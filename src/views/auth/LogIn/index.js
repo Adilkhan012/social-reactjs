@@ -44,6 +44,12 @@ import { AuthContext } from "src/context/Auth";
 import PhoneInput from "react-phone-input-2";
 // import InstagramLogin from 'react-instagram-login';
 import "react-phone-input-2/lib/style.css";
+
+import Web3 from "web3";
+// import { useState } from "react";
+import ConnectWalletButton from "src/component/ConnectWalletButton.js";
+// metmask buttn stylessheet
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -139,6 +145,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
+
+
+// metamask wallet connect
 
 function Login(props) {
   const classes = useStyles();
@@ -584,6 +593,34 @@ function Login(props) {
   };
 
 
+  //metamask connection
+
+  const [loading, setLoading] = useState(false);
+  const [address, setAddress] = useState("");
+
+  const onPressConnect = async () => {
+    setLoading(true);
+
+    try {
+      if (window?.ethereum?.isMetaMask) {
+        // Desktop browser
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
+
+        const account = Web3.utils.toChecksumAddress(accounts[0]);
+        setAddress(account);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    setLoading(false);
+  };
+
+  const onPressLogout = () => setAddress("");
+
+// code ends metamask
 
 
   return (
@@ -627,6 +664,10 @@ function Login(props) {
                           >
                             Continue With Google
                           </Button>
+
+                          // metamask button
+
+                         
                         )}
                         buttonText="Login"
                         onSuccess={responseGoogle}
@@ -667,6 +708,46 @@ function Login(props) {
 
                   
                   */}
+
+                    {/* <Grid item xs={12} sm={6}>
+                      <AppleLogin
+                        render={(renderProps) => (
+                          <Button
+                            disabled={renderProps.disabled}
+                            onClick={renderProps.onClick}
+                            startIcon={<FaApple />}
+                            variant="contained"
+                            color="primary"
+                            size="large"
+                            fullWidth
+                            style={{
+                              marginRight: "5px",
+                              backgroundColor: "#000000",
+                              borderRadius: "60px",
+                              height: "50px",
+                            }}
+                          >
+                            Continue With Metamask
+                          </Button>
+                        )}
+                        buttonText="Login"
+                        onSuccess={responseGoogle}
+                        onFailure={responseGoogle}
+                        cookiePolicy={"single_host_origin"}
+                      />
+                    </Grid> */}
+                    
+                    {/* metamask wallet button */}
+                    <div className="App">
+                      <header className="App-header">
+                        <ConnectWalletButton
+                          onPressConnect={onPressConnect}
+                          onPressLogout={onPressLogout}
+                          loading={loading}
+                          address={address}
+                        />
+                      </header>
+                    </div>
 
                     <Grid item xs={12} sm={6}>
                       <FacebookLogin
@@ -746,6 +827,7 @@ function Login(props) {
                   </Grid>
                 </Box>
               </Grid>
+              
               <Grid item>
                 <Box className={classes.or}>
                   {/* 
