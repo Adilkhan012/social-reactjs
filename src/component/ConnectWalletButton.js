@@ -11,7 +11,9 @@ const ConnectWalletButton = ({
     <div>
       {address && !loading ? (
         <button onClick={onPressLogout} className={styles["connect-wallet"]}>
-          Disconnect
+          {address.substring(0, 6) +
+            '...' +
+            address.substring(address.length - 4, address.length)}
         </button>
       ) : loading ? (
         <button
@@ -21,7 +23,7 @@ const ConnectWalletButton = ({
           <div>Loading...</div>
         </button>
       ) : (
-        <button onClick={onPressConnect} className={styles["connect-wallet"]}>
+        <button onClick={onPressConnect} className={styles['connect-wallet']}>
           Connect Wallet
         </button>
       )}
