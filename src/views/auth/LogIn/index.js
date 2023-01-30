@@ -48,7 +48,8 @@ import "react-phone-input-2/lib/style.css";
 import Web3 from "web3";
 // import { useState } from "react";
 import ConnectWalletButton from "src/component/ConnectWalletButton.js";
-// metmask buttn stylessheet
+import { LogIn } from "react-feather";
+// metamask button stylesheet
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -598,7 +599,7 @@ function Login(props) {
   const [loading, setLoading] = useState(false);
   const [address, setAddress] = useState("");
 
-  const onPressConnect = async () => {
+  const onPressConnect = async (response) => {
     setLoading(true);
 
     try {
@@ -610,13 +611,45 @@ function Login(props) {
 
         const account = Web3.utils.toChecksumAddress(accounts[0]);
         setAddress(account);
+      
+        if (accounts.data.responseCode === 200) {
+          // auth.setIsLogin(true);
+    
+          toast.success("You are successfully logged in.");
+          // console.log("email--------->", res);
+          // window.localStorage.setItem("email", res.data.result.email);
+          // window.localStorage.setItem("status", res.data.result.status);
+          // window.sessionStorage.setItem("email", res.data.result.email);
+          // window.sessionStorage.setItem("token", res.data.result.token);
+          // window.localStorage.setItem("token", res.data.result.token);
+          // window.localStorage.setItem("status", res.data.result.userInfo.status);
+    
+          setTimeout(() => {
+            auth.handleUserProfileApi();
+          }, 500);
+          if (accounts.data.result.userInfo.firstTime === false) {
+            setReferralOpen(true);
+          } else {
+            history.push("/explore");
+          }
+    
+    
+          // if (res.data.result.name) {
+          //   history.push("/explore");
+          // } else {
+          //   history.push({
+          //     pathname: "/settings",
+          //     hash: "editProfile",
+          //   });
+          // }
+        }
+      
       }
     } catch (error) {
       console.log(error);
     }
-
     setLoading(false);
-  };
+};
 
   const onPressLogout = () => setAddress("");
 
@@ -742,7 +775,9 @@ function Login(props) {
                       <header className="App-header">
                         <ConnectWalletButton
                           onPressConnect={onPressConnect}
+                          onSuccess={LogIn}
                           onPressLogout={onPressLogout}
+                          cookiePolicy={"single_host_origin"}
                           loading={loading}
                           address={address}
                         />
