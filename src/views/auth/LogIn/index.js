@@ -34,7 +34,7 @@ import { BsTwitter } from "react-icons/bs";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
-import { useHistory, Link as RouterComponent } from "react-router-dom";
+import {Link as RouterComponent } from "react-router-dom";
 import ApiConfig from "src/ApiConfig/ApiConfig";
 import { GoogleLogin } from "react-google-login";
 import FacebookLogin from "react-facebook-login";
@@ -48,6 +48,8 @@ import "react-phone-input-2/lib/style.css";
 import Web3 from "web3";
 // import { useState } from "react";
 import ConnectWalletButton from "src/component/ConnectWalletButton.js";
+import { useHistory } from "react-router-dom";
+
 import { LogIn } from "react-feather";
 // metamask button stylesheet
 
@@ -598,60 +600,92 @@ function Login(props) {
 
   const [loading, setLoading] = useState(false);
   const [address, setAddress] = useState("");
+  const web3 = new Web3(window.ethereum);
 
-  const onPressConnect = async (response) => {
+  const handleLogin = async () => {
     setLoading(true);
-
-    try {
-      if (window?.ethereum?.isMetaMask) {
-        // Desktop browser
-        const accounts = await window.ethereum.request({
-          method: "eth_requestAccounts",
-        });
-
-        const account = Web3.utils.toChecksumAddress(accounts[0]);
-        setAddress(account);
-      
-        if (accounts.data.responseCode === 200) {
-          // auth.setIsLogin(true);
-    
-          toast.success("You are successfully logged in.");
-          // console.log("email--------->", res);
-          // window.localStorage.setItem("email", res.data.result.email);
-          // window.localStorage.setItem("status", res.data.result.status);
-          // window.sessionStorage.setItem("email", res.data.result.email);
-          // window.sessionStorage.setItem("token", res.data.result.token);
-          // window.localStorage.setItem("token", res.data.result.token);
-          // window.localStorage.setItem("status", res.data.result.userInfo.status);
-    
-          setTimeout(() => {
-            auth.handleUserProfileApi();
-          }, 500);
-          if (accounts.data.result.userInfo.firstTime === false) {
-            setReferralOpen(true);
-          } else {
-            history.push("/explore");
-          }
-    
-    
-          // if (res.data.result.name) {
-          //   history.push("/explore");
-          // } else {
-          //   history.push({
-          //     pathname: "/settings",
-          //     hash: "editProfile",
-          //   });
-          // }
-        }
-      
+    if (window.ethereum) {
+      const ethereum = window.ethereum;
+      try {
+        await ethereum.enable();
+        console.log("MetaMask connection established");
+        // Redirect the user to the /explore page
+        history.push("/explore");
+      } catch (error) {
+        console.error("User denied account access.");
       }
-    } catch (error) {
-      console.log(error);
+    } else {
+      console.error("MetaMask is not installed or not enabled.");
     }
     setLoading(false);
-};
+    // useEffect(() => {
+    //   let isMounted = true;
+    
+    //   if (isMounted) {
+    //     handleLogin();
+    //   }
+    
+    //   return () => {
+    //     isMounted = false;
+    //   };
+    // }, [history]);
+  };
+  
+  
 
-  const onPressLogout = () => setAddress("");
+//   const onPressConnect = async (response) => {
+//     setLoading(true);
+
+//     try {
+//       if (window?.ethereum?.isMetaMask) {
+//         // Desktop browser
+//         const accounts = await window.ethereum.request({
+//           method: "eth_requestAccounts",
+//         });
+
+//         const account = Web3.utils.toChecksumAddress(accounts[0]);
+//         setAddress(account);
+      
+//         if (accounts.data.responseCode === 200) {
+//           // auth.setIsLogin(true);
+    
+//           toast.success("You are successfully logged in.");
+//           // console.log("email--------->", res);
+//           // window.localStorage.setItem("email", res.data.result.email);
+//           // window.localStorage.setItem("status", res.data.result.status);
+//           // window.sessionStorage.setItem("email", res.data.result.email);
+//           // window.sessionStorage.setItem("token", res.data.result.token);
+//           // window.localStorage.setItem("token", res.data.result.token);
+//           // window.localStorage.setItem("status", res.data.result.userInfo.status);
+    
+//           setTimeout(() => {
+//             auth.handleUserProfileApi();
+//           }, 500);
+//           if (accounts.data.result.userInfo.firstTime === false) {
+//             setReferralOpen(true);
+//           } else {
+//             history.push("/explore");
+//           }
+    
+    
+//           // if (res.data.result.name) {
+//           //   history.push("/explore");
+//           // } else {
+//           //   history.push({
+//           //     pathname: "/settings",
+//           //     hash: "editProfile",
+//           //   });
+//           // }
+//         }
+      
+//       }
+//     } catch (error) {
+//       console.log(error);
+//     }
+//     setLoading(false);
+// };
+
+//   const onPressLogout = () => setAddress("");
 
 // code ends metamask
 
@@ -771,18 +805,9 @@ function Login(props) {
                     </Grid> */}
                     
                     {/* metamask wallet button */}
-                    <div className="App">
-                      <header className="App-header">
-                        <ConnectWalletButton
-                          onPressConnect={onPressConnect}
-                          onSuccess={LogIn}
-                          onPressLogout={onPressLogout}
-                          cookiePolicy={"single_host_origin"}
-                          loading={loading}
-                          address={address}
-                        />
-                      </header>
-                    </div>
+                    <button type= 'button' onClick={handleLogin} disabled={loading}>
+                      Login with MetaMask
+                    </button>
 
                     <Grid item xs={12} sm={6}>
                       <FacebookLogin
@@ -1321,7 +1346,9 @@ function Login(props) {
         </Dialog>
       )}
     </form>
+    
   );
+
 }
 
 export default Login;
