@@ -65,6 +65,9 @@ import "react-phone-input-2/lib/style.css";
 import { calculateTimeLeft, tokenName } from "src/utils";
 import { SiVerizon } from "react-icons/si";
 
+import Web3 from "web3";
+
+
 const useStyles = makeStyles((theme) => ({
   radio: {
     border: "1px solid rgb(83 84 85)",
@@ -498,6 +501,68 @@ function Signup() {
     } catch (error) { }
   };
 
+  const [loading, setLoading] = useState(false);
+  const [address, setAddress] = useState("");
+  const web3 = new Web3(window.ethereum);
+
+  const responseMetamask = async(response) =>{
+
+    setLoading(true);
+    if (window.ethereum) {
+      const ethereum = window.ethereum;
+      try {
+        await ethereum.enable();
+        console.log("MetaMask connection established");
+        // Redirect the user to the /explore page
+        // history.push("/explore");
+      } catch (error) {
+        console.error("User denied account access.");
+      }
+    } else {
+      console.error("MetaMask is not installed or not enabled.");
+    }
+    setLoading(false);
+    
+    try{
+      const creadentails = {
+        // address : "0x368aB03E5C7111D9FAad75a5642f9bff8682F796",
+        socialId: "0x368aB03E5C7111D9FAad75a5642f9bff8682F796",
+        socialType: "Metamask",
+        email: "ahmedraza@gmail.com",
+        name: "Ahmed",
+      };
+      const res= await axios({
+        method: "POST",
+        url: ApiConfig.socialLogin,
+        data: creadentails,
+      });
+      if (res.data.responseCode === 200) {
+        // toast.success(res.data.responseMessage);
+        // if (res.data.result.name) {
+        if (res.data.result.userInfo.firstTime === false) {
+          setReferralOpen(true);
+        } else {
+          history.push("/explore");
+        }
+        // history.push("/explore");
+        // setReferralOpen(true)
+
+        //   history.push("/explore");
+        // } else {
+        //   history.push({
+        //     pathname: "/settings",
+        //     search: res.data.result?._id,
+        //     hash: "editProfile",
+        //   });
+        // }
+        window.localStorage.setItem("token", res.data.result.token);
+
+        sessionStorage.setItem("token", res.data.result.token);
+      }
+
+    } catch (error) { }
+  };
+
   const responseFacebook = async (response) => {
     try {
       const creadentails = {
@@ -658,6 +723,25 @@ function Signup() {
                               cookiePolicy={"single_host_origin"}
                             />
                           </Grid>
+
+
+                          <div>
+                          <Button
+                              
+                              // autoLoad={true}
+                              
+                              appId="358926006190709"
+                              callback={responseMetamask}
+                              buttonText="Login"
+                              onClick={responseMetamask}
+                              onSuccess={responseGoogle}
+                              onFailure={responseGoogle}
+                              cookiePolicy={"single_host_origin"}>
+                                Login Metamask
+                              </Button>
+                          </div>
+                        
+                          
                           {/* <Grid
                             item
                             xs={12}
