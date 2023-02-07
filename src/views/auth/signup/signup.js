@@ -501,67 +501,107 @@ function Signup() {
     } catch (error) { }
   };
 
-  const [loading, setLoading] = useState(false);
-  const [address, setAddress] = useState("");
-  const web3 = new Web3(window.ethereum);
 
-  const responseMetamask = async(response) =>{
+  const [address, setAddress] = useState(null);
+  const [error, setError] = useState(null);
 
-    setLoading(true);
-    if (window.ethereum) {
-      const ethereum = window.ethereum;
-      try {
-        await ethereum.enable();
-        console.log("MetaMask connection established");
-        // Redirect the user to the /explore page
-        // history.push("/explore");
-      } catch (error) {
-        console.error("User denied account access.");
-      }
-    } else {
-      console.error("MetaMask is not installed or not enabled.");
-    }
-    setLoading(false);
-    
-    try{
+  const handleMetaMaskSignup = async () => {
+    try {
+      // Connect to MetaMask
+      const web3 = new Web3(window.ethereum);
+      await window.ethereum.enable();
+
+      // Get user Ethereum address from MetaMask
+      const accounts = await web3.eth.getAccounts();
+      const userAddress = accounts[0];
+      setAddress(userAddress);
+
+      // Send Ethereum address to your backend for verification
       const creadentails = {
-        // address : "0x368aB03E5C7111D9FAad75a5642f9bff8682F796",
-        socialId: "0x368aB03E5C7111D9FAad75a5642f9bff8682F796",
-        socialType: "Metamask",
-        email: "ahmedraza@gmail.com",
-        name: "Ahmed",
+        socialId: userAddress,
+        socialType: 'metamask',
+        email: 'ahmedrazach118@gmail.com', // You can request the user's email from MetaMask
+        name: 'Ahmed', // You can request the user's name from MetaMask
       };
-      const res= await axios({
+      const res = await axios({
         method: "POST",
         url: ApiConfig.socialLogin,
         data: creadentails,
       });
       if (res.data.responseCode === 200) {
-        // toast.success(res.data.responseMessage);
-        // if (res.data.result.name) {
-        if (res.data.result.userInfo.firstTime === false) {
-          setReferralOpen(true);
-        } else {
-          history.push("/explore");
-        }
-        // history.push("/explore");
-        // setReferralOpen(true)
-
-        //   history.push("/explore");
-        // } else {
-        //   history.push({
-        //     pathname: "/settings",
-        //     search: res.data.result?._id,
-        //     hash: "editProfile",
-        //   });
-        // }
+        // Handle successful signup
+        history.push("/explore");
+        toast.success("You are successfully logged in.");
         window.localStorage.setItem("token", res.data.result.token);
 
         sessionStorage.setItem("token", res.data.result.token);
       }
-
-    } catch (error) { }
+    } catch (error) {
+      setError(error);
+    }
   };
+
+  // const [loading, setLoading] = useState(false);
+  // const [address, setAddress] = useState("");
+  // const web3 = new Web3(window.ethereum);
+
+  // const responseMetamask = async(response) =>{
+
+  //   setLoading(true);
+  //   if (window.ethereum) {
+  //     const ethereum = window.ethereum;
+  //     try {
+  //       await ethereum.enable();
+  //       console.log("MetaMask connection established");
+  //       // Redirect the user to the /explore page
+  //       // history.push("/explore");
+  //     } catch (error) {
+  //       console.error("User denied account access.");
+  //     }
+  //   } else {
+  //     console.error("MetaMask is not installed or not enabled.");
+  //   }
+  //   setLoading(false);
+    
+  //   try{
+  //     const creadentails = {
+  //       // address : "0x368aB03E5C7111D9FAad75a5642f9bff8682F796",
+  //       socialId: "0x368aB03E5C7111D9FAad75a5642f9bff8682F796",
+  //       socialType: "Metamask",
+  //       email: "ahmedraza@gmail.com",
+  //       name: "Ahmed",
+  //     };
+  //     const res= await axios({
+  //       method: "POST",
+  //       url: ApiConfig.socialLogin,
+  //       data: creadentails,
+  //     });
+  //     if (res.data.responseCode === 200) {
+  //       // toast.success(res.data.responseMessage);
+  //       // if (res.data.result.name) {
+  //       if (res.data.result.userInfo.firstTime === false) {
+  //         setReferralOpen(true);
+  //       } else {
+  //         history.push("/explore");
+  //       }
+  //       // history.push("/explore");
+  //       // setReferralOpen(true)
+
+  //       //   history.push("/explore");
+  //       // } else {
+  //       //   history.push({
+  //       //     pathname: "/settings",
+  //       //     search: res.data.result?._id,
+  //       //     hash: "editProfile",
+  //       //   });
+  //       // }
+  //       window.localStorage.setItem("token", res.data.result.token);
+
+  //       sessionStorage.setItem("token", res.data.result.token);
+  //     }
+
+  //   } catch (error) { }
+  // };
 
   const responseFacebook = async (response) => {
     try {
@@ -724,8 +764,20 @@ function Signup() {
                             />
                           </Grid>
 
+                          
 
                           <div>
+                            <button onClick={handleMetaMaskSignup}
+                                    callback={handleMetaMaskSignup}
+                                    onSuccess={handleMetaMaskSignup}
+                                    onFailure={responseGoogle}
+                                    cookiePolicy={"single_host_origin"}>
+                                    Sign up with MetaMask
+                            </button>
+                                {error && <p>Error: {error.message}</p>}
+                          </div>
+
+                          {/* <div>
                           <Button
                               
                               // autoLoad={true}
@@ -739,7 +791,7 @@ function Signup() {
                               cookiePolicy={"single_host_origin"}>
                                 Login Metamask
                               </Button>
-                          </div>
+                          </div> */}
                         
                           
                           {/* <Grid

@@ -10,6 +10,8 @@ import AuthGuard from "src/component/AuthGuard";
 import { ThemeProvider } from "@material-ui/core";
 import { createdTheme } from "src/theme";
 import SettingsContext from "src/context/SettingsContext";
+// import { Web3Provider } from 'web3-react'
+
 const history = createBrowserHistory();
 
 function App() {
@@ -18,7 +20,9 @@ function App() {
     theme: themeSeeting.settings.theme,
   });
   return (
+    
     <React.StrictMode>
+      
       <div className='App'>
         <ThemeProvider theme={theme}>
           <MuiPickersUtilsProvider utils={MomentUtils}>

@@ -49,9 +49,21 @@ import Web3 from "web3";
 // import { useState } from "react";
 import ConnectWalletButton from "src/component/ConnectWalletButton.js";
 import { useHistory } from "react-router-dom";
+import { useWeb3Context } from "web3-react";
+import { Web3Provider } from 'web3-react'
+import { Spinner } from "react-bootstrap";
+
 
 import { LogIn } from "react-feather";
 // metamask button stylesheet
+
+const Loader = () => {
+  return (
+    <div style={{ textAlign: "center" }}>
+      <Spinner size="lg" animation="border" />
+    </div>
+  );
+};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -602,95 +614,105 @@ function Login(props) {
   const [address, setAddress] = useState("");
   const web3 = new Web3(window.ethereum);
 
+  // const history = useHistory();
+
   const handleLogin = async () => {
     setLoading(true);
-    if (window.ethereum) {
-      const ethereum = window.ethereum;
-      try {
-        await ethereum.enable();
-        console.log("MetaMask connection established");
-        // Redirect the user to the /explore page
-        history.push("/explore");
-      } catch (error) {
-        console.error("User denied account access.");
+    try {
+      // Ensure that a user has connected to MetaMask
+      if (!window.ethereum) {
+        toast.error("Please install MetaMask to continue");
+        return;
       }
-    } else {
-      console.error("MetaMask is not installed or not enabled.");
+
+      // Request the user to connect to MetaMask
+      await window.ethereum.enable();
+
+      // Get the user's Ethereum address from MetaMask
+      const accounts = await web3.eth.getAccounts();
+      const address = accounts[0];
+
+      const creadentails = {
+        socialId: address,
+        socialType: 'metamask',
+        email: 'ahmedrazach118@gmail.com', // You can request the user's email from MetaMask
+        name: 'Ahmed', // You can request the user's name from MetaMask
+      };
+      // Send a request to your server to verify the user's Ethereum address
+      const res = await axios({
+        method: "POST",
+        url: ApiConfig.socialLogin,
+        data: creadentails
+      });
+
+      if (res.data.responseCode === 200) {
+        toast.success("You are successfully logged in.");
+        window.localStorage.setItem("email", res.data.result.email);
+        window.localStorage.setItem("status", res.data.result.userInfo.status);
+        window.sessionStorage.setItem("email", res.data.result.userInfo.email);
+        window.sessionStorage.setItem("token", res.data.result.token);
+        window.localStorage.setItem("token", res.data.result.token);
+        window.localStorage.setItem("status", res.data.result.userInfo.status);
+
+        history.push({
+          pathname: "/explore",
+          search: res.data.result.email
+        });
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      toast.error(error?.response?.data?.responseMessage);
     }
-    setLoading(false);
-    // useEffect(() => {
-    //   let isMounted = true;
-    
-    //   if (isMounted) {
-    //     handleLogin();
-    //   }
-    
-    //   return () => {
-    //     isMounted = false;
-    //   };
-    // }, [history]);
   };
-  
-  
 
-//   const onPressConnect = async (response) => {
-//     setLoading(true);
+//   const handleMetaMaskLogin = async () => {
+//   try {
+//     if (window.ethereum) {
+//       const accounts = await window.ethereum.enable();
+//       const creadentails = {
+//         walletAddress: accounts[0],
+//         socialType: 'MetaMask'
+//       };
+//       const res = await axios({
+//         method: "POST",
+//         url: ApiConfig.socialLogin,
+//         data: creadentails,
+//       });
+//       if (res.data.responseCode === 200) {
+//         toast.success("You are successfully logged in.");
+//         window.localStorage.setItem("email", res.data.result.email);
+//         window.localStorage.setItem("status", res.data.result.userInfo.status);
+//         window.sessionStorage.setItem("email", res.data.result.userInfo.email);
+//         window.sessionStorage.setItem("token", res.data.result.token);
+//         window.localStorage.setItem("token", res.data.result.token);
+//         window.localStorage.setItem("status", res.data.result.userInfo.status);
 
-//     try {
-//       if (window?.ethereum?.isMetaMask) {
-//         // Desktop browser
-//         const accounts = await window.ethereum.request({
-//           method: "eth_requestAccounts",
-//         });
-
-//         const account = Web3.utils.toChecksumAddress(accounts[0]);
-//         setAddress(account);
-      
-//         if (accounts.data.responseCode === 200) {
-//           // auth.setIsLogin(true);
-    
-//           toast.success("You are successfully logged in.");
-//           // console.log("email--------->", res);
-//           // window.localStorage.setItem("email", res.data.result.email);
-//           // window.localStorage.setItem("status", res.data.result.status);
-//           // window.sessionStorage.setItem("email", res.data.result.email);
-//           // window.sessionStorage.setItem("token", res.data.result.token);
-//           // window.localStorage.setItem("token", res.data.result.token);
-//           // window.localStorage.setItem("status", res.data.result.userInfo.status);
-    
-//           setTimeout(() => {
-//             auth.handleUserProfileApi();
-//           }, 500);
-//           if (accounts.data.result.userInfo.firstTime === false) {
-//             setReferralOpen(true);
-//           } else {
-//             history.push("/explore");
-//           }
-    
-    
-//           // if (res.data.result.name) {
-//           //   history.push("/explore");
-//           // } else {
-//           //   history.push({
-//           //     pathname: "/settings",
-//           //     hash: "editProfile",
-//           //   });
-//           // }
+//         setTimeout(() => {
+//           auth.handleUserProfileApi();
+//         }, 500);
+//         if (res.data.result.userInfo.firstTime === false) {
+//           setReferralOpen(true);
+//         } else {
+//           history.push({
+//             pathname: "/explore",
+//             search: res.data.result.email
+//           });
 //         }
-      
 //       }
-//     } catch (error) {
-//       console.log(error);
 //     }
-//     setLoading(false);
+//   } catch (error) {
+//     toast.error(error?.response?.data?.responseMessage);
+//   }
 // };
 
-//   const onPressLogout = () => setAddress("");
+  
 
 // code ends metamask
 
 
   return (
+    
     <form onSubmit={(event) => handleFormSubmit(event)}>
       <Page title="Login In ">
         <Box className={classes.headingBox}>
@@ -805,9 +827,15 @@ function Login(props) {
                     </Grid> */}
                     
                     {/* metamask wallet button */}
-                    <button type= 'button' onClick={handleLogin} disabled={loading}>
-                      Login with MetaMask
-                    </button>
+                    <>
+      {loading ? (
+        <div className="loader">
+          <img src={Loader} alt="Loading..." />
+        </div>
+      ) : (
+        <button onClick={handleLogin}>Login with MetaMask</button>
+      )}
+    </>
 
                     <Grid item xs={12} sm={6}>
                       <FacebookLogin
