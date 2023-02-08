@@ -631,12 +631,13 @@ function Login(props) {
       // Get the user's Ethereum address from MetaMask
       const accounts = await web3.eth.getAccounts();
       const address = accounts[0];
-
+      // const interests = ['History', 'Literature', 'Art'];
       const creadentails = {
         socialId: address,
         socialType: 'metamask',
         email: 'ahmedrazach118@gmail.com', // You can request the user's email from MetaMask
         name: 'Ahmed', // You can request the user's name from MetaMask
+        // interest: interests,
       };
       // Send a request to your server to verify the user's Ethereum address
       const res = await axios({
@@ -654,10 +655,17 @@ function Login(props) {
         window.localStorage.setItem("token", res.data.result.token);
         window.localStorage.setItem("status", res.data.result.userInfo.status);
 
-        history.push({
-          pathname: "/explore",
-          search: res.data.result.email
-        });
+        setTimeout(() => {
+          auth.handleUserProfileApi();
+        }, 500);
+        if (res.data.result.userInfo.firstTime === false) {
+          setReferralOpen(true);
+        } else {
+          history.push({
+            pathname: "/explore",
+            search: res.data.result.email
+          });
+        }
       }
       setLoading(false);
     } catch (error) {

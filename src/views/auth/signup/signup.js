@@ -529,8 +529,21 @@ function Signup() {
         data: creadentails,
       });
       if (res.data.responseCode === 200) {
-        // Handle successful signup
-        history.push("/explore");
+        if (res.data.result.userInfo.firstTime === false) {
+          setReferralOpen(true);
+        } else {
+          history.push("/explore");
+        }
+
+        // if (!res.data.result.name) {
+        //   history.push({
+        //     pathname: "/settings",
+        //     // search: res.data.result?._id,
+        //     hash: "editProfile",
+        //   });
+        // } else {
+        //   history.push("/explore");
+        // }
         toast.success("You are successfully logged in.");
         window.localStorage.setItem("token", res.data.result.token);
 

@@ -118,6 +118,8 @@ export default function Interest() {
         (data) => data.isSelect === true
       );
       const interest = selectedInterest.map((data, i) => data.name);
+      // const interest = ['History', 'Literature', 'Art'];
+
       const res = await Axios.put(
         Apiconfigs.addInterest,
         {
