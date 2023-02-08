@@ -3,14 +3,14 @@ import React, { Component }  from 'react';
 
 const ConnectWalletButton = ({
   onPressLogout,
-  onPressConnect,
+  handleLogin,
   loading,
   address,
 }) => {
   return (
     <div>
       {address && !loading ? (
-        <button onClick={onPressLogout} className={styles["connect-wallet"]}>
+        <button onClick={handleLogin} className={styles["connect-wallet"]}>
           Disconnect
         </button>
       ) : loading ? (
@@ -21,7 +21,7 @@ const ConnectWalletButton = ({
           <div>Loading...</div>
         </button>
       ) : (
-        <button onClick={onPressConnect} className={styles["connect-wallet"]}>
+        <button onClick={handleLogin} className={styles["connect-wallet"]}>
           Connect Wallet
         </button>
       )}

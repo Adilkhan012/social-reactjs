@@ -835,15 +835,15 @@ function Login(props) {
                     </Grid> */}
                     
                     {/* metamask wallet button */}
-                    <>
-      {loading ? (
-        <div className="loader">
-          <img src={Loader} alt="Loading..." />
-        </div>
-      ) : (
-        <button onClick={handleLogin}>Login with MetaMask</button>
-      )}
-    </>
+                    <div>
+                      {/* other components */}
+                         <ConnectWalletButton
+                        // onPressLogout={onPressLogout}
+                             handleLogin={handleLogin}
+                             loading={loading}
+                             address={address}
+                         />
+                    </div>
 
                     <Grid item xs={12} sm={6}>
                       <FacebookLogin

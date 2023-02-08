@@ -65,6 +65,8 @@ import "react-phone-input-2/lib/style.css";
 import { calculateTimeLeft, tokenName } from "src/utils";
 import { SiVerizon } from "react-icons/si";
 
+import ConnectWalletButton from "src/component/ConnectWalletButton.js";
+
 import Web3 from "web3";
 
 
@@ -501,7 +503,7 @@ function Signup() {
     } catch (error) { }
   };
 
-
+  const [loading, setLoading] = useState(false);
   const [address, setAddress] = useState(null);
   const [error, setError] = useState(null);
 
@@ -779,16 +781,15 @@ function Signup() {
 
                           
 
-                          <div>
-                            <button onClick={handleMetaMaskSignup}
-                                    callback={handleMetaMaskSignup}
-                                    onSuccess={handleMetaMaskSignup}
-                                    onFailure={responseGoogle}
-                                    cookiePolicy={"single_host_origin"}>
-                                    Sign up with MetaMask
-                            </button>
-                                {error && <p>Error: {error.message}</p>}
-                          </div>
+                    <div>
+                      {/* other components */}
+                         <ConnectWalletButton
+                        // onPressLogout={onPressLogout}
+                             handleLogin={handleMetaMaskSignup}
+                             loading={loading}
+                             address={address}
+                         />
+                    </div>
 
                           {/* <div>
                           <Button
