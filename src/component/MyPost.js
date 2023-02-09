@@ -1152,6 +1152,7 @@ export default function (props) {
               <Grid container spacing={1}>
                 <Grid item xs={4} align="left">
                   <Typography variant="h6">Duration</Typography>
+                  <TextField></TextField>
                 </Grid>
                 <Grid item xs={12} className={classes.donation}>
                   <Box>

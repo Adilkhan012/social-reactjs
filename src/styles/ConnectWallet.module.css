@@ -1,4 +1,4 @@
-.connect-wallet {
+/* .connect-wallet {
     background-color: #1578f1;
     color: white;
     width: 150px;
@@ -17,3 +17,29 @@
   .connect-wallet-loading {
     cursor: none;
   }
+
+
+  
+    .container {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    }
+    .logo {
+      height: '50px',
+      marginRight: '20px',
+    }
+    .button {
+      backgroundColor: '#4CAF50',
+      border: 'none',
+      color: 'white',
+      padding: '15px 32px',
+      textAlign: 'center',
+      textDecoration: 'none',
+      display: 'inline-block',
+      fontSize: '16px',
+      margin: '4px 2px',
+      cursor: 'pointer',
+      borderRadius: '5px',
+    }
+   */
