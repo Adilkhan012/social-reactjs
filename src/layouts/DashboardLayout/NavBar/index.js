@@ -249,6 +249,11 @@ const NavBar = ({ onMobileClose, openMobile }) => {
                 icon: MdSettings,
                 href: "/settings",
               },
+              {
+                title: "NFT Domain",
+                icon: HiUserGroup,
+                href: "/NFTDomain",
+              },
 
 
             ],

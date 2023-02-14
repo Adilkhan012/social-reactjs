@@ -350,7 +350,7 @@ export function MakeAuctionModal({
       <DialogContent>
         <Box className={classes.mainmodalBox}>
           <Grid container direction={"column"} spacing={3}>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <Box mt={2}>
                 <Typography
                   variant='h6'
@@ -385,7 +385,7 @@ export function MakeAuctionModal({
                 />
               </Box>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <Box mt={2}>
                 {/* <Typography
                   variant="h6"
@@ -453,7 +453,7 @@ export function MakeAuctionModal({
                 )}
               </Box>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <Box mt={2}>
                 <Typography
                   variant='h6'
@@ -517,7 +517,7 @@ export function MakeAuctionModal({
                 </FormControl>
               </Box>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={6} sm={6}>
               <Box mt={3}>
                 <FormControl fullWidth>
                   <Typography

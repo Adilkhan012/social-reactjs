@@ -1,3 +1,5 @@
+
+
 import React, { lazy } from "react";
 import { Redirect } from "react-router-dom";
 import DashboardLayout from "src/layouts/DashboardLayout";
@@ -80,6 +82,12 @@ export const routes = [
     layout: DashboardLayout,
     component: lazy(() => import("src/views/pages/Creators/Creators")),
   },
+  {
+    exact: true,
+    path: "/NFTDomain",
+    layout: DashboardLayout,
+    component: lazy(() => import("src/views/pages/NFTDomain/NFTDomain")),
+  },
 
   {
     exact: true,
@@ -87,7 +95,6 @@ export const routes = [
     layout: DashboardLayout,
     component: lazy(() => import("src/views/pages/Better/Better")),
   },
-
   {
     exact: true,
     path: "/about-creators",

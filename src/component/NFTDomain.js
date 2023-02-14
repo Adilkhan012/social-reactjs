@@ -17,12 +17,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default function PageLoading() {
+export default function NFTDomain() {
   const classes = useStyles()
   return (
     <div className={classes.root}>
       <Box width={200} textAlign="center">
-        <img src="/loader/logo_ww.gif" alt="Loading Page" width="200px" />
+        <p>Herere</p>
       </Box>
     </div>
   )
