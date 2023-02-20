@@ -1,7 +1,7 @@
-// export const baseURL = "https://node.bitfuxi.co.uk";
+export const baseURL = "https://node.bitfuxi.co.uk";
 export const socketURL = "wss://node.bitfuxi.co.uk";
 // export const baseURL = "https://node-social.mobiloitte.org";
-export const baseURL = "http://localhost:1909";
+// export const baseURL = "http://localhost:1909";
 
 
 const url = `${baseURL}/api/v1`;
