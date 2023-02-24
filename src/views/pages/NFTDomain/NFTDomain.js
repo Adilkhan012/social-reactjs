@@ -31,10 +31,11 @@ const web3 = new Web3(window.ethereum);
 //   });
 
 // Instantiate the contract object with your ABI and contract address
-const contractAddress = "0x1a4488b4276f465eFF87F072a337C5F49D933814"; // Replace with your contract address
+const contractAddress = "0xd9145CCE52D386f254917e481eB44e9943F39138"; // Replace with your contract address
 // const contract = new web3.eth.Contract(contractABI, contractAddress);
 
 const NFTDomain = () => {
+  const [laziNames, setLaziNames] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [checkboxColor, setCheckboxColor] = useState("red");
 
@@ -56,18 +57,42 @@ const NFTDomain = () => {
     }
   };
 
+  const initContract = async () => {
+    try {
+      await window.ethereum.enable(); // prompt user to connect their wallet
+      const web3 = new Web3(window.ethereum);
+      const accounts = await web3.eth.getAccounts();
+      const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+      return { web3, accounts, contract };
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // call the function before interacting with the smart contract
   const handleBuyLaziName = async () => {
     try {
-      const accounts = await window.ethereum.request({
-        method: "eth_requestAccounts",
-      });
-      const web3 = new Web3(window.ethereum);
-      const contract = new web3.eth.Contract(contractABI, contractAddress);
+      const { web3, accounts, contract } = await initContract();
       const result = await contract.methods.buyLaziName(searchTerm).send({
         from: accounts[0],
         value: web3.utils.toWei("0.01", "ether"), // specify the amount of ether to send
       });
       console.log(result);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // function to fetch minted lazi domains on wallet address
+  const getMintedLaziDomains = async () => {
+    try {
+      const { accounts, contract } = await initContract();
+      const domains = await contract.methods.getMintedLaziDomains().call({
+        from: accounts[0],
+      });
+      console.log(domains);
+      // update state or render domains on the webpage
     } catch (error) {
       console.error(error);
     }
@@ -105,6 +130,14 @@ const NFTDomain = () => {
           }}
         />
         <button onClick={handleBuyLaziName}>Buy</button>
+      </div>
+      <div>
+        <p>Your Minted LaziNames:</p>
+        <ul>
+          {laziNames.map((laziName) => (
+            <li key={laziName}>{laziName}</li>
+          ))}
+        </ul>
       </div>
       {exist && (
         <div style={{ marginTop: 10 }}>
