@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Auction from "./Auction";
 import Web3 from "web3";
 import contractABI from "./contractABI";
+import "./styles.css";
 
 const data = [
   "apple",
@@ -31,7 +32,7 @@ const web3 = new Web3(window.ethereum);
 //   });
 
 // Instantiate the contract object with your ABI and contract address
-const contractAddress = "0xd9145CCE52D386f254917e481eB44e9943F39138"; // Replace with your contract address
+const contractAddress = "0x89434167B12C97239aa7708980BB6f8FA82185Cd"; // Replace with your contract address
 // const contract = new web3.eth.Contract(contractABI, contractAddress);
 
 const NFTDomain = () => {
@@ -57,6 +58,8 @@ const NFTDomain = () => {
     }
   };
 
+  let accounts = [];
+
   const initContract = async () => {
     try {
       await window.ethereum.enable(); // prompt user to connect their wallet
@@ -71,14 +74,16 @@ const NFTDomain = () => {
   };
 
   // call the function before interacting with the smart contract
-  const handleBuyLaziName = async () => {
+  const handleBuyLaziName = async (e) => {
+    e.preventDefault();
     try {
       const { web3, accounts, contract } = await initContract();
       const result = await contract.methods.buyLaziName(searchTerm).send({
         from: accounts[0],
-        value: web3.utils.toWei("0.01", "ether"), // specify the amount of ether to send
+        value: web3.utils.toWei("0", "ether"), // specify the amount of ether to send
       });
       console.log(result);
+      await getMintedLaziDomains(); // fetch the updated minted domains after successful purchase
     } catch (error) {
       console.error(error);
     }
@@ -88,85 +93,83 @@ const NFTDomain = () => {
   const getMintedLaziDomains = async () => {
     try {
       const { accounts, contract } = await initContract();
-      const domains = await contract.methods.getMintedLaziDomains().call({
-        from: accounts[0],
-      });
-      console.log(domains);
-      // update state or render domains on the webpage
+      const totalMinted = await contract.methods.totalSupply().call();
+      const domains = [];
+
+      for (let i = 0; i < totalMinted; i++) {
+        const domain = await contract.methods.domainNameOf(i).call();
+
+        // if (domainNameOfAddress[accounts[0]] === domain) {
+        domains.push(domain);
+        // }
+      }
+
+      setLaziNames(domains);
     } catch (error) {
       console.error(error);
     }
   };
 
+  useEffect(() => {
+    getMintedLaziDomains();
+  }, []);
+
   return (
     <div>
-      <div style={{ display: "flex" }}>
-        <input
-          type="text"
-          placeholder="Enter a Domain"
-          value={searchTerm}
-          onChange={handleSearch}
-          style={{
-            display: "flex",
-            width: "400px",
-            background: "black",
-            color: "wheat",
-            height: 40,
-            fontSize: 18,
-            borderColor: "white",
-            borderWidth: 1,
-            borderRadius: 10,
-            paddingInline: 10,
-          }}
-        />
-        <div
-          style={{
-            backgroundColor: checkboxColor,
-            width: 30,
-            height: 30,
-            marginLeft: "20px",
-            borderRadius: 15,
-            marginTop: 5,
-          }}
-        />
-        <button onClick={handleBuyLaziName}>Buy</button>
-      </div>
+      <input
+        type="text"
+        className="input"
+        placeholder="Enter a Domain"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <button className="button" onClick={handleBuyLaziName}>
+        Buy
+      </button>
       <div>
-        <p>Your Minted LaziNames:</p>
-        <ul>
-          {laziNames.map((laziName) => (
-            <li key={laziName}>{laziName}</li>
-          ))}
-        </ul>
-      </div>
-      {exist && (
-        <div style={{ marginTop: 10 }}>
-          <p style={{ fontSize: 15, color: "white" }}>Domain......Name</p>
-          <div style={{ marginTop: 20, display: "flex" }}>
-            <img
-              src="https://www.shutterstock.com/image-illustration/domain-names-internet-web-telecommunication-260nw-1708219261.jpg"
-              style={{ height: 200, width: 200 }}
-              alt="img"
-            />
-            <img
-              src="https://www.shutterstock.com/image-illustration/domain-names-internet-web-telecommunication-260nw-1708219261.jpg"
-              style={{ height: 200, width: 200, marginLeft: 30 }}
-              alt="img"
-            />
-            <img
-              src="https://www.shutterstock.com/image-illustration/domain-names-internet-web-telecommunication-260nw-1708219261.jpg"
-              style={{ height: 200, width: 200, marginLeft: 30 }}
-              alt="img"
-            />
+        <button className="button" onClick={getMintedLaziDomains}>
+          Get Lazi Domains
+        </button>
+        {laziNames.length > 0 && (
+          <ul className="domain-list">
+            {laziNames.map((domain) => (
+              <li key={domain} className="domain-item">
+                <span className="domain-item-name">{domain}</span>
+                <span className="domain-item-owner">Owner: {accounts[0]}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div> 
+
+        {exist && (
+          <div style={{ marginTop: 10 }}>
+            <p style={{ fontSize: 15, color: "white" }}>Domain......Name</p>
+            <div style={{ marginTop: 20, display: "flex" }}>
+              <img
+                src="https://www.shutterstock.com/image-illustration/domain-names-internet-web-telecommunication-260nw-1708219261.jpg"
+                style={{ height: 200, width: 200 }}
+                alt="img"
+              />
+              <img
+                src="https://www.shutterstock.com/image-illustration/domain-names-internet-web-telecommunication-260nw-1708219261.jpg"
+                style={{ height: 200, width: 200, marginLeft: 30 }}
+                alt="img"
+              />
+              <img
+                src="https://www.shutterstock.com/image-illustration/domain-names-internet-web-telecommunication-260nw-1708219261.jpg"
+                style={{ height: 200, width: 200, marginLeft: 30 }}
+                alt="img"
+              />
+            </div>
           </div>
-        </div>
-      )}
-      {!exist && len > 3 && (
-        <div style={{ marginTop: 10 }}>
-          <p style={{ fontSize: 15, color: "red" }}>Domain Name Found Found</p>
-        </div>
-      )}
-    </div>
+        )}
+        {!exist && len > 3 && (
+          <div style={{ marginTop: 10 }}>
+            <p style={{ fontSize: 15, color: "red" }}>Domain Name Found Found</p>
+          </div>
+        )}
+      </div>
   );
 };
 

@@ -535,6 +535,25 @@ const contractAbi = [
   {
     inputs: [
       {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "domainNameOfAddress",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "uint256",
         name: "tokenId",
         type: "uint256",
@@ -989,5 +1008,4 @@ const contractAbi = [
     type: "function",
   },
 ];
-
 export default contractAbi;
