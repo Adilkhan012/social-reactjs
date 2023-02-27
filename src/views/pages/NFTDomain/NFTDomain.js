@@ -84,27 +84,31 @@ const NFTDomain = () => {
   const handleBuyLaziName = async (e) => {
     e.preventDefault();
     try {
-      const { web3, accounts, contract } = await initContract();
-      const result = await contract.methods.buyLaziName(searchTerm).send({
-        from: accounts[0],
-        value: web3.utils.toWei("0", "ether"), // specify the amount of ether to send
-      });
-      console.log(result);
-      await getMintedLaziDomains(); // fetch the updated minted domains after successful purchase
+      const {web3, accounts, contract } = await initContract();
+      console.log({ accounts });
+      console.log({ contract });
+      // const result = await contract.methods.buyLaziName(searchTerm).send({
+      //   from: accounts[0],
+      //   value: web3.utils.toWei("0", "ether"), // specify the amount of ether to send
+      // });
+      // console.log(result);
+      await getMintedLaziDomains(accounts, contract); // fetch the updated minted domains after successful purchase
 
-      const canvas = createCanvas(500, 100); // create a canvas element with the desired dimensions
-      const ctx = canvas.getContext("2d");
+      // const canvas = createCanvas(500, 100);
+      // const ctx = canvas.getContext("2d");
 
-      // set font
-      registerFont("path/to/font.ttf", { family: "Arial" });
-      ctx.font = "20px Arial";
+      // try {
+      //   registerFont("path/to/font.ttf", { family: "Arial" });
+      // } catch (error) {
+      //   console.error("Error registering font:", error);
+      // }
 
-      // set text color and draw text
-      ctx.fillStyle = "#000000";
-      ctx.fillText(searchTerm, 10, 50);
+      // ctx.font = "20px Arial";
 
-      // convert canvas to data URL
-      const image = canvas.toDataURL();
+      // ctx.fillStyle = "#000000";
+      // ctx.fillText(searchTerm, 10, 50);
+
+      // const image = canvas.toDataURL();
 
       const response = await axios({
         method: "POST",
@@ -116,7 +120,7 @@ const NFTDomain = () => {
           domainName: searchTerm,
           ownerName: "Ahmed",
           ownerAddress: accounts[0],
-          image: image,
+          // image: image,
         },
       });
 
