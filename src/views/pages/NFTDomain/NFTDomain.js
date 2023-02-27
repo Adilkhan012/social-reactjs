@@ -3,6 +3,13 @@ import Auction from "./Auction";
 import Web3 from "web3";
 import contractABI from "./contractABI";
 import "./styles.css";
+import { AuthContext } from "src/context/Auth";
+import { MdPhoto, MdAddToPhotos } from "react-icons/md";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import ApiConfig from "src/ApiConfig/ApiConfig";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { createCanvas, registerFont } from "canvas";
 
 const data = [
   "apple",
@@ -84,6 +91,40 @@ const NFTDomain = () => {
       });
       console.log(result);
       await getMintedLaziDomains(); // fetch the updated minted domains after successful purchase
+
+      const canvas = createCanvas(500, 100); // create a canvas element with the desired dimensions
+      const ctx = canvas.getContext("2d");
+
+      // set font
+      registerFont("path/to/font.ttf", { family: "Arial" });
+      ctx.font = "20px Arial";
+
+      // set text color and draw text
+      ctx.fillStyle = "#000000";
+      ctx.fillText(searchTerm, 10, 50);
+
+      // convert canvas to data URL
+      const image = canvas.toDataURL();
+
+      const response = await axios({
+        method: "POST",
+        url: ApiConfig.createNftDomainName,
+        headers: {
+          token: localStorage.getItem("token"),
+        },
+        data: {
+          domainName: searchTerm,
+          ownerName: "Ahmed",
+          ownerAddress: accounts[0],
+          image: image,
+        },
+      });
+
+      if (response.status === 200) {
+        console.log("NFT domain created successfully");
+      } else {
+        console.log("Failed to create NFT domain");
+      }
     } catch (error) {
       console.error(error);
     }
@@ -140,36 +181,36 @@ const NFTDomain = () => {
             ))}
           </ul>
         )}
-      </div> 
-
-        {exist && (
-          <div style={{ marginTop: 10 }}>
-            <p style={{ fontSize: 15, color: "white" }}>Domain......Name</p>
-            <div style={{ marginTop: 20, display: "flex" }}>
-              <img
-                src="https://www.shutterstock.com/image-illustration/domain-names-internet-web-telecommunication-260nw-1708219261.jpg"
-                style={{ height: 200, width: 200 }}
-                alt="img"
-              />
-              <img
-                src="https://www.shutterstock.com/image-illustration/domain-names-internet-web-telecommunication-260nw-1708219261.jpg"
-                style={{ height: 200, width: 200, marginLeft: 30 }}
-                alt="img"
-              />
-              <img
-                src="https://www.shutterstock.com/image-illustration/domain-names-internet-web-telecommunication-260nw-1708219261.jpg"
-                style={{ height: 200, width: 200, marginLeft: 30 }}
-                alt="img"
-              />
-            </div>
-          </div>
-        )}
-        {!exist && len > 3 && (
-          <div style={{ marginTop: 10 }}>
-            <p style={{ fontSize: 15, color: "red" }}>Domain Name Found Found</p>
-          </div>
-        )}
       </div>
+
+      {exist && (
+        <div style={{ marginTop: 10 }}>
+          <p style={{ fontSize: 15, color: "white" }}>Domain......Name</p>
+          <div style={{ marginTop: 20, display: "flex" }}>
+            <img
+              src="https://www.shutterstock.com/image-illustration/domain-names-internet-web-telecommunication-260nw-1708219261.jpg"
+              style={{ height: 200, width: 200 }}
+              alt="img"
+            />
+            <img
+              src="https://www.shutterstock.com/image-illustration/domain-names-internet-web-telecommunication-260nw-1708219261.jpg"
+              style={{ height: 200, width: 200, marginLeft: 30 }}
+              alt="img"
+            />
+            <img
+              src="https://www.shutterstock.com/image-illustration/domain-names-internet-web-telecommunication-260nw-1708219261.jpg"
+              style={{ height: 200, width: 200, marginLeft: 30 }}
+              alt="img"
+            />
+          </div>
+        </div>
+      )}
+      {!exist && len > 3 && (
+        <div style={{ marginTop: 10 }}>
+          <p style={{ fontSize: 15, color: "red" }}>Domain Name Found Found</p>
+        </div>
+      )}
+    </div>
   );
 };
 

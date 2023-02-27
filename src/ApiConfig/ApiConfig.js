@@ -48,6 +48,7 @@ const Apiconfigs = {
   profile: `${url}/user/userprofile`,
   forgotPassword: `${url}/user/forgotPassword`,
   createPost: `${url}/user/createPost`,
+  createNftDomainName: `${url}/user/createNftDomainName`,
   updatePost: `${url}/user/updatePost`,
   userBlockUnblock: `${url}/user/userBlockUnblock/`,
   userBlockUnblockAdmin: `${url}/admin/userBlockUnblock/`,
