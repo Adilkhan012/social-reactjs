@@ -357,7 +357,7 @@ const NFTDomain = () => {
         ))}
       </div>
 
-      {/* <div>
+      <div>
         <input
           type="text"
           placeholder="Enter a Domain"
@@ -372,7 +372,7 @@ const NFTDomain = () => {
         {mintedDomain && (
           <p className="minted-message">{`The domain name ${mintedDomain} is already minted.`}</p>
         )}
-      </div>  */}
+      </div> 
 
       {exist && (
         <div style={{ marginTop: 10 }}>
