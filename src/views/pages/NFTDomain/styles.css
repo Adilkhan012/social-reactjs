@@ -41,3 +41,15 @@
 .domain-item-owner {
   color: #666;
 }
+
+.image-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.image {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 20px;
+}

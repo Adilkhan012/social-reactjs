@@ -3,13 +3,17 @@ import Auction from "./Auction";
 import Web3 from "web3";
 import contractABI from "./contractABI";
 import "./styles.css";
+import ArialFont from "./Arialn.ttf";
+import LaziImage from "./lazi.jpeg";
+
 import { AuthContext } from "src/context/Auth";
 import { MdPhoto, MdAddToPhotos } from "react-icons/md";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import ApiConfig from "src/ApiConfig/ApiConfig";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { createCanvas, registerFont } from "canvas";
+// import { createCanvas, registerFont } from "canvas";
+import { createCanvas, loadImage, registerFont } from "canvas";
 
 const data = [
   "apple",
@@ -42,10 +46,48 @@ const web3 = new Web3(window.ethereum);
 const contractAddress = "0x89434167B12C97239aa7708980BB6f8FA82185Cd"; // Replace with your contract address
 // const contract = new web3.eth.Contract(contractABI, contractAddress);
 
+const generateNftImage = async (domainName) => {
+  // Load the background image
+  const bgImage = await loadImage(LaziImage);
+
+  // Create a canvas
+  const canvas = createCanvas(bgImage.width, bgImage.height);
+  const ctx = canvas.getContext("2d");
+
+  // Draw the background image on the canvas
+  ctx.drawImage(bgImage, 0, 0);
+
+  // Register the font that you want to use
+  // registerFont(ArialFont, { family: "Arial" });
+  ctx.font = "60px Arial";
+
+  const textWidth = ctx.measureText(domainName).width;
+  const x = (canvas.width - textWidth) / 2;
+  const y = canvas.height - 80;
+  ctx.fillStyle = "#ffffff";
+  ctx.fillText(domainName, x, y);
+
+  // Convert the canvas to a data URL
+  const dataUrl = canvas.toDataURL();
+
+  return dataUrl;
+};
+
 const NFTDomain = () => {
   const [laziNames, setLaziNames] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [checkboxColor, setCheckboxColor] = useState("red");
+  const [mintedDomain, setMintedDomain] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [message, setMessage] = useState("");
+  const [isAvailable, setIsAvailable] = useState(null);
+  const [isMinted, setIsMinted] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
+  // Define a state variable to store the list of minted domain names
+  const [mintedDomainNames, setMintedDomainNames] = useState([]);
+  // When the component mounts, convert the minted domain names to images and store them in state
+  const [images, setImages] = useState([]);
 
   const [exist, setExist] = useState(false);
 
@@ -53,8 +95,9 @@ const NFTDomain = () => {
 
   const [url, setUrl] = useState("https://images.app.goo.gl/RwQ4YFT2CCENspHp8");
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     setSearchTerm(e.target.value);
+    setLoading(true);
     if (data.includes(e.target.value)) {
       setCheckboxColor("green");
       setExist(true);
@@ -62,6 +105,35 @@ const NFTDomain = () => {
     } else {
       setCheckboxColor("red");
       setExist(false);
+    }
+
+    try {
+      const domain = await getMintedLaziDomain(searchTerm);
+      if (domain) {
+        setMintedDomain(domain);
+        setSuccess(true);
+        setMessage("Domain found!");
+      } else {
+        setMintedDomain(null);
+        setSuccess(false);
+        setMessage("Domain not found.");
+      }
+    } catch (error) {
+      console.error(error);
+      setMessage("An error occurred.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleInputChange = async (e) => {
+    const domainName = e.target.value;
+    setSearchTerm(domainName);
+    const mintedDomain = await getMintedLaziDomain(domainName);
+    if (mintedDomain === null) {
+      setIsAvailable(true);
+    } else {
+      setIsAvailable(false);
     }
   };
 
@@ -84,13 +156,25 @@ const NFTDomain = () => {
   const handleBuyLaziName = async (e) => {
     e.preventDefault();
     try {
-      const {web3, accounts, contract } = await initContract();
-      console.log({ accounts });
-      console.log({ contract });
+      const { web3, accounts, contract } = await initContract();
+      const mintedDomain = await getMintedLaziDomain(searchTerm);
+      if (mintedDomain) {
+        setIsMinted(true);
+        setIsDisabled(true);
+        setMessage(
+          `The domain name '${mintedDomain}' is already minted. Please choose another name.`
+        );
+        return;
+      }
+      // console.log({ accounts });
+      // console.log({ contract });
       // const result = await contract.methods.buyLaziName(searchTerm).send({
       //   from: accounts[0],
       //   value: web3.utils.toWei("0", "ether"), // specify the amount of ether to send
       // });
+      // setIsMinted(true);
+      // setIsDisabled(true);
+      // setMessage(`Successfully minted domain name '${searchTerm}'!`);
       // console.log(result);
       await getMintedLaziDomains(accounts, contract); // fetch the updated minted domains after successful purchase
 
@@ -134,30 +218,87 @@ const NFTDomain = () => {
     }
   };
 
-  // function to fetch minted lazi domains on wallet address
+  // function to fetch all minted lazi domains on wallet address
   const getMintedLaziDomains = async () => {
     try {
       const { accounts, contract } = await initContract();
       const totalMinted = await contract.methods.totalSupply().call();
-      const domains = [];
+      const mintedDomains = [];
 
       for (let i = 0; i < totalMinted; i++) {
-        const domain = await contract.methods.domainNameOf(i).call();
+        const mintedDomain = await contract.methods.domainNameOf(i).call();
 
-        // if (domainNameOfAddress[accounts[0]] === domain) {
-        domains.push(domain);
-        // }
+        if (mintedDomain) {
+          mintedDomains.push(mintedDomain);
+        }
       }
 
-      setLaziNames(domains);
+      setLaziNames(mintedDomains);
+      setMintedDomainNames(mintedDomains);
     } catch (error) {
       console.error(error);
     }
   };
 
+  // function to search a specific minted lazi domainname:
+  const getMintedLaziDomain = async (domainName) => {
+    try {
+      const { accounts, contract } = await initContract();
+      const totalMinted = await contract.methods.totalSupply().call();
+
+      for (let i = 0; i < totalMinted; i++) {
+        const mintedDomain = await contract.methods.domainNameOf(i).call();
+
+        if (mintedDomain === domainName) {
+          return mintedDomain;
+        }
+      }
+
+      // Domain name not found
+      return null;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // Define a function to convert the domain names to images
+  const convertToImages = async () => {
+    const images = [];
+
+    for (const domainName of mintedDomainNames) {
+      const imageUrl = await generateNftImage(domainName);
+      images.push(imageUrl);
+    }
+
+    return images;
+  };
+
   useEffect(() => {
-    getMintedLaziDomains();
+    async function fetchMintedDomainNames() {
+      const { accounts, contract } = await initContract();
+      const totalMinted = await contract.methods.totalSupply().call();
+      const mintedDomainNames = [];
+
+      for (let i = 0; i < totalMinted; i++) {
+        const mintedDomain = await contract.methods.domainNameOf(i).call();
+        mintedDomainNames.push(mintedDomain);
+      }
+
+      setMintedDomainNames(mintedDomainNames);
+    }
+
+    fetchMintedDomainNames();
+    // getMintedLaziDomains();
   }, []);
+
+  useEffect(() => {
+    async function convertMintedDomainNamesToImages() {
+      const images = await convertToImages();
+      setImages(images);
+    }
+
+    convertMintedDomainNamesToImages();
+  }, [mintedDomainNames]);
 
   return (
     <div>
@@ -166,11 +307,30 @@ const NFTDomain = () => {
         className="input"
         placeholder="Enter a Domain"
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={handleInputChange}
       />
-      <button className="button" onClick={handleBuyLaziName}>
-        Buy
+      {isMinted ? (
+        <div className={isDisabled ? "unavailable" : "available"}>
+          {message}
+        </div>
+      ) : null}
+
+      <button
+        className="button"
+        onClick={handleBuyLaziName}
+        disabled={isDisabled}
+      >
+        Buy LaziName
       </button>
+      <div>
+        {isAvailable === true && (
+          <span style={{ color: "green" }}>Available ✓</span>
+        )}
+        {isAvailable === false && (
+          <span style={{ color: "red" }}>Already minted ✗</span>
+        )}
+      </div>
+
       <div>
         <button className="button" onClick={getMintedLaziDomains}>
           Get Lazi Domains
@@ -186,6 +346,33 @@ const NFTDomain = () => {
           </ul>
         )}
       </div>
+      <div className="image-grid">
+        {images.map((imageUrl, index) => (
+          <img
+            key={index}
+            src={imageUrl}
+            alt={`Minted domain name ${index}`}
+            className="image"
+          />
+        ))}
+      </div>
+
+      {/* <div>
+        <input
+          type="text"
+          placeholder="Enter a Domain"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <button onClick={handleSearch}>
+          {loading ? "Loading..." : "Search"}
+        </button>
+        {success && <p className="success-message">{message}</p>}
+        {!success && message && <p className="error-message">{message}</p>}
+        {mintedDomain && (
+          <p className="minted-message">{`The domain name ${mintedDomain} is already minted.`}</p>
+        )}
+      </div>  */}
 
       {exist && (
         <div style={{ marginTop: 10 }}>
