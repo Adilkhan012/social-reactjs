@@ -237,6 +237,8 @@ const NFTDomain = () => {
       setMintedDomainNames(mintedDomains);
     } catch (error) {
       console.error(error);
+
+      //
     }
   };
 
@@ -301,63 +303,109 @@ const NFTDomain = () => {
   }, [mintedDomainNames]);
 
   return (
-    <div>
-      <input
-        type="text"
-        className="input"
-        placeholder="Enter a Domain"
-        value={searchTerm}
-        onChange={handleInputChange}
-      />
-      {isMinted ? (
-        <div className={isDisabled ? "unavailable" : "available"}>
-          {message}
+    <>
+
+    <div className="domain-body">
+      <div className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-6 MuiGrid-grid-md-6 MuiGrid-grid-lg-6">
+        <h3 className="MuiTypography-root MuiTypography-h3">
+          NFT Collection / User
+        </h3>
+      </div>
+{/*  */}
+      <div className="input-bg">
+        {/* input + button flex - section */}
+        <div className="input-flex">
+          {isMinted ? (
+            <div className={isDisabled ? "unavailable" : "available"}>
+              {message}
+            </div>
+          ) : null}
+          <input
+            type="text"
+            className="input"
+            placeholder="Enter a Domain"
+            value={searchTerm}
+            onChange={handleInputChange}
+          />
+
+          <button
+            className="button btx"
+            onClick={handleBuyLaziName}
+            disabled={isDisabled}
+            style={{ backgroundcolor: "#E31A89" }}
+          >
+            Buy LaziName
+          </button>
+          <div className="avail-text">
+            {isAvailable === true && (
+              <span  className="spx" style={{ color: "green" }}>Available </span>
+            )}
+            {isAvailable === false && (
+              <span style={{ color: "red" }}>Already minted ✗</span>
+            )}
+          </div>
         </div>
-      ) : null}
+        {/* input + button flex - section end */}
 
-      <button
-        className="button"
-        onClick={handleBuyLaziName}
-        disabled={isDisabled}
-      >
-        Buy LaziName
-      </button>
-      <div>
-        {isAvailable === true && (
-          <span style={{ color: "green" }}>Available ✓</span>
-        )}
-        {isAvailable === false && (
-          <span style={{ color: "red" }}>Already minted ✗</span>
-        )}
+        {/* domains button url section */}
+        <div className="btn-domain-section">
+          <button
+            style={{ backgroundcolor: "#E31A89" }}
+            className="button btn-1 btn-12 btn-y"
+            onClick={getMintedLaziDomains}
+          >
+            Get Lazi Domains
+          </button>
+          {laziNames.length > 0 && (
+            <ul className="domain-list">
+              {laziNames.map((domain) => (
+                <li key={domain} className="domain-item">
+                  <span className="domain-item-name">{domain}</span>
+                  <span className="domain-item-owner">
+                    Owner: {accounts[0]}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        {/* domains button url section end  */}
+
+        {/* input b-g div end here  */}
       </div>
 
-      <div>
-        <button className="button" onClick={getMintedLaziDomains}>
-          Get Lazi Domains
-        </button>
-        {laziNames.length > 0 && (
-          <ul className="domain-list">
-            {laziNames.map((domain) => (
-              <li key={domain} className="domain-item">
-                <span className="domain-item-name">{domain}</span>
-                <span className="domain-item-owner">Owner: {accounts[0]}</span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      {/* user detail section including name | domain | url */}
+
       <div className="image-grid">
         {images.map((imageUrl, index) => (
-          <img
-            key={index}
-            src={imageUrl}
-            alt={`Minted domain name ${index}`}
-            className="image"
-          />
+          <div key={index} className="book">
+           
+
+            <div className="cover">
+              <img
+                src={imageUrl}
+                alt={`Minted domain name ${index}`}
+                className="image"
+              />
+            </div>
+            {mintedDomainNames.map((index) => (
+              <p key={index}></p>
+            ))}
+
+            <p>{mintedDomainNames[index]}</p>
+          </div>
         ))}
       </div>
 
-      <div>
+      <div className="card-body">
+        <div className="card-img"></div>
+
+        <div className="card-text"></div>
+      </div>
+
+      {/* user detail section including name | domain | url   ends here*/}
+
+      {/* <div>
         <input
           type="text"
           placeholder="Enter a Domain"
@@ -372,7 +420,7 @@ const NFTDomain = () => {
         {mintedDomain && (
           <p className="minted-message">{`The domain name ${mintedDomain} is already minted.`}</p>
         )}
-      </div> 
+      </div>  */}
 
       {exist && (
         <div style={{ marginTop: 10 }}>
@@ -401,7 +449,8 @@ const NFTDomain = () => {
           <p style={{ fontSize: 15, color: "red" }}>Domain Name Found Found</p>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 };
 
