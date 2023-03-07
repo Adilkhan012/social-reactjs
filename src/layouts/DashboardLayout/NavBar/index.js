@@ -250,7 +250,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
                 href: "/settings",
               },
               {
-                title: "NFT Domain",
+                title: "Nft domain/ mint",
                 icon: HiUserGroup,
                 href: "/NFTDomain",
               },
