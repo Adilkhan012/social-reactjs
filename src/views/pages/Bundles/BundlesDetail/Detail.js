@@ -199,19 +199,28 @@ export default function () {
         },
       });
       if (res.data.responseCode === 200) {
-        if (idd) {
+        if (dataList.isSubscribed) {
+          // Allow the user to comment on the post
           viewExclusivepostHandler();
+          toast.success(res.data.responseMessage);
+          setMessage("");
+          console.log("User is subscribed!!!!!!!");
+        } else {
+          // If the user is not subscribed, show a message or disable the comment functionality
+          toast.error("You must be a subscriber to comment on this post.");
+          console.log("User is not subscribed!!!!!!!");
+
         }
-        toast.success(res.data.responseMessage);
-        setIsLoading(false);
-        setMessage("");
       }
+      setIsLoading(false);
     } catch (error) {
-      toast.error(error);
+      toast.error(error.message);
       setIsLoading(false);
     }
   };
-  const likesHandler = async (id) => {
+
+  const likePostHandler = async () => {
+    setIsLoading(true);
     try {
       const res = await axios({
         method: "GET",
@@ -220,17 +229,26 @@ export default function () {
           token: window.localStorage.getItem("token"),
         },
         data: {
-          postId: id,
+          postId: idd,
         },
       });
       if (res.data.responseCode === 200) {
-        if (idd) {
+        if (dataList.isSubscribed) {
+          // Allow the user to like the post
           viewExclusivepostHandler();
+          toast.success(res.data.responseMessage);
+        } else {
+          // If the user is not subscribed, show a message or disable the like functionality
+          toast.error("You must be a subscriber to like this post.");
         }
-        toast.success(res.data.responseMessage);
       }
-    } catch (error) { }
+      setIsLoading(false);
+    } catch (error) {
+      toast.error(error.message);
+      setIsLoading(false);
+    }
   };
+
   useEffect(() => {
     if (location.search.substring(1, location.search.length)) {
       const id = location.search.substring(1, location.search.length);
@@ -243,14 +261,14 @@ export default function () {
 
   const isvideo = dataList?.mediaUrl?.includes(".mp4");
   const [showPicker, setShowPicker] = useState(false);
-
   const [inputStr, setInputStr] = useState("");
+
   const onEmojiClick = (event, emojiObject) => {
     setInputStr((data) => data + emojiObject.emoji);
     setShowPicker(false);
-    // likesHandler();
-    likesHandler(dataList._id);
+    likePostHandler();
   };
+
   return (
     <Page title="Dashboard">
       <Container maxWidth="fixed">
@@ -264,9 +282,9 @@ export default function () {
             <Grid container spacing={2}>
               <Grid item sm={12} md={12} lg={8}>
                 {dataList?.postType === "PUBLIC" ||
-                  dataList?.isSubscribed ||
-                  auth?.userData?.userType === "Admin" ||
-                  auth?.userData?.userType === "Subadmin" ? (
+                dataList?.isSubscribed ||
+                auth?.userData?.userType === "Admin" ||
+                auth?.userData?.userType === "Subadmin" ? (
                   <Box className={classes.rightBox}>
                     {isvideo ? (
                       <video
@@ -388,7 +406,7 @@ export default function () {
                             })}
                         </Box>
                       </Accordion>
-                      <Box className={classes.searchaddress} >
+                      <Box className={classes.searchaddress}>
                         <Grid container spacing={1} alignItems="center">
                           <Grid item xs={2} sm={2}>
                             <Box className="figure">

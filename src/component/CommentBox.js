@@ -160,7 +160,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ({ data, dataList, listPublicExclusiveHandler }) {
+export default function (props) {
+  const {data, listPublicExclusiveHandler, index, dataList} = props;
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState("panel1");
   const [replyMessage, setReplyMessage] = React.useState("");
@@ -174,24 +175,34 @@ export default function ({ data, dataList, listPublicExclusiveHandler }) {
     setIsSubmit(true);
     if (replyMessage !== "" && replyMessage.length < 200) {
       try {
-        const res = await Axios({
-          method: "POST",
-          url: Apiconfigs.commentReplyOnPost,
-          headers: {
-            token: window.localStorage.getItem("token"),
-          },
-          data: {
-            postId: dataList._id,
-            message: replyMessage,
-            commentId: data?._id,
-          },
-        });
-        if (res.data.responseCode === 200) {
-          setIsSubmit(false);
-          listPublicExclusiveHandler();
-          toast.success(res.data.responseMessage);
-          setIsLoading(false);
-          setReplyMessage("");
+        console.log("Data!!! +", data);
+        console.log("DataList. +", dataList);
+        console.log("publicHandler+", listPublicExclusiveHandler);
+        if (data.isSubscribed) {
+          const res = await Axios({
+            method: "POST",
+            url: Apiconfigs.commentReplyOnPost,
+            headers: {
+              token: window.localStorage.getItem("token"),
+            },
+            data: {
+              postId: dataList._id,
+              message: replyMessage,
+              commentId: data?._id,
+            },
+          });
+          if (res.data.responseCode === 200) {
+            setIsSubmit(false);
+            listPublicExclusiveHandler();
+            toast.success(res.data.responseMessage);
+            setIsLoading(false);
+            setReplyMessage("");
+            console.log("User is subscribed!!!!!!!");
+          }
+        } else {
+          // If the user is not subscribed, show a message or disable the comment functionality
+          toast.error("You must be a subscriber to comment on this post.");
+          console.log("User is not subscribed!!!!!!!");
         }
       } catch (error) {
         setIsSubmit(false);
@@ -218,7 +229,7 @@ export default function ({ data, dataList, listPublicExclusiveHandler }) {
         listPublicExclusiveHandler();
         toast.success(res.data.responseMessage);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
   const [isHidePost, setIsHidePost] = React.useState(false);
   const [isHidePost1, setIsHidePost1] = React.useState(false);
@@ -312,8 +323,8 @@ export default function ({ data, dataList, listPublicExclusiveHandler }) {
               {data?.userId?.userName
                 ? data?.userId.userName
                 : data?.userId.name
-                  ? data?.userId.name
-                  : ""}
+                ? data?.userId.name
+                : ""}
             </Typography>
             <Typography variant="body2" component="small">
               {moment(data?.time).local().fromNow()}
@@ -333,9 +344,11 @@ export default function ({ data, dataList, listPublicExclusiveHandler }) {
                 {data?.message}
               </Typography>
             </Box>
-            <Accordion square
-              // expanded={expanded === 'panel1'} 
-              onChange={handleChange("panel1")}>
+            <Accordion
+              square
+              // expanded={expanded === 'panel1'}
+              onChange={handleChange("panel1")}
+            >
               <Box mt={1}>
                 <Button color="primary" size="large" onClick={likesHandler}>
                   <FaHeart
@@ -464,7 +477,8 @@ export default function ({ data, dataList, listPublicExclusiveHandler }) {
                                 <FormHelperText error>
                                   {isSubmit && replyMessage.length > 200 && (
                                     <Box ml={1} style={{ fontSize: "12px" }}>
-                                      Comment should not more than 200 characters.
+                                      Comment should not more than 200
+                                      characters.
                                     </Box>
                                   )}
                                 </FormHelperText>

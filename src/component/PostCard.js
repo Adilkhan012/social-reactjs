@@ -476,12 +476,19 @@ export default function (props) {
           },
         });
         if (res.data.responseCode === 200) {
-          setIsSubmit(false);
+          // if (dataList.isSubscribed) {
+            setIsSubmit(false);
 
-          listPublicExclusiveHandler();
-          toast.success(res.data.responseMessage);
-          setIsLoading(false);
-          setMessage("");
+            listPublicExclusiveHandler();
+            toast.success(res.data.responseMessage);
+            setIsLoading(false);
+            setMessage("");
+          //   console.log("User is subscribed!!!!!!!");
+          // } else {
+          //   // If the user is not subscribed, show a message or disable the comment functionality
+          //   toast.error("You must be a subscriber to comment on this post.");
+          //   console.log("User is not subscribed!!!!!!!");
+          // }
         }
       } catch (error) {
         toast.error(error);
@@ -677,8 +684,8 @@ export default function (props) {
     fileExtention == "mp4" || fileExtention == "webp"
       ? "video"
       : fileExtention == "mp3"
-        ? "audio"
-        : "image";
+      ? "audio"
+      : "image";
 
   const colletionDetails = async () => {
     setIsLoading(true);
@@ -818,7 +825,10 @@ export default function (props) {
                         <Typography variant="h6">
                           {data?.postType !== "PUBLIC" && (
                             <>
-                              {data?.amount.length >= 5 ? sortAddressForPrice(data?.amount) : data?.amount}&nbsp;
+                              {data?.amount.length >= 5
+                                ? sortAddressForPrice(data?.amount)
+                                : data?.amount}
+                              &nbsp;
                               {tokenName}
                             </>
                           )}
@@ -971,7 +981,11 @@ export default function (props) {
                 <Box onClick={handleCollection} className={classes.subBox}>
                   <Typography variant="h6"> Subscribe Collection</Typography>
                   <Typography variant="body2">
-                    Price : {data?.amount.length >= 5 ? sortAddressForPrice(data?.amount) : data?.amount} {tokenName}
+                    Price :{" "}
+                    {data?.amount.length >= 5
+                      ? sortAddressForPrice(data?.amount)
+                      : data?.amount}{" "}
+                    {tokenName}
                   </Typography>
                 </Box>
                 {/* <Button
@@ -999,12 +1013,12 @@ export default function (props) {
                       <Box
                         // id={`imagecard${index}`}
                         className={classes.PhotoBox}
-                      // style={{
-                      //   background: "url(" + viewCollectionDetails?.image + ")",
-                      // }}
-                      // onClick={() => {
-                      //   history.push("/about-auction");
-                      // }}
+                        // style={{
+                        //   background: "url(" + viewCollectionDetails?.image + ")",
+                        // }}
+                        // onClick={() => {
+                        //   history.push("/about-auction");
+                        // }}
                       >
                         <img
                           src={viewCollectionDetails?.image}
@@ -1017,9 +1031,9 @@ export default function (props) {
                       <Box
                         id={`imagecard${index}`}
                         className={classes.PhotoBox}
-                      // onClick={() => {
-                      //   history.push("/about-auction");
-                      // }}
+                        // onClick={() => {
+                        //   history.push("/about-auction");
+                        // }}
                       >
                         <video
                           width="100%"
@@ -1098,14 +1112,14 @@ export default function (props) {
                             color="secondary"
                             size="large"
                             onClick={subscribeNowHandler}
-                          // onClick={() => {
-                          //   if (auth?.userData.userType === "User") {
-                          //     subscribeNowBlockchainHandler(data);
-                          //   } else {
-                          //     subscribeNowHandler(true);
-                          //   }
-                          // }}
-                          // disabled={isLoading}
+                            // onClick={() => {
+                            //   if (auth?.userData.userType === "User") {
+                            //     subscribeNowBlockchainHandler(data);
+                            //   } else {
+                            //     subscribeNowHandler(true);
+                            //   }
+                            // }}
+                            // disabled={isLoading}
                           >
                             Subscribe Now
                             {/* {isLoading ? "pending..." : "Subscribe now"}{" "}
@@ -1222,7 +1236,11 @@ export default function (props) {
               </Box>
               <Typography
                 variant="body2"
-                style={{ fontSize: "17px", paddingBottom: "6px", wordBreak: "break-all" }}
+                style={{
+                  fontSize: "17px",
+                  paddingBottom: "6px",
+                  wordBreak: "break-all",
+                }}
               >
                 {data?.postTitle}
               </Typography>
@@ -1269,16 +1287,21 @@ export default function (props) {
                 {data?.userId?._id !== auth?.userData?._id && (
                   <Box mt={1} mb={1} className="price">
                     <Box style={{ display: "flex" }}>
-                      <span style={{ lineHeight: 1.6, width: "45px" }}>Price :</span>
+                      <span style={{ lineHeight: 1.6, width: "45px" }}>
+                        Price :
+                      </span>
                       &nbsp;
                       <Typography variant="h6">
-                        {data?.amount.length >= 5 ? sortAddressForPrice(data?.amount) : data?.amount}&nbsp;
+                        {data?.amount.length >= 5
+                          ? sortAddressForPrice(data?.amount)
+                          : data?.amount}
+                        &nbsp;
                         {tokenName}
                       </Typography>
                     </Box>
 
                     {currentMoment <
-                      moment(data.createdAt).add(15, "m").unix() ? (
+                    moment(data.createdAt).add(15, "m").unix() ? (
                       <>
                         <Box display="flex" justifyContent="end">
                           <Typography>
@@ -1341,12 +1364,12 @@ export default function (props) {
                 </Dialog>
                 <Box
                   onClick={() => HandleCommentBox(data?._id)}
-                // onClick={() =>
-                //   history.push({
-                //     pathname: "/comment",
-                //     search: data?._id,
-                //   })
-                // }
+                  // onClick={() =>
+                  //   history.push({
+                  //     pathname: "/comment",
+                  //     search: data?._id,
+                  //   })
+                  // }
                 >
                   <figure className="postImg">
                     {isVideo ? (
@@ -1355,7 +1378,7 @@ export default function (props) {
                         height="450"
                         // style={{ cursor: "pointer" }}
                         controls
-                      // onClick={handleClickOpen2}
+                        // onClick={handleClickOpen2}
                       >
                         <source src={data.mediaUrl} type="video/mp4" />
                       </video>
@@ -1388,7 +1411,10 @@ export default function (props) {
                       <label>
                         {data?.postType === "PUBLIC" && (
                           <>
-                            {data?.amount.length >= 5 ? sortAddressForPrice(data?.amount) : data?.amount}&nbsp;
+                            {data?.amount.length >= 5
+                              ? sortAddressForPrice(data?.amount)
+                              : data?.amount}
+                            &nbsp;
                             {tokenName}
                           </>
                         )}{" "}

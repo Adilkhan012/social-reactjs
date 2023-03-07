@@ -186,13 +186,21 @@ export default function (props) {
           },
         });
         if (res.data.responseCode === 200) {
-          setIsSubmit(false);
-          viewExclusivepostHandler();
-          // if (openCommentBoxId ||Idd) {
+          console.log("datalist: " + dataList.isSubscribed);
+          if (dataList.isSubscribed) {
+            setIsSubmit(false);
+            viewExclusivepostHandler();
+            // if (openCommentBoxId ||Idd) {
 
-          // }
-          toast.success(res.data.responseMessage);
-          setMessage("");
+            // }
+            toast.success(res.data.responseMessage);
+            setMessage("");
+            console.log("User is subscribed!!!!!!!");
+          } else {
+            // If the user is not subscribed, show a message or disable the comment functionality
+            toast.error("You must be a subscriber to comment on this post.");
+            console.log("User is not subscribed!!!!!!!");
+          }
         }
       } catch (error) {
         toast.error(error);
@@ -210,6 +218,7 @@ export default function (props) {
     if (openCommentBoxId || Idd) {
       viewExclusivepostHandler();
     }
+    viewExclusivepostHandler();
   }, [location.search, openCommentBoxId, Idd]);
   const likesHandler = async (id) => {
     try {
@@ -227,10 +236,17 @@ export default function (props) {
         },
       });
       if (res.data.responseCode === 200) {
-        listPublicExclusiveHandler();
-        viewExclusivepostHandler();
+        if (dataList.isSubscribed) {
+          listPublicExclusiveHandler();
+          viewExclusivepostHandler();
 
-        toast.success(res.data.responseMessage);
+          toast.success(res.data.responseMessage);
+          console.log("User is subscribed!!!!!!!");
+        } else {
+          // If the user is not subscribed, show a message or disable the comment functionality
+          toast.error("You must be a subscriber to comment on this post.");
+          console.log("User is not subscribed!!!!!!!");
+        }
       }
     } catch (error) {}
   };
@@ -251,6 +267,10 @@ export default function (props) {
     }
   }, [inputStr]);
   let isLike = false;
+
+  useEffect(() => {
+    viewExclusivepostHandler();
+  });
 
   if (auth.userData?._id && dataList) {
     const likeUser = dataList?.reactOnPost?.filter(
