@@ -160,8 +160,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function (props) {
-  const {data, listPublicExclusiveHandler, index, dataList} = props;
+export default function ({
+  data,
+  listPublicExclusiveHandler,
+  dataList,
+  dataParent,
+}) {
+  // const {data, listPublicExclusiveHandler, index, dataList} = props;
+  console.log("data from CommentBox!!! ", dataParent);
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState("panel1");
   const [replyMessage, setReplyMessage] = React.useState("");
@@ -175,10 +181,10 @@ export default function (props) {
     setIsSubmit(true);
     if (replyMessage !== "" && replyMessage.length < 200) {
       try {
-        console.log("Data!!! +", data);
-        console.log("DataList. +", dataList);
-        console.log("publicHandler+", listPublicExclusiveHandler);
-        if (data.isSubscribed) {
+        console.log("DataParent!!! +", dataParent);
+        // console.log("DataList. +", dataList);
+        // console.log("publicHandler+", listPublicExclusiveHandler);
+        if (dataParent.isSubscribed) {
           const res = await Axios({
             method: "POST",
             url: Apiconfigs.commentReplyOnPost,
@@ -214,20 +220,28 @@ export default function (props) {
 
   const likesHandler = async () => {
     try {
-      const res = await Axios({
-        method: "GET",
-        url: Apiconfigs.likeDislikeCommentOnPost,
-        headers: {
-          token: window.localStorage.getItem("token"),
-        },
-        params: {
-          postId: dataList._id,
-          commentId: data?._id,
-        },
-      });
-      if (res.data.responseCode === 200) {
-        listPublicExclusiveHandler();
-        toast.success(res.data.responseMessage);
+      console.log("DataParent!!! +", dataParent);
+      if (dataParent.isSubscribed) {
+        const res = await Axios({
+          method: "GET",
+          url: Apiconfigs.likeDislikeCommentOnPost,
+          headers: {
+            token: window.localStorage.getItem("token"),
+          },
+          params: {
+            postId: dataList._id,
+            commentId: data?._id,
+          },
+        });
+        if (res.data.responseCode === 200) {
+          listPublicExclusiveHandler();
+          toast.success(res.data.responseMessage);
+          console.log("User is subscribed!!!!!!!");
+        }
+      } else {
+        // If the user is not subscribed, show a message or disable the comment functionality
+        toast.error("You must be a subscriber to Like on this post.");
+        console.log("User is not subscribed!!!!!!!");
       }
     } catch (error) {}
   };

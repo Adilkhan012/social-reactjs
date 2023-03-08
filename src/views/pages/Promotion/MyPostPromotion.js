@@ -377,7 +377,9 @@ export default function (props) {
     } catch (error) {}
   };
 
-  const isVideo = data?.mediaUrl ? data?.mediaUrl?.includes(".mp4") :data?.postId?.mediaUrl?.includes(".mp4");
+  const isVideo = data?.mediaUrl
+    ? data?.mediaUrl?.includes(".mp4")
+    : data?.postId?.mediaUrl?.includes(".mp4");
 
   return (
     <Paper>
@@ -457,7 +459,10 @@ export default function (props) {
           {isVideo ? (
             <figure className="postImg">
               <video width="100%" height="450" controls>
-                <source src={data.mediaUrl ?data.mediaUrl:data?.postId?.mediaUrl} type="video/mp4" />
+                <source
+                  src={data.mediaUrl ? data.mediaUrl : data?.postId?.mediaUrl}
+                  type="video/mp4"
+                />
               </video>
             </figure>
           ) : (
@@ -465,7 +470,9 @@ export default function (props) {
               {isLoadingContent ? (
                 <LoadingSkeleton data={8} />
               ) : (
-                <img src={data.mediaUrl ?data.mediaUrl:data?.postId?.mediaUrl} />
+                <img
+                  src={data.mediaUrl ? data.mediaUrl : data?.postId?.mediaUrl}
+                />
               )}
             </figure>
           )}
@@ -478,10 +485,10 @@ export default function (props) {
         >
           <Box className="commentBox"></Box>
           {data &&
-            data?.comment?.map((data, i) => {
+            data?.comment?.map((dataChild, i) => {
               return (
                 <AccordionDetails>
-                  <CommentBox data={data} key={i} />
+                  <CommentBox dataParent={data} data={dataChild} key={i} />
                 </AccordionDetails>
               );
             })}

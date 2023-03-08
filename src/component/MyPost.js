@@ -1,4 +1,3 @@
-
 import {
   Typography,
   Box,
@@ -15,7 +14,12 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import React, { useState, useContext, useEffect } from "react";
-import { calculateTimeLeft, sortAddress, sortAddressPostTitle, tokenName } from "src/utils";
+import {
+  calculateTimeLeft,
+  sortAddress,
+  sortAddressPostTitle,
+  tokenName,
+} from "src/utils";
 import axios from "axios";
 import CommentBox from "./CommentBox";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -375,16 +379,18 @@ export default function (props) {
   const [openExport, setOpenExport] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
   const [idData, setIdData] = useState({});
-  const [updateData, setUpdateData] = useState({})
+  const [updateData, setUpdateData] = useState({});
   const [open, setOpen] = React.useState(false);
   const [isLoadingFunction, setIsLoadingFunc] = React.useState(false);
+  console.log("data from MyPost.js----", data);
   const setAllData = (data) => {
-    console.log("data----", data);
-    setIdData(data)
-  }
+    console.log("data from MyPost.js----", data);
+    setIdData(data);
+  };
 
   const validPromotionUrl = (value) => {
-    const re = /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;
+    const re =
+      /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;
     return re.test(value);
   };
   const handleClick = (event) => {
@@ -451,7 +457,7 @@ export default function (props) {
       if (res.data.responseCode === 200) {
         setSurationList(res.data.result.docs);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   const listInterestHandler = async (id) => {
@@ -469,7 +475,7 @@ export default function (props) {
       if (res.data.responseCode === 200) {
         setIntrestList(res.data.result.docs);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
   useEffect(() => {
     listInterestHandler();
@@ -493,7 +499,7 @@ export default function (props) {
         });
         if (res.data.responseCode === 200) {
         }
-      } catch (error) { }
+      } catch (error) {}
     }
   };
   const createPromotionleHandle = async () => {
@@ -507,7 +513,6 @@ export default function (props) {
       maxAgeCheck !== "" &&
       portUrl !== "" &&
       validPromotionUrl(portUrl) &&
-
       Number(minAgeCheck) < Number(maxAgeCheck) &&
       (selectuser || intrestValue != "")
     ) {
@@ -637,76 +642,66 @@ export default function (props) {
     setOpenExport(false);
   };
 
-
   const exportToAddress = async () => {
     setIsSubmit(true);
 
     if (walletAddress !== "") {
       try {
-        setIsLoadingFunc(true)
+        setIsLoadingFunc(true);
         const res = await Axios({
-          method: 'POST',
+          method: "POST",
           url: Apiconfigs.exportOnMarketPlace,
           headers: {
-            token: sessionStorage.getItem("token")
+            token: sessionStorage.getItem("token"),
           },
           data: {
             postId: idData?._id,
-            walletAddress: walletAddress
-          }
-        })
+            walletAddress: walletAddress,
+          },
+        });
         if (res.data.responseCode === 200) {
-          setIsLoadingFunc(false)
-          toast.success(res.data.responseMessage)
+          setIsLoadingFunc(false);
+          toast.success(res.data.responseMessage);
           listPublicExclusiveHandler();
-          setOpenExport(false)
-
+          setOpenExport(false);
         }
-
       } catch (error) {
-        setIsLoadingFunc(false)
-
+        setIsLoadingFunc(false);
       }
-
     } else {
-      toast.warn("Please Enter Wallet Address")
+      toast.warn("Please Enter Wallet Address");
     }
-
-  }
+  };
 
   const handleClickOpen = (data) => {
     setOpen(true);
     setUpdateData(data);
   };
 
-  const [endTime, setEndtime] = useState(moment(data.createdAt).add(15, "m").unix());
+  const [endTime, setEndtime] = useState(
+    moment(data.createdAt).add(15, "m").unix()
+  );
   const [timeLeft, setTimeLeft] = useState("");
   const [currentMoment, setCurrentMoment] = useState("");
 
-
   useEffect(() => {
-    let endTimes = moment(data.createdAt).add(15, "m").unix()
+    let endTimes = moment(data.createdAt).add(15, "m").unix();
     if (endTimes) {
       const timer = setTimeout(() => {
         setTimeLeft(calculateTimeLeft(endTimes));
-        setCurrentMoment(moment().unix())
+        setCurrentMoment(moment().unix());
       }, 1000);
       return () => clearTimeout(timer);
-
     }
-
-
   });
-
-
 
   return (
     <Paper>
       <Box className={classes.PostBox}>
         <IconButton
           onClick={(event) => {
-            setAllData(data)
-            handleClick(event)
+            setAllData(data);
+            handleClick(event);
           }}
           aria-controls="customized-menu"
           aria-haspopup="true"
@@ -766,14 +761,16 @@ export default function (props) {
               {" "}
               <Typography variant="h6">
                 {data?.userId?.userName
-                  ? `${data?.userId?.userNam?.length > 25
-                    ? sortAddress(data?.userId?.userName)
-                    : data?.userId?.userName
-                  }`
-                  : `${data?.userId?.namel?.length > 25
-                    ? sortAddress(data?.userId?.name)
-                    : data?.userId?.name
-                  }`}
+                  ? `${
+                      data?.userId?.userNam?.length > 25
+                        ? sortAddress(data?.userId?.userName)
+                        : data?.userId?.userName
+                    }`
+                  : `${
+                      data?.userId?.namel?.length > 25
+                        ? sortAddress(data?.userId?.name)
+                        : data?.userId?.name
+                    }`}
               </Typography>
             </Link>
             <Typography variant="body2" component="small">
@@ -786,8 +783,6 @@ export default function (props) {
             ? data?.postTitle
             : sortAddress(data?.postTitle)}
         </Typography>
-
-
 
         <Box mt={1} mb={1} className="price">
           <Box className="text">
@@ -802,20 +797,21 @@ export default function (props) {
             <>
               {data?.userId?._id === auth?.userData?._id && (
                 <Box display="flex" justifyContent="end">
-
-                  <Button style={{ padding: "0px 8px" }} onClick={() => handleClickOpen(data)}
+                  <Button
+                    style={{ padding: "0px 8px" }}
+                    onClick={() => handleClickOpen(data)}
                     variant="contained"
                     color="secondary"
                   >
-                    Edit In <span style={{ paddingLeft: "3px" }}>
-                      {timeLeft.minutes && timeLeft.minutes}m : {timeLeft.seconds && timeLeft.seconds}s
+                    Edit In{" "}
+                    <span style={{ paddingLeft: "3px" }}>
+                      {timeLeft.minutes && timeLeft.minutes}m :{" "}
+                      {timeLeft.seconds && timeLeft.seconds}s
                     </span>
                   </Button>
                 </Box>
-
               )}
             </>
-
           )}
           {data?.postType !== "PUBLIC" &&
             data?.userId?._id !== auth?.userData?._id && (
@@ -849,10 +845,15 @@ export default function (props) {
         >
           <Box className="commentBox"></Box>
           {data &&
-            data?.comment?.map((data, i) => {
+            data?.comment?.map((dataList, i) => {
               return (
                 <AccordionDetails>
-                  <CommentBox data={data} />
+                  <CommentBox
+                    data={data}
+                    dataList={data}
+                    dataParent = {data}
+                    listPublicExclusiveHandler={listPublicExclusiveHandler}
+                  />
                 </AccordionDetails>
               );
             })}
@@ -971,7 +972,7 @@ export default function (props) {
                 fullWidth
                 multiline
                 maxRows={5}
-              // rows={5}
+                // rows={5}
               />
             </Box>
           </Box>
@@ -1143,9 +1144,7 @@ export default function (props) {
                   <Box ml={1}>Promotion url is required</Box>
                 )) ||
                   (portUrl !== "" && !validPromotionUrl(portUrl) && (
-                    <Box ml={1}>
-                      Please enter valid promotion url
-                    </Box>
+                    <Box ml={1}>Please enter valid promotion url</Box>
                   ))}
               </FormHelperText>
             </Box>
@@ -1156,7 +1155,11 @@ export default function (props) {
                 </Grid>
                 <Grid item xs={12} className={classes.donation}>
                   <Box>
-                    <Grid container spacing={3} style={{ paddingRight: "20px" }}>
+                    <Grid
+                      container
+                      spacing={3}
+                      style={{ paddingRight: "20px" }}
+                    >
                       {durationList &&
                         durationList?.map((data, i) => {
                           const statusData = data._id === durationId;
@@ -1176,8 +1179,8 @@ export default function (props) {
                                 className={statusData ? "active" : null}
                                 onClick={() => handleDurationFunc(data)}
                               >
-                                {data?.duration}&nbsp; Days,{" "}
-                                {data?.amount} Share
+                                {data?.duration}&nbsp; Days, {data?.amount}{" "}
+                                Share
                               </span>
                             </Grid>
                           );
@@ -1214,6 +1217,8 @@ export default function (props) {
           fullScreen
         >
           <Comment
+            data={data}
+            dataList= {data}
             openCommentBox={openCommentBox}
             listPublicExclusiveHandler={listPublicExclusiveHandler}
             setOpenCommentBox={setOpenCommentBox}
@@ -1224,8 +1229,7 @@ export default function (props) {
       <Dialog
         onClose={() => {
           if (!isLoadingFunction) {
-            handleCloseExport()
-
+            handleCloseExport();
           }
         }}
         aria-labelledby="customized-dialog-title"
@@ -1235,14 +1239,12 @@ export default function (props) {
           <Typography variant="h6">Wallet Address</Typography>
           <Box my={2}>
             <TextField
-
               variant="outlined"
               value={walletAddress}
               placeholder="Enter wallet address"
               onChange={(e) => setWalletAddress(e.target.value)}
               style={{ width: "20rem" }}
               disabled={isLoadingFunction}
-
               onKeyPress={(event) => {
                 if (event?.key === "-" || event?.key === "+") {
                   event.preventDefault();
@@ -1250,14 +1252,16 @@ export default function (props) {
               }}
             />
             <FormHelperText error>
-              {(isSubmit && (walletAddress === "") && (
+              {isSubmit && walletAddress === "" && (
                 <Box ml={1}>Enter wallet address</Box>
-              ))}
+              )}
             </FormHelperText>
           </Box>
         </Box>
 
-        <Box style={{ marginLeft: "10px", display: "flex", alignItems: "center" }}>
+        <Box
+          style={{ marginLeft: "10px", display: "flex", alignItems: "center" }}
+        >
           <Button
             onClick={handleCloseExport}
             color="primary"
@@ -1266,24 +1270,25 @@ export default function (props) {
             disabled={isLoadingFunction}
           >
             Cancel
-          </Button>&nbsp;
+          </Button>
+          &nbsp;
           <Button
-
             color="secondary"
             variant="contained"
             size="large"
             disabled={isLoadingFunction}
-
             onClick={() => exportToAddress()}
-
           >
-            Export  {isLoadingFunction && <ButtonCircularProgress />}
+            Export {isLoadingFunction && <ButtonCircularProgress />}
           </Button>
         </Box>
-
       </Dialog>
-      <EditPostModal listPublicExclusiveHandler={listPublicExclusiveHandler} updateData={updateData} open={open} setOpen={(item) => setOpen(item)} />
+      <EditPostModal
+        listPublicExclusiveHandler={listPublicExclusiveHandler}
+        updateData={updateData}
+        open={open}
+        setOpen={(item) => setOpen(item)}
+      />
     </Paper>
   );
 }
-

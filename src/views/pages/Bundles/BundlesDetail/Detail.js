@@ -184,6 +184,7 @@ export default function () {
     );
     isLike = likeUser?.length > 0;
   }
+  console.log("dataList from details.js ", dataList);
   const commentPostHandler = async () => {
     setIsLoading(true);
     try {
@@ -199,18 +200,18 @@ export default function () {
         },
       });
       if (res.data.responseCode === 200) {
-        if (dataList.isSubscribed) {
-          // Allow the user to comment on the post
-          viewExclusivepostHandler();
-          toast.success(res.data.responseMessage);
-          setMessage("");
-          console.log("User is subscribed!!!!!!!");
-        } else {
-          // If the user is not subscribed, show a message or disable the comment functionality
-          toast.error("You must be a subscriber to comment on this post.");
-          console.log("User is not subscribed!!!!!!!");
+        // if (dataList.isSubscribed) {
+        // Allow the user to comment on the post
+        viewExclusivepostHandler();
+        toast.success(res.data.responseMessage);
+        setMessage("");
+        console.log("User is subscribed!!!!!!!");
+        // } else {
+        //   // If the user is not subscribed, show a message or disable the comment functionality
+        //   toast.error("You must be a subscriber to comment on this post.");
+        //   console.log("User is not subscribed!!!!!!!");
 
-        }
+        // }
       }
       setIsLoading(false);
     } catch (error) {

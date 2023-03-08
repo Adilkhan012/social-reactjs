@@ -403,6 +403,7 @@ export default function (props) {
   const [updateData, setUpdateData] = useState({});
   const [open, setOpen] = React.useState(false);
 
+  console.log("data from PostCard!", data);
   const handleClickOpen = (data) => {
     setOpen(true);
     setUpdateData(data);
@@ -464,31 +465,33 @@ export default function (props) {
     event.preventDefault();
     if (message !== "") {
       try {
-        const res = await Axios({
-          method: "POST",
-          url: Apiconfigs.commentOnpost,
-          headers: {
-            token: window.localStorage.getItem("token"),
-          },
-          data: {
-            postId: data._id,
-            message: message,
-          },
-        });
-        if (res.data.responseCode === 200) {
-          // if (dataList.isSubscribed) {
+        console.log("data.isSubscribed! ", data.isSubscribed);
+        if (data.isSubscribed) {
+          const res = await Axios({
+            method: "POST",
+            url: Apiconfigs.commentOnpost,
+            headers: {
+              token: window.localStorage.getItem("token"),
+            },
+            data: {
+              postId: data._id,
+              message: message,
+            },
+          });
+          if (res.data.responseCode === 200) {
+            // if (dataList.isSubscribed) {
             setIsSubmit(false);
 
             listPublicExclusiveHandler();
             toast.success(res.data.responseMessage);
             setIsLoading(false);
             setMessage("");
-          //   console.log("User is subscribed!!!!!!!");
-          // } else {
-          //   // If the user is not subscribed, show a message or disable the comment functionality
-          //   toast.error("You must be a subscriber to comment on this post.");
-          //   console.log("User is not subscribed!!!!!!!");
-          // }
+            console.log("User is subscribed!!!!!!!");
+          }
+        } else {
+          // If the user is not subscribed, show a message or disable the comment functionality
+          toast.error("You must be a subscriber to comment on this post.");
+          console.log("User is not subscribed!!!!!!!");
         }
       } catch (error) {
         toast.error(error);
@@ -503,6 +506,8 @@ export default function (props) {
   const likesHandler = async () => {
     setIsLoadingEmoji(true);
     try {
+      console.log("data.isSubscribed! ", data.isSubscribed);
+      if (data.isSubscribed) {
       const res = await Axios({
         method: "GET",
         url: Apiconfigs.reactOnPost + data?._id,
@@ -518,7 +523,14 @@ export default function (props) {
 
         listPublicExclusiveHandler();
         toast.success(res.data.responseMessage);
+        console.log("User is subscribed!!!!!!!");
+
       }
+    } else {
+      // If the user is not subscribed, show a message or disable the comment functionality
+      toast.error("You must be a subscriber to Like on this post.");
+      console.log("User is not subscribed!!!!!!!");
+    }
     } catch (error) {
       setIsLoadingEmoji(false);
 
@@ -1530,6 +1542,7 @@ export default function (props) {
                         <AccordionDetails key={i}>
                           <CommentBox
                             dataList={data}
+                            dataParent ={data}
                             listPublicExclusiveHandler={
                               listPublicExclusiveHandler
                             }
@@ -1727,6 +1740,7 @@ export default function (props) {
             fullScreen
           >
             <Comment
+              data={data}
               openCommentBox={openCommentBox}
               listPublicExclusiveHandler={listPublicExclusiveHandler}
               setOpenCommentBox={setOpenCommentBox}
