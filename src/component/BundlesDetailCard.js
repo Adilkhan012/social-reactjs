@@ -596,6 +596,7 @@ export default function (props) {
             >
               Detail
             </Button>
+
           </Box>
         </Box>
         {!data?.isSubscribed &&
@@ -650,6 +651,7 @@ export default function (props) {
           listPublicExclusiveHandler={listPublicExclusiveHandler}
           setOpenCommentBox={setOpenCommentBox}
           openCommentBoxId={openCommentBoxId}
+          data ={data}
         />
       </Dialog>
 
