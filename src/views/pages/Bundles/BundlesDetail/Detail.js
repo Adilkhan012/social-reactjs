@@ -147,7 +147,8 @@ const AccordionSummary = withStyles({
   },
   expanded: {},
 })(MuiAccordionSummary);
-export default function () {
+export default function (props) {
+  const { data } = props;
   const auth = useContext(AuthContext);
   const history = useHistory();
   const classes = useStyles();
@@ -184,36 +185,37 @@ export default function () {
     );
     isLike = likeUser?.length > 0;
   }
-  console.log("dataList from details.js ", dataList);
+  console.log("dataList from details.js ", data);
   const commentPostHandler = async () => {
     setIsLoading(true);
     try {
-      const res = await axios({
-        method: "POST",
-        url: Apiconfigs.commentOnpost,
-        headers: {
-          token: window.localStorage.getItem("token"),
-        },
-        data: {
-          postId: idd,
-          message: message,
-        },
-      });
-      if (res.data.responseCode === 200) {
-        // if (dataList.isSubscribed) {
+      if (data.isSubscribed) {
         // Allow the user to comment on the post
-        viewExclusivepostHandler();
-        toast.success(res.data.responseMessage);
-        setMessage("");
-        console.log("User is subscribed!!!!!!!");
-        // } else {
-        //   // If the user is not subscribed, show a message or disable the comment functionality
-        //   toast.error("You must be a subscriber to comment on this post.");
-        //   console.log("User is not subscribed!!!!!!!");
-
-        // }
+        const res = await axios({
+          method: "POST",
+          url: Apiconfigs.commentOnpost,
+          headers: {
+            token: window.localStorage.getItem("token"),
+          },
+          data: {
+            postId: idd,
+            message: message,
+          },
+        });
+        if (res.data.responseCode === 200) {
+          // if (dataList.isSubscribed) {
+          // Allow the user to comment on the post
+          viewExclusivepostHandler();
+          toast.success(res.data.responseMessage);
+          setMessage("");
+          console.log("User is subscribed!!!!!!!");
+        }
+        setIsLoading(false);
+      } else {
+        // If the user is not subscribed, show a message or disable the comment functionality
+        toast.error("You must be a subscriber to comment on this post.");
+        console.log("User is not subscribed!!!!!!!");
       }
-      setIsLoading(false);
     } catch (error) {
       toast.error(error.message);
       setIsLoading(false);
@@ -223,6 +225,8 @@ export default function () {
   const likePostHandler = async () => {
     setIsLoading(true);
     try {
+      if (data.isSubscribed) {
+        // Allow the user to comment on the post
       const res = await axios({
         method: "GET",
         url: Apiconfigs.postLikeDislike + idd,
@@ -234,16 +238,18 @@ export default function () {
         },
       });
       if (res.data.responseCode === 200) {
-        if (dataList.isSubscribed) {
           // Allow the user to like the post
           viewExclusivepostHandler();
           toast.success(res.data.responseMessage);
-        } else {
-          // If the user is not subscribed, show a message or disable the like functionality
-          toast.error("You must be a subscriber to like this post.");
-        }
+          console.log("User is subscribed!!!!!!!");
+
       }
       setIsLoading(false);
+    } else {
+      // If the user is not subscribed, show a message or disable the comment functionality
+      toast.error("You must be a subscriber to like on this post.");
+      console.log("User is not subscribed!!!!!!!");
+    }
     } catch (error) {
       toast.error(error.message);
       setIsLoading(false);
@@ -392,7 +398,7 @@ export default function () {
                         </Box>
                         <Box className="CommentscrollDiv">
                           {dataList &&
-                            dataList?.comment?.map((data, i) => {
+                            dataList?.comment?.map((dataChild, i) => {
                               return (
                                 <AccordionDetails>
                                   <CommentBox
@@ -400,7 +406,9 @@ export default function () {
                                     listPublicExclusiveHandler={
                                       viewExclusivepostHandler
                                     }
-                                    data={data}
+                                    data={dataChild}
+                                    dataParent={data}
+
                                   />
                                 </AccordionDetails>
                               );

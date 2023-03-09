@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles, Paper, Grid, Box, Typography } from "@material-ui/core";
 import BundlesDetailCard from "src/component/BundlesDetailCard";
+import Detail from "./Detail";
+
 import { useHistory, Link as RouterLink, useLocation } from "react-router-dom";
 import axios from "axios";
 import Apiconfigs from "src/ApiConfig/ApiConfig";
@@ -71,13 +73,13 @@ function BundlesDetail() {
   return (
     <>
       <Paper className={classes.root} elevation={2}>
-        <Box className='mainbox'>
+        <Box className="mainbox">
           {loader ? (
             <DataLoading />
           ) : (
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12} md={12} lg={12}>
-                <Typography variant='h3'>{`${collectionTitle} Post's`}</Typography>
+                <Typography variant="h3">{`${collectionTitle} Post's`}</Typography>
               </Grid>
               {dataList && dataList?.length > 0 ? (
                 <>
@@ -90,10 +92,15 @@ function BundlesDetail() {
                               viewExclusivepostHandler
                             }
                             index={i}
-                            type='card'
+                            type="card"
                             data={data}
                             key={i}
                           />
+                          {dataList && (
+                            <div style={{ display: "none" }}>
+                              <Detail data={data} />
+                            </div>
+                          )}
                         </Grid>
                       );
                     })}
@@ -104,7 +111,7 @@ function BundlesDetail() {
             </Grid>
           )}
           {dataList && dataList.length > 9 && (
-            <Box mt={2} display='flex' justifyContent='center'>
+            <Box mt={2} display="flex" justifyContent="center">
               <Pagination
                 count={noOfPages}
                 page={page}
