@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import {
   Box,
@@ -36,7 +35,11 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
-import { useHistory, Link as RouterComponent, useLocation } from "react-router-dom";
+import {
+  useHistory,
+  Link as RouterComponent,
+  useLocation,
+} from "react-router-dom";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import { KeyboardDatePicker } from "@material-ui/pickers";
@@ -67,9 +70,9 @@ import { calculateTimeLeft, tokenName } from "src/utils";
 import { SiVerizon } from "react-icons/si";
 
 import ConnectWalletButton from "src/component/ConnectWalletButton.js";
+import MetamaskSignupForm from "src/component/MetamaskSignupForm";
 
 import Web3 from "web3";
-
 
 const useStyles = makeStyles((theme) => ({
   radio: {
@@ -168,7 +171,7 @@ const useStyles = makeStyles((theme) => ({
 function Signup() {
   const classes = useStyles();
   const history = useHistory();
-  const location = useLocation()
+  const location = useLocation();
   const [checked, setChecked] = React.useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
@@ -204,7 +207,6 @@ function Signup() {
     password: "",
     gender: "",
     dob: new Date(),
-
   });
 
   console.log("location----", location);
@@ -212,7 +214,7 @@ function Signup() {
     const referalCode = location.search.split("?")[1];
     if (location.search) {
       setCodeReferalPath(referalCode ? referalCode : "");
-      setRefferalIdData(referalCode ? referalCode : "")
+      setRefferalIdData(referalCode ? referalCode : "");
     }
   }, [location.search]);
 
@@ -446,7 +448,8 @@ function Signup() {
               response.data.result.token
             );
             toast.success(
-              `We have sent an OTP on your ${checked2 ? "mobile number" : "registered email ID"
+              `We have sent an OTP on your ${
+                checked2 ? "mobile number" : "registered email ID"
               }. Please verify.`
             );
           }
@@ -501,14 +504,15 @@ function Signup() {
 
         sessionStorage.setItem("token", res.data.result.token);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   const [loading, setLoading] = useState(false);
   const [address, setAddress] = useState(null);
   const [error, setError] = useState(null);
+  const [showSignupForm, setShowSignupForm] = useState(false);
 
-  const handleMetaMaskSignup = async () => {
+  const handleMetaMaskSignup = async (name, email) => {
     try {
       // Connect to MetaMask
       const web3 = new Web3(window.ethereum);
@@ -519,12 +523,14 @@ function Signup() {
       const userAddress = accounts[0];
       setAddress(userAddress);
 
+      // setShowSignupForm(true);
+
       // Send Ethereum address to your backend for verification
       const creadentails = {
         socialId: userAddress,
-        socialType: 'metamask',
-        email: 'ahmedrazach118@gmail.com', // You can request the user's email from MetaMask
-        name: 'Ahmed', // You can request the user's name from MetaMask
+        socialType: "metamask",
+        email, // You can request the user's email from MetaMask
+        name, // You can request the user's name from MetaMask
       };
       const res = await axios({
         method: "POST",
@@ -547,7 +553,7 @@ function Signup() {
         // } else {
         //   history.push("/explore");
         // }
-        toast.success("You are successfully logged in.");
+        toast.success("You are successfully Signed Up.");
         window.localStorage.setItem("token", res.data.result.token);
 
         sessionStorage.setItem("token", res.data.result.token);
@@ -557,68 +563,14 @@ function Signup() {
     }
   };
 
-  // const [loading, setLoading] = useState(false);
-  // const [address, setAddress] = useState("");
-  // const web3 = new Web3(window.ethereum);
-
-  // const responseMetamask = async(response) =>{
-
-  //   setLoading(true);
-  //   if (window.ethereum) {
-  //     const ethereum = window.ethereum;
-  //     try {
-  //       await ethereum.enable();
-  //       console.log("MetaMask connection established");
-  //       // Redirect the user to the /explore page
-  //       // history.push("/explore");
-  //     } catch (error) {
-  //       console.error("User denied account access.");
-  //     }
-  //   } else {
-  //     console.error("MetaMask is not installed or not enabled.");
-  //   }
-  //   setLoading(false);
-    
-  //   try{
-  //     const creadentails = {
-  //       // address : "0x368aB03E5C7111D9FAad75a5642f9bff8682F796",
-  //       socialId: "0x368aB03E5C7111D9FAad75a5642f9bff8682F796",
-  //       socialType: "Metamask",
-  //       email: "ahmedraza@gmail.com",
-  //       name: "Ahmed",
-  //     };
-  //     const res= await axios({
-  //       method: "POST",
-  //       url: ApiConfig.socialLogin,
-  //       data: creadentails,
-  //     });
-  //     if (res.data.responseCode === 200) {
-  //       // toast.success(res.data.responseMessage);
-  //       // if (res.data.result.name) {
-  //       if (res.data.result.userInfo.firstTime === false) {
-  //         setReferralOpen(true);
-  //       } else {
-  //         history.push("/explore");
-  //       }
-  //       // history.push("/explore");
-  //       // setReferralOpen(true)
-
-  //       //   history.push("/explore");
-  //       // } else {
-  //       //   history.push({
-  //       //     pathname: "/settings",
-  //       //     search: res.data.result?._id,
-  //       //     hash: "editProfile",
-  //       //   });
-  //       // }
-  //       window.localStorage.setItem("token", res.data.result.token);
-
-  //       sessionStorage.setItem("token", res.data.result.token);
-  //     }
-
-  //   } catch (error) { }
-  // };
-
+  //handle connect
+  const handleConnect = () => {
+    setShowSignupForm(true);
+  };
+  // close form
+  const handleCloseSignupForm = () => {
+    setShowSignupForm(false);
+  };
   const responseFacebook = async (response) => {
     try {
       const creadentails = {
@@ -655,7 +607,7 @@ function Signup() {
 
         sessionStorage.setItem("token", res.data.result.token);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
   //   const thirdPartyLoginHandler = ({ response, provider, error }) => {
   //     dispatch(login({ user: response, provider, error }))
@@ -780,35 +732,21 @@ function Signup() {
                             />
                           </Grid>
 
-                          
+                          <div>
+                            {showSignupForm && (
+                              <MetamaskSignupForm
+                                open={showSignupForm} // add the open prop here
+                                handleClose={handleCloseSignupForm}
+                                handleSignup={handleMetaMaskSignup}
+                              />
+                            )}
+                            <ConnectWalletButton
+                              handleLogin={handleConnect}
+                              loading={loading}
+                              address={address}
+                            />
+                          </div>
 
-                    <div>
-                      {/* other components */}
-                         <ConnectWalletButton
-                        // onPressLogout={onPressLogout}
-                             handleLogin={handleMetaMaskSignup}
-                             loading={loading}
-                             address={address}
-                         />
-                    </div>
-
-                          {/* <div>
-                          <Button
-                              
-                              // autoLoad={true}
-                              
-                              appId="358926006190709"
-                              callback={responseMetamask}
-                              buttonText="Login"
-                              onClick={responseMetamask}
-                              onSuccess={responseGoogle}
-                              onFailure={responseGoogle}
-                              cookiePolicy={"single_host_origin"}>
-                                Login Metamask
-                              </Button>
-                          </div> */}
-                        
-                          
                           {/* <Grid
                             item
                             xs={12}
@@ -897,9 +835,9 @@ function Signup() {
                               (isSubmit &&
                                 checked1 &&
                                 formValue.email === "") ||
-                              (formValue.email !== "" &&
-                                checked1 &&
-                                !isValidEmail(formValue.email))
+                                (formValue.email !== "" &&
+                                  checked1 &&
+                                  !isValidEmail(formValue.email))
                             )}
                             InputProps={{
                               startAdornment: (
@@ -935,9 +873,9 @@ function Signup() {
                             value={mobileNumber}
                             error={Boolean(
                               (isSubmit && checked2 && !mobileNumber) ||
-                              (isSubmit &&
-                                checked2 &&
-                                !isValidNumber(mobileNumber))
+                                (isSubmit &&
+                                  checked2 &&
+                                  !isValidNumber(mobileNumber))
                             )}
                             onChange={(phone, e) => {
                               setCountryCode(e.dialCode);
@@ -1059,8 +997,8 @@ function Signup() {
                           onChange={_onInputChange}
                           error={Boolean(
                             (isSubmit && formValue.password === "") ||
-                            (formValue.password !== "" &&
-                              !validPassword(formValue.password))
+                              (formValue.password !== "" &&
+                                !validPassword(formValue.password))
                           )}
                           InputProps={{
                             autoComplete: "new-password",
@@ -1148,7 +1086,7 @@ function Signup() {
                               value={fieldValue}
                               // onChange={_onInputChange}
                               error={Boolean(isSubmit && !myAge(fieldValue))}
-                            // helperText={touched.dob && errors.dob}
+                              // helperText={touched.dob && errors.dob}
                             />
                             <FormHelperText error>
                               {isSubmit && !myAge(fieldValue) && (
@@ -1214,7 +1152,9 @@ function Signup() {
                               name="refereeCode"
                               value={codeReferalPath}
                               placeholder="Type your refferal link...."
-                              onChange={(e) => setCodeReferalPath(e.target.value)}
+                              onChange={(e) =>
+                                setCodeReferalPath(e.target.value)
+                              }
                             />
                           </FormControl>
                         </Grid>
@@ -1259,9 +1199,9 @@ function Signup() {
                             !myAge(fieldValue) ||
                             formValue.gender === ""
                           }
-                        // onClick={gethandleSubmitApi}
-                        // onClick={() => verifyOTPOpen(true)}
-                        // onClick={() => history.push("/")}
+                          // onClick={gethandleSubmitApi}
+                          // onClick={() => verifyOTPOpen(true)}
+                          // onClick={() => history.push("/")}
                         >
                           Sign Up
                           {isLoading && <CircularProgress />}
@@ -1290,7 +1230,7 @@ function Signup() {
               fullWidth
               maxWidth="sm"
               open={verifyOTPOpen}
-            // onClose={() => setVerifyOTPOpen(false)}
+              // onClose={() => setVerifyOTPOpen(false)}
             >
               <DialogContent>
                 <Box>
@@ -1342,18 +1282,18 @@ function Signup() {
                                     event.preventDefault();
                                   }
                                 }}
-                              // onKeyPress={(event) => {
-                              //   if (event?.key === '-' || event?.key === '+') {
-                              //     event.handleChange(event)
-                              //   }
-                              // }}
-                              // onChange={(e) => {
-                              //   if (e.target.value && e.target.value != '-') {
-                              //     handleChange(Math.abs(Number(e.target.value)))
-                              //   } else {
-                              //     handleChange()
-                              //   }
-                              // }}
+                                // onKeyPress={(event) => {
+                                //   if (event?.key === '-' || event?.key === '+') {
+                                //     event.handleChange(event)
+                                //   }
+                                // }}
+                                // onChange={(e) => {
+                                //   if (e.target.value && e.target.value != '-') {
+                                //     handleChange(Math.abs(Number(e.target.value)))
+                                //   } else {
+                                //     handleChange()
+                                //   }
+                                // }}
                               />
                               <FormHelperText error>
                                 {touched.otp && errors.otp}
@@ -1409,8 +1349,8 @@ function Signup() {
                               fontWeight: 500,
                               marginTop: "10px",
                             }}
-                          // onClick={sendOTP}
-                          // disabled={timeLeft && timeLeft.seconds > 0}
+                            // onClick={sendOTP}
+                            // disabled={timeLeft && timeLeft.seconds > 0}
                           >
                             Your OTP will expire in {timeLeft?.minutes} m :{" "}
                             {timeLeft?.seconds} s
@@ -1526,4 +1466,3 @@ function Signup() {
 }
 
 export default Signup;
-
