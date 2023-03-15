@@ -2,8 +2,7 @@
 export const socketURL = "wss://node.bitfuxi.co.uk";
 // export const baseURL = "https://node-social.mobiloitte.org";
 // export const baseURL = "http://localhost:1909";
-export const baseURL = "https://social-node.railway.app";
-
+export const baseURL = "https://social-node-production.up.railway.app";
 
 const url = `${baseURL}/api/v1`;
 export const websiteName =
@@ -41,8 +40,6 @@ const Apiconfigs = {
   collectionSubscriptionList: `${url}/user/collectionSubscriptionList`,
   collectionSubscriptionView: `${url}/user/collectionSubscriptionView`,
   trendingUserlist: `${url}/user/trendingUserlist`,
-
-
 
   // donationTransactionlist: `${url}/user/donationTransactionlist`,
   // emailOtp: `${url}/user/emailOtp`,
@@ -191,11 +188,6 @@ const Apiconfigs = {
   engagingUserList: `${url}/admin/engagingUserList`,
   analysisForTrends: `${url}/admin/analysisForTrends`,
 
-
-
-
-
-
   // Deposit and withdrawl
   deposit: `${url}/user/deposit`,
   withdraw: `${url}/user/withdraw`,
@@ -214,7 +206,6 @@ const Apiconfigs = {
   oneToOneChatApi: `${url}/socket/oneToOneChatApi`,
   // nft
   exportOnMarketPlace: `${url}/nft/exportOnMarketPlace`,
-
 };
 
 export default Apiconfigs;
