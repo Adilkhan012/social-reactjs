@@ -166,16 +166,16 @@ const NFTDomain = () => {
         );
         return;
       }
-      // console.log({ accounts });
-      // console.log({ contract });
-      // const result = await contract.methods.buyLaziName(searchTerm).send({
-      //   from: accounts[0],
-      //   value: web3.utils.toWei("0", "ether"), // specify the amount of ether to send
-      // });
-      // setIsMinted(true);
-      // setIsDisabled(true);
-      // setMessage(`Successfully minted domain name '${searchTerm}'!`);
-      // console.log(result);
+      console.log({ accounts });
+      console.log({ contract });
+      const result = await contract.methods.buyLaziName(searchTerm).send({
+        from: accounts[0],
+        value: web3.utils.toWei("0", "ether"), // specify the amount of ether to send
+      });
+      setIsMinted(true);
+      setIsDisabled(true);
+      setMessage(`Successfully minted domain name '${searchTerm}'!`);
+      console.log(result);
       await getMintedLaziDomains(accounts, contract); // fetch the updated minted domains after successful purchase
 
       // const canvas = createCanvas(500, 100);
@@ -304,108 +304,107 @@ const NFTDomain = () => {
 
   return (
     <>
+      <div className="domain-body">
+        <div className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-6 MuiGrid-grid-md-6 MuiGrid-grid-lg-6">
+          <h3 className="MuiTypography-root MuiTypography-h3">
+            NFT Collection / User
+          </h3>
+        </div>
+        {/*  */}
+        <div className="input-bg">
+          {/* input + button flex - section */}
+          <div className="input-flex">
+            {isMinted ? (
+              <div className={isDisabled ? "unavailable" : "available"}>
+                {message}
+              </div>
+            ) : null}
+            <input
+              type="text"
+              className="input"
+              placeholder="Enter a Domain"
+              value={searchTerm}
+              onChange={handleInputChange}
+            />
 
-    <div className="domain-body">
-      <div className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-6 MuiGrid-grid-md-6 MuiGrid-grid-lg-6">
-        <h3 className="MuiTypography-root MuiTypography-h3">
-          NFT Collection / User
-        </h3>
-      </div>
-{/*  */}
-      <div className="input-bg">
-        {/* input + button flex - section */}
-        <div className="input-flex">
-          {isMinted ? (
-            <div className={isDisabled ? "unavailable" : "available"}>
-              {message}
+            <button
+              className="button btx"
+              onClick={handleBuyLaziName}
+              disabled={isDisabled}
+              style={{ backgroundcolor: "#E31A89" }}
+            >
+              Buy LaziName
+            </button>
+            <div className="avail-text">
+              {isAvailable === true && (
+                <span className="spx" style={{ color: "green" }}>
+                  Available{" "}
+                </span>
+              )}
+              {isAvailable === false && (
+                <span style={{ color: "red" }}>Already minted ✗</span>
+              )}
             </div>
-          ) : null}
-          <input
-            type="text"
-            className="input"
-            placeholder="Enter a Domain"
-            value={searchTerm}
-            onChange={handleInputChange}
-          />
+          </div>
+          {/* input + button flex - section end */}
 
-          <button
-            className="button btx"
-            onClick={handleBuyLaziName}
-            disabled={isDisabled}
-            style={{ backgroundcolor: "#E31A89" }}
-          >
-            Buy LaziName
-          </button>
-          <div className="avail-text">
-            {isAvailable === true && (
-              <span  className="spx" style={{ color: "green" }}>Available </span>
-            )}
-            {isAvailable === false && (
-              <span style={{ color: "red" }}>Already minted ✗</span>
+          {/* domains button url section */}
+          <div className="btn-domain-section">
+            <button
+              style={{ backgroundcolor: "#E31A89" }}
+              className="button btn-1 btn-12 btn-y"
+              onClick={getMintedLaziDomains}
+            >
+              Get Lazi Domains
+            </button>
+            {laziNames.length > 0 && (
+              <ul className="domain-list">
+                {laziNames.map((domain) => (
+                  <li key={domain} className="domain-item">
+                    <span className="domain-item-name">{domain}</span>
+                    <span className="domain-item-owner">
+                      Owner: {accounts[0]}
+                    </span>
+                  </li>
+                ))}
+              </ul>
             )}
           </div>
-        </div>
-        {/* input + button flex - section end */}
+          {/* domains button url section end  */}
 
-        {/* domains button url section */}
-        <div className="btn-domain-section">
-          <button
-            style={{ backgroundcolor: "#E31A89" }}
-            className="button btn-1 btn-12 btn-y"
-            onClick={getMintedLaziDomains}
-          >
-            Get Lazi Domains
-          </button>
-          {laziNames.length > 0 && (
-            <ul className="domain-list">
-              {laziNames.map((domain) => (
-                <li key={domain} className="domain-item">
-                  <span className="domain-item-name">{domain}</span>
-                  <span className="domain-item-owner">
-                    Owner: {accounts[0]}
-                  </span>
-                </li>
+          {/* input b-g div end here  */}
+        </div>
+
+        {/* user detail section including name | domain | url */}
+
+        <div className="image-grid">
+          {images.map((imageUrl, index) => (
+            <div key={index} className="book">
+              <div className="cover">
+                <img
+                  src={imageUrl}
+                  alt={`Minted domain name ${index}`}
+                  className="image"
+                />
+              </div>
+              {mintedDomainNames.map((index) => (
+                <p key={index}></p>
               ))}
-            </ul>
-          )}
-        </div>
-        {/* domains button url section end  */}
 
-        {/* input b-g div end here  */}
-      </div>
-
-      {/* user detail section including name | domain | url */}
-
-      <div className="image-grid">
-        {images.map((imageUrl, index) => (
-          <div key={index} className="book">
-           
-
-            <div className="cover">
-              <img
-                src={imageUrl}
-                alt={`Minted domain name ${index}`}
-                className="image"
-              />
+              <p>{mintedDomainNames[index]}</p>
             </div>
-            {mintedDomainNames.map((index) => (
-              <p key={index}></p>
-            ))}
+          ))}
+        </div>
 
-            <p>{mintedDomainNames[index]}</p>
-          </div>
-        ))}
-      </div>
+        <div className="card-body">
+          <div className="card-img"></div>
 
-      <div className="card-body">
-        <div className="card-img"></div>
+          <div className="card-text"></div>
+        </div>
 
-        <div className="card-text"></div>
-      </div>
+        {/* user detail section including name | domain | url   ends here*/}
 
-      {/* user detail section including name | domain | url   ends here*/}
-
-      {/* <div>
+        {/* <div>
         <input
           type="text"
           placeholder="Enter a Domain"
@@ -422,33 +421,35 @@ const NFTDomain = () => {
         )}
       </div>  */}
 
-      {exist && (
-        <div style={{ marginTop: 10 }}>
-          <p style={{ fontSize: 15, color: "white" }}>Domain......Name</p>
-          <div style={{ marginTop: 20, display: "flex" }}>
-            <img
-              src="https://www.shutterstock.com/image-illustration/domain-names-internet-web-telecommunication-260nw-1708219261.jpg"
-              style={{ height: 200, width: 200 }}
-              alt="img"
-            />
-            <img
-              src="https://www.shutterstock.com/image-illustration/domain-names-internet-web-telecommunication-260nw-1708219261.jpg"
-              style={{ height: 200, width: 200, marginLeft: 30 }}
-              alt="img"
-            />
-            <img
-              src="https://www.shutterstock.com/image-illustration/domain-names-internet-web-telecommunication-260nw-1708219261.jpg"
-              style={{ height: 200, width: 200, marginLeft: 30 }}
-              alt="img"
-            />
+        {exist && (
+          <div style={{ marginTop: 10 }}>
+            <p style={{ fontSize: 15, color: "white" }}>Domain......Name</p>
+            <div style={{ marginTop: 20, display: "flex" }}>
+              <img
+                src="https://www.shutterstock.com/image-illustration/domain-names-internet-web-telecommunication-260nw-1708219261.jpg"
+                style={{ height: 200, width: 200 }}
+                alt="img"
+              />
+              <img
+                src="https://www.shutterstock.com/image-illustration/domain-names-internet-web-telecommunication-260nw-1708219261.jpg"
+                style={{ height: 200, width: 200, marginLeft: 30 }}
+                alt="img"
+              />
+              <img
+                src="https://www.shutterstock.com/image-illustration/domain-names-internet-web-telecommunication-260nw-1708219261.jpg"
+                style={{ height: 200, width: 200, marginLeft: 30 }}
+                alt="img"
+              />
+            </div>
           </div>
-        </div>
-      )}
-      {!exist && len > 3 && (
-        <div style={{ marginTop: 10 }}>
-          <p style={{ fontSize: 15, color: "red" }}>Domain Name Found Found</p>
-        </div>
-      )}
+        )}
+        {!exist && len > 3 && (
+          <div style={{ marginTop: 10 }}>
+            <p style={{ fontSize: 15, color: "red" }}>
+              Domain Name Found Found
+            </p>
+          </div>
+        )}
       </div>
     </>
   );
