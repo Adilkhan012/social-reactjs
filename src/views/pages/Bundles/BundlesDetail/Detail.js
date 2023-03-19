@@ -185,11 +185,11 @@ export default function (props) {
     );
     isLike = likeUser?.length > 0;
   }
-  console.log("dataList from details.js ", data);
+  // console.log("dataList from details.js ", data);
   const commentPostHandler = async () => {
     setIsLoading(true);
     try {
-      if (data.isSubscribed) {
+      // if (data.isSubscribed) {
         // Allow the user to comment on the post
         const res = await axios({
           method: "POST",
@@ -208,14 +208,13 @@ export default function (props) {
           viewExclusivepostHandler();
           toast.success(res.data.responseMessage);
           setMessage("");
-          console.log("User is subscribed!!!!!!!");
         }
         setIsLoading(false);
-      } else {
-        // If the user is not subscribed, show a message or disable the comment functionality
-        toast.error("You must be a subscriber to comment on this post.");
-        console.log("User is not subscribed!!!!!!!");
-      }
+      // } else {
+      //   // If the user is not subscribed, show a message or disable the comment functionality
+      //   toast.error("You must be a subscriber to comment on this post.");
+      //   console.log("User is not subscribed!!!!!!!");
+      // }
     } catch (error) {
       toast.error(error.message);
       setIsLoading(false);
@@ -225,7 +224,7 @@ export default function (props) {
   const likePostHandler = async () => {
     setIsLoading(true);
     try {
-      if (data.isSubscribed) {
+      // if (data.isSubscribed) {
         // Allow the user to comment on the post
       const res = await axios({
         method: "GET",
@@ -241,15 +240,16 @@ export default function (props) {
           // Allow the user to like the post
           viewExclusivepostHandler();
           toast.success(res.data.responseMessage);
-          console.log("User is subscribed!!!!!!!");
+          // console.log("User is subscribed!!!!!!!");
+          setIsLoading(false);
 
       }
       setIsLoading(false);
-    } else {
-      // If the user is not subscribed, show a message or disable the comment functionality
-      toast.error("You must be a subscriber to like on this post.");
-      console.log("User is not subscribed!!!!!!!");
-    }
+    // } else {
+    //   // If the user is not subscribed, show a message or disable the comment functionality
+    //   toast.error("You must be a subscriber to like on this post.");
+    //   console.log("User is not subscribed!!!!!!!");
+    // }
     } catch (error) {
       toast.error(error.message);
       setIsLoading(false);

@@ -135,7 +135,7 @@ export default function (props) {
   const [isLoadingEmoji, setIsLoadingEmoji] = React.useState(false);
   const [isSubmit, setIsSubmit] = React.useState(false);
 
-  console.log("data From Comment!!!!!! ", data);
+  // console.log("data From Comment!!!!!! ", data);
   const handleClose = () => {
     setOpen(false);
     setReciveOpen(false);
@@ -176,8 +176,8 @@ export default function (props) {
 
     if (message !== "") {
       try {
-        console.log("isSubscribed! : " + data.isSubscribed);
-        if (data.isSubscribed) {
+        // console.log("isSubscribed! : " + data.isSubscribed);
+        // if (data.isSubscribed) {
           const res = await axios({
             method: "POST",
             url: Apiconfigs.commentOnpost,
@@ -197,13 +197,12 @@ export default function (props) {
             // }
             toast.success(res.data.responseMessage);
             setMessage("");
-            console.log("User is subscribed!!!!!!!");
           }
-        } else {
-          // If the user is not subscribed, show a message or disable the comment functionality
-          toast.error("You must be a subscriber to comment on this post.");
-          console.log("User is not subscribed!!!!!!!");
-        }
+        // } else {
+        //   // If the user is not subscribed, show a message or disable the comment functionality
+        //   toast.error("You must be a subscriber to comment on this post.");
+        //   console.log("User is not subscribed!!!!!!!");
+        // }
       } catch (error) {
         toast.error(error);
         setIsSubmit(false);
@@ -224,8 +223,8 @@ export default function (props) {
   }, [location.search, openCommentBoxId, Idd]);
   const likesHandler = async (id) => {
     try {
-      console.log("isSubscribed! : " + data.isSubscribed);
-      if (data.isSubscribed) {
+      // console.log("isSubscribed! : " + data.isSubscribed);
+      // if (data.isSubscribed) {
         const res = await axios({
           method: "GET",
           url: Apiconfigs.reactOnPost + id,
@@ -245,13 +244,14 @@ export default function (props) {
           viewExclusivepostHandler();
 
           toast.success(res.data.responseMessage);
-          console.log("User is subscribed!!!!!!!");
+          setIsLoading(false);
+          // console.log("User is subscribed!!!!!!!");
         }
-      } else {
-        // If the user is not subscribed, show a message or disable the comment functionality
-        toast.error("You must be a subscriber to Like on this post.");
-        console.log("User is not subscribed!!!!!!!");
-      }
+      // } else {
+      //   // If the user is not subscribed, show a message or disable the comment functionality
+      //   toast.error("You must be a subscriber to Like on this post.");
+      //   console.log("User is not subscribed!!!!!!!");
+      // }
     } catch (error) {}
   };
   const isVideo = dataList?.mediaUrl?.includes(".mp4");

@@ -167,7 +167,7 @@ export default function ({
   dataParent,
 }) {
   // const {data, listPublicExclusiveHandler, index, dataList} = props;
-  console.log("data from CommentBox!!! ", dataParent);
+  // console.log("data from CommentBox!!! ", dataParent);
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState("panel1");
   const [replyMessage, setReplyMessage] = React.useState("");
@@ -181,10 +181,10 @@ export default function ({
     setIsSubmit(true);
     if (replyMessage !== "" && replyMessage.length < 200) {
       try {
-        console.log("DataParent!!! +", dataParent);
+        // console.log("DataParent!!! +", dataParent);
         // console.log("DataList. +", dataList);
         // console.log("publicHandler+", listPublicExclusiveHandler);
-        if (dataParent.isSubscribed) {
+        // if (dataParent.isSubscribed) {
           const res = await Axios({
             method: "POST",
             url: Apiconfigs.commentReplyOnPost,
@@ -203,13 +203,13 @@ export default function ({
             toast.success(res.data.responseMessage);
             setIsLoading(false);
             setReplyMessage("");
-            console.log("User is subscribed!!!!!!!");
+            // console.log("User is subscribed!!!!!!!");
           }
-        } else {
-          // If the user is not subscribed, show a message or disable the comment functionality
-          toast.error("You must be a subscriber to comment on this post.");
-          console.log("User is not subscribed!!!!!!!");
-        }
+        // } else {
+        //   // If the user is not subscribed, show a message or disable the comment functionality
+        //   toast.error("You must be a subscriber to comment on this post.");
+        //   console.log("User is not subscribed!!!!!!!");
+        // }
       } catch (error) {
         setIsSubmit(false);
         toast.error(error);
@@ -220,8 +220,8 @@ export default function ({
 
   const likesHandler = async () => {
     try {
-      console.log("DataParent!!! +", dataParent);
-      if (dataParent.isSubscribed) {
+      // console.log("DataParent!!! +", dataParent);
+      // if (dataParent.isSubscribed) {
         const res = await Axios({
           method: "GET",
           url: Apiconfigs.likeDislikeCommentOnPost,
@@ -236,13 +236,13 @@ export default function ({
         if (res.data.responseCode === 200) {
           listPublicExclusiveHandler();
           toast.success(res.data.responseMessage);
-          console.log("User is subscribed!!!!!!!");
+          // console.log("User is subscribed!!!!!!!");
         }
-      } else {
-        // If the user is not subscribed, show a message or disable the comment functionality
-        toast.error("You must be a subscriber to Like on this post.");
-        console.log("User is not subscribed!!!!!!!");
-      }
+      // } else {
+      //   // If the user is not subscribed, show a message or disable the comment functionality
+      //   toast.error("You must be a subscriber to Like on this post.");
+      //   console.log("User is not subscribed!!!!!!!");
+      // }
     } catch (error) {}
   };
   const [isHidePost, setIsHidePost] = React.useState(false);

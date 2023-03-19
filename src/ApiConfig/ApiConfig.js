@@ -1,14 +1,15 @@
 // export const baseURL = "https://node.bitfuxi.co.uk";
 export const socketURL = "wss://node.bitfuxi.co.uk";
 // export const baseURL = "https://node-social.mobiloitte.org";
-// export const baseURL = "http://localhost:1909";
-export const baseURL = "https://social-node-production.up.railway.app";
+export const baseURL = "http://localhost:1909";
+// export const baseURL = "https://social-node-production.up.railway.app";
 
 const url = `${baseURL}/api/v1`;
 export const websiteName =
   window.location.protocol + "//" + window.location.host;
 const Apiconfigs = {
   register: `${url}/user/register`,
+  registerMetamask: `${url}/user/registerMetamask`,
   listUser: `${url}/admin/listUser`,
   AllUser: `${url}/admin/AllUser`,
   feeList: `${url}/admin/feeList`,
