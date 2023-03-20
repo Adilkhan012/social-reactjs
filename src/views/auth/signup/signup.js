@@ -716,7 +716,10 @@ function Signup() {
               <Box className="loginForm">
                 <form noValidate>
                   <Grid container direction={"column"} spacing={2}>
-                    <Grid item style={{ marginTop: "10px" }}>
+
+
+
+                    {/* <Grid item style={{ marginTop: "10px" }}>
                       <Box className="d-flex justify-space-between">
                         <Grid container spacing={2}>
                           <Grid item xs={12} sm={6} md={6} lg={6}>
@@ -786,7 +789,7 @@ function Signup() {
                             />
                           </div>
 
-                          {/* <Grid
+                          <Grid
                             item
                             xs={12}
                             sm={6}
@@ -811,15 +814,18 @@ function Signup() {
                               fullWidth
                               className={classes.twitterButton}
                             />
-                          </Grid> */}
+                          </Grid>
                         </Grid>
                       </Box>
-                    </Grid>
-                    <Grid item>
+                    </Grid> */}
+
+                    
+                    {/* <Grid item>
                       <Box className={classes.or}>
                         <Typography variant="body2">OR</Typography>
                       </Box>
-                    </Grid>
+                    </Grid> */}
+
                     {/* <form onSubmit={gethandleSubmitApi}> */}
                     <Grid item xs={8} className={classes.donation}>
                       <Box>
@@ -1242,7 +1248,7 @@ function Signup() {
                           // onClick={() => verifyOTPOpen(true)}
                           // onClick={() => history.push("/")}
                         >
-                          Sign Up
+                          Sign Up using MetaMask
                           {isLoading && <CircularProgress />}
                         </Button>
                       </Box>

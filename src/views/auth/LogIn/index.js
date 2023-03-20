@@ -739,7 +739,7 @@ function Login(props) {
     <form onSubmit={(event) => handleFormSubmit(event)}>
       <Page title="Login In ">
         <Box className={classes.headingBox}>
-          <Typography variant="h2">Sign In</Typography>
+          <Typography variant="h2">Sign In using Metamask</Typography>
           <Typography variant="h6">
             Welcome back, you’ve been missed!
           </Typography>
@@ -750,7 +750,7 @@ function Login(props) {
         <Paper className={classes.loginBox} elevation={2}>
           <Box className="loginForm">
             <Grid container direction={"column"} spacing={2}>
-              <Grid item style={{ marginTop: "10px" }}>
+              {/* <Grid item style={{ marginTop: "10px" }}>
                 <Box>
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
@@ -785,7 +785,7 @@ function Login(props) {
                         cookiePolicy={"single_host_origin"}
                       />
                     </Grid>
-                    {/* 
+                    
 
                       <Grid item xs={12} sm={6}>
                       <AppleLogin
@@ -817,9 +817,9 @@ function Login(props) {
                     </Grid>
 
                   
-                  */}
+                 
 
-                    {/* <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={6}>
                       <AppleLogin
                         render={(renderProps) => (
                           <Button
@@ -845,11 +845,9 @@ function Login(props) {
                         onFailure={responseGoogle}
                         cookiePolicy={"single_host_origin"}
                       />
-                    </Grid> */}
+                    </Grid>
 
-                    {/* metamask wallet button */}
                     <div>
-                      {/* other components */}
                       <ConnectWalletButton
                         // onPressLogout={onPressLogout}
                         handleLogin={handleLogin}
@@ -880,7 +878,7 @@ function Login(props) {
                         cookiePolicy={"single_host_origin"}
                       />
                     </Grid>
-                    {/*<Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={6}>
 
 
                       <InstagramLogin cssClass="twitterBtn"
@@ -894,8 +892,8 @@ function Login(props) {
                         <span> Login with Instagram</span>
                       </InstagramLogin>
 
-                      </Grid> */}
-                    {/* <Grid item xs={12} sm={6}>
+                      </Grid>
+                    <Grid item xs={12} sm={6}>
                       <TwitterLogin
                         // loginUrl="http://localhost:3000/api/v1/auth/twitter"
                         // requestTokenUrl="http://localhost:3000/api/v1/auth/twitter/reverse"
@@ -916,8 +914,8 @@ function Login(props) {
                         buttonTheme="dark"
                         // onSuccess={authHandler}
                       />
-                    </Grid> */}
-                    {/* <Grid item xs={12} sm={6} md={6} lg={6}>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={6} lg={6}>
                     <Button
                       variant="contained"
                       color="secondary"
@@ -932,22 +930,16 @@ function Login(props) {
                     >
                       Log in with Twitter
                     </Button>
-                  </Grid> */}
+                  </Grid>
                   </Grid>
                 </Box>
-              </Grid>
-
-              <Grid item>
+              </Grid> */}
+              {/* <Grid item>
                 <Box className={classes.or}>
-                  {/* 
-             
-               
                   <Typography variant="body2">OR</Typography>
-              
-             
-          */}
                 </Box>
-              </Grid>
+              </Grid> */}
+
               <Grid item xs={12} className={classes.donation}>
                 <Box>
                   <span
@@ -1132,7 +1124,7 @@ function Login(props) {
                     onClick={handleFormSubmit}
                     disabled={isLoading}
                   >
-                    Sign In {isLoading && <ButtonCircularProgress />}
+                    Sign In using MetaMask {isLoading && <ButtonCircularProgress />}
                   </Button>
                 </Box>
               </Grid>
