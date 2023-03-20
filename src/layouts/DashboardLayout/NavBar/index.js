@@ -37,6 +37,7 @@ import { GiStaticGuard } from "react-icons/gi";
 import NavItem from "./NavItem";
 import { PieChart as PieChartIcon } from "react-feather";
 import { AuthContext } from "src/context/Auth";
+import { detectEthereumProvider } from "@metamask/detect-provider";
 
 function renderNavItems({ items, pathname, depth = 0 }) {
   return (
@@ -212,7 +213,6 @@ const NavBar = ({ onMobileClose, openMobile }) => {
         setSections([
           {
             items: [
-
               {
                 title: "Explore",
                 icon: MdDashboard,
@@ -254,8 +254,6 @@ const NavBar = ({ onMobileClose, openMobile }) => {
                 icon: HiUserGroup,
                 href: "/NFTDomain",
               },
-
-
             ],
           },
         ]);
@@ -361,22 +359,38 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     }
   }, [auth.userLoggedIn, auth?.userData?.userType]);
 
-  const handLogout = () => {
-    setOpen(false);
-    auth.setIsLogin(false);
-    auth.getoffLineUserApi()
-    history.push("/");
-    auth.logout();
-    localStorage.removeItem("tokens");
-    sessionStorage.removeItem("token");
-    localStorage.removeItem("token");
-    localStorage.removeItem("status");
+  const handLogout = async () => {
+    // try {
+    //   // Disconnect from Metamask
+    //   await window.ethereum.request({ method: 'wallet_requestPermissions', params: [{ eth_accounts: {} }] });
+    //   // await window.ethereum.disconnect();
+    //   console.log("Metamask Disconnects!!!!!!");
+    // } catch (error) {
+    //   console.error("Failed to disconnect from Metamask:", error);
+    //   // Handle the error here, e.g. show a message to the user
+    // }
 
-    sessionStorage.removeItem("email");
-    localStorage.removeItem("email");
-    localStorage.removeItem("email");
+    try {
+      setOpen(false);
+      auth.setIsLogin(false);
+      auth.getoffLineUserApi();
+      auth.logout();
+      localStorage.removeItem("tokens");
+      sessionStorage.removeItem("token");
+      localStorage.removeItem("token");
+      localStorage.removeItem("status");
+      sessionStorage.removeItem("email");
+      localStorage.removeItem("email");
+      localStorage.removeItem("email");
+      sessionStorage.removeItem("ignoreUser");
 
-    sessionStorage.removeItem("ignoreUser");
+      // Clear local storage and redirect to the home page
+      localStorage.clear();
+      history.push("/");
+    } catch (error) {
+      console.error("Failed to clear local storage:", error);
+      // Handle the error here, e.g. show a message to the user
+    }
   };
 
   const content = (
@@ -410,7 +424,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
           </List>
         </Box>
       </PerfectScrollbar>
-      {open &&
+      {open && (
         <Dialog
           open={open}
           onClose={() => setOpen(false)}
@@ -426,7 +440,10 @@ const NavBar = ({ onMobileClose, openMobile }) => {
               <Typography variant="h4">Logout</Typography>
             </Box>
             <Box my={3} align="center">
-              <Typography variant="body2"> Are you sure you want to logout?</Typography>
+              <Typography variant="body2">
+                {" "}
+                Are you sure you want to logout?
+              </Typography>
             </Box>
             <Box mt={2} mb={3} align="center">
               <Button
@@ -445,7 +462,6 @@ const NavBar = ({ onMobileClose, openMobile }) => {
                 size="large"
                 style={{ marginLeft: "8px" }}
                 onClick={handLogout}
-
               >
                 Logout
               </Button>
@@ -455,7 +471,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
 
           {/* </Box> */}
         </Dialog>
-      }
+      )}
     </Box>
   );
 

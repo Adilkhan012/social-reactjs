@@ -22,6 +22,7 @@ const Apiconfigs = {
   dashboard: `${url}/admin/dashboard`,
 
   userlogin: `${url}/user/login`,
+  userloginMetamask: `${url}/user/loginMetamask`,
   verifyOtp: `${url}/user/verifyOtp`,
   resendOtp: `${url}/user/resendOtp`,
   resetPassword: `${url}/user/resetPassword`,

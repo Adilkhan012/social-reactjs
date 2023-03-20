@@ -248,33 +248,35 @@ function Signup() {
   const verifyOTP = async (values) => {
     setIsLoadingOtp(true);
     try {
-      const res = await axios({
-        method: "PUT",
-        url: ApiConfig.verifyOtp,
-        data: {
-          otp: values.otp,
-          email: emailOtp,
-        },
-      });
-      if (res.data.responseCode === 200) {
-        setIsLoadingOtp(false);
-        setVerifyOTPOpen(false);
-        setTimeout(() => {
-          setErrorMesageResend(""); // count is 0 here
-        }, 5000);
-        setErrorMesageResend(res.data?.responseMessage);
-        toast.success(`${res.data.responseMessage} please login`);
-        history.push("/");
-        // window.sessionStorage.setItem("otp", values.otp);
-      }
-    } catch (error) {
+      // const res = await axios({
+      //   method: "PUT",
+      //   url: ApiConfig.verifyOtp,
+      //   data: {
+      //     otp: values.otp,
+      //     email: emailOtp,
+      //   },
+      // });
+      // if (res.data.responseCode === 200) {
+      //   setIsLoadingOtp(false);
+      //   setVerifyOTPOpen(false);
+      //   setTimeout(() => {
+      //     setErrorMesageResend(""); // count is 0 here
+      //   }, 5000);
+      //   setErrorMesageResend(res.data?.responseMessage);
+      // toast.success(`${res.data.responseMessage} please login`);
+      history.push("/");
       setIsLoadingOtp(false);
+
+      // window.sessionStorage.setItem("otp", values.otp);
+      // }
+    } catch (error) {
+      // setIsLoadingOtp(false);
       // toast.error(error.message);
       // toast.error(error.response.data.responseMessage);
-      setTimeout(() => {
-        setErrorMesage(""); // count is 0 here
-      }, 5000);
-      setErrorMesage(error?.response?.data?.responseMessage);
+      // setTimeout(() => {
+      //   setErrorMesage(""); // count is 0 here
+      // }, 5000);
+      // setErrorMesage(error?.response?.data?.responseMessage);
     }
   };
   const resendOTP = async () => {
@@ -314,8 +316,7 @@ function Signup() {
     return re.test(String(value).toLowerCase());
   };
   const isValidNumber = (value) => {
-    const re =
-      /^(?:(?:\+|0{0,2})91(\s*|[\-])?|[0]?)?([6789]\d{2}([ -]?)\d{3}([ -]?)\d{4})$/;
+    const re = /^(\+?\d{1,3}[- ]?)?\d{6,14}$/;
     return re.test(value);
   };
   const validUsername = (value) => {
@@ -389,6 +390,24 @@ function Signup() {
 
   const gethandleSubmitApi = async (event) => {
     event.preventDefault();
+
+    if (!window.ethereum) {
+      toast.error("Please install MetaMask to continue");
+      return;
+    }
+
+    // Request the user to connect to MetaMask
+    const web3 = new Web3(window.ethereum);
+    await window.ethereum.request({
+      method: "wallet_requestPermissions",
+      params: [{ eth_accounts: {} }],
+    });
+    await window.ethereum.enable();
+
+    // Get the user's Ethereum address from MetaMask
+    const accounts = await web3.eth.getAccounts();
+    const address = accounts[0];
+
     let EmailData = {
       email: formValue.email,
       userName: formValue.userName,
@@ -396,6 +415,7 @@ function Signup() {
       dob: fieldValue,
       gender: formValue.gender,
       refereeCode: codeReferalPath ? codeReferalPath : "",
+      socialId: address,
     };
 
     let MobileData = {
@@ -406,6 +426,7 @@ function Signup() {
       gender: formValue.gender,
       countryCode: `+${mobileNumber?.slice(0, 2)}`,
       refereeCode: codeReferalPath ? codeReferalPath : "",
+      socialId: address,
     };
     // setIsSubmit(true);
 
@@ -440,18 +461,34 @@ function Signup() {
                 ? formValue.email
                 : mobileNumber.slice(countryCode.length)
             );
-            setVerifyOTPOpen(true);
-            setOtpPop(true);
-            setEndtime(moment().add(5, "m").unix());
-            window.sessionStorage.setItem(
-              "loginToken",
-              response.data.result.token
-            );
-            toast.success(
-              `We have sent an OTP on your ${
-                checked2 ? "mobile number" : "registered email ID"
-              }. Please verify.`
-            );
+
+            // if (!res.data.result.name) {
+            //   history.push({
+            //     pathname: "/settings",
+            //     // search: res.data.result?._id,
+            //     hash: "editProfile",
+            //   });
+            // } else {
+            //   history.push("/explore");
+            // }
+            window.sessionStorage.setItem("token", response.data.result.token);
+            window.localStorage.setItem("token", response.data.result.token);
+
+            history.push("/explore");
+
+            toast.success("You are successfully Signed Up.");
+
+            // sessionStorage.setItem("token", res.data.result.token);
+
+            // setVerifyOTPOpen(true);
+            // setOtpPop(true);
+            // setEndtime(moment().add(5, "m").unix());
+
+            // toast.success(
+            //   `We have sent an OTP on your ${
+            //     checked2 ? "mobile number" : "registered email ID"
+            //   }. Please verify.`
+            // );
           }
         })
         .catch((error) => {
@@ -531,10 +568,12 @@ function Signup() {
         socialType: "metamask",
         email, // You can request the user's email from MetaMask
         name, // You can request the user's name from MetaMask
+        userName: "test1",
+        password: "test1",
       };
       const res = await axios({
         method: "POST",
-        url: ApiConfig.socialLogin,
+        url: ApiConfig.registerMetamask,
         data: creadentails,
       });
       if (res.data.responseCode === 200) {

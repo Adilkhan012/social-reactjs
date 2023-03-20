@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useContext } from "react";
 import "src/scss/main.css";
 import {
@@ -35,7 +34,7 @@ import { BsTwitter } from "react-icons/bs";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
-import {Link as RouterComponent } from "react-router-dom";
+import { Link as RouterComponent } from "react-router-dom";
 import ApiConfig from "src/ApiConfig/ApiConfig";
 import { GoogleLogin } from "react-google-login";
 import FacebookLogin from "react-facebook-login";
@@ -51,9 +50,8 @@ import Web3 from "web3";
 import ConnectWalletButton from "src/component/ConnectWalletButton.js";
 import { useHistory } from "react-router-dom";
 import { useWeb3Context } from "web3-react";
-import { Web3Provider } from 'web3-react'
+import { Web3Provider } from "web3-react";
 import { Spinner } from "react-bootstrap";
-
 
 import { LogIn } from "react-feather";
 // metamask button stylesheet
@@ -162,7 +160,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 // metamask wallet connect
 
 function Login(props) {
@@ -222,17 +219,42 @@ function Login(props) {
     return re.test(String(value).toLowerCase());
   };
   const isValidNumber = (value) => {
-    const re =
-      /^(?:(?:\+|0{0,2})91(\s*|[\-])?|[0]?)?([6789]\d{2}([ -]?)\d{3}([ -]?)\d{4})$/;
+    const re = /^(\+?\d{1,3}[- ]?)?\d{6,14}$/;
+
     return re.test(value);
   };
   const validPassword = (value) => {
-    const re = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,16}$/;
+    const re =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,16}$/;
     return re.test(value);
   };
+
+  // metamask login API call
+  // Admin will also connects to metamask
+  const [loading, setLoading] = useState(false);
+  const [address, setAddress] = useState("");
+  const web3 = new Web3(window.ethereum);
+
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     setIsSubmit(true);
+
+    if (!window.ethereum) {
+      toast.error("Please install MetaMask to continue");
+      return;
+    }
+
+    // Request the user to connect to MetaMask
+    // const web3 = new Web3(window.ethereum);
+    await window.ethereum.request({
+      method: "wallet_requestPermissions",
+      params: [{ eth_accounts: {} }],
+    });
+    await window.ethereum.enable();
+
+    // Get the user's Ethereum address from MetaMask
+    const accounts = await web3.eth.getAccounts();
+    const address = accounts[0];
 
     if (
       isValidNumber(mobileNumber) ||
@@ -246,6 +268,7 @@ function Login(props) {
           email: checked2
             ? mobileNumber?.slice(countryCode?.length)
             : formValue.email,
+          socialId: address,
           password: formValue.password,
         });
         if (res.data.responseCode === 200) {
@@ -285,7 +308,7 @@ function Login(props) {
             }, 2000);
             console.log("email--------->", res);
             window.sessionStorage.setItem("email", res.data.result.email);
-            window.localStorage.setItem("email", res.data.result.email)
+            window.localStorage.setItem("email", res.data.result.email);
             window.sessionStorage.setItem("token", res.data.result.token);
             window.localStorage.setItem("token", res.data.result.token);
             window.localStorage.setItem("status", res.data.result.status);
@@ -308,8 +331,8 @@ function Login(props) {
         );
         if (error?.response?.data?.responseCode === 400) {
           setIsLoading(false);
-          setVerifyOTPOpen(true);
-          resendOTP();
+          // setVerifyOTPOpen(true);
+          // resendOTP();
           setTimeout(() => {
             setErrorMesage(""); // count is 0 here
           }, 5000);
@@ -357,7 +380,7 @@ function Login(props) {
         } else {
           history.push({
             pathname: "/explore",
-            search: res.data.result.email
+            search: res.data.result.email,
           });
         }
 
@@ -377,7 +400,6 @@ function Login(props) {
       toast.error(error?.response?.data?.responseMessage);
     }
   };
-
 
   const responseFacebook = async (response) => {
     console.log("response-----", response);
@@ -416,7 +438,6 @@ function Login(props) {
         } else {
           history.push("/explore");
         }
-
 
         // if (res.data.result.name) {
         //   history.push("/explore");
@@ -591,7 +612,6 @@ function Login(props) {
           history.push("/explore");
         }
 
-
         // if (res.data.result.name) {
         //   history.push("/explore");
         // } else {
@@ -608,12 +628,7 @@ function Login(props) {
     }
   };
 
-
   //metamask connection
-
-  const [loading, setLoading] = useState(false);
-  const [address, setAddress] = useState("");
-  const web3 = new Web3(window.ethereum);
 
   // const history = useHistory();
 
@@ -635,16 +650,19 @@ function Login(props) {
       // const interests = ['History', 'Literature', 'Art'];
       const creadentails = {
         socialId: address,
-        socialType: 'metamask',
-        email: 'ahmedrazach118@gmail.com', // You can request the user's email from MetaMask
-        name: 'Ahmed', // You can request the user's name from MetaMask
+        socialType: "metamask",
+        email: "ahmedrazach118@gmail.com", // You can request the user's email from MetaMask
+        name: "Ahmed",
+        // password: "test1",
+
+        // You can request the user's name from MetaMask
         // interest: interests,
       };
       // Send a request to your server to verify the user's Ethereum address
       const res = await axios({
         method: "POST",
         url: ApiConfig.socialLogin,
-        data: creadentails
+        data: creadentails,
       });
 
       if (res.data.responseCode === 200) {
@@ -664,7 +682,7 @@ function Login(props) {
         } else {
           history.push({
             pathname: "/explore",
-            search: res.data.result.email
+            search: res.data.result.email,
           });
         }
       }
@@ -675,53 +693,49 @@ function Login(props) {
     }
   };
 
-//   const handleMetaMaskLogin = async () => {
-//   try {
-//     if (window.ethereum) {
-//       const accounts = await window.ethereum.enable();
-//       const creadentails = {
-//         walletAddress: accounts[0],
-//         socialType: 'MetaMask'
-//       };
-//       const res = await axios({
-//         method: "POST",
-//         url: ApiConfig.socialLogin,
-//         data: creadentails,
-//       });
-//       if (res.data.responseCode === 200) {
-//         toast.success("You are successfully logged in.");
-//         window.localStorage.setItem("email", res.data.result.email);
-//         window.localStorage.setItem("status", res.data.result.userInfo.status);
-//         window.sessionStorage.setItem("email", res.data.result.userInfo.email);
-//         window.sessionStorage.setItem("token", res.data.result.token);
-//         window.localStorage.setItem("token", res.data.result.token);
-//         window.localStorage.setItem("status", res.data.result.userInfo.status);
+  //   const handleMetaMaskLogin = async () => {
+  //   try {
+  //     if (window.ethereum) {
+  //       const accounts = await window.ethereum.enable();
+  //       const creadentails = {
+  //         walletAddress: accounts[0],
+  //         socialType: 'MetaMask'
+  //       };
+  //       const res = await axios({
+  //         method: "POST",
+  //         url: ApiConfig.socialLogin,
+  //         data: creadentails,
+  //       });
+  //       if (res.data.responseCode === 200) {
+  //         toast.success("You are successfully logged in.");
+  //         window.localStorage.setItem("email", res.data.result.email);
+  //         window.localStorage.setItem("status", res.data.result.userInfo.status);
+  //         window.sessionStorage.setItem("email", res.data.result.userInfo.email);
+  //         window.sessionStorage.setItem("token", res.data.result.token);
+  //         window.localStorage.setItem("token", res.data.result.token);
+  //         window.localStorage.setItem("status", res.data.result.userInfo.status);
 
-//         setTimeout(() => {
-//           auth.handleUserProfileApi();
-//         }, 500);
-//         if (res.data.result.userInfo.firstTime === false) {
-//           setReferralOpen(true);
-//         } else {
-//           history.push({
-//             pathname: "/explore",
-//             search: res.data.result.email
-//           });
-//         }
-//       }
-//     }
-//   } catch (error) {
-//     toast.error(error?.response?.data?.responseMessage);
-//   }
-// };
+  //         setTimeout(() => {
+  //           auth.handleUserProfileApi();
+  //         }, 500);
+  //         if (res.data.result.userInfo.firstTime === false) {
+  //           setReferralOpen(true);
+  //         } else {
+  //           history.push({
+  //             pathname: "/explore",
+  //             search: res.data.result.email
+  //           });
+  //         }
+  //       }
+  //     }
+  //   } catch (error) {
+  //     toast.error(error?.response?.data?.responseMessage);
+  //   }
+  // };
 
-  
-
-// code ends metamask
-
+  // code ends metamask
 
   return (
-    
     <form onSubmit={(event) => handleFormSubmit(event)}>
       <Page title="Login In ">
         <Box className={classes.headingBox}>
@@ -764,8 +778,6 @@ function Login(props) {
                           </Button>
 
                           // metamask button
-
-                         
                         )}
                         buttonText="Login"
                         onSuccess={responseGoogle}
@@ -834,16 +846,16 @@ function Login(props) {
                         cookiePolicy={"single_host_origin"}
                       />
                     </Grid> */}
-                    
+
                     {/* metamask wallet button */}
                     <div>
                       {/* other components */}
-                         <ConnectWalletButton
+                      <ConnectWalletButton
                         // onPressLogout={onPressLogout}
-                             handleLogin={handleLogin}
-                             loading={loading}
-                             address={address}
-                         />
+                        handleLogin={handleLogin}
+                        loading={loading}
+                        address={address}
+                      />
                     </div>
 
                     <Grid item xs={12} sm={6}>
@@ -924,7 +936,7 @@ function Login(props) {
                   </Grid>
                 </Box>
               </Grid>
-              
+
               <Grid item>
                 <Box className={classes.or}>
                   {/* 
@@ -966,7 +978,6 @@ function Login(props) {
                 <Grid item>
                   <FormControl fullWidth>
                     <TextField
-
                       variant="outlined"
                       size="small"
                       name="email"
@@ -976,9 +987,9 @@ function Login(props) {
                       onChange={_onInputChange}
                       error={Boolean(
                         (isSubmit && checked1 && formValue.email === "") ||
-                        (formValue.email !== "" &&
-                          checked1 &&
-                          !isValidEmail(formValue.email))
+                          (formValue.email !== "" &&
+                            checked1 &&
+                            !isValidEmail(formValue.email))
                       )}
                       InputProps={{
                         startAdornment: (
@@ -1010,7 +1021,7 @@ function Login(props) {
                       value={mobileNumber}
                       error={Boolean(
                         (isSubmit && checked2 && !mobileNumber) ||
-                        (isSubmit && checked2 && !isValidNumber(mobileNumber))
+                          (isSubmit && checked2 && !isValidNumber(mobileNumber))
                       )}
                       onChange={(phone, e) => {
                         setCountryCode(e.dialCode);
@@ -1048,7 +1059,7 @@ function Login(props) {
                     onChange={_onInputChange}
                     error={Boolean(
                       (isSubmit && formValue.password === "") ||
-                      (isSubmit && !validPassword(formValue.password))
+                        (isSubmit && !validPassword(formValue.password))
                     )}
                     InputProps={{
                       startAdornment: <LockIcon position="start">Kg</LockIcon>,
@@ -1071,7 +1082,9 @@ function Login(props) {
                     )) ||
                       (isSubmit && !validPassword(formValue.password) && (
                         <Box ml={1}>
-                          Password must be minimum 8 and maximum 16 characters , one special character, uppercase letter , lowercase letter.
+                          Password must be minimum 8 and maximum 16 characters ,
+                          one special character, uppercase letter , lowercase
+                          letter.
                         </Box>
                       ))}
                   </FormHelperText>
@@ -1116,7 +1129,7 @@ function Login(props) {
                     fullWidth
                     size="large"
                     // type="submit"
-                    // onClick={handleFormSubmit}
+                    onClick={handleFormSubmit}
                     disabled={isLoading}
                   >
                     Sign In {isLoading && <ButtonCircularProgress />}
@@ -1144,7 +1157,7 @@ function Login(props) {
             fullWidth
             maxWidth="sm"
             open={verifyOTPOpen}
-          // onClose={() => setVerifyOTPOpen(false)}
+            // onClose={() => setVerifyOTPOpen(false)}
           >
             <DialogContent>
               <Page title="Verify OTP">
@@ -1196,18 +1209,18 @@ function Login(props) {
                                   event.preventDefault();
                                 }
                               }}
-                            // onKeyPress={(event) => {
-                            //   if (event?.key === '-' || event?.key === '+') {
-                            //     event.handleChange(event)
-                            //   }
-                            // }}
-                            // onChange={(e) => {
-                            //   if (e.target.value && e.target.value != '-') {
-                            //     handleChange(Math.abs(Number(e.target.value)))
-                            //   } else {
-                            //     handleChange()
-                            //   }
-                            // }}
+                              // onKeyPress={(event) => {
+                              //   if (event?.key === '-' || event?.key === '+') {
+                              //     event.handleChange(event)
+                              //   }
+                              // }}
+                              // onChange={(e) => {
+                              //   if (e.target.value && e.target.value != '-') {
+                              //     handleChange(Math.abs(Number(e.target.value)))
+                              //   } else {
+                              //     handleChange()
+                              //   }
+                              // }}
                             />
                             <FormHelperText error>
                               {touched.otp && errors.otp}
@@ -1263,8 +1276,8 @@ function Login(props) {
                           fontWeight: 500,
                           marginTop: "10px",
                         }}
-                      // onClick={sendOTP}
-                      // disabled={timeLeft && timeLeft.seconds > 0}
+                        // onClick={sendOTP}
+                        // disabled={timeLeft && timeLeft.seconds > 0}
                       >
                         Your OTP will expire in {timeLeft?.minutes} m :{" "}
                         {timeLeft?.seconds} s
@@ -1309,7 +1322,6 @@ function Login(props) {
         )}
       </Page>
 
-
       {referralOpen && (
         <Dialog
           fullWidth
@@ -1323,9 +1335,7 @@ function Login(props) {
         >
           <DialogContent>
             <Box textAlign="center">
-              <Typography
-                style={{ paddingBottom: "7px", fontSize: "18px" }}
-              >
+              <Typography style={{ paddingBottom: "7px", fontSize: "18px" }}>
                 Add Refferal ID
               </Typography>
               <Box mt={2}>
@@ -1383,9 +1393,7 @@ function Login(props) {
         </Dialog>
       )}
     </form>
-    
   );
-
 }
 
 export default Login;

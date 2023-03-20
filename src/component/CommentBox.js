@@ -185,26 +185,26 @@ export default function ({
         // console.log("DataList. +", dataList);
         // console.log("publicHandler+", listPublicExclusiveHandler);
         // if (dataParent.isSubscribed) {
-          const res = await Axios({
-            method: "POST",
-            url: Apiconfigs.commentReplyOnPost,
-            headers: {
-              token: window.localStorage.getItem("token"),
-            },
-            data: {
-              postId: dataList._id,
-              message: replyMessage,
-              commentId: data?._id,
-            },
-          });
-          if (res.data.responseCode === 200) {
-            setIsSubmit(false);
-            listPublicExclusiveHandler();
-            toast.success(res.data.responseMessage);
-            setIsLoading(false);
-            setReplyMessage("");
-            // console.log("User is subscribed!!!!!!!");
-          }
+        const res = await Axios({
+          method: "POST",
+          url: Apiconfigs.commentReplyOnPost,
+          headers: {
+            token: window.localStorage.getItem("token"),
+          },
+          data: {
+            postId: dataList._id,
+            message: replyMessage,
+            commentId: data?._id,
+          },
+        });
+        if (res.data.responseCode === 200) {
+          setIsSubmit(false);
+          listPublicExclusiveHandler();
+          toast.success(res.data.responseMessage);
+          setIsLoading(false);
+          setReplyMessage("");
+          // console.log("User is subscribed!!!!!!!");
+        }
         // } else {
         //   // If the user is not subscribed, show a message or disable the comment functionality
         //   toast.error("You must be a subscriber to comment on this post.");
@@ -220,24 +220,25 @@ export default function ({
 
   const likesHandler = async () => {
     try {
+      // necessary logic has been implemented in the API
       // console.log("DataParent!!! +", dataParent);
       // if (dataParent.isSubscribed) {
-        const res = await Axios({
-          method: "GET",
-          url: Apiconfigs.likeDislikeCommentOnPost,
-          headers: {
-            token: window.localStorage.getItem("token"),
-          },
-          params: {
-            postId: dataList._id,
-            commentId: data?._id,
-          },
-        });
-        if (res.data.responseCode === 200) {
-          listPublicExclusiveHandler();
-          toast.success(res.data.responseMessage);
-          // console.log("User is subscribed!!!!!!!");
-        }
+      const res = await Axios({
+        method: "GET",
+        url: Apiconfigs.likeDislikeCommentOnPost,
+        headers: {
+          token: window.localStorage.getItem("token"),
+        },
+        params: {
+          postId: dataList._id,
+          commentId: data?._id,
+        },
+      });
+      if (res.data.responseCode === 200) {
+        listPublicExclusiveHandler();
+        toast.success(res.data.responseMessage);
+        // console.log("User is subscribed!!!!!!!");
+      }
       // } else {
       //   // If the user is not subscribed, show a message or disable the comment functionality
       //   toast.error("You must be a subscriber to Like on this post.");
