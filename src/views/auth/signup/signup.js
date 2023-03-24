@@ -549,53 +549,53 @@ function Signup() {
   const [error, setError] = useState(null);
   const [showSignupForm, setShowSignupForm] = useState(false);
 
-  const handleMetaMaskSignup = async (name, email) => {
+  const handleMetaMaskConnect = async () => {
     try {
-      // Connect to MetaMask
+      if (!window.ethereum) {
+        // MetaMask not installed
+        toast.error("Please install MetaMask to sign in");
+        return;
+      }
+
+      // Request permission to connect to MetaMask
       const web3 = new Web3(window.ethereum);
+      await window.ethereum.request({
+        method: "wallet_requestPermissions",
+        params: [{ eth_accounts: {} }],
+      });
       await window.ethereum.enable();
 
-      // Get user Ethereum address from MetaMask
+      // Get the user's Ethereum address from MetaMask
       const accounts = await web3.eth.getAccounts();
-      const userAddress = accounts[0];
-      setAddress(userAddress);
+      const address = accounts[0];
 
-      // setShowSignupForm(true);
+      // Prompt the user to sign the message using Metamask
+      const message = "signature";
+      const messageHex = web3.utils.utf8ToHex(message);
+      const signature = await web3.eth.personal.sign(messageHex, address);
 
-      // Send Ethereum address to your backend for verification
-      const creadentails = {
-        socialId: userAddress,
+      // Send the signed message and user's Ethereum address to your backend for verification
+      const credentials = {
         socialType: "metamask",
-        email, // You can request the user's email from MetaMask
-        name, // You can request the user's name from MetaMask
-        userName: "test1",
-        password: "test1",
+        socialId: address,
+        message: message,
+        signature: signature,
       };
-      const res = await axios({
+      const response = await axios({
         method: "POST",
         url: ApiConfig.registerMetamask,
-        data: creadentails,
+        data: credentials,
       });
-      if (res.data.responseCode === 200) {
-        if (res.data.result.userInfo.firstTime === false) {
-          setReferralOpen(true);
-        } else {
-          history.push("/explore");
-        }
-
-        // if (!res.data.result.name) {
-        //   history.push({
-        //     pathname: "/settings",
-        //     // search: res.data.result?._id,
-        //     hash: "editProfile",
-        //   });
-        // } else {
-        //   history.push("/explore");
-        // }
-        toast.success("You are successfully Signed Up.");
-        window.localStorage.setItem("token", res.data.result.token);
-
-        sessionStorage.setItem("token", res.data.result.token);
+      if (response.data.responseCode === 200) {
+        // Sign in successful
+        toast.success("Metamask connected successfully");
+        const token = response.data.result.token;
+        window.sessionStorage.setItem("token", token);
+        window.localStorage.setItem("token", token);
+        history.push("/explore");
+      } else {
+        // Sign in failed
+        toast.error(response.data.responseMessage);
       }
     } catch (error) {
       setError(error);
@@ -706,7 +706,26 @@ function Signup() {
             Create an account to continue and connect with the people
           </Typography>
         </Box>
-        <Box mb={5}>
+        <Box>
+          <button
+            onClick={handleMetaMaskConnect}
+            style={{
+              backgroundColor: "#F0B90B",
+              color: "#FFFFFF",
+              padding: "12px 24px",
+              borderRadius: "4px",
+              border: "none",
+              cursor: "pointer",
+              fontSize: "16px",
+              fontWeight: "bold",
+              boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+              transition: "all 0.2s ease-in-out",
+            }}
+          >
+            Connect to MetaMask
+          </button>
+        </Box>
+        {/* <Box mb={5}>
           <Paper
             className={classes.loginBox}
             elevation={2}
@@ -716,10 +735,7 @@ function Signup() {
               <Box className="loginForm">
                 <form noValidate>
                   <Grid container direction={"column"} spacing={2}>
-
-
-
-                    {/* <Grid item style={{ marginTop: "10px" }}>
+                    <Grid item style={{ marginTop: "10px" }}>
                       <Box className="d-flex justify-space-between">
                         <Grid container spacing={2}>
                           <Grid item xs={12} sm={6} md={6} lg={6}>
@@ -817,16 +833,14 @@ function Signup() {
                           </Grid>
                         </Grid>
                       </Box>
-                    </Grid> */}
+                    </Grid>
 
-                    
-                    {/* <Grid item>
+                    <Grid item>
                       <Box className={classes.or}>
                         <Typography variant="body2">OR</Typography>
                       </Box>
-                    </Grid> */}
+                    </Grid>
 
-                    {/* <form onSubmit={gethandleSubmitApi}> */}
                     <Grid item xs={8} className={classes.donation}>
                       <Box>
                         <span
@@ -1077,9 +1091,7 @@ function Signup() {
                             (formValue.password !== "" &&
                               !validPassword(formValue.password) && (
                                 <Box ml={1}>
-                                  {/* Must contain 8 characters, one uppercase, one
-                                  lowercase, one number and one special
-                                  character */}
+                                  
                                   Password must be minimum 8 and maximum 16
                                   characters , one special character, uppercase
                                   letter , lowercase letter.
@@ -1091,29 +1103,7 @@ function Signup() {
                     <Grid item>
                       <Grid container spacing={2}>
                         <Grid item lg={6} sm={6} md={6} xs={12}>
-                          {/* <FormControl fullWidth>
-                                <TextField
-                                  id="date"
-                                  variant="outlined"
-                                  type="date"
-                                  name="date"
-                                  fullWidth
-                                  value={values.dateOfBirth}
-                                  error={Boolean(
-                                    touched.dateOfBirth && errors.dateOfBirth
-                                  )}
-                                  onBlur={handleBlur}
-                                  onChange={handleChange}
-                                  // {...formik.getFieldProps("dateOfBirth")}
-                                  className={classes.textField}
-                                  InputLabelProps={{
-                                    shrink: true,
-                                  }}
-                                />
-                                <FormHelperText error>
-                                  {touched.dateOfBirth && errors.dateOfBirth}
-                                </FormHelperText>
-                              </FormControl> */}
+                          
                           <FormControl fullWidth>
                             <KeyboardDatePicker
                               // value={fieldValue}
@@ -1253,7 +1243,6 @@ function Signup() {
                         </Button>
                       </Box>
                     </Grid>
-                    {/* </form> */}
                     <Grid item>
                       <Box textAlign="center">
                         <Typography color="primary.main" variant="body2">
@@ -1421,15 +1410,7 @@ function Signup() {
                   </Box>
                 </Box>
               </DialogContent>
-              {/* <DialogActions>
-                <Button onClick={() => setVerifyOTPOpen(false)}>Cancel</Button>
-                <Button
-                  disabled={loader}
-                  onSubmit={(values) => verifyOTP(values)}
-                >
-                  Submit {loader && <ButtonCircularProgress />}
-                </Button>
-              </DialogActions> */}
+             
             </Dialog>
           )}
           {referralOpen && (
@@ -1504,7 +1485,7 @@ function Signup() {
               </Box>
             </Dialog>
           )}
-        </Box>
+        </Box> */}
       </Page>
     </form>
   );
