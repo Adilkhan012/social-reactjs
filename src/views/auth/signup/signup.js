@@ -571,8 +571,9 @@ function Signup() {
 
       // Prompt the user to sign the message using Metamask
       const message = "signature";
-      const messageHex = web3.utils.utf8ToHex(message);
-      const signature = await web3.eth.personal.sign(messageHex, address);
+      // const messageHex = web3.utils.utf8ToHex(message);
+      const messageHash = web3.utils.sha3(message);
+      const signature = await web3.eth.personal.sign(messageHash, address);
 
       // Send the signed message and user's Ethereum address to your backend for verification
       const credentials = {
