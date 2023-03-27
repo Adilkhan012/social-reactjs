@@ -3,7 +3,7 @@ export const socketURL = "wss://node.bitfuxi.co.uk";
 // export const baseURL = "https://node-social.mobiloitte.org";
 // export const baseURL = "http://localhost:1909";
 export const baseURL = "https://social-node-production.up.railway.app";
-
+// for react.js repo refresh
 const url = `${baseURL}/api/v1`;
 export const websiteName =
   window.location.protocol + "//" + window.location.host;
