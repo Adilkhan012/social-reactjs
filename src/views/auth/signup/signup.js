@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 import {
   Box,
   Container,
-  makeStyles,
   Typography,
   Button,
   Grid,
@@ -15,6 +14,7 @@ import {
   OutlinedInput,
   CircularProgress,
 } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 
 import {
   FaApple,
@@ -74,98 +74,47 @@ import ConnectWalletButton from "src/component/ConnectWalletButton.js";
 import MetamaskSignupForm from "src/component/MetamaskSignupForm";
 
 import Web3 from "web3";
+import metamaskLogo from "src/metamask/metamask-logo.png";
 
 const useStyles = makeStyles((theme) => ({
-  radio: {
-    border: "1px solid rgb(83 84 85)",
-    borderRadius: "15px",
-    height: "47px",
+  container: {
+    marginTop: "10rem",
     display: "flex",
-    alignItems: "center",
-    width: "100%",
-    justifyContent: "space-evenly",
-    [theme.breakpoints.down("xs")]: {
-      height: "35px",
-    },
-    "&:hover": {
-      borderColor: "#fff",
-    },
-    "& .innerRadio": {
-      display: "flex",
-      alignItems: "center",
-    },
-  },
-  loginBox: {
-    padding: "40px 30px",
-  },
-  donation: {
-    "& span": {
-      fontSize: "12px",
-      padding: "2px 5px",
-      // border: "1px solid #e31a89",
-      cursor: "pointer",
-      "&.active": {
-        backgroundColor: "#e31a89",
-        borderRadius: "7px",
-      },
-    },
-  },
-  or: {
-    width: "100%",
-    borderTop: "1px solid #555555",
-    marginTop: "20px",
-    textAlign: "center",
-    position: "relative",
-    marginBottom: "20px",
-    "& p": {
-      position: "absolute",
-      top: "-10px",
-      left: "50%",
-      transform: "translateX(-50%)",
-      backgroundColor: "#242526",
-      padding: "0 10px",
-    },
-  },
-  twitterButton: {
-    width: "100%",
-    display: "flex !important",
-    fontSize: "10px !important",
-    alignItems: "center !important",
-    justifyContent: "center !important",
-    "& svg": {
-      width: "100%",
-      display: "flex !important",
-      fontSize: "10px !important",
-      alignItems: "center !important",
-      justifyContent: "center !important",
-    },
-    "& rect": {
-      width: "100%",
-      display: "flex !important",
-      fontSize: "10px !important",
-      alignItems: "center !important",
-      justifyContent: "center !important",
-    },
-  },
-  iconSvg: {
-    "& svg": {
-      fontSize: "30px",
-    },
-  },
-  btnFacebook: {
-    marginRight: "5px",
-    backgroundColor: "#fff",
-    color: "#1877f2",
-    width: "100%",
-    letterSpacing: "1px",
-    height: "50px",
-    borderRadius: "60px",
-    border: "1px solid #ffffff",
-    fontSize: "15px",
-    display: "flex",
+    flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    cursor: "pointer",
+    padding: theme.spacing(4),
+    backgroundColor: "none",
+  },
+  greeting: {
+    marginBottom: theme.spacing(4),
+    textAlign: "center",
+  },
+  heading: {
+    fontSize: "4rem",
+    fontWeight: 700,
+    marginBottom: theme.spacing(2),
+    color: "#E31A89",
+  },
+  subheading: {
+    fontSize: "2rem",
+    fontWeight: 500,
+    color: theme.palette.text.secondary,
+  },
+  connectButton: {
+    marginTop: theme.spacing(4),
+    padding: theme.spacing(2, 4),
+    borderRadius: theme.spacing(4),
+    backgroundColor: "#E31A89",
+    color: theme.palette.common.white,
+    "&:hover": {
+      backgroundColor: "#FF6EB6",
+    },
+  },
+  metamaskLogo: {
+    marginRight: theme.spacing(2),
+    height: "2rem",
+    width: "auto",
   },
 }));
 
@@ -761,25 +710,39 @@ function Signup() {
   // };
 
   return (
-    <div>
-      <button
+    <Box className={classes.container}>
+      <Box className={classes.greeting}>
+        <Typography variant="h1" className={classes.heading}>
+          Welcome to Lazi
+        </Typography>
+        <Typography variant="h2" className={classes.subheading}>
+          The social media platform for NFT enthusiasts
+        </Typography>
+      </Box>
+      <Button
+        variant="contained"
+        className={classes.connectButton}
         onClick={handleMetaMaskConnect}
-        style={{
-          backgroundColor: "#F0B90B",
-          color: "#FFFFFF",
-          padding: "12px 24px",
-          borderRadius: "4px",
-          border: "none",
-          cursor: "pointer",
-          fontSize: "16px",
-          fontWeight: "bold",
-          boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-          transition: "all 0.2s ease-in-out",
-        }}
       >
-        Connect to MetaMask
-      </button>
-    </div>
+        <img
+          src={metamaskLogo}
+          alt="Metamask Logo"
+          className={classes.metamaskLogo}
+        />
+        Connect Metamask
+      </Button>
+      <Box textAlign="center" my={8}>
+        <Typography variant="h4" gutterBottom>
+          Join Us using MetaMask
+        </Typography>
+        <Typography variant="h6" gutterBottom>
+          Earn via trading NFTs
+        </Typography>
+        <Typography variant="body1" gutterBottom>
+          Join our community today and start connecting.
+        </Typography>
+      </Box>
+    </Box>
   );
 }
 
