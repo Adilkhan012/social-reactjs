@@ -557,8 +557,6 @@ function Signup() {
     }
   }, [auth?.userLoggedIn]);
 
-  
-
   // const [showSignupForm, setShowSignupForm] = useState(false);
 
   // const [loading, setLoading] = useState(false);
@@ -584,6 +582,45 @@ function Signup() {
         params: [{ eth_accounts: {} }],
       });
       await window.ethereum.enable();
+
+      // Check if user is on Mumbai testnet
+      const chainId = await web3.eth.getChainId();
+      if (chainId !== 80001) {
+        // Listen for the chainChanged event and switch network when emitted
+        // window.ethereum.on("chainChanged", (chainId) => {
+        //   if (chainId === "0x13881") {
+        //     // window.location.reload();
+        //   }
+        // });
+
+        // Listen for accountsChanged event
+        window.ethereum.on("accountsChanged", (accounts) => {
+          setAddress(accounts[0]);
+        });
+
+        // Switch network to Mumbai testnet
+        const result = await window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: "0x13881" }], // 80001 in hex
+        });
+        console.log("result! ", result);
+
+        // Handle the result of the network switch request
+        // if (result === undefined) {
+        //   // User rejected network switch request
+        //   toast.error("Please switch to Mumbai testnet to use this app");
+        //   setLoading(false);
+        //   return;
+        // } else if (result) {
+        //   // Network switched successfully
+        //   toast.success("Switched to Mumbai testnet");
+        // } else {
+        //   // Network switch failed
+        //   toast.error("Failed to switch to Mumbai testnet");
+        //   setLoading(false);
+        //   return;
+        // }
+      }
 
       // Get the user's Ethereum address from MetaMask
       const accounts = await web3.eth.getAccounts();
@@ -612,17 +649,18 @@ function Signup() {
         const token = response.data.result.token;
         window.sessionStorage.setItem("token", token);
         window.localStorage.setItem("token", token);
-        toast.success("Metamask connected successfully");
         setIsLoggedIn(true);
         history.push("/explore");
+
+        toast.success("Metamask connected successfully");
       } else {
         // Sign in failed
         toast.error(response.data.responseMessage);
         setLoading(false);
       }
-      if (isLoggedIn) {
-        setLoading(false);
-      }
+
+      setLoading(false);
+      window.location.reload();
     } catch (error) {
       setError(error);
       setLoading(false);
