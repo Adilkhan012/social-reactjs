@@ -11,14 +11,20 @@ export const routes = [
     exact: true,
     path: "/",
     layout: LoginLayout,
-    component: lazy(() => import("src/views/auth/LogIn")),
+    component: lazy(() => import("src/views/auth/signup/signup")),
   },
   {
     exact: true,
-    path: "/signup",
+    path: "/admin",
     layout: LoginLayout,
-    component: lazy(() => import("src/views/auth/signup/signup")),
+    component: lazy(() => import("src/views/auth/LogIn")),
   },
+  // {
+  //   exact: true,
+  //   path: "/signup",
+  //   layout: LoginLayout,
+  //   component: lazy(() => import("src/views/auth/signup/signup")),
+  // },
   {
     exact: true,
     path: "/forget-password",
