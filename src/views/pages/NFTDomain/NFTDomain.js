@@ -88,6 +88,9 @@ const NFTDomain = () => {
   const [mintedDomainNames, setMintedDomainNames] = useState([]);
   // When the component mounts, convert the minted domain names to images and store them in state
   const [images, setImages] = useState([]);
+  const [domains, setDomains] = useState(["cat", "bat", "bulb", "ball", "dog"]);
+  const [imageUrls, setImageUrls] = useState([]);
+  const [cimages, setImagesc] = useState([]);
 
   const [exist, setExist] = useState(false);
 
@@ -302,6 +305,26 @@ const NFTDomain = () => {
     convertMintedDomainNamesToImages();
   }, [mintedDomainNames]);
 
+  const convertToImagesCommunity = async () => {
+    const imagesc = [];
+
+    for (const img of domains) {
+      const imageUrl = await generateNftImage(img);
+      imagesc.push(imageUrl);
+    }
+
+    return imagesc;
+  };
+
+  useEffect(() => {
+    async function convertMintedDomainNamesToImages() {
+      const cimages = await convertToImagesCommunity();
+      setImagesc(cimages);
+    }
+
+    convertMintedDomainNamesToImages();
+  }, [domains]);
+
   return (
     <>
       <div className="domain-body">
@@ -349,7 +372,7 @@ const NFTDomain = () => {
           {/* input + button flex - section end */}
 
           {/* domains button url section */}
-          <div className="btn-domain-section">
+          {/* <div className="btn-domain-section">
             <button
               style={{ backgroundcolor: "#E31A89" }}
               className="button btn-1 btn-12 btn-y"
@@ -369,14 +392,16 @@ const NFTDomain = () => {
                 ))}
               </ul>
             )}
-          </div>
+          </div> */}
           {/* domains button url section end  */}
 
           {/* input b-g div end here  */}
         </div>
 
         {/* user detail section including name | domain | url */}
-
+        <div className="user_domains">
+          <h1>User Minted Domains</h1>
+        </div>
         <div className="image-grid">
           {images.map((imageUrl, index) => (
             <div key={index} className="book">
@@ -392,6 +417,27 @@ const NFTDomain = () => {
               ))}
 
               <p>{mintedDomainNames[index]}</p>
+            </div>
+          ))}
+        </div>
+        <div className="user_domains">
+          <h1>Community DomainNames</h1>
+        </div>
+        <div className="image-grid">
+          {cimages.map((imageUrls, index) => (
+            <div key={index} className="book">
+              <div className="cover">
+                <img
+                  src={imageUrls}
+                  alt={`Minted domain name ${index}`}
+                  className="image"
+                />
+              </div>
+              {domains.map((index) => (
+                <p key={index}></p>
+              ))}
+
+              <p>{domains[index]}</p>
             </div>
           ))}
         </div>

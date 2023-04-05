@@ -328,6 +328,31 @@ p {
 
 }
 
+.user_domains {
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 0px;
+  margin-top: 20px;
+}
+
+.user_domains h1 {
+  font-size: 32px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+/* Media query for mobile devices */
+@media only screen and (max-width: 600px) {
+  .user_domains {
+    padding: 10px;
+  }
+  
+  .user_domains h1 {
+    font-size: 24px;
+  }
+}
+
 
 
 
