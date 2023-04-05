@@ -119,11 +119,14 @@ export default function (props) {
 
   useEffect(() => {
     if (auth?.userData.userType === "User") {
-      if (auth?.userData?.interest?.length > 0) {
+      if (
+        auth?.userData?.interest?.length > 0 &&
+        auth?.userData?.userName?.length > 0
+      ) {
         history.push("/explore");
       } else {
         history.push("/settings");
-        toast.info("Please edit/update your interest first");
+        toast.info("Please set your UserName and Interest first");
       }
     }
   }, [auth.userData]);

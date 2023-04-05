@@ -12,8 +12,11 @@ import {
   FormControlLabel,
   Radio,
   IconButton,
+  InputAdornment,
   Paper,
 } from "@material-ui/core";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import ErrorIcon from "@material-ui/icons/Error";
 import { FaTransgender } from "react-icons/fa";
 import Page from "src/component/Page";
 import { FiUpload } from "react-icons/fi";
@@ -156,6 +159,9 @@ function EditProfile({ userProfileData }) {
   const [isEdit, setIsEdit] = React.useState(true);
   const [base64Img, setBase64Img] = useState("");
   const [base64Img1, setBase64Img1] = useState("");
+  const [userName, setUserName] = useState("");
+  const [userExists, setUserExists] = useState(false);
+
   console.log("isEdit", isEdit);
   const [userData, setUserData] = useState({
     userName: "",
@@ -354,22 +360,47 @@ function EditProfile({ userProfileData }) {
       });
   };
 
+  useEffect(() => {
+    const checkUserNameExists = async (username) => {
+      try {
+        const res = await axios.get(Apiconfig.searchUserNameForsignUpTime, {
+          params: {
+            search: username,
+          },
+        });
+        if (res.data.responseCode === 200) {
+          setUserExists(true);
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          setUserExists(false);
+        } else {
+          console.log(error);
+        }
+      }
+    };
+  
+    if (userName) {
+      checkUserNameExists(userName);
+    }
+  }, [userName]);
+
   return (
     <>
-      <Page title='Edit Profile'>
+      <Page title="Edit Profile">
         <Box className={classes.root}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={12} lg={3} md={12}>
               <Grid container direction={"column"} spacing={2}>
-                <Grid item xs={12} align='center'>
-                  <Typography variant='h3' align='left'>
+                <Grid item xs={12} align="center">
+                  <Typography variant="h3" align="left">
                     Edit Profile
                   </Typography>
                 </Grid>
-                <Grid item xs={12} align='center'>
+                <Grid item xs={12} align="center">
                   <Grid
                     container
-                  // style={{ display: "flex", flexDirection: "column" }}
+                    // style={{ display: "flex", flexDirection: "column" }}
                   >
                     <Grid
                       item
@@ -379,14 +410,14 @@ function EditProfile({ userProfileData }) {
                       md={6}
                       style={{ cursor: "pointer" }}
                     >
-                      <figure className='postImg'>
+                      <figure className="postImg">
                         <img src={base64Img ? base64Img : "/images/user.png"} />
                         {!isEdit && (
                           <IconButton disabled={isEdit}>
                             <FiUpload />
                             <input
-                              type='file'
-                              accept='image/*'
+                              type="file"
+                              accept="image/*"
                               onChange={imageUpload}
                             />
                           </IconButton>
@@ -401,9 +432,9 @@ function EditProfile({ userProfileData }) {
                       sm={6}
                       lg={12}
                       md={6}
-                    // style={!isEdit ? { cursor: "pointer" } : ""}
+                      // style={!isEdit ? { cursor: "pointer" } : ""}
                     >
-                      <figure className='postImg1'>
+                      <figure className="postImg1">
                         <img
                           src={base64Img1 ? base64Img1 : "/images/user.png"}
                         />
@@ -411,8 +442,8 @@ function EditProfile({ userProfileData }) {
                           <IconButton disabled={isEdit}>
                             <FiUpload />
                             <input
-                              type='file'
-                              accept='image/*'
+                              type="file"
+                              accept="image/*"
                               onChange={imageUpload1}
                             />
                           </IconButton>
@@ -425,7 +456,7 @@ function EditProfile({ userProfileData }) {
               </Grid>
             </Grid>
             <Grid item xs={12} sm={12} lg={9} md={12}>
-              <Box className='form'>
+              <Box className="form">
                 <Formik
                   initialValues={formInitialSchema}
                   initialStatus={{
@@ -448,11 +479,11 @@ function EditProfile({ userProfileData }) {
                       <Grid container spacing={2}>
                         <Grid item lg={9} sm={9} xs={9}></Grid>
 
-                        <Grid item lg={3} sm={3} xs={3} align='right'>
+                        <Grid item lg={3} sm={3} xs={3} align="right">
                           <Button onClick={() => setIsEdit(!isEdit)}>
-                            <Typography variant='h5'>Edit </Typography>
+                            <Typography variant="h5">Edit </Typography>
                             <EditIcon
-                              fontSize='small'
+                              fontSize="small"
                               style={{ marginLeft: "5px" }}
                             />
                           </Button>
@@ -460,32 +491,52 @@ function EditProfile({ userProfileData }) {
                         <Grid item lg={6} sm={6} xs={12}>
                           <FormControl fullWidth>
                             <Typography
-                              variant='h6'
+                              variant="h6"
                               style={{ paddingBottom: "8px" }}
-                              color='primary.main'
+                              color="primary.main"
                             >
                               Username
                             </Typography>
                             <OutlinedInput
-                              type='text'
-                              variant='outlined'
-                              size='small'
-                              name='userName'
+                              type="text"
+                              variant="outlined"
+                              size="small"
+                              name="userName"
                               style={{ height: "45px" }}
-                              disabled={auth?.userData.userName !== "" || isEdit}
+                              disabled={
+                                auth?.userData.userName !== "" || isEdit
+                              }
                               // disabled={true}
                               value={
                                 values.userName
                                   ? values.userName
                                   : userData?.userName
                               }
-                              placeholder='User name'
+                              placeholder="User name"
                               // value={values.userName}
                               error={Boolean(
                                 touched.userName && errors.userName
                               )}
                               onBlur={handleBlur}
-                              onChange={handleChange}
+                              onChange={(event) => {
+                                setUserName(event.target.value);
+                                handleChange(event);
+                              }}
+                              endAdornment={
+                                <InputAdornment position="end">
+                                  {userName && (
+                                    <>
+                                      {userExists ? (
+                                        <ErrorIcon style={{ color: "red" }} />
+                                      ) : (
+                                        <CheckCircleIcon
+                                          style={{ color: "green" }}
+                                        />
+                                      )}
+                                    </>
+                                  )}
+                                </InputAdornment>
+                              }
                             />
                             <FormHelperText error>
                               {touched.userName && errors.userName}
@@ -495,20 +546,20 @@ function EditProfile({ userProfileData }) {
                         <Grid item lg={6} sm={6} xs={12}>
                           <FormControl fullWidth>
                             <Typography
-                              variant='h6'
+                              variant="h6"
                               style={{ paddingBottom: "8px" }}
-                              color='primary.main'
+                              color="primary.main"
                             >
                               Full Name
                             </Typography>
                             <OutlinedInput
-                              type='text'
-                              variant='outlined'
-                              size='small'
-                              name='name'
+                              type="text"
+                              variant="outlined"
+                              size="small"
+                              name="name"
                               style={{ height: "45px" }}
                               disabled={isEdit}
-                              placeholder='Name'
+                              placeholder="Name"
                               value={values.name ? values.name : userData?.name}
                               // placeholder="Kollol Baran Nath"
                               // value={values.userName}
@@ -523,24 +574,24 @@ function EditProfile({ userProfileData }) {
                         </Grid>
                         <Grid item xs={12} sm={6} lg={6}>
                           <FormControl fullWidth>
-                            <Typography variant='h6' color='primary.main'>
+                            <Typography variant="h6" color="primary.main">
                               Date of birth
                             </Typography>
                             <Box mt={1}>
                               <KeyboardDatePicker
-                                placeholder='DD/MM/YYYY'
+                                placeholder="DD/MM/YYYY"
                                 value={values.dob}
                                 disabled={isEdit}
                                 onChange={(date) => {
                                   setFieldValue("dob", new Date(date));
                                 }}
                                 maxDate={moment().subtract(18, "year")}
-                                format='DD/MM/YYYY'
-                                inputVariant='outlined'
+                                format="DD/MM/YYYY"
+                                inputVariant="outlined"
                                 disableFuture
                                 fullWidth
-                                margin='dense'
-                                name='dob'
+                                margin="dense"
+                                name="dob"
                                 error={Boolean(touched.dob && errors.dob)}
                                 helperText={touched.dob && errors.dob}
                               />
@@ -550,19 +601,19 @@ function EditProfile({ userProfileData }) {
                         <Grid item xs={12} sm={6} lg={6}>
                           <FormControl fullWidth>
                             <Typography
-                              variant='h6'
+                              variant="h6"
                               style={{ paddingBottom: "8px" }}
-                              color='primary.main'
+                              color="primary.main"
                             >
                               Email address
                             </Typography>
                             <OutlinedInput
-                              type='text'
-                              variant='outlined'
-                              size='small'
-                              name='email'
+                              type="text"
+                              variant="outlined"
+                              size="small"
+                              name="email"
                               style={{ height: "45px" }}
-                              placeholder='Add email'
+                              placeholder="Add email"
                               disabled={auth?.userData.email !== "" || isEdit}
                               value={
                                 values.email ? values.email : userData?.email
@@ -579,20 +630,20 @@ function EditProfile({ userProfileData }) {
                         <Grid item xs={12} sm={6} lg={6}>
                           <FormControl fullWidth>
                             <Typography
-                              variant='h6'
+                              variant="h6"
                               style={{ paddingBottom: "8px" }}
-                              color='primary.main'
+                              color="primary.main"
                             >
                               Bio
                             </Typography>
                             <OutlinedInput
-                              type='text'
-                              variant='outlined'
-                              size='small'
-                              name='bio'
+                              type="text"
+                              variant="outlined"
+                              size="small"
+                              name="bio"
                               style={{ height: "45px" }}
                               disabled={isEdit}
-                              placeholder='Add a bio'
+                              placeholder="Add a bio"
                               value={values.bio ? values.bio : userData?.bio}
                               error={Boolean(touched.bio && errors.bio)}
                               onBlur={handleBlur}
@@ -606,16 +657,16 @@ function EditProfile({ userProfileData }) {
                         <Grid item xs={12} sm={6} lg={6}>
                           <FormControl fullWidth>
                             <Typography
-                              variant='h6'
+                              variant="h6"
                               style={{ paddingBottom: "8px" }}
-                              color='primary.main'
+                              color="primary.main"
                             >
                               Mobile number
                             </Typography>
                             <PhoneInput
                               country={"in"}
                               disabled={!auth?.userData.email || isEdit}
-                              name='mobileNumber'
+                              name="mobileNumber"
                               value={mobileNumberField}
                               error={
                                 mobileNumberField !== "" &&
@@ -644,27 +695,27 @@ function EditProfile({ userProfileData }) {
                         </Grid>
                         <Grid item lg={6} sm={6} md={6} xs={12}>
                           <Typography
-                            variant='h6'
+                            variant="h6"
                             style={{ paddingBottom: "8px" }}
-                            color='primary.main'
+                            color="primary.main"
                           >
                             Gender
                           </Typography>
                           {/* <Paper className="innerRadio"> */}
-                          <FormControl component='fieldset' fullWidth>
+                          <FormControl component="fieldset" fullWidth>
                             <Box className={classes.radio}>
                               <FaTransgender
                                 style={{ fontSize: "25px", margin: "13px" }}
                               />{" "}
-                              <Box className='innerRadio'>
+                              <Box className="innerRadio">
                                 <RadioGroup
                                   style={{ marginBottom: "10px" }}
-                                  aria-label='gender'
-                                  name='gender'
+                                  aria-label="gender"
+                                  name="gender"
                                   // value={value}
-                                  variant='outlined'
+                                  variant="outlined"
                                   onChange={handleChange}
-                                  display='flex'
+                                  display="flex"
                                   value={
                                     values.gender
                                       ? values.gender
@@ -676,17 +727,17 @@ function EditProfile({ userProfileData }) {
                                   onBlur={handleBlur}
                                 >
                                   <FormControlLabel
-                                    value='male'
+                                    value="male"
                                     control={<Radio />}
-                                    label='Male'
-                                    labelPlacement='end'
+                                    label="Male"
+                                    labelPlacement="end"
                                     disabled={isEdit}
                                   />
                                   <FormControlLabel
-                                    value='female'
+                                    value="female"
                                     control={<Radio />}
-                                    labelPlacement='end'
-                                    label='Female'
+                                    labelPlacement="end"
+                                    label="Female"
                                     style={{
                                       fontSize: ".5rem",
                                     }}
@@ -706,22 +757,28 @@ function EditProfile({ userProfileData }) {
                         <Grid item xs={12} sm={6} lg={6}>
                           <FormControl fullWidth>
                             <Typography
-                              variant='h6'
+                              variant="h6"
                               style={{ paddingBottom: "8px" }}
-                              color='primary.main'
+                              color="primary.main"
                             >
                               Location
                             </Typography>
                             <OutlinedInput
-                              type='text'
-                              variant='outlined'
-                              size='small'
-                              name='location'
+                              type="text"
+                              variant="outlined"
+                              size="small"
+                              name="location"
                               style={{ height: "45px" }}
                               disabled={isEdit}
-                              placeholder='Add a location'
-                              value={values.location ? values.location : userData?.location}
-                              error={Boolean(touched.location && errors.location)}
+                              placeholder="Add a location"
+                              value={
+                                values.location
+                                  ? values.location
+                                  : userData?.location
+                              }
+                              error={Boolean(
+                                touched.location && errors.location
+                              )}
                               onBlur={handleBlur}
                               onChange={handleChange}
                             />
@@ -731,8 +788,8 @@ function EditProfile({ userProfileData }) {
                           </FormControl>
                         </Grid>
                       </Grid>
-                      <Box className='sociallinks'>
-                        <Typography variant='h5' color='primary.main'>
+                      <Box className="sociallinks">
+                        <Typography variant="h5" color="primary.main">
                           Social Links
                         </Typography>
                       </Box>
@@ -740,19 +797,19 @@ function EditProfile({ userProfileData }) {
                         <Grid item xs={12} sm={6} lg={6}>
                           <FormControl fullWidth>
                             <Typography
-                              variant='h6'
+                              variant="h6"
                               style={{ paddingBottom: "8px" }}
-                              color='primary.main'
+                              color="primary.main"
                             >
                               Facebook
                             </Typography>
                             <OutlinedInput
-                              type='text'
-                              variant='outlined'
+                              type="text"
+                              variant="outlined"
                               disabled={isEdit}
-                              size='small'
-                              name='facebook'
-                              placeholder='Facebook.com'
+                              size="small"
+                              name="facebook"
+                              placeholder="Facebook.com"
                               style={{ height: "45px" }}
                               value={
                                 values.facebook
@@ -773,19 +830,19 @@ function EditProfile({ userProfileData }) {
                         <Grid item xs={12} sm={6} lg={6}>
                           <FormControl fullWidth>
                             <Typography
-                              variant='h6'
+                              variant="h6"
                               style={{ paddingBottom: "8px" }}
-                              color='primary.main'
+                              color="primary.main"
                             >
                               Twitter
                             </Typography>
                             <OutlinedInput
-                              type='text'
-                              variant='outlined'
-                              size='small'
+                              type="text"
+                              variant="outlined"
+                              size="small"
                               disabled={isEdit}
-                              name='twitter'
-                              placeholder='Twitter.com'
+                              name="twitter"
+                              placeholder="Twitter.com"
                               style={{ height: "45px" }}
                               value={
                                 values.twitter
@@ -804,19 +861,19 @@ function EditProfile({ userProfileData }) {
                         <Grid item xs={12} sm={6} lg={6}>
                           <FormControl fullWidth>
                             <Typography
-                              variant='h6'
+                              variant="h6"
                               style={{ paddingBottom: "8px" }}
-                              color='primary.main'
+                              color="primary.main"
                             >
                               LinkedIn
                             </Typography>
                             <OutlinedInput
-                              type='text'
-                              variant='outlined'
-                              size='small'
-                              name='linkedIn'
+                              type="text"
+                              variant="outlined"
+                              size="small"
+                              name="linkedIn"
                               disabled={isEdit}
-                              placeholder='Linkedin.com'
+                              placeholder="Linkedin.com"
                               style={{ height: "45px" }}
                               value={
                                 values.linkedIn
@@ -837,18 +894,18 @@ function EditProfile({ userProfileData }) {
                         <Grid item xs={12} sm={6} lg={6}>
                           <FormControl fullWidth>
                             <Typography
-                              variant='h6'
+                              variant="h6"
                               style={{ paddingBottom: "8px" }}
-                              color='primary.main'
+                              color="primary.main"
                             >
                               Instagram
                             </Typography>
                             <OutlinedInput
-                              type='text'
-                              variant='outlined'
-                              size='small'
-                              name='instagram'
-                              placeholder='Instagram.com'
+                              type="text"
+                              variant="outlined"
+                              size="small"
+                              name="instagram"
+                              placeholder="Instagram.com"
                               style={{ height: "45px" }}
                               disabled={isEdit}
                               value={
@@ -870,7 +927,7 @@ function EditProfile({ userProfileData }) {
                       </Grid>
                       {errorMessage && (
                         <Box
-                          textAlign='left'
+                          textAlign="left"
                           ml={1}
                           mt={1}
                           style={{ color: "#ba1f11", fontWeight: 600 }}
@@ -880,11 +937,11 @@ function EditProfile({ userProfileData }) {
                       )}
                       <Box mt={4} mb={4}>
                         <Grid container spacing={4}>
-                          <Grid item xs={6} align='right'>
+                          <Grid item xs={6} align="right">
                             <Button
-                              variant='contained'
-                              color='primary'
-                              size='large'
+                              variant="contained"
+                              color="primary"
+                              size="large"
                               onClick={() => history.push("/profile")}
                             >
                               Cancel
@@ -892,10 +949,10 @@ function EditProfile({ userProfileData }) {
                           </Grid>
                           <Grid item xs={6}>
                             <Button
-                              type='submit'
-                              variant='contained'
-                              color='secondary'
-                              size='large'
+                              type="submit"
+                              variant="contained"
+                              color="secondary"
+                              size="large"
                               disabled={
                                 isEdit ||
                                 isUpdating ||
