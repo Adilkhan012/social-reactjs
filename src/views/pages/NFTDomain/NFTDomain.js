@@ -179,7 +179,7 @@ const NFTDomain = () => {
       setIsDisabled(true);
       setMessage(`Successfully minted domain name '${searchTerm}'!`);
       console.log(result);
-      await getMintedLaziDomains(accounts, contract); // fetch the updated minted domains after successful purchase
+      // await getMintedLaziDomains(accounts, contract); // fetch the updated minted domains after successful purchase
 
       // const canvas = createCanvas(500, 100);
       // const ctx = canvas.getContext("2d");
@@ -225,25 +225,23 @@ const NFTDomain = () => {
   const getMintedLaziDomains = async () => {
     try {
       const { accounts, contract } = await initContract();
-      const totalMinted = await contract.methods.totalSupply().call();
       const mintedDomains = [];
-
-      for (let i = 0; i < totalMinted; i++) {
-        const mintedDomain = await contract.methods.domainNameOf(i).call();
-
-        if (mintedDomain) {
-          mintedDomains.push(mintedDomain);
-        }
+  
+      // Get the token IDs owned by the connected account
+      const tokenIds = await contract.methods.tokensOfOwner(accounts[0]).call();
+  
+      for (const tokenId of tokenIds) {
+        const mintedDomain = await contract.methods.domainNameOf(tokenId).call();
+        mintedDomains.push(mintedDomain);
       }
-
+  
       setLaziNames(mintedDomains);
       setMintedDomainNames(mintedDomains);
     } catch (error) {
       console.error(error);
-
-      //
     }
   };
+  
 
   // function to search a specific minted lazi domainname:
   const getMintedLaziDomain = async (domainName) => {
@@ -280,22 +278,11 @@ const NFTDomain = () => {
 
   useEffect(() => {
     async function fetchMintedDomainNames() {
-      const { accounts, contract } = await initContract();
-      const totalMinted = await contract.methods.totalSupply().call();
-      const mintedDomainNames = [];
-
-      for (let i = 0; i < totalMinted; i++) {
-        const mintedDomain = await contract.methods.domainNameOf(i).call();
-        mintedDomainNames.push(mintedDomain);
-      }
-
-      setMintedDomainNames(mintedDomainNames);
+      await getMintedLaziDomains();
     }
-
+  
     fetchMintedDomainNames();
-    // getMintedLaziDomains();
   }, []);
-
   useEffect(() => {
     async function convertMintedDomainNamesToImages() {
       const images = await convertToImages();
