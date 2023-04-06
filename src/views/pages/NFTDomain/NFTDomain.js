@@ -14,6 +14,57 @@ import { toast } from "react-toastify";
 import axios from "axios";
 // import { createCanvas, registerFont } from "canvas";
 import { createCanvas, loadImage, registerFont } from "canvas";
+import { makeStyles } from "@material-ui/core/styles";
+import { Alert } from "@material-ui/lab";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { Paper } from "@material-ui/core";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+
+const useStyles = makeStyles((theme) => ({
+  snackbarMessage: {
+    backgroundColor: "#800080",
+    color: "#FFFFFF",
+    fontWeight: "bold",
+    borderRadius: "20px",
+    padding: "10px 20px",
+    boxShadow: theme.shadows[5],
+    fontSize: "1.5rem",
+    "& .MuiSnackbarContent-message": {
+      fontSize: "4rem",
+      textAlign: "center",
+    },
+    "& .MuiSnackbarContent-action": {
+      marginRight: 0,
+    },
+    "& svg": {
+      color: "#FFFF00",
+      fontSize: "3rem",
+      marginRight: "10px",
+    },
+  },
+
+  alertIcon: {
+    marginRight: "10px",
+  },
+  warningContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    top: 0,
+    left: 0,
+    zIndex: 9999,
+  },
+  warningMessage: {
+    padding: 0,
+    margin: 0,
+    fontSize: "1.2rem",
+    fontWeight: 400,
+    textAlign: "center",
+    maxWidth: "90%",
+  },
+}));
 
 const data = [
   "apple",
@@ -74,6 +125,10 @@ const generateNftImage = async (domainName) => {
 };
 
 const NFTDomain = () => {
+  const classes = useStyles();
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down("xs"));
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const [laziNames, setLaziNames] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [checkboxColor, setCheckboxColor] = useState("red");
@@ -226,22 +281,22 @@ const NFTDomain = () => {
     try {
       const { accounts, contract } = await initContract();
       const mintedDomains = [];
-  
       // Get the token IDs owned by the connected account
       const tokenIds = await contract.methods.tokensOfOwner(accounts[0]).call();
-  
+      console.log("tokenIDs: ", tokenIds);
       for (const tokenId of tokenIds) {
-        const mintedDomain = await contract.methods.domainNameOf(tokenId).call();
+        const mintedDomain = await contract.methods
+          .domainNameOf(tokenId)
+          .call();
         mintedDomains.push(mintedDomain);
       }
-  
+
       setLaziNames(mintedDomains);
       setMintedDomainNames(mintedDomains);
     } catch (error) {
       console.error(error);
     }
   };
-  
 
   // function to search a specific minted lazi domainname:
   const getMintedLaziDomain = async (domainName) => {
@@ -280,8 +335,10 @@ const NFTDomain = () => {
     async function fetchMintedDomainNames() {
       await getMintedLaziDomains();
     }
-  
     fetchMintedDomainNames();
+    if (mintedDomainNames.length === 0) {
+      displaySnackbar("Mint Your Web3 Domains!.");
+    }
   }, []);
   useEffect(() => {
     async function convertMintedDomainNamesToImages() {
@@ -312,8 +369,39 @@ const NFTDomain = () => {
     convertMintedDomainNamesToImages();
   }, [domains]);
 
+  //warning message function settings
+  const displaySnackbar = (message) => {
+    setSnackbarMessage(message);
+    setOpenSnackbar(true);
+  };
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnackbar(false);
+  };
+
   return (
     <>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          variant="filled"
+          severity="warning"
+          className={classes.snackbarMessage}
+        >
+          <span className={classes.alertIcon}>
+            <i className="fas fa-exclamation-triangle"></i>
+          </span>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
       <div className="domain-body">
         <div className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-6 MuiGrid-grid-md-6 MuiGrid-grid-lg-6">
           <h3 className="MuiTypography-root MuiTypography-h3">
@@ -389,24 +477,38 @@ const NFTDomain = () => {
         <div className="user_domains">
           <h1>User Minted Domains</h1>
         </div>
-        <div className="image-grid">
-          {images.map((imageUrl, index) => (
-            <div key={index} className="book">
-              <div className="cover">
-                <img
-                  src={imageUrl}
-                  alt={`Minted domain name ${index}`}
-                  className="image"
-                />
-              </div>
-              {mintedDomainNames.map((index) => (
-                <p key={index}></p>
-              ))}
+        <div>
+          {mintedDomainNames.length > 0 ? (
+            <div className="image-grid">
+              {images.map((imageUrl, index) => (
+                <div key={index} className="book">
+                  <div className="cover">
+                    <img
+                      src={imageUrl}
+                      alt={`Minted domain name ${index}`}
+                      className="image"
+                    />
+                  </div>
+                  {mintedDomainNames.map((index) => (
+                    <p key={index}></p>
+                  ))}
 
-              <p>{mintedDomainNames[index]}</p>
+                  <p>{mintedDomainNames[index]}</p>
+                </div>
+              ))}
             </div>
-          ))}
+          ) : (
+            <div className={classes.warningContainer}>
+              <Paper className={classes.warningMessage}>
+                <p>
+                  You don't have any minted domains. Please buy some domains to
+                  display.
+                </p>
+              </Paper>
+            </div>
+          )}
         </div>
+
         <div className="user_domains">
           <h1>Community DomainNames</h1>
         </div>
