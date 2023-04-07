@@ -17,14 +17,18 @@ import { createCanvas, loadImage, registerFont } from "canvas";
 import { makeStyles } from "@material-ui/core/styles";
 import { Alert } from "@material-ui/lab";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { Paper } from "@material-ui/core";
+import { Paper, InputAdornment } from "@material-ui/core";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import ErrorIcon from "@material-ui/icons/Error";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
+import TextField from "@material-ui/core/TextField";
+
 
 const useStyles = makeStyles((theme) => ({
   snackbarMessage: {
-    backgroundColor: "#800080",
-    color: "#FFFFFF",
+    backgroundColor: "#e70c9b",
+    color: "#dfff4e",
     fontWeight: "bold",
     borderRadius: "20px",
     padding: "10px 20px",
@@ -38,16 +42,17 @@ const useStyles = makeStyles((theme) => ({
       marginRight: 0,
     },
     "& svg": {
-      color: "#FFFF00",
-      fontSize: "3rem",
+      color: "#dfff4e",
+      fontSize: "2.5rem",
       marginRight: "10px",
     },
   },
 
   alertIcon: {
-    marginRight: "10px",
+    marginRight: "8px",
   },
   warningContainer: {
+    backgroundColor: "E70C9B",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -57,8 +62,10 @@ const useStyles = makeStyles((theme) => ({
     zIndex: 9999,
   },
   warningMessage: {
+    backgroundColor: "E70C9B",
     padding: 0,
     margin: 0,
+    color: "#E70C9B",
     fontSize: "1.2rem",
     fontWeight: 400,
     textAlign: "center",
@@ -188,10 +195,13 @@ const NFTDomain = () => {
     const domainName = e.target.value;
     setSearchTerm(domainName);
     const mintedDomain = await getMintedLaziDomain(domainName);
-    if (mintedDomain === null) {
-      setIsAvailable(true);
-    } else {
-      setIsAvailable(false);
+    if (mintedDomain) {
+      setIsMinted(true);
+      setIsDisabled(true);
+      return;
+    }else{
+      setIsMinted(false);
+      setIsDisabled(false);
     }
   };
 
@@ -417,32 +427,32 @@ const NFTDomain = () => {
                 {message}
               </div>
             ) : null}
-            <input
+            <TextField
               type="text"
               className="input"
               placeholder="Enter a Domain"
               value={searchTerm}
               onChange={handleInputChange}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    {isMinted === true ? (
+                      <ErrorIcon style={{ color: "red" }} />
+                    ) : (
+                      <CheckCircleIcon style={{ color: "green" }} />
+                    )}
+                  </InputAdornment>
+                ),
+              }}
             />
-
             <button
               className="button btx"
               onClick={handleBuyLaziName}
               disabled={isDisabled}
               style={{ backgroundcolor: "#E31A89" }}
             >
-              Buy LaziName
+              Buy
             </button>
-            <div className="avail-text">
-              {isAvailable === true && (
-                <span className="spx" style={{ color: "green" }}>
-                  Available{" "}
-                </span>
-              )}
-              {isAvailable === false && (
-                <span style={{ color: "red" }}>Already minted ✗</span>
-              )}
-            </div>
           </div>
           {/* input + button flex - section end */}
 

@@ -22,23 +22,28 @@
 .input {
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
   font-weight: 500;
-  font-size: 12px;
-
+  font-size: 2em;
   color: #fff;
   background: #373636;
   box-shadow: 0 0 .4vw rgb(227 26 137) transparent;
-  border-radius: 0.4vw;
+  border-radius: 0.2vw;
   border: none;
   outline: none;
-  padding: 11px;
-
- 
-    width: 85%;
+  padding: 6px;
+  width: 80%;
+  height: 10%;
   transition: .4s;
 }
-.button{
+
+.button {
   background-color: #E31A89;
   color: white;
+  font-size: 1em;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 0.2vw;
+  cursor: pointer;
+  margin-left: 8px;
 }
 
 
@@ -72,12 +77,13 @@
 
 .input-bg{
   background: rgb(0, 0, 0);
-    padding: 20px;
-    border-radius: 15px;
-    margin-top: 31px;
-    width: 81%;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 15px;
+    width: 70%;
+    height: 10%;
     margin: auto;
-    margin-top: 24px;
+    margin-top: 10px;
 }
 .domain-item {
   margin-bottom: 10px;
@@ -295,17 +301,17 @@ p {
 @media only screen and (max-width: 767px) {
 
 .input{
-      border-radius: 11px;
-    margin-right: 14px;
-    font-size: 15px;
+      border-radius: 5px;
+    margin-right: 8px;
+    font-size: 10px;
 }
 
 .button{
-      border-radius: 9px;
+      border-radius: 6px;
       width: 100%;
       margin-left: 0px;
-      padding: 8px;
-      width: 176px;
+      padding: 5px;
+      width: 100px;
       
 }
 .btn-y{
