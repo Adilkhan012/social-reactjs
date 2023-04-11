@@ -90,7 +90,7 @@ export const routes = [
   },
   {
     exact: true,
-    path: "/NFTDomain",
+    path: "/mint",
     layout: DashboardLayout,
     component: lazy(() => import("src/views/pages/NFTDomain/NFTDomain")),
   },

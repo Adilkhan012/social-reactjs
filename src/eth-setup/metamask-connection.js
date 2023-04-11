@@ -7,7 +7,7 @@ import MetaMaskOnboarding from "@metamask/onboarding";
 
 const msg_mobile = "Please use MetaMask App!";
 const msg_desk = "Please install MetaMask Wallet extension";
-const deepLink = "https://metamask.app.link/dapp/morphgenesis.com/mint";
+const deepLink = "https://metamask.app.link/dapp/app.lazi.app/mint";
 
 // the responsibility of this method is to deal with blockchain
 // irrespective of metamask installed or not
