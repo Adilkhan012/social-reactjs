@@ -91,6 +91,7 @@ export const routes = [
   {
     exact: true,
     path: "/mint",
+    guard: true,
     layout: DashboardLayout,
     component: lazy(() => import("src/views/pages/NFTDomain/NFTDomain")),
   },

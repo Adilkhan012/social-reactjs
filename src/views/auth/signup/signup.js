@@ -506,12 +506,6 @@ function Signup() {
     }
   }, [auth?.userLoggedIn]);
 
-  // const [showSignupForm, setShowSignupForm] = useState(false);
-
-  // const [loading, setLoading] = useState(false);
-  // const [error, setError] = useState(null);
-
-  // const history = useHistory();
 
   const handleMetaMaskConnect = async () => {
     try {
@@ -587,29 +581,43 @@ function Signup() {
         message: message,
         signature: signature,
       };
-      const response = await axios({
+      const res = await axios({
         method: "POST",
         url: ApiConfig.registerMetamask,
         data: credentials,
       });
 
-      if (response.data.responseCode === 200) {
-        // Sign in successful
-        const token = response.data.result.token;
-        window.sessionStorage.setItem("token", token);
-        window.localStorage.setItem("token", token);
-        setIsLoggedIn(true);
-        history.push("/explore");
+      if (res.data.responseCode === 200) {
+        window.localStorage.setItem("status", res.data.result.status);
+        auth.setIsLogin(true);
+        setTimeout(() => {
+          auth.handleUserProfileApi();
+        }, 500);
 
+        setTimeout(() => {
+          auth.handleUserProfileApi(res.data.result.token);
+        }, 500);
+
+        // Sign in successful
+        toast.success(res.data.responseMessage);
+        setIsLoggedIn(true);
+        // history.push("/explore");
         toast.success("Metamask connected successfully");
+        setIsLoading(false);
+        setTimeout(() => {
+          history.push("/explore");
+        }, 2000);
+        window.sessionStorage.setItem("token", res.data.result.token);
+        window.localStorage.setItem("token", res.data.result.token);
+        window.localStorage.setItem("status", res.data.result.status);
       } else {
         // Sign in failed
-        toast.error(response.data.responseMessage);
-        setLoading(false);
+        setIsLoading(false);
+        toast.error(res.data.responseMessage);
       }
 
       setLoading(false);
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       setError(error);
       setLoading(false);
