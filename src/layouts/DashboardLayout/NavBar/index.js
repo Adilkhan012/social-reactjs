@@ -252,7 +252,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
               {
                 title: "Nft domain/ mint",
                 icon: HiUserGroup,
-                href: "/NFTDomain",
+                href: "/mint",
               },
             ],
           },
