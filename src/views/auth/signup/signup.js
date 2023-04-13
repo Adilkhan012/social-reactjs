@@ -502,7 +502,7 @@ function Signup() {
 
   useEffect(() => {
     if (auth?.userLoggedIn) {
-      history.push("/explore");
+      history.push("/mint");
     }
   }, [auth?.userLoggedIn]);
 
@@ -524,10 +524,13 @@ function Signup() {
         params: [{ eth_accounts: {} }],
       });
       await window.ethereum.enable();
-
+      const requiredChainId = '0x38';
       // Check if user is on Mumbai testnet
-      const chainId = await web3.eth.getChainId();
-      if (chainId !== 80001) {
+      const chainId = await window.ethereum.request({
+        method: 'eth_chainId',
+      });
+
+      if (chainId !== requiredChainId) {
     
         // Listen for accountsChanged event
         window.ethereum.on("accountsChanged", (accounts) => {
@@ -537,7 +540,7 @@ function Signup() {
         // Switch network to Mumbai testnet
         const result = await window.ethereum.request({
           method: "wallet_switchEthereumChain",
-          params: [{ chainId: "0x13881" }], // 80001 in hex
+          params: [{ chainId: "0x38" }], // 80001 in hex
         });
         console.log("result! ", result);
 
@@ -598,7 +601,7 @@ function Signup() {
         toast.success("Metamask connected successfully");
         setIsLoading(false);
         setTimeout(() => {
-          history.push("/explore");
+          history.push("/mint");
         }, 2000);
         window.sessionStorage.setItem("token", res.data.result.token);
         window.localStorage.setItem("token", res.data.result.token);
@@ -610,7 +613,7 @@ function Signup() {
       }
 
       setLoading(false);
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       setError(error);
       setLoading(false);

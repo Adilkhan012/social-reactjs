@@ -101,7 +101,7 @@ const web3 = new Web3(window.ethereum);
 //   });
 
 // Instantiate the contract object with your ABI and contract address
-const contractAddress = "0x89434167B12C97239aa7708980BB6f8FA82185Cd"; // Replace with your contract address
+const contractAddress = "0x9c2C4aE02C9e3005F5e36EAf9096983Af502307E"; // Replace with your contract address
 // const contract = new web3.eth.Contract(contractABI, contractAddress);
 
 const generateNftImage = async (domainName) => {
@@ -236,10 +236,27 @@ const NFTDomain = () => {
       }
       console.log({ accounts });
       console.log({ contract });
-      const result = await contract.methods.buyLaziName(searchTerm).send({
-        from: accounts[0],
-        value: web3.utils.toWei("0", "ether"), // specify the amount of ether to send
-      });
+
+      const result = contract.methods.buyLaziNames([searchTerm]);
+      let msg;
+      try {
+        const etGas =  await result.estimateGas({
+          from: accounts[0],
+          value: web3.utils.toWei("0", "ether"), // specify the amount of ether to send
+        })
+        
+      } catch (e) {
+        console.log(e);
+        console.log(e.message);
+        let a = e.message;
+        let objStr = a.substring(a.indexOf('{'), a.lastIndexOf('}') + 1);
+        msg = JSON.parse(objStr).message || JSON.parse(objStr).originalError.message;
+        msg = msg.replace('err: ', '');
+        msg = msg.replace('execution reverted: ', '');
+        return
+      }
+
+
       setIsMinted(true);
       setIsDisabled(true);
       setMessage(`Successfully minted domain name '${searchTerm}'!`);
@@ -347,7 +364,7 @@ const NFTDomain = () => {
     }
     fetchMintedDomainNames();
     if (mintedDomainNames.length === 0) {
-      displaySnackbar("Mint Your Web3 Domains!.");
+      displaySnackbar("Mint Your Web3 UserName!.");
     }
   }, []);
   useEffect(() => {
@@ -451,7 +468,7 @@ const NFTDomain = () => {
               disabled={isDisabled}
               style={{ backgroundcolor: "#E31A89" }}
             >
-              Buy
+              Mint
             </button>
           </div>
           {/* input + button flex - section end */}
