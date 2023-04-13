@@ -506,7 +506,6 @@ function Signup() {
     }
   }, [auth?.userLoggedIn]);
 
-
   const handleMetaMaskConnect = async () => {
     try {
       setLoading(true);
@@ -617,7 +616,7 @@ function Signup() {
       }
 
       setLoading(false);
-      // window.location.reload();
+      window.location.reload();
     } catch (error) {
       setError(error);
       setLoading(false);
