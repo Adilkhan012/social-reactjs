@@ -528,13 +528,7 @@ function Signup() {
       // Check if user is on Mumbai testnet
       const chainId = await web3.eth.getChainId();
       if (chainId !== 80001) {
-        // Listen for the chainChanged event and switch network when emitted
-        // window.ethereum.on("chainChanged", (chainId) => {
-        //   if (chainId === "0x13881") {
-        //     // window.location.reload();
-        //   }
-        // });
-
+    
         // Listen for accountsChanged event
         window.ethereum.on("accountsChanged", (accounts) => {
           setAddress(accounts[0]);

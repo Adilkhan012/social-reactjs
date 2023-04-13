@@ -430,7 +430,7 @@ const NFTDomain = () => {
             <TextField
               type="text"
               className="input"
-              placeholder="Enter a Domain"
+              placeholder="Enter a UserName"
               value={searchTerm}
               onChange={handleInputChange}
               InputProps={{
@@ -485,7 +485,7 @@ const NFTDomain = () => {
 
         {/* user detail section including name | domain | url */}
         <div className="user_domains">
-          <h1>User Minted Domains</h1>
+          <h1>User Minted UserNames</h1>
         </div>
         <div>
           {mintedDomainNames.length > 0 ? (
@@ -520,7 +520,7 @@ const NFTDomain = () => {
         </div>
 
         <div className="user_domains">
-          <h1>Community DomainNames</h1>
+          <h1>Community UserNames</h1>
         </div>
         <div className="image-grid">
           {cimages.map((imageUrls, index) => (
