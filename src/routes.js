@@ -15,7 +15,7 @@ export const routes = [
   },
   {
     exact: true,
-    path: "/admin",
+    path: "/admin-login",
     layout: LoginLayout,
     component: lazy(() => import("src/views/auth/LogIn")),
   },

@@ -239,22 +239,22 @@ function Login(props) {
     event.preventDefault();
     setIsSubmit(true);
 
-    if (!window.ethereum) {
-      toast.error("Please install MetaMask to continue");
-      return;
-    }
+    // if (!window.ethereum) {
+    //   toast.error("Please install MetaMask to continue");
+    //   return;
+    // }
 
-    // Request the user to connect to MetaMask
-    // const web3 = new Web3(window.ethereum);
-    await window.ethereum.request({
-      method: "wallet_requestPermissions",
-      params: [{ eth_accounts: {} }],
-    });
-    await window.ethereum.enable();
+    // // Request the user to connect to MetaMask
+    // // const web3 = new Web3(window.ethereum);
+    // await window.ethereum.request({
+    //   method: "wallet_requestPermissions",
+    //   params: [{ eth_accounts: {} }],
+    // });
+    // await window.ethereum.enable();
 
-    // Get the user's Ethereum address from MetaMask
-    const accounts = await web3.eth.getAccounts();
-    const address = accounts[0];
+    // // Get the user's Ethereum address from MetaMask
+    // const accounts = await web3.eth.getAccounts();
+    // const address = accounts[0];
 
     if (
       isValidNumber(mobileNumber) ||
@@ -268,7 +268,7 @@ function Login(props) {
           email: checked2
             ? mobileNumber?.slice(countryCode?.length)
             : formValue.email,
-          socialId: address,
+          // socialId: address,
           password: formValue.password,
         });
         if (res.data.responseCode === 200) {
