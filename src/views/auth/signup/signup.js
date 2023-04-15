@@ -118,6 +118,31 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// const customNetwork = {
+//   chainId: '0x38', // BSC Mainnet Chain ID
+//   chainName: 'Binance Smart Chain Mainnet',
+//   nativeCurrency: {
+//     name: 'BNB',
+//     symbol: 'BNB',
+//     decimals: 18,
+//   },
+//   rpcUrls: ['https://bsc-dataseed1.binance.org'], // BSC Mainnet RPC endpoint
+//   blockExplorerUrls: ['https://bscscan.com'], // BSC Mainnet Block Explorer URL
+// };
+
+const customNetwork = {
+  chainId: '0x61',
+  chainName: 'Binance Smart Chain Testnet',
+  rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
+  nativeCurrency: {
+    name: 'BNB',
+    symbol: 'BNB',
+    decimals: 18,
+  },
+  blockExplorerUrls: ['https://testnet.bscscan.com/'],
+};
+
+
 function Signup() {
   const classes = useStyles();
   const history = useHistory();
@@ -524,13 +549,12 @@ function Signup() {
         params: [{ eth_accounts: {} }],
       });
       await window.ethereum.enable();
-      const requiredChainId = '0x38';
       // Check if user is on Mumbai testnet
       const chainId = await window.ethereum.request({
         method: 'eth_chainId',
       });
 
-      if (chainId !== requiredChainId) {
+      if (chainId !== customNetwork.chainId) {
     
         // Listen for accountsChanged event
         window.ethereum.on("accountsChanged", (accounts) => {
@@ -538,11 +562,18 @@ function Signup() {
         });
 
         // Switch network to Mumbai testnet
-        const result = await window.ethereum.request({
-          method: "wallet_switchEthereumChain",
-          params: [{ chainId: "0x38" }], // 80001 in hex
-        });
-        console.log("result! ", result);
+
+        try {
+          await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: customNetwork.chainId }], // 80001 in hex
+          });
+        } catch (error) {
+          await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [customNetwork],
+          });
+        }
 
         // Handle the result of the network switch request
         // if (result === undefined) {
