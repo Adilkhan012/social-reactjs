@@ -25,6 +25,7 @@ import MuiAlert from "@material-ui/lab/Alert";
 import TextField from "@material-ui/core/TextField";
 
 
+
 const useStyles = makeStyles((theme) => ({
   snackbarMessage: {
     backgroundColor: "#e70c9b",
@@ -101,7 +102,8 @@ const web3 = new Web3(window.ethereum);
 //   });
 
 // Instantiate the contract object with your ABI and contract address
-const contractAddress = "0x9c2C4aE02C9e3005F5e36EAf9096983Af502307E"; // Replace with your contract address
+// const contractAddress = "0x9c2C4aE02C9e3005F5e36EAf9096983Af502307E"; // Replace with your contract address
+const contractAddress = "0xB4EF36f15F225A0c4244CA5Abd5C5c2c03321092"; // Replace with your contract address
 // const contract = new web3.eth.Contract(contractABI, contractAddress);
 
 const generateNftImage = async (domainName) => {
@@ -237,48 +239,35 @@ const NFTDomain = () => {
       console.log({ accounts });
       console.log({ contract });
 
-      const result = contract.methods.buyLaziNames([searchTerm]);
-      let msg;
-      try {
-        const etGas =  await result.estimateGas({
-          from: accounts[0],
-          value: web3.utils.toWei("0", "ether"), // specify the amount of ether to send
-        })
+      const result = await contract.methods.buyLaziNames([searchTerm]).send({
+        from: accounts[0],
+        value: web3.utils.toWei("0", "ether"), // specify the amount of ether to send
+      });
+
+      // const result = contract.methods.buyLaziNames([searchTerm]);
+      // let msg;
+      // try {
+      //   const etGas =  await result.estimateGas({
+      //     from: accounts[0],
+      //     value: web3.utils.toWei("0", "ether"), // specify the amount of ether to send
+      //   })
         
-      } catch (e) {
-        console.log(e);
-        console.log(e.message);
-        let a = e.message;
-        let objStr = a.substring(a.indexOf('{'), a.lastIndexOf('}') + 1);
-        msg = JSON.parse(objStr).message || JSON.parse(objStr).originalError.message;
-        msg = msg.replace('err: ', '');
-        msg = msg.replace('execution reverted: ', '');
-        return
-      }
+      // } catch (e) {
+      //   console.log(e);
+      //   console.log(e.message);
+      //   let a = e.message;
+      //   let objStr = a.substring(a.indexOf('{'), a.lastIndexOf('}') + 1);
+      //   msg = JSON.parse(objStr).message || JSON.parse(objStr).originalError.message;
+      //   msg = msg.replace('err: ', '');
+      //   msg = msg.replace('execution reverted: ', '');
+      //   return
+      // }
 
 
       setIsMinted(true);
       setIsDisabled(true);
-      setMessage(`Successfully minted domain name '${searchTerm}'!`);
+      // setMessage(`Successfully minted domain name '${searchTerm}'!`);
       console.log(result);
-      // await getMintedLaziDomains(accounts, contract); // fetch the updated minted domains after successful purchase
-
-      // const canvas = createCanvas(500, 100);
-      // const ctx = canvas.getContext("2d");
-
-      // try {
-      //   registerFont("path/to/font.ttf", { family: "Arial" });
-      // } catch (error) {
-      //   console.error("Error registering font:", error);
-      // }
-
-      // ctx.font = "20px Arial";
-
-      // ctx.fillStyle = "#000000";
-      // ctx.fillText(searchTerm, 10, 50);
-
-      // const image = canvas.toDataURL();
-
       const response = await axios({
         method: "POST",
         url: ApiConfig.createNftDomainName,
@@ -295,6 +284,8 @@ const NFTDomain = () => {
 
       if (response.status === 200) {
         console.log("NFT domain created successfully");
+        toast.success(` UserName Minted Successfully!`);
+
       } else {
         console.log("Failed to create NFT domain");
       }
@@ -331,7 +322,7 @@ const NFTDomain = () => {
       const { accounts, contract } = await initContract();
       const totalMinted = await contract.methods.totalSupply().call();
 
-      for (let i = 0; i < totalMinted; i++) {
+      for (let i = 0; i <= totalMinted; i++) {
         const mintedDomain = await contract.methods.domainNameOf(i).call();
 
         if (mintedDomain === domainName) {
