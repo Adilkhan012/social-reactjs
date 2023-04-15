@@ -41915,7 +41915,7 @@
     }
 
     // protected
-    BigInteger.prototype.copyTo = bnpCopyTo;
+    // BigInteger.prototype.copyTo = bnpCopyTo;
     BigInteger.prototype.fromInt = bnpFromInt;
     BigInteger.prototype.fromString = bnpFromString;
     BigInteger.prototype.clamp = bnpClamp;
