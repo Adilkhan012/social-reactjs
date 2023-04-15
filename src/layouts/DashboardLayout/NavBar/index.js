@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
-import React, { useContext, useEffect, useState } from "react";
-import { useLocation, matchPath, useHistory } from "react-router-dom";
+import React, {useContext, useEffect, useState} from "react";
+import {useLocation, matchPath, useHistory} from "react-router-dom";
 import PerfectScrollbar from "react-perfect-scrollbar";
 
 import PropTypes from "prop-types";
@@ -20,37 +20,36 @@ import {
   DialogContentText,
 } from "@material-ui/core";
 import Logo from "src/component/Logo";
-import { FaUserAlt } from "react-icons/fa";
-import { MdLocalOffer } from "react-icons/md";
-import { MdDashboard, MdSettings } from "react-icons/md";
-import { RiLogoutCircleRFill } from "react-icons/ri";
-import { ImUsers } from "react-icons/im";
-import { RiAdminLine } from "react-icons/ri";
-import { RiAuctionFill } from "react-icons/ri";
-import { AiOutlineControl } from "react-icons/ai";
-import { CgUnblock } from "react-icons/cg";
-import { SiProcessingfoundation } from "react-icons/si";
-import { HiUserGroup } from "react-icons/hi";
-import { BsPeopleFill } from "react-icons/bs";
-import { FiTrendingUp } from "react-icons/fi";
-import { GiStaticGuard } from "react-icons/gi";
+import {FaUserAlt} from "react-icons/fa";
+import {MdLocalOffer} from "react-icons/md";
+import {MdDashboard, MdSettings} from "react-icons/md";
+import {RiLogoutCircleRFill} from "react-icons/ri";
+import {ImUsers} from "react-icons/im";
+import {RiAdminLine} from "react-icons/ri";
+import {RiAuctionFill} from "react-icons/ri";
+import {AiOutlineControl} from "react-icons/ai";
+import {CgUnblock} from "react-icons/cg";
+import {SiProcessingfoundation} from "react-icons/si";
+import {HiUserGroup} from "react-icons/hi";
+import {BsPeopleFill} from "react-icons/bs";
+import {FiTrendingUp} from "react-icons/fi";
+import {GiStaticGuard, GiWantedReward} from "react-icons/gi";
 import NavItem from "./NavItem";
-import { PieChart as PieChartIcon } from "react-feather";
-import { AuthContext } from "src/context/Auth";
-import { detectEthereumProvider } from "@metamask/detect-provider";
+import {PieChart as PieChartIcon} from "react-feather";
+import {AuthContext} from "src/context/Auth";
 
-function renderNavItems({ items, pathname, depth = 0 }) {
+function renderNavItems({items, pathname, depth = 0}) {
   return (
     <List disablePadding>
       {items.reduce(
-        (acc, item) => reduceChildRoutes({ acc, item, pathname, depth }),
+        (acc, item) => reduceChildRoutes({acc, item, pathname, depth}),
         []
       )}
     </List>
   );
 }
 
-function reduceChildRoutes({ acc, pathname, item, depth }) {
+function reduceChildRoutes({acc, pathname, item, depth}) {
   const key = item.title + depth;
 
   if (item.items) {
@@ -89,6 +88,7 @@ function reduceChildRoutes({ acc, pathname, item, depth }) {
   }
   return acc;
 }
+
 const useStyles = makeStyles((theme) => ({
   mobileDrawer: {
     width: 256,
@@ -134,7 +134,7 @@ const useStyles = makeStyles((theme) => ({
   // }
 }));
 
-const NavBar = ({ onMobileClose, openMobile }) => {
+const NavBar = ({onMobileClose, openMobile}) => {
   const classes = useStyles();
   const location = useLocation();
   const history = useHistory();
@@ -243,6 +243,11 @@ const NavBar = ({ onMobileClose, openMobile }) => {
                 title: "Promotion",
                 icon: SiProcessingfoundation,
                 href: "/promotion",
+              },
+              {
+                title: "Rewards",
+                icon: GiWantedReward,
+                href: "/rewards",
               },
               {
                 title: "Settings",
@@ -395,8 +400,8 @@ const NavBar = ({ onMobileClose, openMobile }) => {
 
   const content = (
     <Box height="100%" display="flex" flexDirection="column">
-      <PerfectScrollbar options={{ suppressScrollX: true }}>
-        <Box style={{ padding: "8px 0px 32px 0px" }}>
+      <PerfectScrollbar options={{suppressScrollX: true}}>
+        <Box style={{padding: "8px 0px 32px 0px"}}>
           {sections.map((section, i) => {
             return (
               <List
@@ -418,7 +423,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
         <Box>
           <List>
             <Button className={classes.button} onClick={() => setOpen(true)}>
-              <RiLogoutCircleRFill />
+              <RiLogoutCircleRFill/>
               &nbsp;&nbsp;&nbsp; Logout
             </Button>
           </List>
@@ -431,7 +436,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
           // fullWidth
           // maxWidth="sm"
           // className="logoutModal
-          style={{ border: "#787878 !important" }}
+          style={{border: "#787878 !important"}}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
@@ -451,7 +456,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
                 color="primary"
                 variant="contained"
                 size="large"
-                style={{ marginRight: "8px" }}
+                style={{marginRight: "8px"}}
               >
                 Cancel
               </Button>
@@ -460,7 +465,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
                 color="secondary"
                 variant="contained"
                 size="large"
-                style={{ marginLeft: "8px" }}
+                style={{marginLeft: "8px"}}
                 onClick={handLogout}
               >
                 Logout
@@ -480,7 +485,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       <Hidden lgUp>
         <Drawer
           anchor="left"
-          classes={{ paper: classes.mobileDrawer }}
+          classes={{paper: classes.mobileDrawer}}
           onClose={onMobileClose}
           open={openMobile}
           variant="temporary"
@@ -491,7 +496,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       <Hidden mdDown>
         <Drawer
           anchor="left"
-          classes={{ paper: classes.desktopDrawer }}
+          classes={{paper: classes.desktopDrawer}}
           open
           variant="persistent"
         >

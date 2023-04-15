@@ -270,6 +270,13 @@ export const routes = [
     layout: DashboardLayout,
     component: lazy(() => import("src/views/pages/Promotion/Promotion")),
   },
+  {
+    exact: true,
+    path: "/rewards",
+    guard: true,
+    layout: DashboardLayout,
+    component: lazy(() => import("src/views/pages/Rewards/Rewards")),
+  },
 
   {
     exact: true,
