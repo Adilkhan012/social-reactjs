@@ -6,16 +6,28 @@ import {Tooltip} from '@material-ui/core';
 import InfoIcon from "@material-ui/icons/Info";
 
 const useStyles = makeStyles((theme) => ({
+  checkbox: {
+    display: "flex",
+    alignItems: "center",
+    marginBottom: theme.spacing(1),
+  },
   tooltip: {
     backgroundColor: 'secondary',
     textAlign: 'center',
   },
+  sliderThumb: {
+    transition: 'transform 0.2s ease-out',
+    '&:hover': {
+      transform: 'scale(1.2)',
+    },
+  },
+
   heading: {
     display: "flex",
   },
   toolTipHeader: {
     position: "absolute",
-    top: "12.5%",
+    top: "11.5%",
     left: "49%"
   },
   bannerBox: {
@@ -34,27 +46,38 @@ const useStyles = makeStyles((theme) => ({
       padding: "10px",
     },
   },
+
   Buttonbox: {
     "& Button": {
-      marginRight: "5px",
-      minWidth: "106px",
-      boxSizing: "border-box",
-      fontWeight: "400",
-      borderRadius: "10px",
       padding: "11px 16px",
-      background: "#242526",
-      color: "#9E9E9E",
-      fontFamily: "'Montserrat'",
-      marginTop: "7px",
-      fontSize: "14px",
-      "&:hover": {
-        background: "#EC167F",
-        color: "#fff",
+      borderRadius: "4px",
+      color: "#fff",
+      fontSize: "16px",
+      fontWeight: "bold",
+      position: "relative",
+      overflow: "hidden",
+      backgroundColor: "#EC167F",
+      border: "none",
+      "&::before": {
+        content: '""',
+        position: "absolute",
+        top: "0",
+        left: "-50%",
+        width: "100%",
+        height: "100%",
+        backgroundColor: "rgba(255, 255, 255, 0.2)",
+        transform: "translateX(-150%) skewX(-45deg)",
+        animation: "$shining 1.5s ease-in-out infinite",
       },
-      "&:active": {
-        background: "#EC167F",
-        color: "#fff",
-      },
+
+    },
+  },
+  "@keyframes shining": {
+    "0%": {
+      transform: "translateX(-150%) skewX(-45deg)",
+    },
+    "100%": {
+      transform: "translateX(150%) skewX(-45deg)",
     },
   },
 }));
@@ -98,19 +121,19 @@ const EngageReward = () => {
                 </Box>
                 <br></br>
                 <Box mt={2}>
-                  <br></br>
                   <Slider
                     aria-label="Default"
                     defaultValue={20}
                     getAriaValueText={valuetext}
-                    valueLabelDisplay="auto"
                     valueLabelFormat={valuetext}
                     step={5}
                     min={10}
                     max={100}
                     classes={{
                       valueLabel: classes.tooltip,
+                      thumb: classes.sliderThumb,
                     }}
+                    valueLabelDisplay="on"
                     color="secondary"
                   />
                 </Box>
@@ -125,28 +148,38 @@ const EngageReward = () => {
 
                   />
                   <br></br>
-                  <Autocomplete
-                    id="checkboxes-users"
-                    options={userOptions}
-                    disableCloseOnSelect
-                    getOptionLabel={(option) => option.label}
-                    onChange={handleSelectedOptionsChange}
-                    value={selectedOptions}
-                    renderOption={(props, option) => (
-                      <div {...props}>
-                        <Checkbox
-                          checked={props.selected}
-                          {...props.inputProps}
-                        />
-                        {userOptions.label}
-                      </div>
-                    )}
-                    renderInput={(params) => (
-                      <TextField {...params} variant="outlined" label="Users Stake"/>
-                    )}
-                  />
                 </Box>
-
+                <br></br>
+                <Box className={classes.heading}>
+                  <Typography variant="h2">
+                    Users Stake
+                  </Typography>
+                </Box>
+                <br></br>
+                <Box className={classes.checkbox}>
+                  <Checkbox
+                    // checked={true}
+                    // onChange={(event) => setCheckedBox(!checkBoxRemember)}
+                    defaultChecked
+                    size="small"
+                    inputProps={{
+                      "aria-label": "checkbox with small size",
+                    }}
+                  />
+                  <Typography variant="h5">{"Adil Kan"}</Typography>
+                </Box>
+                <Box className={classes.checkbox}>
+                  <Checkbox
+                    // checked={true}
+                    // onChange={(event) => setCheckedBox(!checkBoxRemember)}
+                    defaultChecked
+                    size="small"
+                    inputProps={{
+                      "aria-label": "checkbox with small size",
+                    }}
+                  />
+                  <Typography variant="h5">{"Muneeb zubair"}</Typography>
+                </Box>
                 <Box className={classes.Buttonbox} mt={2}>
                   <Box mt={2}>
                     <Button
