@@ -4,9 +4,15 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import Button from "@material-ui/core/Button";
 import {Tooltip} from '@material-ui/core';
 import InfoIcon from "@material-ui/icons/Info";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 const useStyles = makeStyles((theme) => ({
   checkbox: {
+    display: "flex",
+    alignItems: "center",
+    marginBottom: theme.spacing(1),
+  },
+  tooltipIconHeader: {
     display: "flex",
     alignItems: "center",
     marginBottom: theme.spacing(1),
@@ -96,6 +102,7 @@ const EngageReward = () => {
   const handleSelectedOptionsChange = (event, newValue) => {
     setSelectedOptions(newValue);
   };
+  const isMobile = useMediaQuery('(max-width:600px)');
   const valuetext = (value) => {
     return `${value} LAZI`;
   }
@@ -104,21 +111,18 @@ const EngageReward = () => {
     <>
       <Box className={classes.bannerBox}>
         <Grid container spacing={3}>
-          <Grid item xs={6}>
+          <Grid item xs={isMobile ? 12 : 6}>
             <Paper className={classes.root} elevation={2}>
               <Box className={classes.root}>
-                <Box className={classes.heading}>
+                <Box className={classes.tooltipIconHeader}>
                   <Typography variant="h2">
                     Engage Reward
                   </Typography>
+                  <Tooltip title="This is the stake reward tooltip." style={{cursor: "pointer"}} placement={"top"}>
+                    <InfoIcon fontSize={"medium"}/>
+                  </Tooltip>
                 </Box>
-                <Box mt={2}>
-                  <div className={classes.toolTipHeader}>
-                    <Tooltip title="This is the stake reward tooltip." style={{cursor: "pointer"}} placement={"top"}>
-                      <InfoIcon fontSize={"medium"}/>
-                    </Tooltip>
-                  </div>
-                </Box>
+
                 <br></br>
                 <Box mt={2}>
                   <Slider
@@ -207,9 +211,9 @@ const EngageReward = () => {
               </Box>
             </Paper>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={isMobile ? 12 : 6}>
             <Paper className={classes.root} elevation={2}>
-              <Box className={classes.root}>
+              <Box className={classes.root} height={400} overflow="auto">
                 <Box className={classes.heading}>
                   <Typography variant="h2" style={{fontSize: "26px"}}>
                     <u>Total Staking Pool</u>
