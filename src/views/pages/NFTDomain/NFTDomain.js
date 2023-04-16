@@ -23,8 +23,7 @@ import ErrorIcon from "@material-ui/icons/Error";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import TextField from "@material-ui/core/TextField";
-
-
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
   snackbarMessage: {
@@ -143,6 +142,7 @@ const NFTDomain = () => {
   const [checkboxColor, setCheckboxColor] = useState("red");
   const [mintedDomain, setMintedDomain] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [message, setMessage] = useState("");
   const [isAvailable, setIsAvailable] = useState(null);
@@ -196,14 +196,24 @@ const NFTDomain = () => {
   const handleInputChange = async (e) => {
     const domainName = e.target.value;
     setSearchTerm(domainName);
-    const mintedDomain = await getMintedLaziDomain(domainName);
-    if (mintedDomain) {
-      setIsMinted(true);
-      setIsDisabled(true);
-      return;
-    }else{
-      setIsMinted(false);
-      setIsDisabled(false);
+
+    try {
+      const { accounts, contract } = await initContract();
+      setIsLoading(true);
+      const isMinted = await contract.methods.isMinted(domainName).call();
+
+      if (isMinted) {
+        setIsMinted(true);
+        setIsDisabled(true);
+        setIsLoading(false);
+      } else {
+        setIsMinted(false);
+        setIsDisabled(false);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.error(error);
     }
   };
 
@@ -251,7 +261,7 @@ const NFTDomain = () => {
       //     from: accounts[0],
       //     value: web3.utils.toWei("0", "ether"), // specify the amount of ether to send
       //   })
-        
+
       // } catch (e) {
       //   console.log(e);
       //   console.log(e.message);
@@ -262,7 +272,6 @@ const NFTDomain = () => {
       //   msg = msg.replace('execution reverted: ', '');
       //   return
       // }
-
 
       setIsMinted(true);
       setIsDisabled(true);
@@ -285,7 +294,6 @@ const NFTDomain = () => {
       if (response.status === 200) {
         console.log("NFT domain created successfully");
         toast.success(` UserName Minted Successfully!`);
-
       } else {
         console.log("Failed to create NFT domain");
       }
@@ -294,8 +302,8 @@ const NFTDomain = () => {
     }
   };
 
-  // function to fetch all minted lazi domains on wallet address
-  const getMintedLaziDomains = async () => {
+  // function to fetch all minted lazi domains on owner wallet address
+  const getOwnerMintedLaziDomains = async () => {
     try {
       const { accounts, contract } = await initContract();
       const mintedDomains = [];
@@ -351,7 +359,7 @@ const NFTDomain = () => {
 
   useEffect(() => {
     async function fetchMintedDomainNames() {
-      await getMintedLaziDomains();
+      await getOwnerMintedLaziDomains();
     }
     fetchMintedDomainNames();
     if (mintedDomainNames.length === 0) {
@@ -440,14 +448,24 @@ const NFTDomain = () => {
               className="input"
               placeholder="Enter a UserName"
               value={searchTerm}
-              onChange={handleInputChange}
+              onChange={(e) => {
+                handleInputChange(e);
+                setIsMinted(false);
+                setIsDisabled(false);
+              }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    {isMinted === true ? (
-                      <ErrorIcon style={{ color: "red" }} />
-                    ) : (
-                      <CheckCircleIcon style={{ color: "green" }} />
+                    {searchTerm.length > 0 && (
+                      <>
+                        {isLoading ? (
+                          <CircularProgress size={24} />
+                        ) : isMinted ? (
+                          <ErrorIcon style={{ color: "red" }} />
+                        ) : (
+                          <CheckCircleIcon style={{ color: "green" }} />
+                        )}
+                      </>
                     )}
                   </InputAdornment>
                 ),
