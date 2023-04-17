@@ -216,17 +216,17 @@ const EngageReward = () => {
               <Box className={classes.root} height={400} overflow="auto">
                 <Box className={classes.heading}>
                   <Typography variant="h2" style={{fontSize: "26px"}}>
-                    <u>Total Staking Pool</u>
+                    <h>Locked APR</h>
                   </Typography>
                 </Box>
                 <br></br>
                 <p style={{fontSize: "17px"}}>
-                  <b>{"150,000 LAZI"}</b>
+                  <b>{"Up to 41.35%"}</b>
                 </p>
                 <br></br>
                 <Box className={classes.heading}>
                   <Typography variant="h2" style={{fontSize: "26px"}}>
-                    <u>Your Pool Share</u>
+                  <h>Flexible APY</h>
                   </Typography>
                 </Box>
                 <br></br>
@@ -235,7 +235,7 @@ const EngageReward = () => {
                 </p>
                 <Box className={classes.heading}>
                   <Typography variant="h2" style={{fontSize: "26px"}}>
-                    <u>Your Rewards</u>
+                  <h>Total Staked</h>
                   </Typography>
                 </Box>
                 <br></br>

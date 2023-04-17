@@ -226,12 +226,12 @@ const StakeReward = () => {
                 <br></br>
                 <Box className={classes.heading}>
                   <Typography variant="h2" style={{fontSize: "26px"}}>
-                    <u>Your Pool Share</u>
+                    <h>Your Pool Share</h>
                   </Typography>
                 </Box>
                 <br></br>
                 <p style={{fontSize: "17px"}}>
-                  <b>{"15%"}</b>
+                  <b>{"1.93%"}</b>
                 </p>
                 <Box className={classes.heading}>
                   <Typography variant="h2" style={{fontSize: "26px"}}>
