@@ -100,8 +100,8 @@ const web3 = new Web3(window.ethereum);
 //   });
 
 // Instantiate the contract object with your ABI and contract address
-// const contractAddress = "0x9c2C4aE02C9e3005F5e36EAf9096983Af502307E"; // Replace with your contract address
-const contractAddress = "0xB4EF36f15F225A0c4244CA5Abd5C5c2c03321092"; // Replace with your contract address
+const contractAddress = '0x9c2C4aE02C9e3005F5e36EAf9096983Af502307E'; // Replace with your contract address
+// const contractAddress = "0xB4EF36f15F225A0c4244CA5Abd5C5c2c03321092"; // Replace with your contract address
 // const contract = new web3.eth.Contract(contractABI, contractAddress);
 
 const generateNftImage = async (domainName) => {
@@ -110,19 +110,19 @@ const generateNftImage = async (domainName) => {
 
   // Create a canvas
   const canvas = createCanvas(bgImage.width, bgImage.height);
-  const ctx = canvas.getContext("2d");
+  const ctx = canvas.getContext('2d');
 
   // Draw the background image on the canvas
   ctx.drawImage(bgImage, 0, 0);
 
   // Register the font that you want to use
   // registerFont(ArialFont, { family: "Arial" });
-  ctx.font = "60px Arial";
+  ctx.font = '60px Arial';
 
   const textWidth = ctx.measureText(domainName).width;
   const x = (canvas.width - textWidth) / 2;
   const y = canvas.height - 80;
-  ctx.fillStyle = "#ffffff";
+  ctx.fillStyle = '#ffffff';
   ctx.fillText(domainName, x, y);
 
   // Convert the canvas to a data URL
@@ -133,18 +133,18 @@ const generateNftImage = async (domainName) => {
 
 const NFTDomain = () => {
   const classes = useStyles();
-  const isMobile = useMediaQuery((theme) => theme.breakpoints.down("xs"));
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down('xs'));
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const [laziNames, setLaziNames] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [checkboxColor, setCheckboxColor] = useState("red");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [checkboxColor, setCheckboxColor] = useState('red');
   const [mintedDomain, setMintedDomain] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingMint, setIsLoadingMint] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
   const [isAvailable, setIsAvailable] = useState(null);
   const [isMinted, setIsMinted] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
@@ -152,7 +152,13 @@ const NFTDomain = () => {
   const [mintedDomainNames, setMintedDomainNames] = useState([]);
   // When the component mounts, convert the minted domain names to images and store them in state
   const [images, setImages] = useState([]);
-  const [domains, setDomains] = useState(["cat", "bat", "bulb", "ball", "dog"]);
+  const [domains, setDomains] = useState([
+    'steve.lazi',
+    'jhons.lazi',
+    'thomsan.lazi',
+    'adam.lazi',
+    'smith.lazi',
+  ]);
   const [imageUrls, setImageUrls] = useState([]);
   const [cimages, setImagesc] = useState([]);
 
@@ -160,17 +166,17 @@ const NFTDomain = () => {
 
   const [len, setLen] = useState(false);
 
-  const [url, setUrl] = useState("https://images.app.goo.gl/RwQ4YFT2CCENspHp8");
+  const [url, setUrl] = useState('https://images.app.goo.gl/RwQ4YFT2CCENspHp8');
 
   const handleSearch = async (e) => {
     setSearchTerm(e.target.value);
     setLoading(true);
     if (data.includes(e.target.value)) {
-      setCheckboxColor("green");
+      setCheckboxColor('green');
       setExist(true);
       setLen(e.target.value.length);
     } else {
-      setCheckboxColor("red");
+      setCheckboxColor('red');
       setExist(false);
     }
 
@@ -179,15 +185,15 @@ const NFTDomain = () => {
       if (domain) {
         setMintedDomain(domain);
         setSuccess(true);
-        setMessage("Domain found!");
+        setMessage('Domain found!');
       } else {
         setMintedDomain(null);
         setSuccess(false);
-        setMessage("Domain not found.");
+        setMessage('Domain not found.');
       }
     } catch (error) {
       console.error(error);
-      setMessage("An error occurred.");
+      setMessage('An error occurred.');
     } finally {
       setLoading(false);
     }
@@ -199,7 +205,7 @@ const NFTDomain = () => {
       // The input field is empty, disable the "mint" button
       setIsDisabled(true);
       setIsMinted(false);
-      setSearchTerm(""); // Reset the search term to empty string
+      setSearchTerm(''); // Reset the search term to empty string
       return;
     }
     setSearchTerm(domainName);
@@ -259,7 +265,7 @@ const NFTDomain = () => {
       try {
         const result = await contract.methods.buyLaziNames([searchTerm]).send({
           from: accounts[0],
-          value: web3.utils.toWei("0", "ether"), // specify the amount of ether to send
+          value: web3.utils.toWei('0', 'ether'), // specify the amount of ether to send
         });
         // If minting is successful, update state or take other actions
         console.log(result);
@@ -285,14 +291,14 @@ const NFTDomain = () => {
 
         // setMessage(`Successfully minted domain name '${searchTerm}'!`);
         const response = await axios({
-          method: "POST",
+          method: 'POST',
           url: ApiConfig.createNftDomainName,
           headers: {
-            token: localStorage.getItem("token"),
+            token: localStorage.getItem('token'),
           },
           data: {
             domainName: searchTerm,
-            ownerName: "Ahmed",
+            ownerName: 'Ahmed',
             ownerAddress: accounts[0],
             // image: image,
           },
@@ -302,27 +308,27 @@ const NFTDomain = () => {
           setIsMinted(true);
           setIsDisabled(true);
           setIsLoadingMint(false);
-          setSearchTerm("");
-          console.log("NFT domain created successfully");
+          setSearchTerm('');
+          console.log('NFT domain created successfully');
           toast.success(` UserName Minted Success!`);
           getOwnerMintedLaziDomains();
         } else {
-          console.log("Failed to create NFT domain");
+          console.log('Failed to create NFT domain');
           setIsLoadingMint(false);
-          setSearchTerm("");
+          setSearchTerm('');
           toast.error(` Failed to mint UserName!`);
         }
       } catch (error) {
         console.log(error);
         setIsMinted(false);
         setIsLoadingMint(false);
-        setSearchTerm("");
+        setSearchTerm('');
         toast.error(` Failed to mint UserName!`);
       }
     } catch (error) {
       console.error(error);
       setIsLoadingMint(false);
-      setSearchTerm("");
+      setSearchTerm('');
       toast.error(` Failed to mint UserName!`);
     }
   };
@@ -334,7 +340,7 @@ const NFTDomain = () => {
       const mintedDomains = [];
       // Get the token IDs owned by the connected account
       const tokenIds = await contract.methods.tokensOfOwner(accounts[0]).call();
-      console.log("tokenIDs: ", tokenIds);
+      console.log('tokenIDs: ', tokenIds);
       for (const tokenId of tokenIds) {
         const mintedDomain = await contract.methods
           .domainNameOf(tokenId)
@@ -388,7 +394,7 @@ const NFTDomain = () => {
     }
     fetchMintedDomainNames();
     if (mintedDomainNames.length === 0) {
-      displaySnackbar("Mint Your Web3 UserName!.");
+      displaySnackbar('Mint Your Web3 UserName!.');
     }
   }, []);
   useEffect(() => {
@@ -427,7 +433,7 @@ const NFTDomain = () => {
   };
 
   const handleCloseSnackbar = (event, reason) => {
-    if (reason === "clickaway") {
+    if (reason === 'clickaway') {
       return;
     }
 
@@ -440,38 +446,38 @@ const NFTDomain = () => {
         open={openSnackbar}
         autoHideDuration={6000}
         onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
         <Alert
-          variant="filled"
-          severity="warning"
+          variant='filled'
+          severity='warning'
           className={classes.snackbarMessage}
         >
           <span className={classes.alertIcon}>
-            <i className="fas fa-exclamation-triangle"></i>
+            <i className='fas fa-exclamation-triangle'></i>
           </span>
           {snackbarMessage}
         </Alert>
       </Snackbar>
-      <div className="domain-body">
-        <div className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-6 MuiGrid-grid-md-6 MuiGrid-grid-lg-6">
-          <h3 className="MuiTypography-root MuiTypography-h3">
+      <div className='domain-body'>
+        <div className='MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-6 MuiGrid-grid-md-6 MuiGrid-grid-lg-6'>
+          <h3 className='MuiTypography-root MuiTypography-h3'>
             NFT Collection / User
           </h3>
         </div>
         {/*  */}
-        <div className="input-bg">
+        <div className='input-bg'>
           {/* input + button flex - section */}
-          <div className="input-flex">
+          <div className='input-flex'>
             {isMinted ? (
-              <div className={isDisabled ? "unavailable" : "available"}>
+              <div className={isDisabled ? 'unavailable' : 'available'}>
                 {message}
               </div>
             ) : null}
             <TextField
-              type="text"
-              className="input"
-              placeholder="Enter a UserName"
+              type='text'
+              className='input'
+              placeholder='Enter a UserName'
               value={searchTerm}
               onChange={(e) => {
                 handleInputChange(e);
@@ -479,16 +485,35 @@ const NFTDomain = () => {
                 setIsDisabled(false);
               }}
               InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <div style={{ display: 'inline-block' }}>
+                      {searchTerm.length > 0 && (
+                        <span
+                          style={{
+                            position: 'relative',
+                            top: 0,
+                            left: searchTerm.length * 8 + 40,
+                            right: '1.75rem',
+                            color: '#aaa',
+                          }}
+                        >
+                          .lazi
+                        </span>
+                      )}
+                    </div>
+                  </InputAdornment>
+                ),
                 endAdornment: (
-                  <InputAdornment position="end">
+                  <InputAdornment position='end'>
                     {searchTerm.length > 0 && (
                       <>
                         {isLoading ? (
                           <CircularProgress size={24} />
                         ) : isMinted ? (
-                          <ErrorIcon style={{ color: "red" }} />
+                          <ErrorIcon style={{ color: 'red' }} />
                         ) : (
-                          <CheckCircleIcon style={{ color: "green" }} />
+                          <CheckCircleIcon style={{ color: 'green' }} />
                         )}
                       </>
                     )}
@@ -497,12 +522,12 @@ const NFTDomain = () => {
               }}
             />
             <button
-              className="button btx"
+              className='button btx'
               onClick={handleBuyLaziName}
               disabled={isDisabled || searchTerm.length === 0}
-              style={{ backgroundcolor: "#E31A89" }}
+              style={{ backgroundcolor: '#E31A89' }}
             >
-              {isLoadingMint ? <CircularProgress size={24} /> : "Mint"}
+              {isLoadingMint ? <CircularProgress size={24} /> : 'Mint'}
             </button>
           </div>
           {/* input + button flex - section end */}
@@ -535,19 +560,19 @@ const NFTDomain = () => {
         </div>
 
         {/* user detail section including name | domain | url */}
-        <div className="user_domains">
+        <div className='user_domains'>
           <h1>User Minted UserNames</h1>
         </div>
         <div>
           {mintedDomainNames.length > 0 ? (
-            <div className="image-grid">
+            <div className='image-grid'>
               {images.map((imageUrl, index) => (
-                <div key={index} className="book">
-                  <div className="cover">
+                <div key={index} className='book'>
+                  <div className='cover'>
                     <img
                       src={imageUrl}
                       alt={`Minted domain name ${index}`}
-                      className="image"
+                      className='image'
                     />
                   </div>
                   {mintedDomainNames.map((index) => (
@@ -570,17 +595,17 @@ const NFTDomain = () => {
           )}
         </div>
 
-        <div className="user_domains">
+        <div className='user_domains'>
           <h1>Community UserNames</h1>
         </div>
-        <div className="image-grid">
+        <div className='image-grid'>
           {cimages.map((imageUrls, index) => (
-            <div key={index} className="book">
-              <div className="cover">
+            <div key={index} className='book'>
+              <div className='cover'>
                 <img
                   src={imageUrls}
                   alt={`Minted domain name ${index}`}
-                  className="image"
+                  className='image'
                 />
               </div>
               {domains.map((index) => (
@@ -592,10 +617,10 @@ const NFTDomain = () => {
           ))}
         </div>
 
-        <div className="card-body">
-          <div className="card-img"></div>
+        <div className='card-body'>
+          <div className='card-img'></div>
 
-          <div className="card-text"></div>
+          <div className='card-text'></div>
         </div>
 
         {/* user detail section including name | domain | url   ends here*/}
@@ -619,29 +644,29 @@ const NFTDomain = () => {
 
         {exist && (
           <div style={{ marginTop: 10 }}>
-            <p style={{ fontSize: 15, color: "white" }}>Domain......Name</p>
-            <div style={{ marginTop: 20, display: "flex" }}>
+            <p style={{ fontSize: 15, color: 'white' }}>Domain......Name</p>
+            <div style={{ marginTop: 20, display: 'flex' }}>
               <img
-                src="https://www.shutterstock.com/image-illustration/domain-names-internet-web-telecommunication-260nw-1708219261.jpg"
+                src='https://www.shutterstock.com/image-illustration/domain-names-internet-web-telecommunication-260nw-1708219261.jpg'
                 style={{ height: 200, width: 200 }}
-                alt="img"
+                alt='img'
               />
               <img
-                src="https://www.shutterstock.com/image-illustration/domain-names-internet-web-telecommunication-260nw-1708219261.jpg"
+                src='https://www.shutterstock.com/image-illustration/domain-names-internet-web-telecommunication-260nw-1708219261.jpg'
                 style={{ height: 200, width: 200, marginLeft: 30 }}
-                alt="img"
+                alt='img'
               />
               <img
-                src="https://www.shutterstock.com/image-illustration/domain-names-internet-web-telecommunication-260nw-1708219261.jpg"
+                src='https://www.shutterstock.com/image-illustration/domain-names-internet-web-telecommunication-260nw-1708219261.jpg'
                 style={{ height: 200, width: 200, marginLeft: 30 }}
-                alt="img"
+                alt='img'
               />
             </div>
           </div>
         )}
         {!exist && len > 3 && (
           <div style={{ marginTop: 10 }}>
-            <p style={{ fontSize: 15, color: "red" }}>
+            <p style={{ fontSize: 15, color: 'red' }}>
               Domain Name Found Found
             </p>
           </div>

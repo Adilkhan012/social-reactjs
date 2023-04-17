@@ -120,29 +120,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// const customNetwork = {
-//   chainId: '0x38', // BSC Mainnet Chain ID
-//   chainName: 'Binance Smart Chain Mainnet',
-//   nativeCurrency: {
-//     name: 'BNB',
-//     symbol: 'BNB',
-//     decimals: 18,
-//   },
-//   rpcUrls: ['https://bsc-dataseed1.binance.org'], // BSC Mainnet RPC endpoint
-//   blockExplorerUrls: ['https://bscscan.com'], // BSC Mainnet Block Explorer URL
-// };
-
 const customNetwork = {
-  chainId: "0x61",
-  chainName: "Binance Smart Chain Testnet",
-  rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545/"],
+  chainId: '0x38', // BSC Mainnet Chain ID
+  chainName: 'Binance Smart Chain Mainnet',
   nativeCurrency: {
-    name: "BNB",
-    symbol: "BNB",
+    name: 'BNB',
+    symbol: 'BNB',
     decimals: 18,
   },
-  blockExplorerUrls: ["https://testnet.bscscan.com/"],
+  rpcUrls: ['https://bsc-dataseed1.binance.org'], // BSC Mainnet RPC endpoint
+  blockExplorerUrls: ['https://bscscan.com'], // BSC Mainnet Block Explorer URL
 };
+
+// const customNetwork = {
+//   chainId: "0x61",
+//   chainName: "Binance Smart Chain Testnet",
+//   rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545/"],
+//   nativeCurrency: {
+//     name: "BNB",
+//     symbol: "BNB",
+//     decimals: 18,
+//   },
+//   blockExplorerUrls: ["https://testnet.bscscan.com/"],
+// };
 
 export const showMessage = () => {
   if (window.confirm(msg_mobile)) window.location.href = deepLink;
