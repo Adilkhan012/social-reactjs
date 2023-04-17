@@ -199,6 +199,7 @@ const NFTDomain = () => {
       // The input field is empty, disable the "mint" button
       setIsDisabled(true);
       setIsMinted(false);
+      setSearchTerm(""); // Reset the search term to empty string
       return;
     }
     setSearchTerm(domainName);
@@ -301,23 +302,27 @@ const NFTDomain = () => {
           setIsMinted(true);
           setIsDisabled(true);
           setIsLoadingMint(false);
+          setSearchTerm("");
           console.log("NFT domain created successfully");
           toast.success(` UserName Minted Success!`);
           getOwnerMintedLaziDomains();
         } else {
           console.log("Failed to create NFT domain");
           setIsLoadingMint(false);
+          setSearchTerm("");
           toast.error(` Failed to mint UserName!`);
         }
       } catch (error) {
         console.log(error);
         setIsMinted(false);
         setIsLoadingMint(false);
+        setSearchTerm("");
         toast.error(` Failed to mint UserName!`);
       }
     } catch (error) {
       console.error(error);
       setIsLoadingMint(false);
+      setSearchTerm("");
       toast.error(` Failed to mint UserName!`);
     }
   };
