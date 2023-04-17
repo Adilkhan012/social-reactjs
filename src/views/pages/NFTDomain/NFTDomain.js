@@ -345,7 +345,7 @@ const NFTDomain = () => {
         const mintedDomain = await contract.methods
           .domainNameOf(tokenId)
           .call();
-        mintedDomains.push(mintedDomain);
+        mintedDomains.push(mintedDomain + '.lazi');
       }
 
       setLaziNames(mintedDomains);
