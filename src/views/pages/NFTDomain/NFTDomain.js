@@ -143,6 +143,7 @@ const NFTDomain = () => {
   const [mintedDomain, setMintedDomain] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingMint, setIsLoadingMint] = useState(false);
   const [success, setSuccess] = useState(false);
   const [message, setMessage] = useState("");
   const [isAvailable, setIsAvailable] = useState(null);
@@ -195,6 +196,12 @@ const NFTDomain = () => {
 
   const handleInputChange = async (e) => {
     const domainName = e.target.value;
+    if (domainName.trim().length === 0) {
+      // The input field is empty, disable the "mint" button
+      setIsDisabled(true);
+      setIsMinted(false);
+      return;
+    }
     setSearchTerm(domainName);
 
     try {
@@ -236,69 +243,83 @@ const NFTDomain = () => {
   const handleBuyLaziName = async (e) => {
     e.preventDefault();
     try {
+      setIsLoadingMint(true);
       const { web3, accounts, contract } = await initContract();
-      const mintedDomain = await getMintedLaziDomain(searchTerm);
-      if (mintedDomain) {
+      const isMinted = await contract.methods.isMinted(searchTerm).call();
+      if (isMinted) {
         setIsMinted(true);
         setIsDisabled(true);
-        setMessage(
-          `The domain name '${mintedDomain}' is already minted. Please choose another name.`
-        );
+        setIsLoadingMint(false);
         return;
       }
+
       console.log({ accounts });
       console.log({ contract });
 
-      const result = await contract.methods.buyLaziNames([searchTerm]).send({
-        from: accounts[0],
-        value: web3.utils.toWei("0", "ether"), // specify the amount of ether to send
-      });
+      try {
+        const result = await contract.methods.buyLaziNames([searchTerm]).send({
+          from: accounts[0],
+          value: web3.utils.toWei("0", "ether"), // specify the amount of ether to send
+        });
+        // If minting is successful, update state or take other actions
+        console.log(result);
 
-      // const result = contract.methods.buyLaziNames([searchTerm]);
-      // let msg;
-      // try {
-      //   const etGas =  await result.estimateGas({
-      //     from: accounts[0],
-      //     value: web3.utils.toWei("0", "ether"), // specify the amount of ether to send
-      //   })
+        // const result = contract.methods.buyLaziNames([searchTerm]);
+        // let msg;
+        // try {
+        //   const etGas =  await result.estimateGas({
+        //     from: accounts[0],
+        //     value: web3.utils.toWei("0", "ether"), // specify the amount of ether to send
+        //   })
 
-      // } catch (e) {
-      //   console.log(e);
-      //   console.log(e.message);
-      //   let a = e.message;
-      //   let objStr = a.substring(a.indexOf('{'), a.lastIndexOf('}') + 1);
-      //   msg = JSON.parse(objStr).message || JSON.parse(objStr).originalError.message;
-      //   msg = msg.replace('err: ', '');
-      //   msg = msg.replace('execution reverted: ', '');
-      //   return
-      // }
+        // } catch (e) {
+        //   console.log(e);
+        //   console.log(e.message);
+        //   let a = e.message;
+        //   let objStr = a.substring(a.indexOf('{'), a.lastIndexOf('}') + 1);
+        //   msg = JSON.parse(objStr).message || JSON.parse(objStr).originalError.message;
+        //   msg = msg.replace('err: ', '');
+        //   msg = msg.replace('execution reverted: ', '');
+        //   return
+        // }
 
-      setIsMinted(true);
-      setIsDisabled(true);
-      // setMessage(`Successfully minted domain name '${searchTerm}'!`);
-      console.log(result);
-      const response = await axios({
-        method: "POST",
-        url: ApiConfig.createNftDomainName,
-        headers: {
-          token: localStorage.getItem("token"),
-        },
-        data: {
-          domainName: searchTerm,
-          ownerName: "Ahmed",
-          ownerAddress: accounts[0],
-          // image: image,
-        },
-      });
+        // setMessage(`Successfully minted domain name '${searchTerm}'!`);
+        const response = await axios({
+          method: "POST",
+          url: ApiConfig.createNftDomainName,
+          headers: {
+            token: localStorage.getItem("token"),
+          },
+          data: {
+            domainName: searchTerm,
+            ownerName: "Ahmed",
+            ownerAddress: accounts[0],
+            // image: image,
+          },
+        });
 
-      if (response.status === 200) {
-        console.log("NFT domain created successfully");
-        toast.success(` UserName Minted Successfully!`);
-      } else {
-        console.log("Failed to create NFT domain");
+        if (response.status === 200) {
+          setIsMinted(true);
+          setIsDisabled(true);
+          setIsLoadingMint(false);
+          console.log("NFT domain created successfully");
+          toast.success(` UserName Minted Success!`);
+          getOwnerMintedLaziDomains();
+        } else {
+          console.log("Failed to create NFT domain");
+          setIsLoadingMint(false);
+          toast.error(` Failed to mint UserName!`);
+        }
+      } catch (error) {
+        console.log(error);
+        setIsMinted(false);
+        setIsLoadingMint(false);
+        toast.error(` Failed to mint UserName!`);
       }
     } catch (error) {
       console.error(error);
+      setIsLoadingMint(false);
+      toast.error(` Failed to mint UserName!`);
     }
   };
 
@@ -474,10 +495,10 @@ const NFTDomain = () => {
             <button
               className="button btx"
               onClick={handleBuyLaziName}
-              disabled={isDisabled}
+              disabled={isDisabled || searchTerm.length === 0}
               style={{ backgroundcolor: "#E31A89" }}
             >
-              Mint
+              {isLoadingMint ? <CircularProgress size={24} /> : "Mint"}
             </button>
           </div>
           {/* input + button flex - section end */}
