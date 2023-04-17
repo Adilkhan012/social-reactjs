@@ -75,6 +75,8 @@ import MetamaskSignupForm from "src/component/MetamaskSignupForm";
 
 import Web3 from "web3";
 import metamaskLogo from "src/metamask/metamask-logo.png";
+const msg_mobile = "Please use MetaMask!";
+const deepLink = "https://metamask.app.link/dapp/digicollect.io/mint";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -131,17 +133,20 @@ const useStyles = makeStyles((theme) => ({
 // };
 
 const customNetwork = {
-  chainId: '0x61',
-  chainName: 'Binance Smart Chain Testnet',
-  rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
+  chainId: "0x61",
+  chainName: "Binance Smart Chain Testnet",
+  rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545/"],
   nativeCurrency: {
-    name: 'BNB',
-    symbol: 'BNB',
+    name: "BNB",
+    symbol: "BNB",
     decimals: 18,
   },
-  blockExplorerUrls: ['https://testnet.bscscan.com/'],
+  blockExplorerUrls: ["https://testnet.bscscan.com/"],
 };
 
+export const showMessage = () => {
+  if (window.confirm(msg_mobile)) window.location.href = deepLink;
+};
 
 function Signup() {
   const classes = useStyles();
@@ -537,25 +542,25 @@ function Signup() {
 
       if (!window.ethereum) {
         // MetaMask not installed
-        toast.error("Please install MetaMask to sign in");
+        showMessage();
+        // toast.error("Please install MetaMask to sign in");
         setLoading(false);
         return;
       }
 
       // Request permission to connect to MetaMask
       const web3 = new Web3(window.ethereum);
-      
+
       // const [account] = await window.ethereum.request({
       //   method: 'eth_requestAccounts',
       // });
 
       // Check if user is on Mumbai testnet
       const chainId = await window.ethereum.request({
-        method: 'eth_chainId',
+        method: "eth_chainId",
       });
 
       if (chainId !== customNetwork.chainId) {
-    
         // Listen for accountsChanged event
         window.ethereum.on("accountsChanged", (accounts) => {
           setAddress(accounts[0]);
@@ -565,12 +570,12 @@ function Signup() {
 
         try {
           await window.ethereum.request({
-            method: 'wallet_switchEthereumChain',
+            method: "wallet_switchEthereumChain",
             params: [{ chainId: customNetwork.chainId }], // 80001 in hex
           });
         } catch (error) {
           await window.ethereum.request({
-            method: 'wallet_addEthereumChain',
+            method: "wallet_addEthereumChain",
             params: [customNetwork],
           });
         }
