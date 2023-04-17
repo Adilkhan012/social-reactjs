@@ -544,11 +544,11 @@ function Signup() {
 
       // Request permission to connect to MetaMask
       const web3 = new Web3(window.ethereum);
-      await window.ethereum.request({
-        method: "wallet_requestPermissions",
-        params: [{ eth_accounts: {} }],
+      
+      const [account] = await window.ethereum.request({
+        method: 'eth_requestAccounts',
       });
-      await window.ethereum.enable();
+
       // Check if user is on Mumbai testnet
       const chainId = await window.ethereum.request({
         method: 'eth_chainId',
@@ -593,13 +593,13 @@ function Signup() {
       }
 
       // Get the user's Ethereum address from MetaMask
-      const accounts = await web3.eth.getAccounts();
-      const address = accounts[0];
+      // const accounts = await web3.eth.getAccounts();
+      // const address = accounts[0];
 
       // Prompt the user to sign the message using Metamask
       const message = "signature";
       const messageHash = web3.utils.sha3(message);
-      const signature = await web3.eth.personal.sign(messageHash, address);
+      const signature = await web3.eth.personal.sign(messageHash, account);
 
       // Send the signed message and user's Ethereum address to your backend for verification
       const credentials = {
