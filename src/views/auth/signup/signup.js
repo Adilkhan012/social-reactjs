@@ -76,7 +76,7 @@ import MetamaskSignupForm from "src/component/MetamaskSignupForm";
 import Web3 from "web3";
 import metamaskLogo from "src/metamask/metamask-logo.png";
 const msg_mobile = "Please use MetaMask!";
-const deepLink = "https://metamask.app.link/dapp/digicollect.io/mint";
+const deepLink = 'https://metamask.app.link/dapp/social-reactjs.pages.dev/mint';
 
 const useStyles = makeStyles((theme) => ({
   container: {
