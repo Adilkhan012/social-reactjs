@@ -544,11 +544,11 @@ function Signup() {
 
       // Request permission to connect to MetaMask
       const web3 = new Web3(window.ethereum);
-      await window.ethereum.request({
-        method: "wallet_requestPermissions",
-        params: [{ eth_accounts: {} }],
-      });
-      await window.ethereum.enable();
+      
+      // const [account] = await window.ethereum.request({
+      //   method: 'eth_requestAccounts',
+      // });
+
       // Check if user is on Mumbai testnet
       const chainId = await window.ethereum.request({
         method: 'eth_chainId',
