@@ -56,7 +56,6 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    position: "relative",
     top: 0,
     left: 0,
     zIndex: 9999,
