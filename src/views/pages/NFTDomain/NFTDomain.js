@@ -234,7 +234,7 @@ const NFTDomain = () => {
 
   const initContract = async () => {
     try {
-      await window.ethereum.enable(); // prompt user to connect their wallet
+      // await window.ethereum.enable(); // prompt user to connect their wallet
       const web3 = new Web3(window.ethereum);
       const accounts = await web3.eth.getAccounts();
       const contract = new web3.eth.Contract(contractABI, contractAddress);
