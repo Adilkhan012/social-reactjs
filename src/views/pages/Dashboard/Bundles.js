@@ -190,7 +190,7 @@ function Collection({ listPublicExclusiveHandler }) {
     },
     {
       value: "PRIVATE",
-      label: "PRIVATE",
+      label: "ONLY SUBSCRIBER",
     },
   ];
   const classes = useStyles();
@@ -356,6 +356,9 @@ function Collection({ listPublicExclusiveHandler }) {
 
     setIsSubmit(true);
     const selectuser = selectedTeam?.map((data, i) => data._id);
+
+  //contract interaction before storing to database
+      
 
     if (activities === "PRIVATE") {
       if (
@@ -1599,7 +1602,7 @@ function Collection({ listPublicExclusiveHandler }) {
                       </Grid>
                       <Grid item xs={6} align="left">
                         <Typography variant="h6">
-                          You will get profit only on private Post.
+                          You will get profit only on Subscriber Post.
                         </Typography>
                         {/* <Typography variant="h6">
                           Collection fee&nbsp;

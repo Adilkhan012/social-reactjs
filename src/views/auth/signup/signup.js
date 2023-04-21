@@ -122,7 +122,7 @@ const useStyles = makeStyles((theme) => ({
 
 const customNetwork = {
   chainId: '0x38', // BSC Mainnet Chain ID
-  chainName: 'Binance Smart Chain Mainnet',
+  chainName: 'BNB Smart Chain Mainnet',
   nativeCurrency: {
     name: 'BNB',
     symbol: 'BNB',
@@ -134,7 +134,7 @@ const customNetwork = {
 
 // const customNetwork = {
 //   chainId: "0x61",
-//   chainName: "Binance Smart Chain Testnet",
+//   chainName: "BNB Smart Chain Testnet",
 //   rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545/"],
 //   nativeCurrency: {
 //     name: "BNB",
