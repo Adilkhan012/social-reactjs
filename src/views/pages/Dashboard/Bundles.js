@@ -1,4 +1,10 @@
-import React, { useState, useContext, useEffect, useRef, useCallback } from "react";
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  useRef,
+  useCallback,
+} from "react";
 import {
   makeStyles,
   Paper,
@@ -34,6 +40,9 @@ import ButtonCircularProgress from "src/component/ButtonCircularProgress";
 import { AuthContext } from "src/context/Auth";
 // import ReactVideoTrimmer from "react-video-trimmer";
 // import "react-video-trimmer/dist/style.css";
+
+import initMetamask from "src/blockchain/metamaskConnection";
+import initLaziPostContract from "src/blockchain/laziPostContract";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -196,7 +205,7 @@ function Collection({ listPublicExclusiveHandler }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [loader, setLoader] = React.useState(false);
-  const [isValidTitle, setIsValidTitle] = useState(true)
+  const [isValidTitle, setIsValidTitle] = useState(true);
   const [activities, setActivities] = useState("PUBLIC");
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
@@ -227,6 +236,12 @@ function Collection({ listPublicExclusiveHandler }) {
   const [startPosition, setStartPosition] = useState(false);
   const [royality, setRoyality] = useState("");
   const [textImage, setTextImage] = useState();
+  const [address, setAddress] = useState(null);
+  const [web3, setWeb3] = useState(null);
+  const [laziPostContract, setlaziPostContract] = useState(null);
+  const [laziPost, setLaziPost] = useState("");
+  const [tokenId, setTokenId] = useState("");
+  const [posts, setPosts] = useState({});
 
   const [formValueCollection, setFormValueCollection] = useState({
     image: "",
@@ -237,15 +252,10 @@ function Collection({ listPublicExclusiveHandler }) {
     duration: "",
   });
 
-
-
   const textToImage = require("text-to-image");
-
 
   const teatdataHandler = async () => {
     const text = document.getElementById("titlePost").value;
-
-
 
     const dataUri = textToImage.generateSync(text, {
       fontFamily: "Montserrat, sans-serif",
@@ -259,11 +269,23 @@ function Collection({ listPublicExclusiveHandler }) {
       justifyContent: "center",
       alignItems: "center",
       textAlign: "center",
-      verticalAlign: "center"
+      verticalAlign: "center",
     });
     setTextImage(dataUri);
-
   };
+
+  useEffect(() => {
+    const init = async () => {
+      const { web3, address } = await initMetamask();
+      const contract = await initLaziPostContract();
+      setlaziPostContract(contract);
+      setAddress(address);
+      setWeb3(web3);
+    };
+
+    init();
+  }, []);
+
   useEffect(() => {
     if (titlePost != "") teatdataHandler();
   }, [titlePost]);
@@ -271,21 +293,20 @@ function Collection({ listPublicExclusiveHandler }) {
   const videoEl = useRef(null);
 
   const checkVideoSize = () => {
-
     const video = videoEl.current;
     if (!video) return;
     console.log(`The video is ${video.duration} seconds long.`, video.duration);
-    let durations = Number(video.duration) > 180
+    let durations = Number(video.duration) > 180;
 
-    setIsDurationLess(Number(video.duration) > 180)
-  }
+    setIsDurationLess(Number(video.duration) > 180);
+  };
   const getBase64 = (file, cb) => {
     let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = function () {
       cb(reader.result);
     };
-    reader.onerror = function (err) { };
+    reader.onerror = function (err) {};
   };
   const handleClickOpen = () => {
     setOpen(true);
@@ -314,7 +335,7 @@ function Collection({ listPublicExclusiveHandler }) {
       if (response.data.responseCode === 200) {
         setCollectionlist(response.data.result.docs);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
   useEffect(() => {
     collectionList();
@@ -352,13 +373,38 @@ function Collection({ listPublicExclusiveHandler }) {
 
   const createBundleHandle = async (event) => {
     event.preventDefault();
-    console.log("dfajsgdfjs");
+    console.log("In create Post Handle!!!");
 
     setIsSubmit(true);
     const selectuser = selectedTeam?.map((data, i) => data._id);
 
-  //contract interaction before storing to database
-      
+    //contract interaction before storing to database
+    try {
+      const totalSupply = await laziPostContract.methods.totalSupply().call();
+      const tokenId = parseInt(totalSupply) + 1; // Get the next available tokenId
+      console.log("tokenId", tokenId)
+      // setTokenId(tokenId)
+      const result = await laziPostContract.methods
+        .lazyMint( tokenId, "apple")
+        .send({
+          from: address,
+        });
+
+      console.log(result); // print the transaction result
+
+      // Add the post to the posts object with its tokenId as the key
+      // setPosts({
+      //   ...posts,
+      //   [tokenId.toString()]: titlePost,
+      // });
+    } catch (error) {
+      if (error.code === 4001) {
+        console.log("User denied transaction");
+      } else {
+        console.error(error);
+      }
+      return;
+    }
 
     if (activities === "PRIVATE") {
       if (
@@ -370,11 +416,9 @@ function Collection({ listPublicExclusiveHandler }) {
         Number(amount) > 0 &&
         titlePost.length <= 280 &&
         Number(amount) <= 2000 &&
-
         collectionlistAll.length !== 0
       ) {
         const hastag = description.match(/#[a-z\d]+/gi);
-
 
         setLoader(true);
         axios({
@@ -434,11 +478,9 @@ function Collection({ listPublicExclusiveHandler }) {
         Number(amount) > 0 &&
         titlePost.length <= 280 &&
         Number(amount) <= 2000 &&
-
         collectionlistAll.length !== 0
       ) {
         const hastag = description.match(/#[a-z\d]+/gi);
-
 
         setLoader(true);
         axios({
@@ -580,7 +622,7 @@ function Collection({ listPublicExclusiveHandler }) {
 
             // toast.error("error");
           });
-      } catch { }
+      } catch {}
     }
     // } else {
     //   setTimeout(() => {
@@ -696,10 +738,6 @@ function Collection({ listPublicExclusiveHandler }) {
   };
   const [isValidRoyalty, setIsValidRoyalty] = useState(false);
 
-
-
-
-
   // const handleVideoEncode = useCallback(result => {
   //   console.log("Encoding Result:", result);
   // });
@@ -729,7 +767,7 @@ function Collection({ listPublicExclusiveHandler }) {
           <Grid
             container
             spacing={2}
-          // style={{ marginTop: "10px", marginLeft: "-12px" }}
+            // style={{ marginTop: "10px", marginLeft: "-12px" }}
           >
             {/* <Grid item xs={4} sm={4}>
               <Button>
@@ -826,11 +864,9 @@ function Collection({ listPublicExclusiveHandler }) {
                   id="text-element"
                 ></textarea>
                 <FormHelperText error>
-                  {(isSubmit && description === "" && (
+                  {isSubmit && description === "" && (
                     <Box mt={1}>Description is required</Box>
-                  ))
-
-                  }
+                  )}
                 </FormHelperText>
                 {hashtagData?.length > 0 && (
                   <>
@@ -870,27 +906,25 @@ function Collection({ listPublicExclusiveHandler }) {
                     multiline
                     rows={2}
                     fullWidth
-
                     onChange={(e) => {
-                      let temp = e.target.value
+                      let temp = e.target.value;
                       setTitlePost(temp);
                       if (temp.length > 280) {
-                        setIsValidTitle(false)
+                        setIsValidTitle(false);
                       } else {
-                        setIsValidTitle(true)
+                        setIsValidTitle(true);
                       }
                     }}
-
                   />
                   {isSubmit && titlePost === "" && (
                     <FormHelperText error>Please enter title.</FormHelperText>
                   )}
                   {!isValidTitle && titlePost !== "" && (
-                    <FormHelperText error>You can not enter more than 280 charachters.</FormHelperText>
+                    <FormHelperText error>
+                      You can not enter more than 280 charachters.
+                    </FormHelperText>
                   )}
                 </Box>
-
-
 
                 <Box mt={2}>
                   <TextField
@@ -956,8 +990,6 @@ function Collection({ listPublicExclusiveHandler }) {
                   )}
                 </Box>
 
-
-
                 <Box mt={2}>
                   {/* {searchUserList && searchUserList?.map()} */}
                   <Autocomplete
@@ -996,11 +1028,11 @@ function Collection({ listPublicExclusiveHandler }) {
                   />
                   <Box>
                     {image?.type === "video/mp4" ||
-                      image?.type == "image/jpeg" ||
-                      image?.type == "image/png" ||
-                      image?.type == "image/gif" ||
-                      image?.type == "image/jpg" ||
-                      image?.type == "image/svg" ? (
+                    image?.type == "image/jpeg" ||
+                    image?.type == "image/png" ||
+                    image?.type == "image/gif" ||
+                    image?.type == "image/jpg" ||
+                    image?.type == "image/svg" ? (
                       <>
                         {image?.type === "video/mp4" ? (
                           <>
@@ -1013,19 +1045,19 @@ function Collection({ listPublicExclusiveHandler }) {
                               <source src={imageurl} type="video/mp4" />
                             </video>
                             <Box>
-                              {isDurationLess ? (<Typography
-
-                                style={{ color: "red" }}
-                              >
-                                Video duration does not exceed more than 3 min
-                              </Typography>) : (
+                              {isDurationLess ? (
+                                <Typography style={{ color: "red" }}>
+                                  Video duration does not exceed more than 3 min
+                                </Typography>
+                              ) : (
                                 <Button
                                   variant="outined"
                                   color="primary"
                                   component="span"
                                 >
                                   Uploaded Successfully
-                                </Button>)}
+                                </Button>
+                              )}
                             </Box>
                             <Button
                               variant="contained"
@@ -1044,7 +1076,6 @@ function Collection({ listPublicExclusiveHandler }) {
                           <>
                             <img src={imageurl} alt="" width="200px" />
                             <Box>
-
                               <Button
                                 variant="outined"
                                 color="primary"
@@ -1052,7 +1083,6 @@ function Collection({ listPublicExclusiveHandler }) {
                               >
                                 Uploaded Successfully
                               </Button>
-
                             </Box>
                             <Button
                               variant="contained"
@@ -1124,28 +1154,28 @@ function Collection({ listPublicExclusiveHandler }) {
                         style={
                           list
                             ? {
-                              width: "200px",
-                              minWidth: "200px",
-                              height: "179px",
-                              background: "#710d44",
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              flexDirection: "column",
-                              corsor: "pointer !important",
-                              borderRadius: "10px",
-                            }
+                                width: "200px",
+                                minWidth: "200px",
+                                height: "179px",
+                                background: "#710d44",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                flexDirection: "column",
+                                corsor: "pointer !important",
+                                borderRadius: "10px",
+                              }
                             : {
-                              width: "200px",
-                              minWidth: "200px",
-                              height: "179px",
-                              background: "#710d44",
-                              corsor: "pointer",
-                              // display: "flex",
-                              // justifyContent: "center",
-                              // alignItems: "center",
-                              borderRadius: "10px",
-                            }
+                                width: "200px",
+                                minWidth: "200px",
+                                height: "179px",
+                                background: "#710d44",
+                                corsor: "pointer",
+                                // display: "flex",
+                                // justifyContent: "center",
+                                // alignItems: "center",
+                                borderRadius: "10px",
+                              }
                         }
                         onClick={() => {
                           updateSelectedBundle(data._id);
@@ -1165,7 +1195,7 @@ function Collection({ listPublicExclusiveHandler }) {
                                     borderRadius: "11px",
                                   }}
                                   controls
-                                // onClick={handleClickOpen2}
+                                  // onClick={handleClickOpen2}
                                 >
                                   <source src={data.image} type="video/mp4" />
                                 </video>
@@ -1215,8 +1245,6 @@ function Collection({ listPublicExclusiveHandler }) {
                 </FormHelperText>
 
                 <Box mt={3} mb={2}>
-
-
                   <Button
                     variant="contained"
                     fullWidth
@@ -1224,17 +1252,16 @@ function Collection({ listPublicExclusiveHandler }) {
                       loader ||
                       description === "" ||
                       royality < 0 ||
-                      royality > 10 || isDurationLess ||
+                      royality > 10 ||
+                      isDurationLess ||
                       amount <= 0
                     }
                     color="secondary"
                     type="submit"
-                  // onClick={createBundleHandle}
+                    // onClick={createBundleHandle}
                   >
                     Post {loader && <ButtonCircularProgress />}
                   </Button>
-
-
                 </Box>
               </Box>
             </form>
@@ -1370,14 +1397,14 @@ function Collection({ listPublicExclusiveHandler }) {
                               formValueCollection.details.length > 200)
                           }
                           fullWidth
-                        // helperText={
-                        //   (isSubmit1 &&
-                        //     formValueCollection.details === "" &&
-                        //     "Collection description is required") ||
-                        //   (formValueCollection.details !== "" &&
-                        //     formValueCollection.details.length > 200 &&
-                        //     "Collection description should be less than or equal to 200 characters")
-                        // }
+                          // helperText={
+                          //   (isSubmit1 &&
+                          //     formValueCollection.details === "" &&
+                          //     "Collection description is required") ||
+                          //   (formValueCollection.details !== "" &&
+                          //     formValueCollection.details.length > 200 &&
+                          //     "Collection description should be less than or equal to 200 characters")
+                          // }
                         />
                         <FormHelperText error>
                           {(isSubmit1 && formValueCollection.details === "" && (
@@ -1516,11 +1543,11 @@ function Collection({ listPublicExclusiveHandler }) {
                                 />
                                 <Box>
                                   {imageCollection?.type === "video/mp4" ||
-                                    imageCollection?.type == "image/jpeg" ||
-                                    imageCollection?.type == "image/png" ||
-                                    imageCollection?.type == "image/gif" ||
-                                    imageCollection?.type == "image/jpg" ||
-                                    imageCollection?.type == "image/svg" ? (
+                                  imageCollection?.type == "image/jpeg" ||
+                                  imageCollection?.type == "image/png" ||
+                                  imageCollection?.type == "image/gif" ||
+                                  imageCollection?.type == "image/jpg" ||
+                                  imageCollection?.type == "image/svg" ? (
                                     <>
                                       {imageCollection?.type === "video/mp4" ? (
                                         <>

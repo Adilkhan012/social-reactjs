@@ -106,6 +106,8 @@ const StakeReward = () => {
   const [web3, setWeb3] = useState(null);
   const [sliderValue, setSliderValue] = useState(20);
   const [stakingContract, setStakingContract] = useState(null);
+  const [totalStaked, setTotalStaked] = useState(0);
+  const [userRewards, setUserRewards] = useState(0);
 
   const handleSliderChange = (event, newValue) => {
     setSliderValue(newValue);
@@ -121,6 +123,8 @@ const StakeReward = () => {
     };
 
     init();
+    fetchUserRewards();
+    fetchTotalStaked();
   }, []);
 
   const options = [
@@ -156,6 +160,67 @@ const StakeReward = () => {
         .on("error", (error) => {
           console.log(error);
         });
+    }
+  };
+  async function fetchTotalStaked() {
+    try {
+      if (!stakingContract) {
+        await initStakingContract();
+      }
+      const totalStaked = await stakingContract.methods.totalStaked().call();
+      setTotalStaked(totalStaked);
+    } catch (error) {
+      console.error("Error fetching total staked:", error);
+    }
+  }
+
+  async function fetchUserRewards() {
+    try {
+      if (!stakingContract) {
+        await initStakingContract();
+      }
+      const userRewardsValue = await stakingContract.methods
+        .calculateUserRewards(address)
+        .call();
+      setUserRewards(userRewardsValue);
+    } catch (error) {
+      console.error("Error fetching user rewards:", error);
+    }
+  }
+
+  const handleUserRewardsClick = async () => {
+    fetchUserRewards();
+  };
+  const handleTotalStakedClick = async () => {
+    fetchTotalStaked();
+  };
+  const handleCollectButtonClick = async () => {
+    try {
+      // ensure the staking contract instance has been initialized
+      if (!stakingContract) {
+        await initStakingContract();
+      }
+
+      // execute the getReward function in the smart contract
+      const tx = await stakingContract.methods
+        .getReward()
+        .send({ from: address });
+
+      // Wait for the transaction to be confirmed
+      const receipt = await tx.wait();
+
+      // Check for errors in the transaction receipt
+      if (receipt.status === false) {
+        throw new Error(
+          `Transaction failed with status code ${receipt.status}`
+        );
+      }
+
+      // Display a success message to the user
+      alert("Rewards collected successfully!");
+    } catch (error) {
+      // Display an error message to the user
+      alert(`Error collecting rewards: ${error.message}`);
     }
   };
 
@@ -275,15 +340,19 @@ const StakeReward = () => {
           <Grid item xs={isMobile ? 12 : 6}>
             <Paper className={classes.root} elevation={2}>
               <Box className={classes.root} height={400} overflow="auto">
-                <Box className={classes.heading}>
-                  <Typography variant="h2" style={{ fontSize: "26px" }}>
-                    <u>Total Staking Pool</u>
-                  </Typography>
-                </Box>
-                <br></br>
-                <p style={{ fontSize: "17px" }}>
-                  <b>{"150,000 LAZI"}</b>
-                </p>
+                <div>
+                  <Box className={classes.heading}>
+                    <Typography variant="h2" style={{ fontSize: "26px" }}>
+                      <u>Total Staking Pool</u>
+                    </Typography>
+                    <Button onClick={handleTotalStakedClick}>Refresh</Button>
+                  </Box>
+                  <br></br>
+                  <p style={{ fontSize: "17px" }}>
+                    <b>{totalStaked ? `${totalStaked} LAZI` : ""}</b>
+                  </p>
+                </div>
+
                 <br></br>
                 <Box className={classes.heading}>
                   <Typography variant="h2" style={{ fontSize: "26px" }}>
@@ -294,20 +363,32 @@ const StakeReward = () => {
                 <p style={{ fontSize: "17px" }}>
                   <b>{"1.93%"}</b>
                 </p>
-                <Box className={classes.heading}>
-                  <Typography variant="h2" style={{ fontSize: "26px" }}>
-                    <u>Your Rewards</u>
-                  </Typography>
-                </Box>
-                <br></br>
-                <p style={{ fontSize: "17px" }}>
-                  <b>{"500 LAZI"}</b>
-                </p>
+                <div>
+                  <Box className={classes.heading}>
+                    <Typography variant="h2" style={{ fontSize: "26px" }}>
+                      <u>Your Rewards</u>
+                    </Typography>
+                  </Box>
+                  <br></br>
+                  <p style={{ fontSize: "17px" }}>
+                    <b>{`${userRewards} LAZI`}</b>
+                  </p>
+                  <br></br>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleUserRewardsClick}
+                  >
+                    Get Your Rewards
+                  </Button>
+                </div>
                 <Box className={classes.Buttonbox} mt={2}>
                   <Box mt={2}>
                     <Button
                       variant="contained"
                       style={{ backgroundColor: "#e31a89", color: "#fff" }}
+                      onClick={handleCollectButtonClick}
+
                     >
                       Collect
                     </Button>
