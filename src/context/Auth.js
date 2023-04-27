@@ -306,6 +306,7 @@ export default function AuthProvider(props) {
       setIsLogin(false);
       setUserData({});
       window.localStorage.removeItem("token");
+      window.localStorage.removeItem("userId");
     },
   };
 

@@ -171,7 +171,8 @@ export default TopBar;
 
 export function TopBarData() {
   const auth = useContext(AuthContext);
-  const userMail = auth?.userLoggedIn?.email;
+  //const userId = auth?.userLoggedIn?.userId;
+  //console.log("data: ", auth?.userLoggedIn?.userId);
   const location = useLocation();
   const classes = useStyles();
   const history = useHistory();
@@ -182,7 +183,7 @@ export function TopBarData() {
   const [isSubmit, setIsSubmit] = useState(false);
   const [socialLoginEmail, setSocialLoginEmail] = useState();
   const [formData, setFormData] = useState({
-    message: "",
+    message: "", userId: "",
   });
 
   const _onInputChange = (e) => {
@@ -219,7 +220,7 @@ export function TopBarData() {
     setIsSubmit(true);
     const formData = new FormData();
     formData.append("message", message);
-    formData.append("email", userMail);
+    //formData.append("userId", userId);
     if (message !== "" && message.length < 100) {
       try {
         const res = await Axios({
@@ -227,7 +228,8 @@ export function TopBarData() {
           url: Apiconfigs.requestAdminByuser,
           // data: formData,
           data: {
-            email: window.sessionStorage.getItem("email"),
+            // email: window.sessionStorage.getItem("email"),
+            userId : window.sessionStorage.getItem("userId"),
             message: message,
           },
         });

@@ -385,8 +385,9 @@ const NavBar = ({onMobileClose, openMobile}) => {
       localStorage.removeItem("token");
       localStorage.removeItem("status");
       sessionStorage.removeItem("email");
+      sessionStorage.removeItem("userId");
       localStorage.removeItem("email");
-      localStorage.removeItem("email");
+      localStorage.removeItem("userId");
       sessionStorage.removeItem("ignoreUser");
 
       // Clear local storage and redirect to the home page

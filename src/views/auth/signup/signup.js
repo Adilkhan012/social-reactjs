@@ -76,7 +76,7 @@ import MetamaskSignupForm from "src/component/MetamaskSignupForm";
 import Web3 from "web3";
 import metamaskLogo from "src/metamask/metamask-logo.png";
 const msg_mobile = "Please use MetaMask!";
-const deepLink = 'https://metamask.app.link/dapp/social-reactjs.pages.dev/mint';
+const deepLink = "https://metamask.app.link/dapp/social-reactjs.pages.dev/mint";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -121,15 +121,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const customNetwork = {
-  chainId: '0x38', // BSC Mainnet Chain ID
-  chainName: 'BNB Smart Chain Mainnet',
+  chainId: "0x38", // BSC Mainnet Chain ID
+  chainName: "BNB Smart Chain Mainnet",
   nativeCurrency: {
-    name: 'BNB',
-    symbol: 'BNB',
+    name: "BNB",
+    symbol: "BNB",
     decimals: 18,
   },
-  rpcUrls: ['https://bsc-dataseed1.binance.org'], // BSC Mainnet RPC endpoint
-  blockExplorerUrls: ['https://bscscan.com'], // BSC Mainnet Block Explorer URL
+  rpcUrls: ["https://bsc-dataseed1.binance.org"], // BSC Mainnet RPC endpoint
+  blockExplorerUrls: ["https://bscscan.com"], // BSC Mainnet Block Explorer URL
 };
 
 // const customNetwork = {
@@ -620,7 +620,9 @@ function Signup() {
       });
 
       if (res.data.responseCode === 200) {
-        window.localStorage.setItem("status", res.data.result.status);
+        const { result } = res.data;
+        console.log( result)
+        window.localStorage.setItem("status", result.userInfo.status);
         auth.setIsLogin(true);
         setTimeout(() => {
           auth.handleUserProfileApi();
@@ -639,9 +641,18 @@ function Signup() {
         setTimeout(() => {
           history.push("/mint");
         }, 2000);
+        const token = result.userInfo.token;
+        const userId = result.userInfo._id;
+        console.log(userId);
+        // Update session storage
         window.sessionStorage.setItem("token", res.data.result.token);
+        window.sessionStorage.setItem("status", result.userInfo.status);
+        window.sessionStorage.setItem("userId", userId);
+
+        // Update local storage
         window.localStorage.setItem("token", res.data.result.token);
-        window.localStorage.setItem("status", res.data.result.status);
+        window.localStorage.setItem("userId", userId);
+        window.localStorage.setItem("status", result.userInfo.status);
       } else {
         // Sign in failed
         setIsLoading(false);
