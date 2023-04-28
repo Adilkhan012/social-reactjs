@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import {
   Box,
   Checkbox,
@@ -11,9 +11,10 @@ import {
 } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Button from "@material-ui/core/Button";
-import { Tooltip } from "@material-ui/core";
+import {Tooltip} from "@material-ui/core";
 import InfoIcon from "@material-ui/icons/Info";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import Chart from "react-apexcharts";
 
 import initMetamask from "src/blockchain/metamaskConnection";
 import initStakingContract from "src/blockchain/stakingReward";
@@ -39,7 +40,12 @@ const useStyles = makeStyles((theme) => ({
       transform: "scale(1.2)",
     },
   },
-
+  radialChart: {
+    display: "flex",
+    alignItems: "center",
+    marginBottom: theme.spacing(1),
+    justifyContent: "space-between"
+  },
   heading: {
     display: "flex",
   },
@@ -115,7 +121,7 @@ const StakeReward = () => {
 
   useEffect(() => {
     const init = async () => {
-      const { web3, address } = await initMetamask();
+      const {web3, address} = await initMetamask();
       const contract = await initStakingContract();
       setStakingContract(contract);
       setAddress(address);
@@ -128,14 +134,38 @@ const StakeReward = () => {
   }, []);
 
   const options = [
-    { label: "3 months (1.2x)", id: 1 },
-    { label: "3 months (1.2x)", id: 2 },
+    {label: "3 months (1.2x)", id: 1},
+    {label: "3 months (1.2x)", id: 2},
   ];
   const userOptions = [
-    { label: "User 1", value: 1 },
-    { label: "User 2", value: 2 },
+    {label: "User 1", value: 1},
+    {label: "User 2", value: 2},
   ];
 
+  const [chartData, setChartData] = useState({
+    options: {
+      chart: {
+        id: "basic-bar"
+      },
+      xaxis: {
+        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999]
+      },
+      theme: {
+        mode: "dark",
+        palette: "palette1",
+        monochrome: {
+          enabled: true,
+          color: "#EC167F"
+        }
+      }
+    },
+    series: [
+      {
+        name: "series-1",
+        data: [30, 40, 45, 50, 49, 60, 70, 91]
+      }
+    ]
+  })
   const handleSelectedOptionsChange = (event, newValue) => {
     setSelectedOptions(newValue);
   };
@@ -150,7 +180,7 @@ const StakeReward = () => {
     if (web3 && stakingContract) {
       stakingContract.methods
         .stake(amount)
-        .send({ from: address })
+        .send({from: address})
         .on("transactionHash", (hash) => {
           console.log(hash);
         })
@@ -162,6 +192,7 @@ const StakeReward = () => {
         });
     }
   };
+
   async function fetchTotalStaked() {
     try {
       if (!stakingContract) {
@@ -204,7 +235,7 @@ const StakeReward = () => {
       // execute the getReward function in the smart contract
       const tx = await stakingContract.methods
         .getReward()
-        .send({ from: address });
+        .send({from: address});
 
       // Wait for the transaction to be confirmed
       const receipt = await tx.wait();
@@ -235,10 +266,10 @@ const StakeReward = () => {
                   <Typography variant="h2">Stake Reward</Typography>
                   <Tooltip
                     title="This is the stake reward tooltip."
-                    style={{ cursor: "pointer" }}
+                    style={{cursor: "pointer"}}
                     placement={"top"}
                   >
-                    <InfoIcon fontSize={"medium"} />
+                    <InfoIcon fontSize={"medium"}/>
                   </Tooltip>
                 </Box>
 
@@ -266,7 +297,7 @@ const StakeReward = () => {
                   <Autocomplete
                     disablePortal
                     id="tags-standard"
-                    sx={{ width: 300 }}
+                    sx={{width: 300}}
                     options={options}
                     getOptionLabel={(option) => option.label}
                     renderInput={(params) => (
@@ -312,7 +343,7 @@ const StakeReward = () => {
                   <Box mt={2}>
                     <Button
                       variant="contained"
-                      style={{ backgroundColor: "#e31a89", color: "#fff" }}
+                      style={{backgroundColor: "#e31a89", color: "#fff"}}
                       onClick={handleStake}
                     >
                       Stake
@@ -331,7 +362,7 @@ const StakeReward = () => {
                     variant="outlined"
                     multiline
                     maxRows={10}
-                    InputProps={{ readOnly: true }}
+                    InputProps={{readOnly: true}}
                   />
                 </Box>
               </Box>
@@ -340,40 +371,150 @@ const StakeReward = () => {
           <Grid item xs={isMobile ? 12 : 6}>
             <Paper className={classes.root} elevation={2}>
               <Box className={classes.root} height={400} overflow="auto">
-                <div>
-                  <Box className={classes.heading}>
-                    <Typography variant="h2" style={{ fontSize: "26px" }}>
-                      <u>Total Staking Pool</u>
-                    </Typography>
-                    <Button onClick={handleTotalStakedClick}>Refresh</Button>
-                  </Box>
-                  <br></br>
-                  <p style={{ fontSize: "17px" }}>
-                    <b>{totalStaked ? `${totalStaked} LAZI` : ""}</b>
+                <Box className={classes.heading}>
+                  <Typography variant="h2" style={{fontSize: "26px"}}>
+                    <u>Total Staking Pool</u>
+                  </Typography>
+                  <Button onClick={handleTotalStakedClick}>Refresh</Button>
+                </Box>
+
+                <div className={classes.radialChart}>
+                  <p style={{fontSize: "17px"}}>
+                    <b>{totalStaked ? `${totalStaked} LAZI` : "0 LAZI"}</b>
                   </p>
+                  <Chart
+                    type="radialBar"
+                    height="100"
+                    width="100"
+                    series={[0]}
+                    options={{
+                      grid: {
+                        padding: {
+                          top: 0,
+                          right: 0,
+                          bottom: 0,
+                          left: 0
+                        }
+                      },
+                      colors: ["#e31a89", "#ebeff2"],
+                      chart: {
+                        height: "180px",
+                        type: "radialBar"
+                      },
+                      plotOptions: {
+                        radialBar: {
+                          dataLabels: {
+                            name: {
+                              show: false,
+                            },
+                            value: {
+                              show: false,
+                            },
+                          },
+                          hollow: {
+                            size: "30%"
+                          }
+                        }
+                      }
+                    }}
+                  />
                 </div>
 
-                <br></br>
                 <Box className={classes.heading}>
-                  <Typography variant="h2" style={{ fontSize: "26px" }}>
+                  <Typography variant="h2" style={{fontSize: "26px"}}>
                     <h>Your Pool Share</h>
                   </Typography>
                 </Box>
-                <br></br>
-                <p style={{ fontSize: "17px" }}>
-                  <b>{"1.93%"}</b>
-                </p>
+
+                <div className={classes.radialChart}>
+                  <p style={{fontSize: "17px"}}>
+                    <b>{"1.93%"}</b>
+                  </p>
+                  <Chart
+                    type="radialBar"
+                    height="100"
+                    width="100"
+                    series={[1.93]}
+                    options={{
+                      grid: {
+                        padding: {
+                          top: 0,
+                          right: 0,
+                          bottom: 0,
+                          left: 0
+                        }
+                      },
+                      colors: ["#e31a89", "#ebeff2"],
+                      chart: {
+                        height: "180px",
+                        type: "radialBar"
+                      },
+                      plotOptions: {
+                        radialBar: {
+                          dataLabels: {
+                            name: {
+                              show: false,
+                            },
+                            value: {
+                              show: false,
+                            },
+                          },
+                          hollow: {
+                            size: "30%"
+                          }
+                        }
+                      }
+                    }}
+                  />
+                </div>
                 <div>
                   <Box className={classes.heading}>
-                    <Typography variant="h2" style={{ fontSize: "26px" }}>
+                    <Typography variant="h2" style={{fontSize: "26px"}}>
                       <u>Your Rewards</u>
                     </Typography>
                   </Box>
-                  <br></br>
-                  <p style={{ fontSize: "17px" }}>
-                    <b>{`${userRewards} LAZI`}</b>
-                  </p>
-                  <br></br>
+                  <div className={classes.radialChart}>
+                    <p style={{fontSize: "17px"}}>
+                      <b>{`${userRewards} LAZI`}</b>
+                    </p>
+                    <Chart
+                      type="radialBar"
+                      height="100"
+                      width="100"
+                      series={[0]}
+                      options={{
+                        grid: {
+                          padding: {
+                            top: 0,
+                            right: 0,
+                            bottom: 0,
+                            left: 0
+                          }
+                        },
+                        colors: ["#e31a89", "#ebeff2"],
+                        chart: {
+                          height: "180px",
+                          type: "radialBar"
+                        },
+                        plotOptions: {
+                          radialBar: {
+                            dataLabels: {
+                              name: {
+                                show: false,
+                              },
+                              value: {
+                                show: false,
+                              },
+                            },
+                            hollow: {
+                              size: "30%"
+                            }
+                          }
+                        }
+                      }}
+                    />
+                  </div>
+
                   <Button
                     variant="contained"
                     color="primary"
@@ -386,7 +527,7 @@ const StakeReward = () => {
                   <Box mt={2}>
                     <Button
                       variant="contained"
-                      style={{ backgroundColor: "#e31a89", color: "#fff" }}
+                      style={{backgroundColor: "#e31a89", color: "#fff"}}
                       onClick={handleCollectButtonClick}
 
                     >
@@ -394,6 +535,13 @@ const StakeReward = () => {
                     </Button>
                   </Box>
                 </Box>
+                <br></br>
+
+                <Chart
+                  options={chartData.options}
+                  series={chartData.series}
+                  type="bar"
+                />
               </Box>
             </Paper>
           </Grid>
