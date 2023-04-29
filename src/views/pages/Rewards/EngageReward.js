@@ -5,6 +5,7 @@ import Button from "@material-ui/core/Button";
 import {Tooltip} from '@material-ui/core';
 import InfoIcon from "@material-ui/icons/Info";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import Chart from "react-apexcharts";
 
 const useStyles = makeStyles((theme) => ({
   checkbox: {
@@ -35,6 +36,12 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     top: "11.5%",
     left: "49%"
+  },
+  radialChart: {
+    display: "flex",
+    alignItems: "center",
+    marginBottom: theme.spacing(1),
+    justifyContent: "space-between"
   },
   bannerBox: {
     padding: "10px 0px 150px 0px",
@@ -99,6 +106,30 @@ const EngageReward = () => {
   ];
   const [selectedOptions, setSelectedOptions] = useState([]);
 
+  const [chartData, setChartData] = useState({
+    options: {
+      chart: {
+        id: "basic-bar"
+      },
+      xaxis: {
+        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999]
+      },
+      theme: {
+        mode: "dark",
+        palette: "palette1",
+        monochrome: {
+          enabled: true,
+          color: "#EC167F"
+        }
+      }
+    },
+    series: [
+      {
+        name: "series-1",
+        data: [30, 40, 45, 50, 49, 60, 70, 91]
+      }
+    ]
+  })
   const handleSelectedOptionsChange = (event, newValue) => {
     setSelectedOptions(newValue);
   };
@@ -219,29 +250,140 @@ const EngageReward = () => {
                     <h>Locked APR</h>
                   </Typography>
                 </Box>
-                <br></br>
-                <p style={{fontSize: "17px"}}>
-                  <b>{"Up to 41.35%"}</b>
-                </p>
-                <br></br>
+                <div className={classes.radialChart}>
+                  <p style={{fontSize: "17px"}}>
+                    <b>{"Up to 41.35%"}</b>
+                  </p>
+                  <Chart
+                    type="radialBar"
+                    height="100"
+                    width="100"
+                    series={[41.35]}
+                    options={{
+                      grid: {
+                        padding: {
+                          top: 0,
+                          right: 0,
+                          bottom: 0,
+                          left: 0
+                        }
+                      },
+                      colors: ["#e31a89", "#ebeff2"],
+                      chart: {
+                        height: "180px",
+                        type: "radialBar"
+                      },
+                      plotOptions: {
+                        radialBar: {
+                          dataLabels: {
+                            name: {
+                              show: false,
+                            },
+                            value: {
+                              show: false,
+                            },
+                          },
+                          hollow: {
+                            size: "30%"
+                          }
+                        }
+                      }
+                    }}
+                  />
+                </div>
+
                 <Box className={classes.heading}>
                   <Typography variant="h2" style={{fontSize: "26px"}}>
-                  <h>Flexible APY</h>
+                    <h>Flexible APY</h>
                   </Typography>
                 </Box>
-                <br></br>
-                <p style={{fontSize: "17px"}}>
-                  <b>{"15%"}</b>
-                </p>
+                <div className={classes.radialChart}>
+                  <p style={{fontSize: "17px"}}>
+                    <b>{"15%"}</b>
+                  </p>
+                  <Chart
+                    type="radialBar"
+                    height="100"
+                    width="100"
+                    series={[15]}
+                    options={{
+                      grid: {
+                        padding: {
+                          top: 0,
+                          right: 0,
+                          bottom: 0,
+                          left: 0
+                        }
+                      },
+                      colors: ["#e31a89", "#ebeff2"],
+                      chart: {
+                        height: "180px",
+                        type: "radialBar"
+                      },
+                      plotOptions: {
+                        radialBar: {
+                          dataLabels: {
+                            name: {
+                              show: false,
+                            },
+                            value: {
+                              show: false,
+                            },
+                          },
+                          hollow: {
+                            size: "30%"
+                          }
+                        }
+                      }
+                    }}
+                  />
+                </div>
                 <Box className={classes.heading}>
                   <Typography variant="h2" style={{fontSize: "26px"}}>
-                  <h>Total Staked</h>
+                    <h>Total Staked</h>
                   </Typography>
                 </Box>
-                <br></br>
-                <p style={{fontSize: "17px"}}>
-                  <b>{"500 LAZI"}</b>
-                </p>
+                <div className={classes.radialChart}>
+                  <p style={{fontSize: "17px"}}>
+                    <b>{"500 LAZI"}</b>
+                  </p>
+                  <Chart
+                    type="radialBar"
+                    height="100"
+                    width="100"
+                    series={[50]}
+                    options={{
+                      grid: {
+                        padding: {
+                          top: 0,
+                          right: 0,
+                          bottom: 0,
+                          left: 0
+                        }
+                      },
+                      colors: ["#e31a89", "#ebeff2"],
+                      chart: {
+                        height: "180px",
+                        type: "radialBar"
+                      },
+                      plotOptions: {
+                        radialBar: {
+                          dataLabels: {
+                            name: {
+                              show: false,
+                            },
+                            value: {
+                              show: false,
+                            },
+                          },
+                          hollow: {
+                            size: "30%"
+                          }
+                        }
+                      }
+                    }}
+                  />
+                </div>
                 <Box className={classes.Buttonbox} mt={2}>
                   <Box mt={2}>
                     <Button
@@ -252,7 +394,13 @@ const EngageReward = () => {
                     </Button>
                   </Box>
                 </Box>
+                <br></br>
 
+                <Chart
+                  options={chartData.options}
+                  series={chartData.series}
+                  type="bar"
+                />
               </Box>
             </Paper>
           </Grid>
