@@ -1,6 +1,6 @@
 node_modules
-.DS_Store
 package-lock.json
 yarn-error.log
 yarn.lock
 public/images/.DS_Store
+.DS_Store
