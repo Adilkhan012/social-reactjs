@@ -551,9 +551,9 @@ function Signup() {
       // Request permission to connect to MetaMask
       const web3 = new Web3(window.ethereum);
 
-      // const [account] = await window.ethereum.request({
-      //   method: 'eth_requestAccounts',
-      // });
+      const [account] = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
 
       // Check if user is on Mumbai testnet
       const chainId = await window.ethereum.request({
@@ -621,7 +621,7 @@ function Signup() {
 
       if (res.data.responseCode === 200) {
         const { result } = res.data;
-        console.log( result)
+        console.log(result);
         window.localStorage.setItem("status", result.userInfo.status);
         auth.setIsLogin(true);
         setTimeout(() => {
