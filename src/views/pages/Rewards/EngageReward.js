@@ -147,7 +147,7 @@ const EngageReward = () => {
               <Box className={classes.root}>
                 <Box className={classes.tooltipIconHeader}>
                   <Typography variant="h2">
-                    Engage Reward
+                    LP Rewards
                   </Typography>
                   <Tooltip title="This is the stake reward tooltip." style={{cursor: "pointer"}} placement={"top"}>
                     <InfoIcon fontSize={"medium"}/>
@@ -187,7 +187,7 @@ const EngageReward = () => {
                 <br></br>
                 <Box className={classes.heading}>
                   <Typography variant="h2">
-                    Users Stake
+                    UserNames 
                   </Typography>
                 </Box>
                 <br></br>

@@ -263,7 +263,7 @@ const StakeReward = () => {
             <Paper className={classes.root} elevation={2}>
               <Box className={classes.root}>
                 <Box className={classes.tooltipIconHeader}>
-                  <Typography variant="h2">Stake Reward</Typography>
+                  <Typography variant="h2">Stake Rewards</Typography>
                   <Tooltip
                     title="This is the stake reward tooltip."
                     style={{cursor: "pointer"}}
@@ -312,7 +312,7 @@ const StakeReward = () => {
                 </Box>
                 <br></br>
                 <Box className={classes.heading}>
-                  <Typography variant="h2">Users Stake</Typography>
+                  <Typography variant="h2">UserNames</Typography>
                 </Box>
                 <br></br>
                 <Box className={classes.checkbox}>

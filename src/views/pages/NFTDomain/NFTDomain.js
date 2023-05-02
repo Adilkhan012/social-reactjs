@@ -587,7 +587,7 @@ const NFTDomain = () => {
             <div className={classes.warningContainer}>
               <Paper className={classes.warningMessage}>
                 <p>
-                  You don't have any minted domains. Please buy some domains to
+                  You don't have any minted UserNames. Please buy some UserNames to
                   display.
                 </p>
               </Paper>

@@ -89,7 +89,7 @@ const Rewards = () => {
                     className={tabview === "EngageReward" ? "active" : " "}
                     onClick={() => setTabView("EngageReward")}
                   >
-                    Engage Reward
+                    LP Rewards
                   </Link>
                 </Box>
 
@@ -98,7 +98,7 @@ const Rewards = () => {
                     className={tabview === "StakeReward" ? "active" : " "}
                     onClick={() => setTabView("StakeReward")}
                   >
-                    Stake Reward
+                    Stake Rewards
                   </Link>
                 </Box>
               </Box>
