@@ -56,6 +56,9 @@ import moment from "moment";
 import { tokenName } from "src/utils";
 import { BsEmojiLaughing } from "react-icons/bs";
 import Picker from "emoji-picker-react";
+import initMetamask from "src/blockchain/metamaskConnection";
+import initLaziPostContract from "src/blockchain/laziPostContract";
+
 
 import {
   FacebookShareButton,
@@ -384,7 +387,9 @@ export default function (props) {
   const classes = useStyles();
   const history = useHistory();
   const { data, listPublicExclusiveHandler, isLoadingContent, index } = props;
-
+  const { ownerAddress, tokenId } = data;
+// console.log(ownerAddress, tokenId);
+// console.log("post data", data);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [isBuyLoading, setIsBuyLoading] = useState(false);
   const [expanded, setExpanded] = React.useState("panel1");
@@ -402,6 +407,21 @@ export default function (props) {
   const [isHidePost, setIsHidePost] = React.useState(false);
   const [updateData, setUpdateData] = useState({});
   const [open, setOpen] = React.useState(false);
+  const [buyerAddress, setAddress] = useState(null);
+  const [web3, setWeb3] = useState(null);
+  const [laziPostContract, setlaziPostContract] = useState(null);
+
+  useEffect(() => {
+    const init = async () => {
+      const { web3, address } = await initMetamask();
+      const contract = await initLaziPostContract();
+      setlaziPostContract(contract);
+      setAddress(address);
+      setWeb3(web3);
+    };
+
+    init();
+  }, []);
 
   // console.log("data from PostCard!", data);
   const handleClickOpen = (data) => {
@@ -604,42 +624,70 @@ export default function (props) {
     try {
       setIsBuyLoading(true);
       setIsHidePost1(false);
-      const res = await Axios.post(
-        Apiconfigs.buyPost,
-        {
-          postId: isHidePostdata?._id,
-          description: "NA",
-        },
-        {
-          headers: {
-            token: localStorage.getItem("token"),
+  
+      console.log("Owner Address:", ownerAddress);
+      console.log("Buyer Address:", buyerAddress);
+      console.log("Token ID:", tokenId);
+      const gas = 3000000; // Set the initial gas limit value
+
+      
+  // Send the transaction with the updated gas limit
+  const result = await laziPostContract.methods.safeTransferFrom(ownerAddress, buyerAddress, tokenId).send({
+    from: buyerAddress,
+    gas: 300000, // Specify the desired gas amount
+    gasPrice: '50000000000' // Specify the desired gas price (in wei)
+  });
+      // Check if the transaction was successful
+      if (result.status) {
+        const res = await Axios.post(
+          Apiconfigs.buyPost,
+          {
+            postId: isHidePostdata?._id,
+            description: "NA",
           },
+          {
+            headers: {
+              token: localStorage.getItem("token"),
+            },
+          }
+        );
+  
+        if (res.data.responseCode === 200) {
+          setIsHidePost1(false);
+          history.push("/profile");
+  
+          listPublicExclusiveHandler();
+          auth.handleUserProfileApi();
+  
+          toast.success(res.data.responseMessage);
+        } else {
+          // toast.error(res.data.responseMessage);
         }
-      );
-      if (res.data.responseCode === 200) {
-        setIsHidePost1(false);
-        history.push("/profile");
-
-        listPublicExclusiveHandler();
-        auth.handleUserProfileApi();
-
-        toast.success(res.data.responseMessage);
       } else {
-        // toast.error(res.data.responseMessage);
+        // Handle the case when the Metamask transaction fails
+        toast.error("Metamask transaction failed");
       }
-
+  
       setIsBuyLoading(false);
     } catch (error) {
       setIsHidePost1(false);
-
       setIsBuyLoading(false);
+  
+      console.error("Error:", error);
+  
       if (error.response) {
         toast.error(error.response.data.responseMessage);
       } else {
-        toast.error(error.message);
+        if (error.message.includes("exceeds gas limit")) {
+          toast.error("Gas limit exceeded. Please try again with a higher gas limit.");
+        } else {
+          toast.error(error.message);
+        }
       }
     }
   };
+  
+  
 
   const subscribeNowHandler = async (isCheck) => {
     // setIsloading(true);

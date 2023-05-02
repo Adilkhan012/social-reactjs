@@ -240,7 +240,7 @@ function Collection({ listPublicExclusiveHandler }) {
   const [web3, setWeb3] = useState(null);
   const [laziPostContract, setlaziPostContract] = useState(null);
   const [laziPost, setLaziPost] = useState("");
-  const [tokenId, setTokenId] = useState("");
+  const [tokenId, setTokenId] = useState(0);
   const [posts, setPosts] = useState({});
 
   const [formValueCollection, setFormValueCollection] = useState({
@@ -381,14 +381,17 @@ function Collection({ listPublicExclusiveHandler }) {
     //contract interaction before storing to database
     try {
       const totalSupply = await laziPostContract.methods.totalSupply().call();
-      const tokenId = parseInt(totalSupply) + 1; // Get the next available tokenId
+      const newTotalSupply = parseInt(totalSupply) + 1;
+      // Get the next available tokenId
+      var tokenIdNFT = newTotalSupply;
+      console.log("totalSupply", newTotalSupply)
+      setTokenId(tokenIdNFT);
       console.log("tokenId", tokenId)
       // setTokenId(tokenId)
-      const result = await laziPostContract.methods
-        .lazyMint( tokenId, "apple")
-        .send({
-          from: address,
-        });
+      const result = await laziPostContract.methods.buyLaziPost([titlePost]).send({
+        from: address,
+        value: web3.utils.toWei('0', 'ether'), // Set the desired amount of Ether to send along with the transaction (if required)
+      });
 
       console.log(result); // print the transaction result
 
@@ -409,6 +412,7 @@ function Collection({ listPublicExclusiveHandler }) {
     if (activities === "PRIVATE") {
       if (
         activities !== "" &&
+        address !== "" &&
         description !== "" &&
         titlePost !== "" &&
         list !== "" &&
@@ -435,6 +439,8 @@ function Collection({ listPublicExclusiveHandler }) {
             royality: royality,
             hashTagName: hastag ? hastag : [],
             mediaType: coverPost ? "MEDIA" : "TEXT",
+            ownerAddress: address,
+            tokenId: tokenIdNFT,
           },
           headers: {
             token: localStorage.getItem("token"),
@@ -444,6 +450,7 @@ function Collection({ listPublicExclusiveHandler }) {
             setLoader(false);
             if (res.data.responseCode === 200) {
               setIsSubmit(false);
+              setTokenId(0);
               listPublicExclusiveHandler();
               setActivities("");
               setDescription("");
@@ -470,6 +477,7 @@ function Collection({ listPublicExclusiveHandler }) {
       }
     } else {
       if (
+        address !== "" &&
         activities !== "" &&
         description !== "" &&
         titlePost !== "" &&
@@ -497,6 +505,8 @@ function Collection({ listPublicExclusiveHandler }) {
             royality: royality,
             hashTagName: hastag ? hastag : [],
             mediaType: coverPost ? "MEDIA" : "TEXT",
+            ownerAddress: address,
+            tokenId: tokenIdNFT,
           },
           headers: {
             token: localStorage.getItem("token"),
@@ -506,6 +516,7 @@ function Collection({ listPublicExclusiveHandler }) {
             setLoader(false);
             if (res.data.responseCode === 200) {
               setIsSubmit(false);
+              setTokenId(0);
               listPublicExclusiveHandler();
               setActivities("");
               setDescription("");

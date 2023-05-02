@@ -1,8 +1,44 @@
 import initMetamask from "./metamaskConnection";
 
-const laziPostContractAddress = "0x4b19dEa86b9060Eb64691a6244Ad1Ce23B39F183";
+const laziPostContractAddress = "0xCBAE00C693ff481b231dec99dc5Ab6e3B4887f69";
 
 const laziPostContractABI = [
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_address",
+        type: "address",
+      },
+      {
+        internalType: "string[]",
+        name: "_laziPosts",
+        type: "string[]",
+      },
+    ],
+    name: "airdrop",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address[]",
+        name: "_addresses",
+        type: "address[]",
+      },
+      {
+        internalType: "string[]",
+        name: "_laziPosts",
+        type: "string[]",
+      },
+    ],
+    name: "airdrop",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
   {
     inputs: [],
     stateMutability: "nonpayable",
@@ -24,14 +60,86 @@ const laziPostContractABI = [
     type: "error",
   },
   {
+    inputs: [
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "approve",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "ApproveToCaller",
     type: "error",
   },
   {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_spender",
+        type: "address",
+      },
+    ],
+    name: "autoApproveMarketplace",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "BalanceQueryForZeroAddress",
     type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string[]",
+        name: "_laziNames",
+        type: "string[]",
+      },
+    ],
+    name: "buyLaziPost",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "_laziPost",
+        type: "string",
+      },
+      {
+        internalType: "uint256",
+        name: "_laziPostPrice",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes32",
+        name: "_signedMessageHash",
+        type: "bytes32",
+      },
+      {
+        internalType: "bytes",
+        name: "_signature",
+        type: "bytes",
+      },
+    ],
+    name: "buyLaziPostsSigned",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
   },
   {
     inputs: [],
@@ -55,13 +163,195 @@ const laziPostContractABI = [
   },
   {
     inputs: [],
+    name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "from",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "safeTransferFrom",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "from",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes",
+        name: "_data",
+        type: "bytes",
+      },
+    ],
+    name: "safeTransferFrom",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "_laziPostImages",
+        type: "string",
+      },
+    ],
+    name: "set_laziPostImages",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_laziPostPrice",
+        type: "uint256",
+      },
+    ],
+    name: "set_laziPostPrice",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_mintSigner",
+        type: "address",
+      },
+    ],
+    name: "set_mintSigner",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_receiver",
+        type: "address",
+      },
+      {
+        internalType: "uint96",
+        name: "_feeNumerator",
+        type: "uint96",
+      },
+    ],
+    name: "set_royalty",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_saleActiveTime",
+        type: "uint256",
+      },
+    ],
+    name: "set_saleActiveTime",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "operator",
+        type: "address",
+      },
+      {
+        internalType: "bool",
+        name: "approved",
+        type: "bool",
+      },
+    ],
+    name: "setApprovalForAll",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "TransferCallerNotOwnerNorApproved",
     type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "from",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "transferFrom",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [],
     name: "TransferFromIncorrectOwner",
     type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [],
@@ -173,6 +463,13 @@ const laziPostContractABI = [
     type: "event",
   },
   {
+    inputs: [],
+    name: "withdraw",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "bytes",
@@ -195,73 +492,6 @@ const laziPostContractABI = [
     inputs: [
       {
         internalType: "address",
-        name: "_address",
-        type: "address",
-      },
-      {
-        internalType: "string[]",
-        name: "_laziPosts",
-        type: "string[]",
-      },
-    ],
-    name: "airdrop",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address[]",
-        name: "_addresses",
-        type: "address[]",
-      },
-      {
-        internalType: "string[]",
-        name: "_laziPosts",
-        type: "string[]",
-      },
-    ],
-    name: "airdrop",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-    ],
-    name: "approve",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_spender",
-        type: "address",
-      },
-    ],
-    name: "autoApproveMarketplace",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
         name: "owner",
         type: "address",
       },
@@ -275,34 +505,6 @@ const laziPostContractABI = [
       },
     ],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "_laziPost",
-        type: "string",
-      },
-      {
-        internalType: "uint256",
-        name: "_laziPostPrice",
-        type: "uint256",
-      },
-      {
-        internalType: "bytes32",
-        name: "_signedMessageHash",
-        type: "bytes32",
-      },
-      {
-        internalType: "bytes",
-        name: "_signature",
-        type: "bytes",
-      },
-    ],
-    name: "buyLaziPostsSigned",
-    outputs: [],
-    stateMutability: "payable",
     type: "function",
   },
   {
@@ -493,24 +695,6 @@ const laziPostContractABI = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-      {
-        internalType: "string",
-        name: "_laziPost",
-        type: "string",
-      },
-    ],
-    name: "lazyMint",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "string",
         name: "_message",
         type: "string",
@@ -538,19 +722,6 @@ const laziPostContractABI = [
       },
     ],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "_laziPost",
-        type: "string",
-      },
-    ],
-    name: "mintUnpurchasedToken",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -599,13 +770,6 @@ const laziPostContractABI = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "renounceOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "uint256",
@@ -635,57 +799,6 @@ const laziPostContractABI = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-    ],
-    name: "safeTransferFrom",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-      {
-        internalType: "bytes",
-        name: "_data",
-        type: "bytes",
-      },
-    ],
-    name: "safeTransferFrom",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [],
     name: "saleActiveTime",
     outputs: [
@@ -696,94 +809,6 @@ const laziPostContractABI = [
       },
     ],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "operator",
-        type: "address",
-      },
-      {
-        internalType: "bool",
-        name: "approved",
-        type: "bool",
-      },
-    ],
-    name: "setApprovalForAll",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "_laziPostImages",
-        type: "string",
-      },
-    ],
-    name: "set_laziPostImages",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_laziPostPrice",
-        type: "uint256",
-      },
-    ],
-    name: "set_laziPostPrice",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_mintSigner",
-        type: "address",
-      },
-    ],
-    name: "set_mintSigner",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_receiver",
-        type: "address",
-      },
-      {
-        internalType: "uint96",
-        name: "_feeNumerator",
-        type: "uint96",
-      },
-    ],
-    name: "set_royalty",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_saleActiveTime",
-        type: "uint256",
-      },
-    ],
-    name: "set_saleActiveTime",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -808,25 +833,6 @@ const laziPostContractABI = [
   {
     inputs: [],
     name: "symbol",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-    ],
-    name: "tokenURI",
     outputs: [
       {
         internalType: "string",
@@ -886,6 +892,25 @@ const laziPostContractABI = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "tokenURI",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "totalSupply",
     outputs: [
@@ -896,42 +921,6 @@ const laziPostContractABI = [
       },
     ],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-    ],
-    name: "transferFrom",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
-      },
-    ],
-    name: "transferOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -956,13 +945,6 @@ const laziPostContractABI = [
       },
     ],
     stateMutability: "pure",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "withdraw",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function",
   },
 ];
