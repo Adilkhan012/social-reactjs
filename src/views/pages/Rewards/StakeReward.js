@@ -373,7 +373,7 @@ const StakeReward = () => {
               <Box className={classes.root} height={400} overflow="auto">
                 <Box className={classes.heading}>
                   <Typography variant="h2" style={{fontSize: "26px"}}>
-                    <u>Total Staking Pool</u>
+                  <h>Locked APR</h>
                   </Typography>
                   <Button onClick={handleTotalStakedClick}>Refresh</Button>
                 </Box>
@@ -422,7 +422,7 @@ const StakeReward = () => {
 
                 <Box className={classes.heading}>
                   <Typography variant="h2" style={{fontSize: "26px"}}>
-                    <h>Your Pool Share</h>
+                    <h>Flexible APY</h>
                   </Typography>
                 </Box>
 
@@ -470,7 +470,7 @@ const StakeReward = () => {
                 <div>
                   <Box className={classes.heading}>
                     <Typography variant="h2" style={{fontSize: "26px"}}>
-                      <u>Your Rewards</u>
+                    <h>Total Staked</h>
                     </Typography>
                   </Box>
                   <div className={classes.radialChart}>
