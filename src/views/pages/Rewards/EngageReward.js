@@ -1,11 +1,12 @@
-import React, {useState} from "react";
+import React, {useState, useEffect } from "react";
+import Chart from "react-apexcharts";
 import {Box, Checkbox, Grid, makeStyles, Paper, Slider, TextField, Typography} from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Button from "@material-ui/core/Button";
 import {Tooltip} from '@material-ui/core';
 import InfoIcon from "@material-ui/icons/Info";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import Chart from "react-apexcharts";
+
 
 const useStyles = makeStyles((theme) => ({
   checkbox: {
@@ -137,12 +138,80 @@ const EngageReward = () => {
   const valuetext = (value) => {
     return `${value} LAZI`;
   }
+  const[state,setState]=useState({
+    options: {
+      title: {
+        text: 'chart',
+        align: 'left',
+        margin: 10,
+        offsetX: 0,
+        offsetY: 0,
+        floating: false,
+        style: {
+          fontSize:  '14px',
+          fontWeight:  'bold',
+          fontFamily:  undefined,
+          color:  '#fff'
+        }
+    },
+      tooltip: {
+        enabled: true,
+        style: {
+         
+          fontFamily: "'Montserrat', 'sans-serif'"
+        },
+
+        theme:'dark'
+      },
+      toolbar: {
+        foreColor:'#ffff',
+      style:{
+        color :'black'
+      }},
+      colors:["#8a8688","#e31a89"],
+      chart: { foreColor: '#e6e5e8',
+        id: "basic-bar"
+      },
+      dataLabels: {
+        enabled: false},
+        legend: {
+          show: false},
+      xaxis: {
+        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999]
+      }
+    },
+    series: [
+      {
+        name: "series-1",
+        data: [30, 40, 45, 50, 49, 60, 70, 91]
+      },
+      {
+        name: "series-2",
+        data: [40, 14, 51, 5, 42, 30, 22, 100]
+      }
+    ]
+  })
+  function AnimatedNumber({ targetNumber, suffix }) {
+    const [currentNumber, setCurrentNumber] = useState(0);
+  
+    useEffect(() => {
+      const interval = setInterval(() => {
+        if (currentNumber < targetNumber) {
+          setCurrentNumber((prevNumber) => prevNumber + 1);
+        }
+      }, 5);
+  
+      return () => clearInterval(interval);
+    }, [currentNumber, targetNumber]);
+  
+    return <b>{currentNumber}{suffix}</b>;
+  }
 
   return (
     <>
       <Box className={classes.bannerBox}>
         <Grid container spacing={3}>
-          <Grid item xs={isMobile ? 12 : 6}>
+        <Grid item  md={isMobile ? 12 : 6}  xs={isMobile ? 12 : 12} >
             <Paper className={classes.root} elevation={2}>
               <Box className={classes.root}>
                 <Box className={classes.tooltipIconHeader}>
@@ -185,6 +254,8 @@ const EngageReward = () => {
                   <br></br>
                 </Box>
                 <br></br>
+                <div style={{display:'flex'}}>
+                <div>
                 <Box className={classes.heading}>
                   <Typography variant="h2">
                     UserNames 
@@ -215,6 +286,18 @@ const EngageReward = () => {
                   />
                   <Typography variant="h5">{"Muneeb zubair"}</Typography>
                 </Box>
+                </div>
+                <div
+                  style={{marginLeft:'auto'}}>
+                  <Chart
+              options={state.options}
+              series={[23,45]}
+              type="donut"
+              width="70%"
+
+            />  </div>
+            </div>
+           
                 <Box className={classes.Buttonbox} mt={2}>
                   <Box mt={2}>
                     <Button
@@ -228,116 +311,85 @@ const EngageReward = () => {
                 <br></br>
                 <Box mt={2}>
                   <h3>Text Area</h3>
-                  <TextField
-                    fullWidth
-                    defaultValue={"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type "}
-                    type="text"
-                    variant="outlined"
-                    multiline
-                    maxRows={10}
-                    InputProps={{readOnly: true}}
-                  />
+                  <div style={{border:'1px solid',padding:'10px', borderRadius: '7px'}}>
+                  <div class="info">
+  <div class="label">Total Locked:</div>
+  <div class="value"><AnimatedNumber targetNumber={11888888} suffix="CAKE" /></div>
+</div>
+<div class="info">
+  <div class="label">Average lock duration:</div>
+  <div class="value"><AnimatedNumber targetNumber={42} suffix="weeks" /></div>
+</div>
+<div class="info">
+  <div class="label">Performance fee:</div>
+  <div class="value"><AnimatedNumber targetNumber={0} suffix="" />
+  ~ <AnimatedNumber targetNumber={2} suffix="%" />
+  </div>
+</div>
+                  <a href="https://example.com" style={{fontSize:'20px',marginTop:'15px',color:'#e31a89'}}> See Token Info<img src="./images/link.png" alt="External Link Icon" style={{verticalAlign:'middle',width:'25px'}}/></a>
+                  <br></br>
+                  <a href="https://example.com" style={{fontSize:'20px',marginTop:'15px',color:'#e31a89'}}> View Tutorial<img src="./images/link.png" alt="External Link Icon" style={{verticalAlign:'middle',width:'25px'}}/></a>
+                  <br></br>
+                  <a href="https://example.com" style={{fontSize:'20px',marginTop:'15px',color:'#e31a89'}}> View Contract<img src="./images/link.png" alt="External Link Icon" style={{verticalAlign:'middle',width:'25px'}}/></a>
+                  <br></br>
+                  <Button
+                      variant='outlined'
+                      style={{ color: "#e31a89",marginTop:'15px'}}
+                    >
+                     Auto/Locked
+                    </Button>
+                    <div class="image-container">
+  <img src="./images/info.png" alt="Your image description" style={{verticalAlign:'middle', width:'20px',marginTop:'13px', marginLeft:'10px'}}/>
+  <div class="info-text">information</div>
+</div>
+                    </div>
                 </Box>
-
               </Box>
             </Paper>
+            <Paper className={classes.root} elevation={2} style={{ marginTop: '10px' }}>
+            <Chart
+              options={state.options}
+              series={[23,45]}
+              type="donut"
+              width="100%"
+            />
+              </Paper>
           </Grid>
-          <Grid item xs={isMobile ? 12 : 6}>
+          <Grid item md={isMobile ? 12 : 6}  xs={isMobile ? 12 : 12}>
             <Paper className={classes.root} elevation={2}>
               <Box className={classes.root} height={400} overflow="auto">
+                <div style={{display:'flex'}}>
+               <div>
                 <Box className={classes.heading}>
                   <Typography variant="h2" style={{fontSize: "26px"}}>
                     <h>Locked APR</h>
                   </Typography>
+                
                 </Box>
-                <div className={classes.radialChart}>
-                  <p style={{fontSize: "17px"}}>
-                    <b>{"Up to 41.35%"}</b>
-                  </p>
+                <br></br>
+                <p style={{fontSize: "17px"}}>
+                  <b>{"Up to"} <AnimatedNumber targetNumber={41.3} suffix="%" /></b>
+                </p></div>
+                <div
+                  style={{marginLeft:'auto'}}>
                   <Chart
-                    type="radialBar"
-                    height="100"
-                    width="100"
-                    series={[41.35]}
-                    options={{
-                      grid: {
-                        padding: {
-                          top: 0,
-                          right: 0,
-                          bottom: 0,
-                          left: 0
-                        }
-                      },
-                      colors: ["#e31a89", "#ebeff2"],
-                      chart: {
-                        height: "180px",
-                        type: "radialBar"
-                      },
-                      plotOptions: {
-                        radialBar: {
-                          dataLabels: {
-                            name: {
-                              show: false,
-                            },
-                            value: {
-                              show: false,
-                            },
-                          },
-                          hollow: {
-                            size: "30%"
-                          }
-                        }
-                      }
-                    }}
-                  />
-                </div>
+              options={state.options}
+              series={[23,45]}
+              type="donut"
+              width="70%"
 
+            />
+            </div></div>
+                
+                <br></br>
+                <div style={{display:'flex'}}>
+                  <div>
                 <Box className={classes.heading}>
                   <Typography variant="h2" style={{fontSize: "26px"}}>
                     <h>Flexible APY</h>
                   </Typography>
                 </Box>
-                <div className={classes.radialChart}>
-                  <p style={{fontSize: "17px"}}>
-                    <b>{"15%"}</b>
-                  </p>
-                  <Chart
-                    type="radialBar"
-                    height="100"
-                    width="100"
-                    series={[15]}
-                    options={{
-                      grid: {
-                        padding: {
-                          top: 0,
-                          right: 0,
-                          bottom: 0,
-                          left: 0
-                        }
-                      },
-                      colors: ["#e31a89", "#ebeff2"],
-                      chart: {
-                        height: "180px",
-                        type: "radialBar"
-                      },
-                      plotOptions: {
-                        radialBar: {
-                          dataLabels: {
-                            name: {
-                              show: false,
-                            },
-                            value: {
-                              show: false,
-                            },
-                          },
-                          hollow: {
-                            size: "30%"
-                          }
-                        }
-                      }
-                    }}
-                  />
-                </div>
+          
                 <Box className={classes.heading}>
                   <Typography variant="h2" style={{fontSize: "26px"}}>
                     <h>Total Staked</h>
@@ -345,44 +397,8 @@ const EngageReward = () => {
                 </Box>
                 <div className={classes.radialChart}>
                   <p style={{fontSize: "17px"}}>
-                    <b>{"500 LAZI"}</b>
-                  </p>
-                  <Chart
-                    type="radialBar"
-                    height="100"
-                    width="100"
-                    series={[50]}
-                    options={{
-                      grid: {
-                        padding: {
-                          top: 0,
-                          right: 0,
-                          bottom: 0,
-                          left: 0
-                        }
-                      },
-                      colors: ["#e31a89", "#ebeff2"],
-                      chart: {
-                        height: "180px",
-                        type: "radialBar"
-                      },
-                      plotOptions: {
-                        radialBar: {
-                          dataLabels: {
-                            name: {
-                              show: false,
-                            },
-                            value: {
-                              show: false,
-                            },
-                          },
-                          hollow: {
-                            size: "30%"
-                          }
-                        }
-                      }
-                    }}
-                  />
+                    <b> <AnimatedNumber targetNumber={500} suffix="LAZI" /></b>
+                  </p>   
                 </div>
                 <Box className={classes.Buttonbox} mt={2}>
                   <Box mt={2}>
@@ -393,20 +409,52 @@ const EngageReward = () => {
                       Collect
                     </Button>
                   </Box>
-                </Box>
-                <br></br>
+                </Box>          
+            </div>
+            <div
+                  style={{marginLeft:'auto'}}>
+                  <Chart
+              options={state.options}
+              series={[23,45]}
+              type="donut"
+              width="70%"
 
-                <Chart
-                  options={chartData.options}
-                  series={chartData.series}
-                  type="bar"
-                />
-              </Box>
+            />
+            </div></div>
+            </Box>
             </Paper>
-          </Grid>
+            
+            <Paper className={classes.root} elevation={2} style={{ marginTop: '10px'}}>
+            <Chart
+              options={state.options}
+              series={state.series}
+              type="bar"
+              width="100%"
+            />
+              </Paper>
+              <Paper className={classes.root} elevation={2} style={{ marginTop: '10px' }}>
+            <Chart
+              options={state.options}
+              series={state.series}
+              type="area"
+              width="100%"
+            />
+              </Paper>
+              <Paper className={classes.root} elevation={2} style={{ marginTop: '10px' }}>
+            <Chart
+              options={{ ...state.options, title: { text: "Chart 1" } }}
+              series={state.series}
+              type="line"
+              width="100%"
+            />
+              </Paper>
+             
+         
+       
+        </Grid>
         </Grid>
       </Box>
     </>
-  )
-}
+  );
+};
 export default EngageReward;

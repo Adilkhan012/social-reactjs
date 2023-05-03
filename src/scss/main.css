@@ -611,3 +611,50 @@ iframe {
   height: 50px !important;
   cursor: pointer;
 }/*# sourceMappingURL=main.css.map */
+.apexcharts-menu{
+  background-color: #393b48!important;
+  border: 0px;
+}
+  .apexcharts-menu-item{
+    background-color: #393b48!important;
+    border: 0px;
+  }
+  .apexcharts-menu-item:hover {
+    background-color: #666!important;
+  }
+  .info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .label {
+    text-align: left;
+    flex-basis: 30%;
+    padding-right: 10px;
+  }
+  
+  .value {
+    text-align: right;
+    flex-basis: 70%;
+  }
+  .image-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .info-text {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, 10px);
+    background-color: #4d4c4c;
+   
+    padding: 5px;
+    display: none;
+  }
+  
+  .image-container:hover .info-text {
+    display: block;
+  }
