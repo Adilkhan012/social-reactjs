@@ -388,7 +388,7 @@ function Collection({ listPublicExclusiveHandler }) {
       setTokenId(tokenIdNFT);
       console.log("tokenId", tokenId)
       // setTokenId(tokenId)
-      const result = await laziPostContract.methods.buyLaziPost([titlePost]).send({
+      const result = await laziPostContract.methods.MintLaziPost([titlePost]).send({
         from: address,
         value: web3.utils.toWei('0', 'ether'), // Set the desired amount of Ether to send along with the transaction (if required)
       });

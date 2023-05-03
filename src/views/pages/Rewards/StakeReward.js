@@ -255,7 +255,7 @@ const StakeReward = () => {
 
       // execute the getReward function in the smart contract
       const tx = await stakingContract.methods
-        .getReward()
+        .getUserRewards(address)
         .send({ from: address });
 
       // Wait for the transaction to be confirmed

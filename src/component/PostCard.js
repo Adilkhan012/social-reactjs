@@ -59,7 +59,6 @@ import Picker from "emoji-picker-react";
 import initMetamask from "src/blockchain/metamaskConnection";
 import initLaziPostContract from "src/blockchain/laziPostContract";
 
-
 import {
   FacebookShareButton,
   TelegramShareButton,
@@ -388,8 +387,8 @@ export default function (props) {
   const history = useHistory();
   const { data, listPublicExclusiveHandler, isLoadingContent, index } = props;
   const { ownerAddress, tokenId } = data;
-// console.log(ownerAddress, tokenId);
-// console.log("post data", data);
+  // console.log(ownerAddress, tokenId);
+  // console.log("post data", data);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [isBuyLoading, setIsBuyLoading] = useState(false);
   const [expanded, setExpanded] = React.useState("panel1");
@@ -422,7 +421,7 @@ export default function (props) {
 
     init();
   }, []);
-
+  
   // console.log("data from PostCard!", data);
   const handleClickOpen = (data) => {
     setOpen(true);
@@ -487,26 +486,26 @@ export default function (props) {
       try {
         // console.log("data.isSubscribed! ", data.isSubscribed);
         // if (data.isSubscribed) {
-          const res = await Axios({
-            method: "POST",
-            url: Apiconfigs.commentOnpost,
-            headers: {
-              token: window.localStorage.getItem("token"),
-            },
-            data: {
-              postId: data._id,
-              message: message,
-            },
-          });
-          if (res.data.responseCode === 200) {
-            // if (dataList.isSubscribed) {
-            setIsSubmit(false);
+        const res = await Axios({
+          method: "POST",
+          url: Apiconfigs.commentOnpost,
+          headers: {
+            token: window.localStorage.getItem("token"),
+          },
+          data: {
+            postId: data._id,
+            message: message,
+          },
+        });
+        if (res.data.responseCode === 200) {
+          // if (dataList.isSubscribed) {
+          setIsSubmit(false);
 
-            listPublicExclusiveHandler();
-            toast.success(res.data.responseMessage);
-            setIsLoading(false);
-            setMessage("");
-          }
+          listPublicExclusiveHandler();
+          toast.success(res.data.responseMessage);
+          setIsLoading(false);
+          setMessage("");
+        }
         // } else {
         //   // If the user is not subscribed, show a message or disable the comment functionality
         //   toast.error("You must be a subscriber to comment on this post.");
@@ -543,13 +542,12 @@ export default function (props) {
         listPublicExclusiveHandler();
         toast.success(res.data.responseMessage);
         // console.log("User is subscribed!!!!!!!");
-
       }
-    // } else {
-    //   // If the user is not subscribed, show a message or disable the comment functionality
-    //   toast.error("You must be a subscriber to Like on this post.");
-    //   console.log("User is not subscribed!!!!!!!");
-    // }
+      // } else {
+      //   // If the user is not subscribed, show a message or disable the comment functionality
+      //   toast.error("You must be a subscriber to Like on this post.");
+      //   console.log("User is not subscribed!!!!!!!");
+      // }
     } catch (error) {
       setIsLoadingEmoji(false);
 
@@ -624,19 +622,34 @@ export default function (props) {
     try {
       setIsBuyLoading(true);
       setIsHidePost1(false);
-  
+
       console.log("Owner Address:", ownerAddress);
       console.log("Buyer Address:", buyerAddress);
       console.log("Token ID:", tokenId);
-      const gas = 3000000; // Set the initial gas limit value
+      const price = 0;
+      console.log("price: ", price);
 
+      // const price = await laziPostContract.methods.getTokenPrice(tokenId).call();
+      const listing = await laziPostContract.methods.nftListings(tokenId).call();
+    if (!listing.active) {
+      throw new Error('NFT is not listed for sale');
+    }
+    // Check if payment is sufficient
+    if (price < listing.price) {
+      throw new Error('Insufficient payment');
+    }
       
-  // Send the transaction with the updated gas limit
-  const result = await laziPostContract.methods.safeTransferFrom(ownerAddress, buyerAddress, tokenId).send({
-    from: buyerAddress,
-    gas: 300000, // Specify the desired gas amount
-    gasPrice: '50000000000' // Specify the desired gas price (in wei)
-  });
+      // const gasEstimate = await laziPostContract.methods
+      //   .buyNft(tokenId)
+      //   .estimateGas({
+      //     value: price,  // Specify the desired value for the transaction (including gas fee)
+      //   });
+      // Send the transaction with the updated gas limit
+      const result = await laziPostContract.methods.buyNft(tokenId).send({
+      from: buyerAddress,
+      value: price,
+    });
+
       // Check if the transaction was successful
       if (result.status) {
         const res = await Axios.post(
@@ -651,14 +664,14 @@ export default function (props) {
             },
           }
         );
-  
+
         if (res.data.responseCode === 200) {
           setIsHidePost1(false);
           history.push("/profile");
-  
+
           listPublicExclusiveHandler();
           auth.handleUserProfileApi();
-  
+
           toast.success(res.data.responseMessage);
         } else {
           // toast.error(res.data.responseMessage);
@@ -667,27 +680,27 @@ export default function (props) {
         // Handle the case when the Metamask transaction fails
         toast.error("Metamask transaction failed");
       }
-  
+
       setIsBuyLoading(false);
     } catch (error) {
       setIsHidePost1(false);
       setIsBuyLoading(false);
-  
+
       console.error("Error:", error);
-  
+
       if (error.response) {
         toast.error(error.response.data.responseMessage);
       } else {
         if (error.message.includes("exceeds gas limit")) {
-          toast.error("Gas limit exceeded. Please try again with a higher gas limit.");
+          toast.error(
+            "Gas limit exceeded. Please try again with a higher gas limit."
+          );
         } else {
           toast.error(error.message);
         }
       }
     }
   };
-  
-  
 
   const subscribeNowHandler = async (isCheck) => {
     // setIsloading(true);
@@ -1589,7 +1602,7 @@ export default function (props) {
                         <AccordionDetails key={i}>
                           <CommentBox
                             dataList={data}
-                            dataParent ={data}
+                            dataParent={data}
                             listPublicExclusiveHandler={
                               listPublicExclusiveHandler
                             }
