@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Checkbox,
@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Button from "@material-ui/core/Button";
-import {Tooltip} from "@material-ui/core";
+import { Tooltip } from "@material-ui/core";
 import InfoIcon from "@material-ui/icons/Info";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Chart from "react-apexcharts";
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     marginBottom: theme.spacing(1),
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   heading: {
     display: "flex",
@@ -114,6 +114,8 @@ const StakeReward = () => {
   const [stakingContract, setStakingContract] = useState(null);
   const [totalStaked, setTotalStaked] = useState(0);
   const [userRewards, setUserRewards] = useState(0);
+  const [selectedUserNames, setSelectedUserNames] = useState([]);
+  const [selectedTime, setSelectedTime] = useState(null);
 
   const handleSliderChange = (event, newValue) => {
     setSliderValue(newValue);
@@ -121,7 +123,7 @@ const StakeReward = () => {
 
   useEffect(() => {
     const init = async () => {
-      const {web3, address} = await initMetamask();
+      const { web3, address } = await initMetamask();
       const contract = await initStakingContract();
       setStakingContract(contract);
       setAddress(address);
@@ -134,40 +136,56 @@ const StakeReward = () => {
   }, []);
 
   const options = [
-    {label: "3 months (1.2x)", id: 1},
-    {label: "3 months (1.2x)", id: 2},
+    { label: "3 months (1.25x)", value: 1 },
+    { label: "6 months (1.5x)", value: 2 },
+    { label: "1 year (2x)", value: 3 },
+    { label: "1.5 year (1.75x)", value: 4 },
+    { label: "2 year (3.5x)", value: 5 },
   ];
   const userOptions = [
-    {label: "User 1", value: 1},
-    {label: "User 2", value: 2},
+    { label: "User 1", value: 1 },
+    { label: "User 2", value: 2 },
   ];
 
   const [chartData, setChartData] = useState({
     options: {
       chart: {
-        id: "basic-bar"
+        id: "basic-bar",
       },
       xaxis: {
-        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999]
+        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
       },
       theme: {
         mode: "dark",
         palette: "palette1",
         monochrome: {
           enabled: true,
-          color: "#EC167F"
-        }
-      }
+          color: "#EC167F",
+        },
+      },
     },
     series: [
       {
         name: "series-1",
-        data: [30, 40, 45, 50, 49, 60, 70, 91]
-      }
-    ]
-  })
+        data: [30, 40, 45, 50, 49, 60, 70, 91],
+      },
+    ],
+  });
   const handleSelectedOptionsChange = (event, newValue) => {
     setSelectedOptions(newValue);
+  };
+
+  const handleCheckboxChange = (event, value) => {
+    if (event.target.checked) {
+      setSelectedUserNames((prevSelectedUserNames) => [
+        ...prevSelectedUserNames,
+        value,
+      ]);
+    } else {
+      setSelectedUserNames((prevSelectedUserNames) =>
+        prevSelectedUserNames.filter((v) => v !== value)
+      );
+    }
   };
 
   const isMobile = useMediaQuery("(max-width:600px)");
@@ -176,11 +194,14 @@ const StakeReward = () => {
   };
 
   const handleStake = () => {
-    const amount = sliderValue; // Use sliderValue state variable
+    const erc20Amount = sliderValue; // Use sliderValue state variable
+    // const daysToStake = selectedTime; // Example: 30 days
+    const erc721Ids = [1];
+    // const erc721Ids = selectedUserNames; // Example: ERC721 token IDs
     if (web3 && stakingContract) {
       stakingContract.methods
-        .stake(amount)
-        .send({from: address})
+        .stake(erc20Amount, selectedTime, erc721Ids)
+        .send({ from: address })
         .on("transactionHash", (hash) => {
           console.log(hash);
         })
@@ -235,7 +256,7 @@ const StakeReward = () => {
       // execute the getReward function in the smart contract
       const tx = await stakingContract.methods
         .getReward()
-        .send({from: address});
+        .send({ from: address });
 
       // Wait for the transaction to be confirmed
       const receipt = await tx.wait();
@@ -255,6 +276,13 @@ const StakeReward = () => {
     }
   };
 
+  useEffect(() => {
+    // Access the selected option value whenever it changes
+    if (selectedTime) {
+      console.log("Selected Option:", selectedTime);
+    }
+  }, [selectedTime]);
+
   return (
     <>
       <Box className={classes.bannerBox}>
@@ -266,10 +294,10 @@ const StakeReward = () => {
                   <Typography variant="h2">Stake Rewards</Typography>
                   <Tooltip
                     title="This is the stake reward tooltip."
-                    style={{cursor: "pointer"}}
+                    style={{ cursor: "pointer" }}
                     placement={"top"}
                   >
-                    <InfoIcon fontSize={"medium"}/>
+                    <InfoIcon fontSize={"medium"} />
                   </Tooltip>
                 </Box>
 
@@ -297,9 +325,16 @@ const StakeReward = () => {
                   <Autocomplete
                     disablePortal
                     id="tags-standard"
-                    sx={{width: 300}}
+                    sx={{ width: 300 }}
                     options={options}
+                    value={
+                      options.find((option) => option.value === selectedTime) ||
+                      null
+                    }
                     getOptionLabel={(option) => option.label}
+                    onChange={(event, newValue) =>
+                      setSelectedTime(newValue?.value || null)
+                    }
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -308,7 +343,7 @@ const StakeReward = () => {
                       />
                     )}
                   />
-                  <br></br>
+                  <br />
                 </Box>
                 <br></br>
                 <Box className={classes.heading}>
@@ -317,33 +352,31 @@ const StakeReward = () => {
                 <br></br>
                 <Box className={classes.checkbox}>
                   <Checkbox
-                    // checked={true}
-                    // onChange={(event) => setCheckedBox(!checkBoxRemember)}
-                    defaultChecked
+                    checked={selectedUserNames.includes("Adil")}
+                    onChange={(event) => handleCheckboxChange(event, "Adil")}
                     size="small"
                     inputProps={{
                       "aria-label": "checkbox with small size",
                     }}
                   />
-                  <Typography variant="h5">{"Adil Kan"}</Typography>
+                  <Typography variant="h5">Adil</Typography>
                 </Box>
                 <Box className={classes.checkbox}>
                   <Checkbox
-                    // checked={true}
-                    // onChange={(event) => setCheckedBox(!checkBoxRemember)}
-                    defaultChecked
+                    checked={selectedUserNames.includes("Muneeb")}
+                    onChange={(event) => handleCheckboxChange(event, "Muneeb")}
                     size="small"
                     inputProps={{
                       "aria-label": "checkbox with small size",
                     }}
                   />
-                  <Typography variant="h5">{"Muneeb zubair"}</Typography>
+                  <Typography variant="h5">Muneeb</Typography>
                 </Box>
                 <Box className={classes.Buttonbox} mt={2}>
                   <Box mt={2}>
                     <Button
                       variant="contained"
-                      style={{backgroundColor: "#e31a89", color: "#fff"}}
+                      style={{ backgroundColor: "#e31a89", color: "#fff" }}
                       onClick={handleStake}
                     >
                       Stake
@@ -362,7 +395,7 @@ const StakeReward = () => {
                     variant="outlined"
                     multiline
                     maxRows={10}
-                    InputProps={{readOnly: true}}
+                    InputProps={{ readOnly: true }}
                   />
                 </Box>
               </Box>
@@ -372,14 +405,14 @@ const StakeReward = () => {
             <Paper className={classes.root} elevation={2}>
               <Box className={classes.root} height={400} overflow="auto">
                 <Box className={classes.heading}>
-                  <Typography variant="h2" style={{fontSize: "26px"}}>
-                  <h>Locked APR</h>
+                  <Typography variant="h2" style={{ fontSize: "26px" }}>
+                    <h>Locked APR</h>
                   </Typography>
                   <Button onClick={handleTotalStakedClick}>Refresh</Button>
                 </Box>
 
                 <div className={classes.radialChart}>
-                  <p style={{fontSize: "17px"}}>
+                  <p style={{ fontSize: "17px" }}>
                     <b>{totalStaked ? `${totalStaked} LAZI` : "0 LAZI"}</b>
                   </p>
                   <Chart
@@ -393,13 +426,13 @@ const StakeReward = () => {
                           top: 0,
                           right: 0,
                           bottom: 0,
-                          left: 0
-                        }
+                          left: 0,
+                        },
                       },
                       colors: ["#e31a89", "#ebeff2"],
                       chart: {
                         height: "180px",
-                        type: "radialBar"
+                        type: "radialBar",
                       },
                       plotOptions: {
                         radialBar: {
@@ -412,22 +445,22 @@ const StakeReward = () => {
                             },
                           },
                           hollow: {
-                            size: "30%"
-                          }
-                        }
-                      }
+                            size: "30%",
+                          },
+                        },
+                      },
                     }}
                   />
                 </div>
 
                 <Box className={classes.heading}>
-                  <Typography variant="h2" style={{fontSize: "26px"}}>
+                  <Typography variant="h2" style={{ fontSize: "26px" }}>
                     <h>Flexible APY</h>
                   </Typography>
                 </Box>
 
                 <div className={classes.radialChart}>
-                  <p style={{fontSize: "17px"}}>
+                  <p style={{ fontSize: "17px" }}>
                     <b>{"1.93%"}</b>
                   </p>
                   <Chart
@@ -441,13 +474,13 @@ const StakeReward = () => {
                           top: 0,
                           right: 0,
                           bottom: 0,
-                          left: 0
-                        }
+                          left: 0,
+                        },
                       },
                       colors: ["#e31a89", "#ebeff2"],
                       chart: {
                         height: "180px",
-                        type: "radialBar"
+                        type: "radialBar",
                       },
                       plotOptions: {
                         radialBar: {
@@ -460,21 +493,21 @@ const StakeReward = () => {
                             },
                           },
                           hollow: {
-                            size: "30%"
-                          }
-                        }
-                      }
+                            size: "30%",
+                          },
+                        },
+                      },
                     }}
                   />
                 </div>
                 <div>
                   <Box className={classes.heading}>
-                    <Typography variant="h2" style={{fontSize: "26px"}}>
-                    <h>Total Staked</h>
+                    <Typography variant="h2" style={{ fontSize: "26px" }}>
+                      <h>Total Staked</h>
                     </Typography>
                   </Box>
                   <div className={classes.radialChart}>
-                    <p style={{fontSize: "17px"}}>
+                    <p style={{ fontSize: "17px" }}>
                       <b>{`${userRewards} LAZI`}</b>
                     </p>
                     <Chart
@@ -488,13 +521,13 @@ const StakeReward = () => {
                             top: 0,
                             right: 0,
                             bottom: 0,
-                            left: 0
-                          }
+                            left: 0,
+                          },
                         },
                         colors: ["#e31a89", "#ebeff2"],
                         chart: {
                           height: "180px",
-                          type: "radialBar"
+                          type: "radialBar",
                         },
                         plotOptions: {
                           radialBar: {
@@ -507,10 +540,10 @@ const StakeReward = () => {
                               },
                             },
                             hollow: {
-                              size: "30%"
-                            }
-                          }
-                        }
+                              size: "30%",
+                            },
+                          },
+                        },
                       }}
                     />
                   </div>
@@ -527,9 +560,8 @@ const StakeReward = () => {
                   <Box mt={2}>
                     <Button
                       variant="contained"
-                      style={{backgroundColor: "#e31a89", color: "#fff"}}
+                      style={{ backgroundColor: "#e31a89", color: "#fff" }}
                       onClick={handleCollectButtonClick}
-
                     >
                       Collect
                     </Button>
