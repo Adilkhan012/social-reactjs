@@ -298,6 +298,21 @@ const StakeReward = () => {
   
     return <b>{currentNumber}{suffix}</b>;
   }
+  function AnimatedNumber1({ targetNumber, suffix }) {
+    const [currentNumber, setCurrentNumber] = useState(0);
+  
+    useEffect(() => {
+      const interval = setInterval(() => {
+        if (currentNumber < targetNumber) {
+          setCurrentNumber((prevNumber) => prevNumber + 1500);
+        }
+      }, 1);
+  
+      return () => clearInterval(interval);
+    }, [currentNumber, targetNumber]);
+  
+    return <b>{currentNumber}{suffix}</b>;
+  }
   return (
     <>
       <Box className={classes.bannerBox}>
@@ -391,7 +406,7 @@ const StakeReward = () => {
               options={state.options}
               series={[23,45]}
               type="donut"
-              width="70%"
+              width="80%"
 
             />  </div>
             </div>
@@ -412,11 +427,15 @@ const StakeReward = () => {
                   <div style={{border:'1px solid',padding:'10px', borderRadius: '7px'}}>
                   <div class="info">
   <div class="label">Total Locked:</div>
-  <div class="value"><AnimatedNumber targetNumber={11888888} suffix="CAKE" /></div>
+  <div class="value"><AnimatedNumber1 targetNumber={1888888} suffix="CAKE" /></div>
 </div>
 <div class="info">
   <div class="label">Average lock duration:</div>
-  <div class="value"><AnimatedNumber targetNumber={42} suffix="weeks" /></div>
+  <div class="value" style={{display:'flex',justifyContent:'flex-end'}}><AnimatedNumber targetNumber={42} suffix="weeks" />
+  <div class="image-container">
+  <img src="./images/clock.png" alt="Your image description" style={{ width:'20px'}}/>
+  <div class="info-text">Time remaining</div>
+</div></div>
 </div>
 <div class="info">
   <div class="label">Performance fee:</div>
@@ -428,7 +447,9 @@ const StakeReward = () => {
                   <br></br>
                   <a href="https://example.com" style={{fontSize:'20px',marginTop:'15px',color:'#e31a89'}}> View Tutorial<img src="./images/link.png" alt="External Link Icon" style={{verticalAlign:'middle',width:'25px'}}/></a>
                   <br></br>
-                  <a href="https://example.com" style={{fontSize:'20px',marginTop:'15px',color:'#e31a89'}}> View Contract<img src="./images/link.png" alt="External Link Icon" style={{verticalAlign:'middle',width:'25px'}}/></a>
+                  <a href="https://example.com" style={{fontSize:'20px',marginTop:'15px',color:'#e31a89'}}> View Contract<img src="./images/etherscan.svg" alt="External Link Icon" style={{marginLeft:'3px',verticalAlign:'middle',width:'25px'}}/></a>
+                  <br></br>
+                  <a href="https://example.com" style={{fontSize:'20px',marginTop:'15px',color:'#e31a89'}}> Add to Wallet<img src="./images/metamask.png" alt="External Link Icon" style={{marginLeft:'3px',verticalAlign:'middle',width:'25px'}}/></a>
                   <br></br>
                   <Button
                       variant='outlined'
@@ -449,49 +470,43 @@ const StakeReward = () => {
               options={state.options}
               series={[23,45]}
               type="donut"
-              width="100%"
+              width="80%"
             />
               </Paper>
           </Grid>  <Grid item md={isMobile ? 12 : 6}  xs={isMobile ? 12 : 12}>
             <Paper className={classes.root} elevation={2}>
               <Box className={classes.root} height={400} overflow="auto">
                 <div style={{display:'flex'}}>
-                  <Box className={classes.heading}>
+                  <div>
+                  <Box className={classes.heading} style={{display:'block'}}>
                     <Typography variant="h2" style={{ fontSize: "26px" }}>
-                      <u>Total Staking Pool</u>
+                      <h>Total Staking Pool</h>
                     </Typography>
-                    <Button onClick={handleTotalStakedClick}>Refresh</Button>
+                    {/* <Button onClick={handleTotalStakedClick}>Refresh</Button> */}
                   </Box>
                   <br></br>
                   <p style={{ fontSize: "17px" }}>
                     <b>{totalStaked ? `${totalStaked} LAZI` : ""}</b>
                   </p>
+                  <br></br>
+                <p style={{ fontSize: "17px" }}>
+                  <b> <AnimatedNumber targetNumber={1.93} suffix="%" /></b>
+                </p>
+                </div>
                   <div
                   style={{marginLeft:'auto'}}>
                   <Chart
               options={state.options}
               series={[23,45]}
               type="donut"
-              width="70%"
-
-            />  </div>
+              width="70%"/> 
+               </div>
                 </div>
-
-                <br></br>
-                <Box className={classes.heading}>
-                  <Typography variant="h2" style={{ fontSize: "26px" }}>
-                    <h>Your Pool Share</h>
-                  </Typography>
-                </Box>
-                <br></br>
-                <p style={{ fontSize: "17px" }}>
-                  <b> <AnimatedNumber targetNumber={1.93} suffix="%" /></b>
-                </p>
                 <div style={{display:'flex'}}>
                   <div>        
                               <Box className={classes.heading}>
                     <Typography variant="h2" style={{ fontSize: "26px" }}>
-                      <u>Your Rewards</u>
+                      <h>Your Rewards</h>
                     </Typography>
                   </Box>
                   <br></br>
@@ -506,17 +521,6 @@ const StakeReward = () => {
                   >
                     Get Your Rewards
                   </Button>
-                  </div>
-                  <div
-                  style={{marginLeft:'auto'}}>
-                  <Chart
-              options={state.options}
-              series={[23,45]}
-              type="donut"
-              width="70%"
-
-            />  </div>
-                </div>
                 <Box className={classes.Buttonbox} mt={2}>
                   <Box mt={2}>
                     <Button
@@ -529,6 +533,17 @@ const StakeReward = () => {
                     </Button>
                   </Box>
                 </Box>
+                </div>
+                  <div
+                  style={{marginLeft:'auto'}}>
+                  <Chart
+              options={state.options}
+              series={[23,45]}
+              type="donut"
+              width="70%"
+
+            />  </div>
+                </div>
               </Box>
             </Paper>
              <Paper className={classes.root} elevation={2} style={{ marginTop: '10px'}}>

@@ -206,6 +206,21 @@ const EngageReward = () => {
   
     return <b>{currentNumber}{suffix}</b>;
   }
+  function AnimatedNumber1({ targetNumber, suffix }) {
+    const [currentNumber, setCurrentNumber] = useState(0);
+  
+    useEffect(() => {
+      const interval = setInterval(() => {
+        if (currentNumber < targetNumber) {
+          setCurrentNumber((prevNumber) => prevNumber + 1500);
+        }
+      }, 1);
+  
+      return () => clearInterval(interval);
+    }, [currentNumber, targetNumber]);
+  
+    return <b>{currentNumber}{suffix}</b>;
+  }
 
   return (
     <>
@@ -257,7 +272,7 @@ const EngageReward = () => {
                 <div style={{display:'flex'}}>
                 <div>
                 <Box className={classes.heading}>
-                  <Typography variant="h2">
+                  <Typography variant="h2" style={{fontSize:'20px'}}>
                     UserNames 
                   </Typography>
                 </Box>
@@ -293,7 +308,7 @@ const EngageReward = () => {
               options={state.options}
               series={[23,45]}
               type="donut"
-              width="70%"
+              width="80%"
 
             />  </div>
             </div>
@@ -314,11 +329,15 @@ const EngageReward = () => {
                   <div style={{border:'1px solid',padding:'10px', borderRadius: '7px'}}>
                   <div class="info">
   <div class="label">Total Locked:</div>
-  <div class="value"><AnimatedNumber targetNumber={11888888} suffix="CAKE" /></div>
+  <div class="value"><AnimatedNumber1 targetNumber={1888888} suffix="CAKE" /></div>
 </div>
 <div class="info">
   <div class="label">Average lock duration:</div>
-  <div class="value"><AnimatedNumber targetNumber={42} suffix="weeks" /></div>
+  <div class="value" style={{display:'flex',justifyContent:'flex-end'}}><AnimatedNumber targetNumber={42} suffix="weeks" />
+  <div class="image-container">
+  <img src="./images/clock.png" alt="Your image description" style={{ width:'20px'}}/>
+  <div class="info-text">Time remaining</div>
+</div></div>
 </div>
 <div class="info">
   <div class="label">Performance fee:</div>
@@ -330,7 +349,9 @@ const EngageReward = () => {
                   <br></br>
                   <a href="https://example.com" style={{fontSize:'20px',marginTop:'15px',color:'#e31a89'}}> View Tutorial<img src="./images/link.png" alt="External Link Icon" style={{verticalAlign:'middle',width:'25px'}}/></a>
                   <br></br>
-                  <a href="https://example.com" style={{fontSize:'20px',marginTop:'15px',color:'#e31a89'}}> View Contract<img src="./images/link.png" alt="External Link Icon" style={{verticalAlign:'middle',width:'25px'}}/></a>
+                  <a href="https://example.com" style={{fontSize:'20px',marginTop:'15px',color:'#e31a89'}}> View Contract<img src="./images/etherscan.svg" alt="External Link Icon" style={{marginLeft:'3px',verticalAlign:'middle',width:'25px'}}/></a>
+                  <br></br>
+                  <a href="https://example.com" style={{fontSize:'20px',marginTop:'15px',color:'#e31a89'}}> Add to Wallet<img src="./images/metamask.png" alt="External Link Icon" style={{marginLeft:'3px',verticalAlign:'middle',width:'25px'}}/></a>
                   <br></br>
                   <Button
                       variant='outlined'

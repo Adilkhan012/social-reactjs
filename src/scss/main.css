@@ -650,6 +650,7 @@ iframe {
     left: 50%;
     transform: translate(-50%, 10px);
     background-color: #4d4c4c;
+    border : 1px solid;
    
     padding: 5px;
     display: none;
