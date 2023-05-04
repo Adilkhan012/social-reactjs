@@ -1,18 +1,11 @@
 import initMetamask from './metamaskConnection'
 
-const stakingRewardAddress = "0xDC899cA9B82cAa4F8b54693CF18498df2039eF20";
+const stakingRewardAddress = "0xCbAC51C7C1f2C8223231101b52Bc87CD2532Ed67";
 
 const stakingRewardABI = [
 	{
 		"inputs": [],
-		"name": "compoundRewards",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "harvestRewards",
+		"name": "harvest",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -52,45 +45,15 @@ const stakingRewardABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "erc20Amount",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "daysToStake",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "erc721Ids",
-				"type": "uint256[]"
-			}
-		],
-		"name": "stake",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "contract IERC20",
-				"name": "_rewardToken",
+				"name": "_erc20",
 				"type": "address"
 			},
 			{
 				"internalType": "contract IERC721",
-				"name": "_nftToken",
+				"name": "_erc721",
 				"type": "address"
 			}
 		],
@@ -117,6 +80,36 @@ const stakingRewardABI = [
 		"type": "event"
 	},
 	{
+		"inputs": [],
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "erc20Amount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "lockPeriodInDays",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "erc721TokenIds",
+				"type": "uint256[]"
+			}
+		],
+		"name": "stake",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -139,17 +132,24 @@ const stakingRewardABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "daysToStake",
-				"type": "uint256"
+				"internalType": "address",
+				"name": "_erc20",
+				"type": "address"
 			}
 		],
-		"name": "getAPYDistribution",
+		"name": "withdrawERC20",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "erc20",
 		"outputs": [
 			{
-				"internalType": "uint256",
+				"internalType": "contract IERC20",
 				"name": "",
-				"type": "uint256"
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -157,25 +157,12 @@ const stakingRewardABI = [
 	},
 	{
 		"inputs": [],
-		"name": "getCurrentAPR",
+		"name": "erc721",
 		"outputs": [
 			{
-				"internalType": "uint256",
+				"internalType": "contract IERC721",
 				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getCurrentAPY",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -184,79 +171,27 @@ const stakingRewardABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "uint256",
+				"internalType": "uint256[]",
 				"name": "daysToStake",
-				"type": "uint256"
+				"type": "uint256[]"
 			}
 		],
-		"name": "getLockPeriodDistribution",
+		"name": "getDistributions",
 		"outputs": [
 			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "stakingDays",
-				"type": "uint256"
+				"internalType": "uint256[]",
+				"name": "lockPeriodDistributions",
+				"type": "uint256[]"
 			},
 			{
-				"internalType": "uint256",
-				"name": "erc721Tokens",
-				"type": "uint256"
-			}
-		],
-		"name": "getRewardMultiplier",
-		"outputs": [
+				"internalType": "uint256[]",
+				"name": "stakedTokenDistributions",
+				"type": "uint256[]"
+			},
 			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "pure",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "daysToStake",
-				"type": "uint256"
-			}
-		],
-		"name": "getRewardTokensDistribution",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "daysToStake",
-				"type": "uint256"
-			}
-		],
-		"name": "getStakedTokensDistribution",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
+				"internalType": "uint256[]",
+				"name": "rewardTokenDistributions",
+				"type": "uint256[]"
 			}
 		],
 		"stateMutability": "view",
@@ -282,13 +217,19 @@ const stakingRewardABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "nftToken",
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "lockPeriodDistribution",
 		"outputs": [
 			{
-				"internalType": "contract IERC721",
+				"internalType": "uint256",
 				"name": "",
-				"type": "address"
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -309,12 +250,50 @@ const stakingRewardABI = [
 	},
 	{
 		"inputs": [],
-		"name": "rewardToken",
+		"name": "REWARD_PERIOD",
 		"outputs": [
 			{
-				"internalType": "contract IERC20",
+				"internalType": "uint256",
 				"name": "",
-				"type": "address"
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "rewardTokensDistribution",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "stakedTokensDistribution",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -332,17 +311,66 @@ const stakingRewardABI = [
 		"outputs": [
 			{
 				"internalType": "uint256",
-				"name": "stakedTimestamp",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
 				"name": "erc20Amount",
 				"type": "uint256"
 			},
 			{
 				"internalType": "uint256",
+				"name": "lockPeriod",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "entryTimestamp",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "weightedStake",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
 				"name": "claimedRewards",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "TOTAL_REWARD_TOKENS",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "totalStaked",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "totalWeightedStake",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
 				"type": "uint256"
 			}
 		],

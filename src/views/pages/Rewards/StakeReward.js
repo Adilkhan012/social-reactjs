@@ -98,7 +98,6 @@ const useStyles = makeStyles((theme) => ({
       transform: "translateX(150%) skewX(-45deg)",
     },
   },
-  
 }));
 const StakeReward = () => {
   const classes = useStyles();
@@ -109,33 +108,55 @@ const StakeReward = () => {
   const [stakingContract, setStakingContract] = useState(null);
   const [totalStaked, setTotalStaked] = useState(0);
   const [userRewards, setUserRewards] = useState(0);
+  const [selectedUserNames, setSelectedUserNames] = useState([]);
+  const [selectedTime, setSelectedTime] = useState(null);
 
   const handleSliderChange = (event, newValue) => {
     setSliderValue(newValue);
   };
 
   useEffect(() => {
+    const initilize = async () =>{
     const init = async () => {
       const { web3, address } = await initMetamask();
       const contract = await initStakingContract();
       setStakingContract(contract);
       setAddress(address);
       setWeb3(web3);
+      // Wait for contract initialization before calling fetch functions
     };
-
-    init();
+  
+    await init();
     fetchUserRewards();
     fetchTotalStaked();
+  }
+  initilize();
   }, []);
 
-  const options = [
-    { label: "3 months (1.2x)", id: 1 },
-    { label: "3 months (1.2x)", id: 2 },
+  const monthOptions = [
+    { label: "3 months (1.25x)", value: 1 },
+    { label: "6 months (1.5x)", value: 2 },
+    { label: "1 year (2x)", value: 3 },
+    { label: "1.5 year (1.75x)", value: 4 },
+    { label: "2 year (3.5x)", value: 5 },
   ];
   const userOptions = [
     { label: "User 1", value: 1 },
     { label: "User 2", value: 2 },
   ];
+
+  const handleCheckboxChange = (event, value) => {
+    if (event.target.checked) {
+      setSelectedUserNames((prevSelectedUserNames) => [
+        ...prevSelectedUserNames,
+        value,
+      ]);
+    } else {
+      setSelectedUserNames((prevSelectedUserNames) =>
+        prevSelectedUserNames.filter((v) => v !== value)
+      );
+    }
+  };
 
   const handleSelectedOptionsChange = (event, newValue) => {
     setSelectedOptions(newValue);
@@ -147,33 +168,35 @@ const StakeReward = () => {
   };
 
   const handleStake = () => {
-    const amount = sliderValue; // Use sliderValue state variable
-    if (web3 && stakingContract) {
-      stakingContract.methods
-        .stake(amount)
-        .send({ from: address })
-        .on("transactionHash", (hash) => {
-          console.log(hash);
-        })
-        .on("receipt", (receipt) => {
-          console.log(receipt);
-        })
-        .on("error", (error) => {
-          console.log(error);
-        });
-    }
+    const erc20Amount = sliderValue; // Use sliderValue state variable
+    // const daysToStake = selectedTime; // Example: 30 days
+    const erc721Ids = [1];
+    // const erc721Ids = selectedUserNames; // Example: ERC721 token IDs    if (web3 && stakingContract) {
+    stakingContract.methods
+      .stake(erc20Amount, selectedTime, erc721Ids)
+      .send({ from: address })
+      .on("transactionHash", (hash) => {
+        console.log(hash);
+      })
+      .on("receipt", (receipt) => {
+        console.log(receipt);
+      })
+      .on("error", (error) => {
+        console.log(error);
+      });
   };
   async function fetchTotalStaked() {
     try {
       if (!stakingContract) {
         await initStakingContract();
       }
-      const totalStaked = await stakingContract.methods.totalStaked().call();
+      const totalStaked = await stakingContract.totalStaked().call();
       setTotalStaked(totalStaked);
     } catch (error) {
       console.error("Error fetching total staked:", error);
     }
   }
+  
 
   async function fetchUserRewards() {
     try {
@@ -181,7 +204,7 @@ const StakeReward = () => {
         await initStakingContract();
       }
       const userRewardsValue = await stakingContract.methods
-        .calculateUserRewards(address)
+        .getUserRewards(address)
         .call();
       setUserRewards(userRewardsValue);
     } catch (error) {
@@ -204,7 +227,7 @@ const StakeReward = () => {
 
       // execute the getReward function in the smart contract
       const tx = await stakingContract.methods
-        .getReward()
+        .harvest()
         .send({ from: address });
 
       // Wait for the transaction to be confirmed
@@ -224,79 +247,84 @@ const StakeReward = () => {
       alert(`Error collecting rewards: ${error.message}`);
     }
   };
-  const[state,setState]=useState({
+  const [state, setState] = useState({
     options: {
       title: {
-        text: 'chart',
-        align: 'left',
+        text: "chart",
+        align: "left",
         margin: 10,
         offsetX: 0,
         offsetY: 0,
         floating: false,
         style: {
-          fontSize:  '14px',
-          fontWeight:  'bold',
-          fontFamily:  undefined,
-          color:  '#fff'
-        }
-    },
+          fontSize: "14px",
+          fontWeight: "bold",
+          fontFamily: undefined,
+          color: "#fff",
+        },
+      },
       tooltip: {
         enabled: true,
         style: {
-         
-          fontFamily: "'Montserrat', 'sans-serif'"
+          fontFamily: "'Montserrat', 'sans-serif'",
         },
 
-        theme:'dark'
+        theme: "dark",
       },
       toolbar: {
-        foreColor:'#ffff',
-      style:{
-        color :'black'
-      }},
-      colors:["#8a8688","#e31a89"],
-      chart: { foreColor: '#e6e5e8',
-        id: "basic-bar"
+        foreColor: "#ffff",
+        style: {
+          color: "black",
+        },
       },
+      colors: ["#8a8688", "#e31a89"],
+      chart: { foreColor: "#e6e5e8", id: "basic-bar" },
       dataLabels: {
-        enabled: false},
-        legend: {
-          show: false},
+        enabled: false,
+      },
+      legend: {
+        show: false,
+      },
       xaxis: {
-        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999]
-      }
+        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
+      },
     },
     series: [
       {
         name: "series-1",
-        data: [30, 40, 45, 50, 49, 60, 70, 91]
+        data: [30, 40, 45, 50, 49, 60, 70, 91],
       },
       {
         name: "series-2",
-        data: [40, 14, 51, 5, 42, 30, 22, 100]
-      }
-    ]
-  })
-  // useEffect(() => {
-  //   // Access the selected option value whenever it changes
-  //   if (selectedTime) {
-  //     console.log("Selected Option:", selectedTime);
-  //   }
-  // }, [selectedTime]);
+        data: [40, 14, 51, 5, 42, 30, 22, 100],
+      },
+    ],
+  });
+  useEffect(() => {
+    // Access the selected option value whenever it changes
+    if (selectedTime) {
+      console.log("Selected Option:", selectedTime);
+    }
+  }, [selectedTime]);
   function AnimatedNumber({ targetNumber, suffix }) {
     const [currentNumber, setCurrentNumber] = useState(0);
-  
+
     useEffect(() => {
       const interval = setInterval(() => {
         if (currentNumber < targetNumber) {
           setCurrentNumber((prevNumber) => prevNumber + 1);
         }
       }, 5);
-  
+
       return () => clearInterval(interval);
     }, [currentNumber, targetNumber]);
-  
-    return <b>{currentNumber}{suffix}</b>;
+
+    return (
+      <b>
+        {currentNumber}
+        {suffix}
+      </b>
+    );
   }
   function AnimatedNumber1({ targetNumber, suffix }) {
     const [currentNumber, setCurrentNumber] = useState(0);
@@ -317,7 +345,7 @@ const StakeReward = () => {
     <>
       <Box className={classes.bannerBox}>
         <Grid container spacing={3}>
-          <Grid item  md={isMobile ? 12 : 6}  xs={isMobile ? 12 : 12} >
+          <Grid item md={isMobile ? 12 : 6} xs={isMobile ? 12 : 12}>
             <Paper className={classes.root} elevation={2}>
               <Box className={classes.root}>
                 <Box className={classes.tooltipIconHeader}>
@@ -356,8 +384,16 @@ const StakeReward = () => {
                     disablePortal
                     id="tags-standard"
                     sx={{ width: 300 }}
-                    options={options}
+                    options={monthOptions}
+                    value={
+                      monthOptions.find(
+                        (option) => option.value === selectedTime
+                      ) || null
+                    }
                     getOptionLabel={(option) => option.label}
+                    onChange={(event, newValue) =>
+                      setSelectedTime(newValue?.value || null)
+                    }
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -369,47 +405,50 @@ const StakeReward = () => {
                   <br></br>
                 </Box>
                 <br></br>
-                <div style={{display:'flex'}}>
-                <div>
-                <Box className={classes.heading}>
-                  <Typography variant="h2">Users Stake</Typography>
-                </Box>
-                <br></br>
-                <Box className={classes.checkbox}>
-                  <Checkbox
-                    // checked={true}
-                    // onChange={(event) => setCheckedBox(!checkBoxRemember)}
-                    defaultChecked
-                    size="small"
-                    inputProps={{
-                      "aria-label": "checkbox with small size",
-                    }}
-                  />
-                  <Typography variant="h5">{"Adil Kan"}</Typography>
-                </Box>
-                <Box className={classes.checkbox}>
-                  <Checkbox
-                    // checked={true}
-                    // onChange={(event) => setCheckedBox(!checkBoxRemember)}
-                    defaultChecked
-                    size="small"
-                    inputProps={{
-                      "aria-label": "checkbox with small size",
-                    }}
-                  />
-                  <Typography variant="h5">{"Muneeb zubair"}</Typography>
-                </Box>
+                <div style={{ display: "flex" }}>
+                  <div>
+                    <Box className={classes.heading}>
+                      <Typography variant="h2">Users Stake</Typography>
+                    </Box>
+                    <br></br>
+                    <Box className={classes.checkbox}>
+                      <Checkbox
+                        checked={selectedUserNames.includes("Adil")}
+                        onChange={(event) =>
+                          handleCheckboxChange(event, "Adil")
+                        }
+                        defaultChecked
+                        size="small"
+                        inputProps={{
+                          "aria-label": "checkbox with small size",
+                        }}
+                      />
+                      <Typography variant="h5">{"Adil Kan"}</Typography>
+                    </Box>
+                    <Box className={classes.checkbox}>
+                      <Checkbox
+                        checked={selectedUserNames.includes("Muneeb")}
+                        onChange={(event) =>
+                          handleCheckboxChange(event, "Muneeb")
+                        }
+                        defaultChecked
+                        size="small"
+                        inputProps={{
+                          "aria-label": "checkbox with small size",
+                        }}
+                      />
+                      <Typography variant="h5">{"Muneeb zubair"}</Typography>
+                    </Box>
+                  </div>
+                  <div style={{ marginLeft: "auto" }}>
+                    <Chart
+                      options={state.options}
+                      series={[23, 45]}
+                      type="donut"
+                      width="70%"
+                    />{" "}
+                  </div>
                 </div>
-                <div
-                  style={{marginLeft:'auto'}}>
-                  <Chart
-              options={state.options}
-              series={[23,45]}
-              type="donut"
-              width="80%"
-
-            />  </div>
-            </div>
                 <Box className={classes.Buttonbox} mt={2}>
                   <Box mt={2}>
                     <Button
@@ -455,13 +494,22 @@ const StakeReward = () => {
                       variant='outlined'
                       style={{ color: "#e31a89",marginTop:'15px'}}
                     >
-                     Auto/Locked
+                      Auto/Locked
                     </Button>
                     <div class="image-container">
-  <img src="./images/info.png" alt="Your image description" style={{verticalAlign:'middle', width:'20px',marginTop:'13px', marginLeft:'10px'}}/>
-  <div class="info-text">information</div>
-</div>
+                      <img
+                        src="./images/info.png"
+                        alt="Your image description"
+                        style={{
+                          verticalAlign: "middle",
+                          width: "20px",
+                          marginTop: "13px",
+                          marginLeft: "10px",
+                        }}
+                      />
+                      <div class="info-text">information</div>
                     </div>
+                  </div>
                 </Box>
               </Box>
             </Paper>
@@ -527,7 +575,6 @@ const StakeReward = () => {
                       variant="contained"
                       style={{ backgroundColor: "#e31a89", color: "#fff" }}
                       onClick={handleCollectButtonClick}
-
                     >
                       Collect
                     </Button>
@@ -546,32 +593,42 @@ const StakeReward = () => {
                 </div>
               </Box>
             </Paper>
-             <Paper className={classes.root} elevation={2} style={{ marginTop: '10px'}}>
-            <Chart
-              options={state.options}
-              series={state.series}
-              type="bar"
-              width="100%"
-            />
-              </Paper>
-   <Paper className={classes.root} elevation={2} style={{ marginTop: '10px' }}>
-               
-            <Chart
-              options={state.options}
-              series={state.series}
-              type="area"
-              width="100%"
-            />
-              </Paper>
-              <Paper className={classes.root} elevation={2} style={{ marginTop: '10px' }}>
+            <Paper
+              className={classes.root}
+              elevation={2}
+              style={{ marginTop: "10px" }}
+            >
               <Chart
-              options={state.options}
-              series={state.series}
-              type="line"
-              width="100%"
-            />
-              </Paper>
-              
+                options={state.options}
+                series={state.series}
+                type="bar"
+                width="100%"
+              />
+            </Paper>
+            <Paper
+              className={classes.root}
+              elevation={2}
+              style={{ marginTop: "10px" }}
+            >
+              <Chart
+                options={state.options}
+                series={state.series}
+                type="area"
+                width="100%"
+              />
+            </Paper>
+            <Paper
+              className={classes.root}
+              elevation={2}
+              style={{ marginTop: "10px" }}
+            >
+              <Chart
+                options={state.options}
+                series={state.series}
+                type="line"
+                width="100%"
+              />
+            </Paper>
           </Grid>
         </Grid>
       </Box>
@@ -579,3 +636,4 @@ const StakeReward = () => {
   );
 };
 export default StakeReward;
+ 

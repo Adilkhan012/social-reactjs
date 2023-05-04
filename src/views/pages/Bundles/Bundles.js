@@ -35,7 +35,8 @@ import DataLoading from "src/component/DataLoading";
 import NoDataFound from "src/component/NoDataFound";
 import { Pagination } from "@material-ui/lab";
 import { KeyboardDatePicker } from "@material-ui/pickers";
-
+import initMetamask from "src/blockchain/metamaskConnection";
+import initPostFactoryContract from "src/blockchain/laziPostFactory";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -144,21 +145,55 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
   const [errorMessageresend, setErrorMesageResend] = useState();
   const [particularUserList, setParticularUserList] = useState();
   const [tokenImage, setTokenImage] = React.useState("/images/tokens/1.png");
+  const [deployedLaziPostAddress, setDeployedLaziPostAddress] = useState("");
+  const [deployedLaziPosts, setDeployedLaziPosts] = useState([]);
+  const [address, setAddress] = useState(null);
+  const [web3, setWeb3] = useState(null);
+  const [laziFactoryContract, setLaziFactoryContract] = useState(null);
 
+  console.log("in create collection! ");
   const getBase64 = (file, cb) => {
     let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = function () {
       cb(reader.result);
     };
-    reader.onerror = function (err) { };
+    reader.onerror = function (err) {};
   };
+
+  useEffect(() => {
+    const init = async () => {
+      const { address } = await initMetamask();
+      const contract = await initPostFactoryContract();
+      setLaziFactoryContract(contract);
+      setAddress(address);
+      // setWeb3(web3);
+    };
+
+    init();
+  }, []);
 
   const post = async (event) => {
     event.preventDefault();
 
-    // if (auth?.userData?.bnbBalace > 0) {
-    //   setIsSubmit(true);
+    try {
+      if (!laziFactoryContract) {
+        await initPostFactoryContract();
+      }
+
+      const transaction = await laziFactoryContract.methods
+        .createLaziPost()
+        .send({ from: address });
+      const { contractAddress } = transaction;
+      setDeployedLaziPostAddress(contractAddress);
+      setDeployedLaziPosts((prevDeployedLaziPosts) => [
+        ...prevDeployedLaziPosts,
+        contractAddress,
+      ]);
+      console.log("transaction!: ", transaction)
+      console.log("address!: ", contractAddress)
+
+
       if (
         image !== "" &&
         title !== "" &&
@@ -167,7 +202,6 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
         Number(donation) <= 2000 &&
         details.length <= 200 &&
         title.length <= 60 &&
-        // donation !== ""
         parseFloat(donation) > 0
       ) {
         try {
@@ -180,56 +214,47 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
           formData.append("description", details);
           formData.append("amount", donation);
 
-          axios
-            .request({
-              method: "POST",
-              url: ApiConfig.addNft,
-              data: {
-                image: cover,
-                title: title,
-                duration: duration,
-                description: details,
-                amount: donation,
-              },
-              // data: formData,
-              headers: {
-                token: window.localStorage.getItem("token"),
-              },
-            })
-            .then((res) => {
-              if (res.data.responseCode === 200) {
-                collectionList();
-                setTimeout(() => {
-                  auth.handleUserProfileApi(
-                    window.localStorage.getItem("token")
-                  );
-                }, 10000);
-                setIsSubmit(false);
-                // user.updateUserData();
-                setOpen(false);
-                setprocess(false);
-                toast.success("Collection created");
-                setfire(!fire);
-                // handleClose();
-                setname("");
-                settitle("");
-                setdonation("");
-                setimage();
-                setdetails("");
-              } else {
-                setprocess(false);
-                toast.error("error");
-              }
-            })
+          const response = await axios.request({
+            method: "POST",
+            url: ApiConfig.addNft,
+            data: formData,
+            headers: {
+              token: window.localStorage.getItem("token"),
+            },
+          });
 
-            .catch((err) => {
-              setprocess(false);
-              toast.error(err?.response?.data?.responseMessage);
-
-              // toast.error("error");
-            });
-        } catch { }
+          if (response.data.responseCode === 200) {
+            collectionList();
+            setTimeout(() => {
+              auth.handleUserProfileApi(window.localStorage.getItem("token"));
+            }, 10000);
+            setIsSubmit(false);
+            setOpen(false);
+            setprocess(false);
+            toast.success("Collection created");
+            setfire(!fire);
+            setname("");
+            settitle("");
+            setdonation("");
+            setimage();
+            setdetails("");
+          } else {
+            setprocess(false);
+            toast.error("Error creating collection");
+          }
+        } catch (error) {
+          setprocess(false);
+          toast.error(
+            error?.response?.data?.responseMessage ||
+              "An error occurred while creating collection"
+          );
+        }
       }
+    } catch (error) {
+      console.error("Error creating LaziPost contract:", error);
+      toast.error("An error occurred while creating the LaziPost contract");
+    }
+
     // } else {
     //   setTimeout(() => {
     //     setErrorMesageResend(""); // count is 0 here
@@ -334,7 +359,6 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
   }, [location, page]);
 
   const pageCheck = page === 1 ? 12 : 0;
-
 
   return (
     <>
@@ -558,14 +582,14 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                                 (isSubmit && title === "") ||
                                 (title !== "" && title.length > 60)
                               }
-                            // helperText={
-                            //   (isSubmit &&
-                            //     title === "" &&
-                            //     "Please enter valid title") ||
-                            //   (title !== "" &&
-                            //     title.length > 60 &&
-                            //     "Title should be less than or equal to 60 characters")
-                            // }
+                              // helperText={
+                              //   (isSubmit &&
+                              //     title === "" &&
+                              //     "Please enter valid title") ||
+                              //   (title !== "" &&
+                              //     title.length > 60 &&
+                              //     "Title should be less than or equal to 60 characters")
+                              // }
                             />
                             <FormHelperText error>
                               {(isSubmit && title === "" && (
@@ -635,14 +659,14 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                                 (details !== "" && details.length > 200)
                               }
                               fullWidth
-                            // helperText={
-                            //   (isSubmit &&
-                            //     details === "" &&
-                            //     "Collection description is required") ||
-                            //   (details !== "" &&
-                            //     details.length > 200 &&
-                            //     "Collection description should be less than or equal to 200 characters")
-                            // }
+                              // helperText={
+                              //   (isSubmit &&
+                              //     details === "" &&
+                              //     "Collection description is required") ||
+                              //   (details !== "" &&
+                              //     details.length > 200 &&
+                              //     "Collection description should be less than or equal to 200 characters")
+                              // }
                             />
                             <FormHelperText error>
                               {(isSubmit && details === "" && (
@@ -687,17 +711,17 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                                   event.preventDefault();
                                 }
                               }}
-                            // helperText={
-                            //   (isSubmit &&
-                            //     donation == "" &&
-                            //     "donation amount is required") ||
-                            //   (donation !== "" &&
-                            //     Number(donation) < 1 &&
-                            //     "Please enter valid donation amount") ||
-                            //   (donation !== "" &&
-                            //     Number(donation) > 2000 &&
-                            //     " Donation amount should be less than or equal to 2000")
-                            // }
+                              // helperText={
+                              //   (isSubmit &&
+                              //     donation == "" &&
+                              //     "donation amount is required") ||
+                              //   (donation !== "" &&
+                              //     Number(donation) < 1 &&
+                              //     "Please enter valid donation amount") ||
+                              //   (donation !== "" &&
+                              //     Number(donation) > 2000 &&
+                              //     " Donation amount should be less than or equal to 2000")
+                              // }
                             />
                             <FormHelperText error>
                               {(isSubmit && donation == "" && (
@@ -705,13 +729,13 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                               )) ||
                                 (donation !== "" && Number(donation) > 2000 && (
                                   <Box ml={1}>
-                                    Collection amount should be less than or equal
-                                    to 2000
+                                    Collection amount should be less than or
+                                    equal to 2000
                                   </Box>
                                 )) ||
                                 (donation !== "" && Number(donation) == 0 && (
                                   <Box ml={1}>
-                                    Please enter valid  Collection amount
+                                    Please enter valid Collection amount
                                   </Box>
                                 ))}
                             </FormHelperText>
@@ -792,11 +816,11 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                                     />
                                     <Box>
                                       {image?.type === "video/mp4" ||
-                                        image?.type == "image/jpeg" ||
-                                        image?.type == "image/png" ||
-                                        image?.type == "image/gif" ||
-                                        image?.type == "image/jpg" ||
-                                        image?.type == "image/svg" ? (
+                                      image?.type == "image/jpeg" ||
+                                      image?.type == "image/png" ||
+                                      image?.type == "image/gif" ||
+                                      image?.type == "image/jpg" ||
+                                      image?.type == "image/svg" ? (
                                         <>
                                           {image?.type === "video/mp4" ? (
                                             <>
@@ -879,8 +903,8 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                             </Box>
                           </Grid>
                           <Grid item xs={6} align="left">
-                          <Typography variant="h6">
-                             You will get profit only on private Post.
+                            <Typography variant="h6">
+                              You will get profit only on private Post.
                             </Typography>
                             {/* <Typography variant="h6">
                               Collection fee&nbsp;
