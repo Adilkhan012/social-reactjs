@@ -1,17 +1,33 @@
 import { useState } from "react";
 import Web3 from "web3";
+
 // custom network for testnet
 const customNetwork = {
-  chainId: "0x61", // BSC Testnet Chain ID
-  chainName: "BSC Testnet",
+  chainId: "0x13881", // Mumbai Testnet Chain ID
+  chainName: "Mumbai Testnet",
   nativeCurrency: {
-    name: "BNB",
-    symbol: "BNB",
+    name: "MATIC",
+    symbol: "MATIC",
     decimals: 18,
   },
-  rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545"], // BSC Testnet RPC endpoint
-  blockExplorerUrls: ["https://testnet.bscscan.com"], // BSC Testnet Block Explorer URL
+  rpcUrls: ["https://rpc-mumbai.maticvigil.com"], // Mumbai Testnet RPC endpoint
+  blockExplorerUrls: ["https://explorer-mumbai.maticvigil.com"], // Mumbai Testnet Block Explorer URL
 };
+
+
+
+// // custom network for testnet
+// const customNetwork = {
+//   chainId: "0x61", // BSC Testnet Chain ID
+//   chainName: "BSC Testnet",
+//   nativeCurrency: {
+//     name: "BNB",
+//     symbol: "BNB",
+//     decimals: 18,
+//   },
+//   rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545"], // BSC Testnet RPC endpoint
+//   blockExplorerUrls: ["https://testnet.bscscan.com"], // BSC Testnet Block Explorer URL
+// };
 
 // custom network for mainnet
 

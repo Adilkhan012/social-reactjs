@@ -181,18 +181,31 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
         await initPostFactoryContract();
       }
 
+      const gasLimit = await laziFactoryContract.methods
+        .createLaziPost()
+        .estimateGas({ from: address });
+      console.log("gasLimit: ", gasLimit);
+
       const transaction = await laziFactoryContract.methods
         .createLaziPost()
-        .send({ from: address });
-      const { contractAddress } = transaction;
-      setDeployedLaziPostAddress(contractAddress);
+        .send({ from: address, gas: gasLimit });
+
+      const deployedPostsCount = await laziFactoryContract.methods
+        .getDeployedLaziPostsCount()
+        .call();
+      console.log("Deployed LaziPosts count:", deployedPostsCount);
+      const index = deployedPostsCount - 1;
+      const deployedLaziPostAddress = await laziFactoryContract.methods
+        .deployedLaziPosts(index)
+        .call();
+
+      setDeployedLaziPostAddress(deployedLaziPostAddress);
       setDeployedLaziPosts((prevDeployedLaziPosts) => [
         ...prevDeployedLaziPosts,
-        contractAddress,
+        deployedLaziPostAddress,
       ]);
-      console.log("transaction!: ", transaction)
-      console.log("address!: ", contractAddress)
-
+      console.log("transaction!: ", transaction);
+      console.log("address!: ", deployedLaziPostAddress);
 
       if (
         image !== "" &&
@@ -212,7 +225,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
           formData.append("symbol", title);
           formData.append("duration", duration);
           formData.append("description", details);
-          formData.append("amount", donation);
+          formData.append("amount", 10);
 
           const response = await axios.request({
             method: "POST",
@@ -711,17 +724,17 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                                   event.preventDefault();
                                 }
                               }}
-                              // helperText={
-                              //   (isSubmit &&
-                              //     donation == "" &&
-                              //     "donation amount is required") ||
-                              //   (donation !== "" &&
-                              //     Number(donation) < 1 &&
-                              //     "Please enter valid donation amount") ||
-                              //   (donation !== "" &&
-                              //     Number(donation) > 2000 &&
-                              //     " Donation amount should be less than or equal to 2000")
-                              // }
+                              helperText={
+                                (isSubmit &&
+                                  donation == "" &&
+                                  "donation amount is required") ||
+                                (donation !== "" &&
+                                  Number(donation) < 1 &&
+                                  "Please enter valid donation amount") ||
+                                (donation !== "" &&
+                                  Number(donation) > 2000 &&
+                                  " Donation amount should be less than or equal to 2000")
+                              }
                             />
                             <FormHelperText error>
                               {(isSubmit && donation == "" && (
