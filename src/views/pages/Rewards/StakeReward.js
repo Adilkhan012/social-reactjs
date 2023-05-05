@@ -176,13 +176,12 @@ const StakeReward = () => {
     console.log("selected Amount:", erc20Amount);
 
     // const daysToStake = selectedTime; // Example: 30 days
-    const erc721Ids = [1];
     console.log("selected UserName:", selectedUserNames);
     console.log("selected TimePeriod:", selectedTime);
 
     // const erc721Ids = selectedUserNames; // Example: ERC721 token IDs    if (web3 && stakingContract) {
     stakingContract.methods
-      .stake(erc20Amount, selectedTime, erc721Ids)
+      .stake(erc20Amount, selectedTime, selectedUserNames)
       .send({ from: userAddress })
       .on("transactionHash", (hash) => {
         console.log(hash);
@@ -197,7 +196,7 @@ const StakeReward = () => {
 
   const fetchTotalStaked = useCallback(async () => {
     try {
-      const totalStaked = await stakingContract.totalStaked();
+      const totalStaked = await stakingContract.totalStaked;
       setTotalStaked(totalStaked);
       console.log("toktal staked! ", totalStaked);
     } catch (error) {
@@ -662,13 +661,12 @@ const StakeReward = () => {
                       <Typography variant="h2" style={{ fontSize: "26px" }}>
                         Total Staking Pool
                       </Typography>
-                      <Button onClick={handleTotalStakedClick}>Refresh</Button>
+                      {/* <Button onClick={handleTotalStakedClick}>Refresh</Button> */}
                     </Box>
                     <br></br>
                     <p style={{ fontSize: "17px" }}>
                       <b>{totalStaked ? `${totalStaked} LAZI` : ""}</b>
                     </p>
-                    <br></br>
                     <p style={{ fontSize: "17px" }}>
                       <b>
                         <AnimatedNumber
@@ -680,6 +678,7 @@ const StakeReward = () => {
                       </b>
                     </p>
                   </div>
+                  <br></br>
                   <div style={{ marginLeft: "auto" }}>
                     <Chart
                       options={state.options}
@@ -693,6 +692,7 @@ const StakeReward = () => {
                     />
                   </div>
                 </div>
+                <br></br>
 
                 <div style={{ display: "flex" }}>
                   <div>
@@ -706,13 +706,13 @@ const StakeReward = () => {
                       <b>{`${userRewards} LAZI`}</b>
                     </p>
                     <br></br>
-                    <Button
+                    {/* <Button
                       variant="contained"
                       color="primary"
                       onClick={handleUserRewardsClick}
                     >
                       Get Your Rewards
-                    </Button>
+                    </Button> */}
                     <Box className={classes.Buttonbox} mt={2}>
                       <Box mt={2}>
                         <Button
