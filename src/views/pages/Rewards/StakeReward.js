@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Chart from "react-apexcharts";
 import {
   Box,
@@ -18,6 +18,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import initMetamask from "src/blockchain/metamaskConnection";
 import initStakingContract from "src/blockchain/stakingReward";
+import initUserNameContract from "src/blockchain/laziUserNameContract";
 import { styles } from "@material-ui/pickers/views/Clock/Clock";
 
 const useStyles = makeStyles((theme) => ({
@@ -102,13 +103,14 @@ const useStyles = makeStyles((theme) => ({
 const StakeReward = () => {
   const classes = useStyles();
   const [selectedOptions, setSelectedOptions] = useState([]);
-  const [address, setAddress] = useState(null);
-  const [web3, setWeb3] = useState(null);
+  const [userAddress, setAddress] = useState(null);
   const [sliderValue, setSliderValue] = useState(20);
   const [stakingContract, setStakingContract] = useState(null);
+  const [userNameContract, setUserNameContract] = useState(null);
   const [totalStaked, setTotalStaked] = useState(0);
   const [userRewards, setUserRewards] = useState(0);
   const [selectedUserNames, setSelectedUserNames] = useState([]);
+  const [mintedUserNames, setMintedUserNames] = useState([]);
   const [selectedTime, setSelectedTime] = useState(null);
 
   const handleSliderChange = (event, newValue) => {
@@ -116,44 +118,46 @@ const StakeReward = () => {
   };
 
   useEffect(() => {
-    const initilize = async () =>{
-    const init = async () => {
-      const { web3, address } = await initMetamask();
-      const contract = await initStakingContract();
-      setStakingContract(contract);
-      setAddress(address);
-      setWeb3(web3);
-      // Wait for contract initialization before calling fetch functions
+    const initialize = async () => {
+      try {
+        const { address } = await initMetamask();
+        const contractStaking = await initStakingContract();
+        const contractUserName = await initUserNameContract();
+        setStakingContract(contractStaking);
+        setUserNameContract(contractUserName);
+        setAddress(address);
+      } catch (error) {
+        console.error("Contract initialization failed:", error);
+      }
     };
-  
-    await init();
-    fetchUserRewards();
-    fetchTotalStaked();
-  }
-  initilize();
+
+    initialize();
   }, []);
 
   const monthOptions = [
-    { label: "3 months (1.25x)", value: 1 },
-    { label: "6 months (1.5x)", value: 2 },
-    { label: "1 year (2x)", value: 3 },
-    { label: "1.5 year (1.75x)", value: 4 },
-    { label: "2 year (3.5x)", value: 5 },
+    { label: "3 months (1.25x)", value: 91 },
+    { label: "6 months (1.5x)", value: 182 },
+    { label: "1 year (2x)", value: 365 },
+    { label: "1.5 year (1.75x)", value: 547 },
+    { label: "2 year (3.5x)", value: 730 },
   ];
   const userOptions = [
     { label: "User 1", value: 1 },
     { label: "User 2", value: 2 },
   ];
 
-  const handleCheckboxChange = (event, value) => {
+  const handleCheckboxChange = (event, userName, tokenId) => {
+    const selectedTokenId = event.target.value;
+    console.log("Selected Token ID:", selectedTokenId);
+
     if (event.target.checked) {
       setSelectedUserNames((prevSelectedUserNames) => [
         ...prevSelectedUserNames,
-        value,
+        tokenId,
       ]);
     } else {
       setSelectedUserNames((prevSelectedUserNames) =>
-        prevSelectedUserNames.filter((v) => v !== value)
+        prevSelectedUserNames.filter((id) => id !== tokenId)
       );
     }
   };
@@ -169,12 +173,17 @@ const StakeReward = () => {
 
   const handleStake = () => {
     const erc20Amount = sliderValue; // Use sliderValue state variable
+    console.log("selected Amount:", erc20Amount);
+
     // const daysToStake = selectedTime; // Example: 30 days
     const erc721Ids = [1];
+    console.log("selected UserName:", selectedUserNames);
+    console.log("selected TimePeriod:", selectedTime);
+
     // const erc721Ids = selectedUserNames; // Example: ERC721 token IDs    if (web3 && stakingContract) {
     stakingContract.methods
       .stake(erc20Amount, selectedTime, erc721Ids)
-      .send({ from: address })
+      .send({ from: userAddress })
       .on("transactionHash", (hash) => {
         console.log(hash);
       })
@@ -185,32 +194,63 @@ const StakeReward = () => {
         console.log(error);
       });
   };
-  async function fetchTotalStaked() {
+
+  const fetchTotalStaked = useCallback(async () => {
     try {
-      if (!stakingContract) {
-        await initStakingContract();
-      }
-      const totalStaked = await stakingContract.totalStaked().call();
+      const totalStaked = await stakingContract.totalStaked();
       setTotalStaked(totalStaked);
+      console.log("toktal staked! ", totalStaked);
     } catch (error) {
       console.error("Error fetching total staked:", error);
     }
-  }
-  
+  }, [stakingContract]);
 
-  async function fetchUserRewards() {
+  const fetchUserRewards = useCallback(async () => {
     try {
-      if (!stakingContract) {
-        await initStakingContract();
-      }
+      console.log("address: ", userAddress);
       const userRewardsValue = await stakingContract.methods
-        .getUserRewards(address)
+        .getUserRewards(userAddress)
         .call();
       setUserRewards(userRewardsValue);
     } catch (error) {
       console.error("Error fetching user rewards:", error);
     }
-  }
+  }, [userAddress, stakingContract]);
+
+  const getOwnerMintedUserNames = useCallback(async () => {
+    try {
+      const mintedDomains = [];
+      // Get the token IDs owned by the connected account
+      const tokenIds = await userNameContract.methods
+        .tokensOfOwner(userAddress)
+        .call();
+      console.log("tokenIDs: ", tokenIds);
+      for (const tokenId of tokenIds) {
+        const mintedDomain = await userNameContract.methods
+          .domainNameOf(tokenId)
+          .call();
+        mintedDomains.push({ domainName: mintedDomain + ".lazi", tokenId });
+      }
+
+      setMintedUserNames(mintedDomains);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [userAddress, userNameContract]);
+
+  useEffect(() => {
+    if (userAddress && stakingContract && userNameContract) {
+      fetchUserRewards();
+      fetchTotalStaked();
+      getOwnerMintedUserNames();
+    }
+  }, [
+    userAddress,
+    userNameContract,
+    stakingContract,
+    fetchUserRewards,
+    fetchTotalStaked,
+  ]);
 
   const handleUserRewardsClick = async () => {
     fetchUserRewards();
@@ -228,7 +268,7 @@ const StakeReward = () => {
       // execute the getReward function in the smart contract
       const tx = await stakingContract.methods
         .harvest()
-        .send({ from: address });
+        .send({ from: userAddress });
 
       // Wait for the transaction to be confirmed
       const receipt = await tx.wait();
@@ -247,6 +287,7 @@ const StakeReward = () => {
       alert(`Error collecting rewards: ${error.message}`);
     }
   };
+
   const [state, setState] = useState({
     options: {
       title: {
@@ -300,12 +341,14 @@ const StakeReward = () => {
       },
     ],
   });
+
   useEffect(() => {
     // Access the selected option value whenever it changes
     if (selectedTime) {
       console.log("Selected Option:", selectedTime);
     }
   }, [selectedTime]);
+
   function AnimatedNumber({ targetNumber, suffix }) {
     const [currentNumber, setCurrentNumber] = useState(0);
 
@@ -328,18 +371,23 @@ const StakeReward = () => {
   }
   function AnimatedNumber1({ targetNumber, suffix }) {
     const [currentNumber, setCurrentNumber] = useState(0);
-  
+
     useEffect(() => {
       const interval = setInterval(() => {
         if (currentNumber < targetNumber) {
           setCurrentNumber((prevNumber) => prevNumber + 1500);
         }
       }, 1);
-  
+
       return () => clearInterval(interval);
     }, [currentNumber, targetNumber]);
-  
-    return <b>{currentNumber}{suffix}</b>;
+
+    return (
+      <b>
+        {currentNumber}
+        {suffix}
+      </b>
+    );
   }
   return (
     <>
@@ -411,33 +459,23 @@ const StakeReward = () => {
                       <Typography variant="h2">Users Stake</Typography>
                     </Box>
                     <br></br>
-                    <Box className={classes.checkbox}>
-                      <Checkbox
-                        checked={selectedUserNames.includes("Adil")}
-                        onChange={(event) =>
-                          handleCheckboxChange(event, "Adil")
-                        }
-                        defaultChecked
-                        size="small"
-                        inputProps={{
-                          "aria-label": "checkbox with small size",
-                        }}
-                      />
-                      <Typography variant="h5">{"Adil Kan"}</Typography>
-                    </Box>
-                    <Box className={classes.checkbox}>
-                      <Checkbox
-                        checked={selectedUserNames.includes("Muneeb")}
-                        onChange={(event) =>
-                          handleCheckboxChange(event, "Muneeb")
-                        }
-                        defaultChecked
-                        size="small"
-                        inputProps={{
-                          "aria-label": "checkbox with small size",
-                        }}
-                      />
-                      <Typography variant="h5">{"Muneeb zubair"}</Typography>
+                    <Box>
+                      {mintedUserNames.map(({ domainName, tokenId }) => (
+                        <Box className={classes.checkbox} key={domainName}>
+                          <Checkbox
+                            checked={selectedUserNames.includes(tokenId)}
+                            onChange={(event) =>
+                              handleCheckboxChange(event, domainName, tokenId)
+                            }
+                            value={tokenId}
+                            size="small"
+                            inputProps={{
+                              "aria-label": "checkbox with small size",
+                            }}
+                          />
+                          <Typography variant="h5">{domainName}</Typography>
+                        </Box>
+                      ))}
                     </Box>
                   </div>
                   <div style={{ marginLeft: "auto" }}>
@@ -463,36 +501,122 @@ const StakeReward = () => {
                 <br></br>
                 <Box mt={2}>
                   <h3>Text Area</h3>
-                  <div style={{border:'1px solid',padding:'10px', borderRadius: '7px'}}>
-                  <div class="info">
-  <div class="label">Total Locked:</div>
-  <div class="value"><AnimatedNumber1 targetNumber={1888888} suffix="CAKE" /></div>
-</div>
-<div class="info">
-  <div class="label">Average lock duration:</div>
-  <div class="value" style={{display:'flex',justifyContent:'flex-end'}}><AnimatedNumber targetNumber={42} suffix="weeks" />
-  <div class="image-container">
-  <img src="./images/clock.png" alt="Your image description" style={{ width:'20px'}}/>
-  <div class="info-text">Time remaining</div>
-</div></div>
-</div>
-<div class="info">
-  <div class="label">Performance fee:</div>
-  <div class="value"><AnimatedNumber targetNumber={0} suffix="" />
-  ~ <AnimatedNumber targetNumber={2} suffix="%" />
-  </div>
-</div>
-                  <a href="https://example.com" style={{fontSize:'20px',marginTop:'15px',color:'#e31a89'}}> See Token Info<img src="./images/link.png" alt="External Link Icon" style={{verticalAlign:'middle',width:'25px'}}/></a>
-                  <br></br>
-                  <a href="https://example.com" style={{fontSize:'20px',marginTop:'15px',color:'#e31a89'}}> View Tutorial<img src="./images/link.png" alt="External Link Icon" style={{verticalAlign:'middle',width:'25px'}}/></a>
-                  <br></br>
-                  <a href="https://example.com" style={{fontSize:'20px',marginTop:'15px',color:'#e31a89'}}> View Contract<img src="./images/etherscan.svg" alt="External Link Icon" style={{marginLeft:'3px',verticalAlign:'middle',width:'25px'}}/></a>
-                  <br></br>
-                  <a href="https://example.com" style={{fontSize:'20px',marginTop:'15px',color:'#e31a89'}}> Add to Wallet<img src="./images/metamask.png" alt="External Link Icon" style={{marginLeft:'3px',verticalAlign:'middle',width:'25px'}}/></a>
-                  <br></br>
-                  <Button
-                      variant='outlined'
-                      style={{ color: "#e31a89",marginTop:'15px'}}
+                  <div
+                    style={{
+                      border: "1px solid",
+                      padding: "10px",
+                      borderRadius: "7px",
+                    }}
+                  >
+                    <div class="info">
+                      <div class="label">Total Locked:</div>
+                      <div class="value">
+                        <AnimatedNumber1 targetNumber={1888888} suffix="CAKE" />
+                      </div>
+                    </div>
+                    <div class="info">
+                      <div class="label">Average lock duration:</div>
+                      <div
+                        class="value"
+                        style={{ display: "flex", justifyContent: "flex-end" }}
+                      >
+                        <AnimatedNumber targetNumber={42} suffix="weeks" />
+                        <div class="image-container">
+                          <img
+                            src="./images/clock.png"
+                            alt="Your image description"
+                            style={{ width: "20px" }}
+                          />
+                          <div class="info-text">Time remaining</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="info">
+                      <div class="label">Performance fee:</div>
+                      <div class="value">
+                        <AnimatedNumber targetNumber={0} suffix="" />
+                        ~ <AnimatedNumber targetNumber={2} suffix="%" />
+                      </div>
+                    </div>
+                    <a
+                      href="https://example.com"
+                      style={{
+                        fontSize: "20px",
+                        marginTop: "15px",
+                        color: "#e31a89",
+                      }}
+                    >
+                      {" "}
+                      See Token Info
+                      <img
+                        src="./images/link.png"
+                        alt="External Link Icon"
+                        style={{ verticalAlign: "middle", width: "25px" }}
+                      />
+                    </a>
+                    <br></br>
+                    <a
+                      href="https://example.com"
+                      style={{
+                        fontSize: "20px",
+                        marginTop: "15px",
+                        color: "#e31a89",
+                      }}
+                    >
+                      {" "}
+                      View Tutorial
+                      <img
+                        src="./images/link.png"
+                        alt="External Link Icon"
+                        style={{ verticalAlign: "middle", width: "25px" }}
+                      />
+                    </a>
+                    <br></br>
+                    <a
+                      href="https://example.com"
+                      style={{
+                        fontSize: "20px",
+                        marginTop: "15px",
+                        color: "#e31a89",
+                      }}
+                    >
+                      {" "}
+                      View Contract
+                      <img
+                        src="./images/etherscan.svg"
+                        alt="External Link Icon"
+                        style={{
+                          marginLeft: "3px",
+                          verticalAlign: "middle",
+                          width: "25px",
+                        }}
+                      />
+                    </a>
+                    <br></br>
+                    <a
+                      href="https://example.com"
+                      style={{
+                        fontSize: "20px",
+                        marginTop: "15px",
+                        color: "#e31a89",
+                      }}
+                    >
+                      {" "}
+                      Add to Wallet
+                      <img
+                        src="./images/metamask.png"
+                        alt="External Link Icon"
+                        style={{
+                          marginLeft: "3px",
+                          verticalAlign: "middle",
+                          width: "25px",
+                        }}
+                      />
+                    </a>
+                    <br></br>
+                    <Button
+                      variant="outlined"
+                      style={{ color: "#e31a89", marginTop: "15px" }}
                     >
                       Auto/Locked
                     </Button>
@@ -513,83 +637,102 @@ const StakeReward = () => {
                 </Box>
               </Box>
             </Paper>
-            <Paper className={classes.root} elevation={2} style={{ marginTop: '10px' }}>
-            <Chart
-              options={state.options}
-              series={[23,45]}
-              type="donut"
-              width="80%"
-            />
-              </Paper>
-          </Grid>  <Grid item md={isMobile ? 12 : 6}  xs={isMobile ? 12 : 12}>
+            <Paper
+              className={classes.root}
+              elevation={2}
+              style={{ marginTop: "10px" }}
+            >
+              <Chart
+                options={state.options}
+                series={[23, 45]}
+                type="donut"
+                width="80%"
+              />
+            </Paper>
+          </Grid>{" "}
+          <Grid item md={isMobile ? 12 : 6} xs={isMobile ? 12 : 12}>
             <Paper className={classes.root} elevation={2}>
               <Box className={classes.root} height={400} overflow="auto">
-                <div style={{display:'flex'}}>
+                <div style={{ display: "flex" }}>
                   <div>
-                  <Box className={classes.heading} style={{display:'block'}}>
-                    <Typography variant="h2" style={{ fontSize: "26px" }}>
-                      <h>Total Staking Pool</h>
-                    </Typography>
-                    {/* <Button onClick={handleTotalStakedClick}>Refresh</Button> */}
-                  </Box>
-                  <br></br>
-                  <p style={{ fontSize: "17px" }}>
-                    <b>{totalStaked ? `${totalStaked} LAZI` : ""}</b>
-                  </p>
-                  <br></br>
-                <p style={{ fontSize: "17px" }}>
-                  <b> <AnimatedNumber targetNumber={1.93} suffix="%" /></b>
-                </p>
+                    <Box
+                      className={classes.heading}
+                      style={{ display: "block" }}
+                    >
+                      <Typography variant="h2" style={{ fontSize: "26px" }}>
+                        Total Staking Pool
+                      </Typography>
+                      <Button onClick={handleTotalStakedClick}>Refresh</Button>
+                    </Box>
+                    <br></br>
+                    <p style={{ fontSize: "17px" }}>
+                      <b>{totalStaked ? `${totalStaked} LAZI` : ""}</b>
+                    </p>
+                    <br></br>
+                    <p style={{ fontSize: "17px" }}>
+                      <b>
+                        <AnimatedNumber
+                          targetNumber={
+                            totalStaked ? (totalStaked * 100) / 13700000 : 0
+                          }
+                          suffix="%"
+                        />
+                      </b>
+                    </p>
+                  </div>
+                  <div style={{ marginLeft: "auto" }}>
+                    <Chart
+                      options={state.options}
+                      series={[
+                        totalStaked ? (totalStaked * 100) / 13700000 : 0,
+                        100 -
+                          (totalStaked ? (totalStaked * 100) / 13700000 : 0),
+                      ]}
+                      type="donut"
+                      width="70%"
+                    />
+                  </div>
                 </div>
-                  <div
-                  style={{marginLeft:'auto'}}>
-                  <Chart
-              options={state.options}
-              series={[23,45]}
-              type="donut"
-              width="70%"/> 
-               </div>
-                </div>
-                <div style={{display:'flex'}}>
-                  <div>        
-                              <Box className={classes.heading}>
-                    <Typography variant="h2" style={{ fontSize: "26px" }}>
-                      <h>Your Rewards</h>
-                    </Typography>
-                  </Box>
-                  <br></br>
-                  <p style={{ fontSize: "17px" }}>
-                    <b>{`${userRewards} LAZI`}</b>
-                  </p>
-                  <br></br>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleUserRewardsClick}
-                  >
-                    Get Your Rewards
-                  </Button>
-                <Box className={classes.Buttonbox} mt={2}>
-                  <Box mt={2}>
+
+                <div style={{ display: "flex" }}>
+                  <div>
+                    <Box className={classes.heading}>
+                      <Typography variant="h2" style={{ fontSize: "26px" }}>
+                        <h>Your Rewards</h>
+                      </Typography>
+                    </Box>
+                    <br></br>
+                    <p style={{ fontSize: "17px" }}>
+                      <b>{`${userRewards} LAZI`}</b>
+                    </p>
+                    <br></br>
                     <Button
                       variant="contained"
-                      style={{ backgroundColor: "#e31a89", color: "#fff" }}
-                      onClick={handleCollectButtonClick}
+                      color="primary"
+                      onClick={handleUserRewardsClick}
                     >
-                      Collect
+                      Get Your Rewards
                     </Button>
-                  </Box>
-                </Box>
-                </div>
-                  <div
-                  style={{marginLeft:'auto'}}>
-                  <Chart
-              options={state.options}
-              series={[23,45]}
-              type="donut"
-              width="70%"
-
-            />  </div>
+                    <Box className={classes.Buttonbox} mt={2}>
+                      <Box mt={2}>
+                        <Button
+                          variant="contained"
+                          style={{ backgroundColor: "#e31a89", color: "#fff" }}
+                          onClick={handleCollectButtonClick}
+                        >
+                          Collect
+                        </Button>
+                      </Box>
+                    </Box>
+                  </div>
+                  <div style={{ marginLeft: "auto" }}>
+                    <Chart
+                      options={state.options}
+                      series={[23, 45]}
+                      type="donut"
+                      width="70%"
+                    />{" "}
+                  </div>
                 </div>
               </Box>
             </Paper>
@@ -636,4 +779,3 @@ const StakeReward = () => {
   );
 };
 export default StakeReward;
- 

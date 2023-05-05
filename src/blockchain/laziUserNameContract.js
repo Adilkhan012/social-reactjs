@@ -1,4 +1,6 @@
-const laziUserNameAddress = '0xAD17e5Abe6eBBbd8E54317ad555CF16a0657A243';
+import Web3 from "web3";
+
+const laziUserNameAddress = '0xb6C42B011DF21A92Be48242D7a68A5b616140E1F';
 
 const laziUserNameABI = [
 	{
@@ -960,3 +962,16 @@ const laziUserNameABI = [
 		"type": "function"
 	}
 ]
+
+const initUserNameContract = async () => {
+    const web3 = new Web3(window.ethereum);
+  return new Promise((resolve, reject) => {
+    const stakingContract = new web3.eth.Contract(
+		laziUserNameABI,
+		laziUserNameAddress
+    );
+    resolve(stakingContract);
+  });
+};
+
+export default initUserNameContract;

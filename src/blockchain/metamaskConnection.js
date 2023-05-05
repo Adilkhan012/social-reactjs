@@ -81,7 +81,7 @@ const initMetamask = async () => {
     address = accounts[0];
 
 
-    return { web3, address};
+    return {address};
   } catch (error) {
     console.error(error);
   }

@@ -1,4 +1,5 @@
 import initMetamask from "./metamaskConnection";
+import Web3 from "web3";
 
 const laziPostFactoryContractAddress =
   "0x3a38a796a48a55d75ff5477Eb90f76c78a237cb0";
@@ -78,7 +79,7 @@ const laziPostFactoryContractABI = [
 ]
 
 const initLaziPostFactoryContract = async () => {
-  const { web3 } = await initMetamask();
+    const web3 = new Web3(window.ethereum);
   return new Promise((resolve, reject) => {
     const stakingContract = new web3.eth.Contract(
       laziPostFactoryContractABI,
