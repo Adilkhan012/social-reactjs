@@ -112,181 +112,7 @@ const StakeReward = () => {
   const [selectedUserNames, setSelectedUserNames] = useState([]);
   const [mintedUserNames, setMintedUserNames] = useState([]);
   const [selectedTime, setSelectedTime] = useState(null);
-
-  const handleSliderChange = (event, newValue) => {
-    setSliderValue(newValue);
-  };
-
-  useEffect(() => {
-    const initialize = async () => {
-      try {
-        const { address } = await initMetamask();
-        const contractStaking = await initStakingContract();
-        const contractUserName = await initUserNameContract();
-        setStakingContract(contractStaking);
-        setUserNameContract(contractUserName);
-        setAddress(address);
-      } catch (error) {
-        console.error("Contract initialization failed:", error);
-      }
-    };
-
-    initialize();
-  }, []);
-
-  const monthOptions = [
-    { label: "3 months (1.25x)", value: 91 },
-    { label: "6 months (1.5x)", value: 182 },
-    { label: "1 year (2x)", value: 365 },
-    { label: "1.5 year (1.75x)", value: 547 },
-    { label: "2 year (3.5x)", value: 730 },
-  ];
-  const userOptions = [
-    { label: "User 1", value: 1 },
-    { label: "User 2", value: 2 },
-  ];
-
-  const handleCheckboxChange = (event, userName, tokenId) => {
-    const selectedTokenId = event.target.value;
-    console.log("Selected Token ID:", selectedTokenId);
-
-    if (event.target.checked) {
-      setSelectedUserNames((prevSelectedUserNames) => [
-        ...prevSelectedUserNames,
-        tokenId,
-      ]);
-    } else {
-      setSelectedUserNames((prevSelectedUserNames) =>
-        prevSelectedUserNames.filter((id) => id !== tokenId)
-      );
-    }
-  };
-
-  const handleSelectedOptionsChange = (event, newValue) => {
-    setSelectedOptions(newValue);
-  };
-
-  const isMobile = useMediaQuery("(max-width:600px)");
-  const valuetext = (value) => {
-    return `${value} LAZI`;
-  };
-
-  const handleStake = () => {
-    const erc20Amount = sliderValue; // Use sliderValue state variable
-    console.log("selected Amount:", erc20Amount);
-
-    // const daysToStake = selectedTime; // Example: 30 days
-    console.log("selected UserName:", selectedUserNames);
-    console.log("selected TimePeriod:", selectedTime);
-
-    // const erc721Ids = selectedUserNames; // Example: ERC721 token IDs    if (web3 && stakingContract) {
-    stakingContract.methods
-      .stake(erc20Amount, selectedTime, selectedUserNames)
-      .send({ from: userAddress })
-      .on("transactionHash", (hash) => {
-        console.log(hash);
-      })
-      .on("receipt", (receipt) => {
-        console.log(receipt);
-      })
-      .on("error", (error) => {
-        console.log(error);
-      });
-  };
-
-  const fetchTotalStaked = useCallback(async () => {
-    try {
-      const totalStaked = await stakingContract.totalStaked;
-      setTotalStaked(totalStaked);
-      console.log("toktal staked! ", totalStaked);
-    } catch (error) {
-      console.error("Error fetching total staked:", error);
-    }
-  }, [stakingContract]);
-
-  const fetchUserRewards = useCallback(async () => {
-    try {
-      console.log("address: ", userAddress);
-      const userRewardsValue = await stakingContract.methods
-        .getUserRewards(userAddress)
-        .call();
-      setUserRewards(userRewardsValue);
-    } catch (error) {
-      console.error("Error fetching user rewards:", error);
-    }
-  }, [userAddress, stakingContract]);
-
-  const getOwnerMintedUserNames = useCallback(async () => {
-    try {
-      const mintedDomains = [];
-      // Get the token IDs owned by the connected account
-      const tokenIds = await userNameContract.methods
-        .tokensOfOwner(userAddress)
-        .call();
-      console.log("tokenIDs: ", tokenIds);
-      for (const tokenId of tokenIds) {
-        const mintedDomain = await userNameContract.methods
-          .domainNameOf(tokenId)
-          .call();
-        mintedDomains.push({ domainName: mintedDomain + ".lazi", tokenId });
-      }
-
-      setMintedUserNames(mintedDomains);
-    } catch (error) {
-      console.error(error);
-    }
-  }, [userAddress, userNameContract]);
-
-  useEffect(() => {
-    if (userAddress && stakingContract && userNameContract) {
-      fetchUserRewards();
-      fetchTotalStaked();
-      getOwnerMintedUserNames();
-    }
-  }, [
-    userAddress,
-    userNameContract,
-    stakingContract,
-    fetchUserRewards,
-    fetchTotalStaked,
-  ]);
-
-  const handleUserRewardsClick = async () => {
-    fetchUserRewards();
-  };
-  const handleTotalStakedClick = async () => {
-    fetchTotalStaked();
-  };
-  const handleCollectButtonClick = async () => {
-    try {
-      // ensure the staking contract instance has been initialized
-      if (!stakingContract) {
-        await initStakingContract();
-      }
-
-      // execute the getReward function in the smart contract
-      const tx = await stakingContract.methods
-        .harvest()
-        .send({ from: userAddress });
-
-      // Wait for the transaction to be confirmed
-      const receipt = await tx.wait();
-
-      // Check for errors in the transaction receipt
-      if (receipt.status === false) {
-        throw new Error(
-          `Transaction failed with status code ${receipt.status}`
-        );
-      }
-
-      // Display a success message to the user
-      alert("Rewards collected successfully!");
-    } catch (error) {
-      // Display an error message to the user
-      alert(`Error collecting rewards: ${error.message}`);
-    }
-  };
-
+  //chart state
   const [state, setState] = useState({
     options: {
       title: {
@@ -340,6 +166,466 @@ const StakeReward = () => {
       },
     ],
   });
+  //lockPeriodState
+  const [lockPeriodState, setLockPeriodState] = useState({
+    options: {
+      title: {
+        text: "LockPeriodDistributions",
+        align: "left",
+        margin: 10,
+        offsetX: 0,
+        offsetY: 0,
+        floating: false,
+        style: {
+          fontSize: "14px",
+          fontWeight: "bold",
+          fontFamily: undefined,
+          color: "#fff",
+        },
+      },
+      tooltip: {
+        enabled: true,
+        style: {
+          fontFamily: "'Montserrat', 'sans-serif'",
+        },
+        theme: "dark",
+      },
+      toolbar: {
+        foreColor: "#ffff",
+        style: {
+          color: "black",
+        },
+      },
+      colors: ["#8a8688", "#e31a89"],
+      chart: { foreColor: "#e6e5e8", id: "basic-bar" },
+      dataLabels: {
+        enabled: false,
+      },
+      legend: {
+        show: false,
+      },
+      xaxis: {
+        categories: [],
+      },
+    },
+    series: [
+      {
+        name: "Lock Period Distributions",
+        data: [],
+      },
+    ],
+  });
+
+  // stakedTokenState
+  const [stakedTokenState, setStakedTokenState] = useState({
+    options: {
+      title: {
+        text: "StakedTokenDistributions",
+        align: "left",
+        margin: 10,
+        offsetX: 0,
+        offsetY: 0,
+        floating: false,
+        style: {
+          fontSize: "14px",
+          fontWeight: "bold",
+          fontFamily: undefined,
+          color: "#fff",
+        },
+      },
+      tooltip: {
+        enabled: true,
+        style: {
+          fontFamily: "'Montserrat', 'sans-serif'",
+        },
+        theme: "dark",
+      },
+      toolbar: {
+        foreColor: "#ffff",
+        style: {
+          color: "black",
+        },
+      },
+      colors: ["#8a8688", "#e31a89"],
+      chart: { foreColor: "#e6e5e8", id: "basic-bar" },
+      dataLabels: {
+        enabled: false,
+      },
+      legend: {
+        show: false,
+      },
+      xaxis: {
+        categories: [],
+      },
+    },
+    series: [
+      {
+        name: "Staked Token Distributions",
+        data: [],
+      },
+    ],
+  });
+
+  //Reward Token State
+  const [rewardTokenState, setRewardTokenState] = useState({
+    options: {
+      title: {
+        text: "RewardTokenDistributions",
+        align: "left",
+        margin: 10,
+        offsetX: 0,
+        offsetY: 0,
+        floating: false,
+        style: {
+          fontSize: "14px",
+          fontWeight: "bold",
+          fontFamily: undefined,
+          color: "#fff",
+        },
+      },
+      tooltip: {
+        enabled: true,
+        style: {
+          fontFamily: "'Montserrat', 'sans-serif'",
+        },
+        theme: "dark",
+      },
+      toolbar: {
+        foreColor: "#ffff",
+        style: {
+          color: "black",
+        },
+      },
+      colors: ["#8a8688", "#e31a89"],
+      chart: { foreColor: "#e6e5e8", id: "basic-bar" },
+      dataLabels: {
+        enabled: false,
+      },
+      legend: {
+        show: false,
+      },
+      xaxis: {
+        categories: [],
+      },
+    },
+    series: [
+      {
+        name: "Staked Token Distributions",
+        data: [],
+      },
+    ],
+  });
+
+  //userName chart state
+  const [userNameChart, setUserNameChartState] = useState({
+    options: {
+      title: {
+        text: "chart",
+        align: "left",
+        margin: 10,
+        offsetX: 0,
+        offsetY: 0,
+        floating: false,
+        style: {
+          fontSize: "14px",
+          fontWeight: "bold",
+          fontFamily: undefined,
+          color: "#fff",
+        },
+      },
+      tooltip: {
+        enabled: true,
+        style: {
+          fontFamily: "'Montserrat', 'sans-serif'",
+        },
+
+        theme: "dark",
+      },
+      toolbar: {
+        foreColor: "#ffff",
+        style: {
+          color: "black",
+        },
+      },
+      colors: ["#8a8688", "#e31a89"],
+      chart: { foreColor: "#e6e5e8", id: "basic-bar" },
+      dataLabels: {
+        enabled: false,
+      },
+      legend: {
+        show: false,
+      },
+      xaxis: {
+        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
+      },
+    },
+    series: [
+      {
+        name: "series-1",
+        data: [0],
+      },
+      {
+        name: "series-2",
+        data: [0],
+      },
+    ],
+  });
+
+  const handleSliderChange = (event, newValue) => {
+    setSliderValue(newValue);
+  };
+
+  useEffect(() => {
+    const initialize = async () => {
+      try {
+        const { address } = await initMetamask();
+        const contractStaking = await initStakingContract();
+        const contractUserName = await initUserNameContract();
+        setStakingContract(contractStaking);
+        setUserNameContract(contractUserName);
+        setAddress(address);
+      } catch (error) {
+        console.error("Contract initialization failed:", error);
+      }
+    };
+
+    initialize();
+  }, []);
+
+  const monthOptions = [
+    { label: "3 months (1.25x)", value: 91 },
+    { label: "6 months (1.5x)", value: 182 },
+    { label: "1 year (2x)", value: 365 },
+    { label: "1.5 year (1.75x)", value: 547 },
+    { label: "2 year (3.5x)", value: 730 },
+  ];
+  const userOptions = [
+    { label: "User 1", value: 1 },
+    { label: "User 2", value: 2 },
+  ];
+
+  const handleCheckboxChange = (event, userName, tokenId) => {
+    const selectedTokenId = event.target.value;
+    console.log("Selected Token ID:", selectedTokenId);
+
+    if (event.target.checked) {
+      setSelectedUserNames((prevSelectedUserNames) => [
+        ...prevSelectedUserNames,
+        tokenId,
+      ]);
+    } else {
+      setSelectedUserNames((prevSelectedUserNames) =>
+        prevSelectedUserNames.filter((id) => id !== tokenId)
+      );
+    }
+    const progress = (selectedUserNames.length / mintedUserNames.length) * 100;
+    setUserNameChartState({
+      ...userNameChart,
+      series: [progress],
+    });
+  };
+
+  const handleSelectedOptionsChange = (event, newValue) => {
+    setSelectedOptions(newValue);
+  };
+
+  const isMobile = useMediaQuery("(max-width:600px)");
+  const valuetext = (value) => {
+    return `${value} LAZI`;
+  };
+
+  const handleStake = () => {
+    const erc20Amount = sliderValue; // Use sliderValue state variable
+    console.log("selected Amount:", erc20Amount);
+
+    // const daysToStake = selectedTime; // Example: 30 days
+    console.log("selected UserName:", selectedUserNames);
+    console.log("selected TimePeriod:", selectedTime);
+
+    // const erc721Ids = selectedUserNames; // Example: ERC721 token IDs    if (web3 && stakingContract) {
+    stakingContract.methods
+      .stake(erc20Amount, selectedTime, selectedUserNames)
+      .send({ from: userAddress })
+      .on("transactionHash", (hash) => {
+        console.log(hash);
+      })
+      .on("receipt", (receipt) => {
+        console.log(receipt);
+      })
+      .on("error", (error) => {
+        console.log(error);
+      });
+  };
+
+  const fetchTotalStaked = useCallback(async () => {
+    try {
+      const totalStaked = await stakingContract.methods.totalStaked().call();
+      setTotalStaked(totalStaked);
+      console.log("toktal staked! ", totalStaked);
+    } catch (error) {
+      console.error("Error fetching total staked:", error);
+    }
+  }, [stakingContract]);
+
+  const fetchUserRewards = useCallback(async () => {
+    try {
+      console.log("address: ", userAddress);
+      const userRewardsValue = await stakingContract.methods
+        .getUserRewards(userAddress)
+        .call();
+        const etherValue = parseInt(userRewardsValue) / 10**18;
+      setUserRewards(etherValue);
+    } catch (error) {
+      console.error("Error fetching user rewards:", error);
+    }
+  }, [userAddress, stakingContract]);
+
+  const getOwnerMintedUserNames = useCallback(async () => {
+    try {
+      const mintedDomains = [];
+      // Get the token IDs owned by the connected account
+      const tokenIds = await userNameContract.methods
+        .tokensOfOwner(userAddress)
+        .call();
+      console.log("tokenIDs: ", tokenIds);
+      for (const tokenId of tokenIds) {
+        const mintedDomain = await userNameContract.methods
+          .domainNameOf(tokenId)
+          .call();
+        mintedDomains.push({ domainName: mintedDomain + ".lazi", tokenId });
+      }
+
+      setMintedUserNames(mintedDomains);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [userAddress, userNameContract]);
+
+  const fetchDistributionsData = useCallback(async () => {
+    try {
+      const daysToStake = [30, 91, 82, 365, 547, 730]; // Example data
+
+      const distributions = await stakingContract.methods
+        .getDistributions(daysToStake)
+        .call();
+      const lockPeriodDistributions = distributions[0];
+      const stakedTokenDistributions = distributions[1];
+      const rewardTokenDistributions = distributions[2];
+
+      console.log(lockPeriodDistributions); // array of lock period distributions
+      console.log(stakedTokenDistributions); // array of staked token distributions
+      console.log(rewardTokenDistributions); // array of reward token distributions
+      // Rest of the code
+      console.log("Graph data fetch success!!!");
+      setLockPeriodState((prevState) => ({
+        ...prevState,
+        options: {
+          ...prevState.options,
+          xaxis: {
+            categories: daysToStake,
+          },
+        },
+        series: [
+          {
+            ...prevState.series[0],
+            data: lockPeriodDistributions,
+          },
+        ],
+      }));
+
+      setStakedTokenState((prevState) => ({
+        ...prevState,
+        options: {
+          ...prevState.options,
+          xaxis: {
+            categories: daysToStake,
+          },
+        },
+        series: [
+          {
+            ...prevState.series[0],
+            data: stakedTokenDistributions,
+          },
+        ],
+      }));
+
+      setRewardTokenState((prevState) => ({
+        ...prevState,
+        options: {
+          ...prevState.options,
+          xaxis: {
+            categories: daysToStake,
+          },
+        },
+        series: [
+          {
+            ...prevState.series[0],
+            data: rewardTokenDistributions,
+          },
+        ],
+      }));
+      console.log("Graph data Update success!!!");
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message);
+      } else {
+        console.error(error);
+      }
+    }
+  }, [userAddress, stakingContract, userNameContract]);
+
+  useEffect(() => {
+    if (userAddress && stakingContract && userNameContract) {
+      fetchUserRewards();
+      fetchTotalStaked();
+      getOwnerMintedUserNames();
+      fetchDistributionsData();
+    }
+  }, [
+    userAddress,
+    userNameContract,
+    stakingContract,
+    fetchUserRewards,
+    fetchTotalStaked,
+    getOwnerMintedUserNames,
+    fetchDistributionsData,
+  ]);
+
+  const handleUserRewardsClick = async () => {
+    fetchUserRewards();
+  };
+  const handleTotalStakedClick = async () => {
+    fetchTotalStaked();
+  };
+  const handleCollectButtonClick = async () => {
+    try {
+      // ensure the staking contract instance has been initialized
+      if (!stakingContract) {
+        await initStakingContract();
+      }
+
+      // execute the getReward function in the smart contract
+      const tx = await stakingContract.methods
+        .harvest()
+        .send({ from: userAddress });
+
+      // Wait for the transaction to be confirmed
+      const receipt = await tx.wait();
+
+      // Check for errors in the transaction receipt
+      if (receipt.status === false) {
+        throw new Error(
+          `Transaction failed with status code ${receipt.status}`
+        );
+      }
+
+      // Display a success message to the user
+      alert("Rewards collected successfully!");
+    } catch (error) {
+      // Display an error message to the user
+      alert(`Error collecting rewards: ${error.message}`);
+    }
+  };
 
   useEffect(() => {
     // Access the selected option value whenever it changes
@@ -388,6 +674,7 @@ const StakeReward = () => {
       </b>
     );
   }
+
   return (
     <>
       <Box className={classes.bannerBox}>
@@ -479,10 +766,10 @@ const StakeReward = () => {
                   </div>
                   <div style={{ marginLeft: "auto" }}>
                     <Chart
-                      options={state.options}
-                      series={[23, 45]}
+                      options={userNameChart.options}
+                      series={[selectedUserNames.length, mintedUserNames.length]}
                       type="donut"
-                      width="70%"
+                      width="80%"
                     />{" "}
                   </div>
                 </div>
@@ -671,7 +958,7 @@ const StakeReward = () => {
                       <b>
                         <AnimatedNumber
                           targetNumber={
-                            totalStaked ? (totalStaked * 100) / 13700000 : 0
+                            totalStaked ? (totalStaked * 100) / 200000000 : 0
                           }
                           suffix="%"
                         />
@@ -683,9 +970,9 @@ const StakeReward = () => {
                     <Chart
                       options={state.options}
                       series={[
-                        totalStaked ? (totalStaked * 100) / 13700000 : 0,
+                        totalStaked ? (totalStaked * 100) / 200000000 : 0,
                         100 -
-                          (totalStaked ? (totalStaked * 100) / 13700000 : 0),
+                          (totalStaked ? (totalStaked * 100) / 200000000 : 0),
                       ]}
                       type="donut"
                       width="70%"
@@ -742,8 +1029,8 @@ const StakeReward = () => {
               style={{ marginTop: "10px" }}
             >
               <Chart
-                options={state.options}
-                series={state.series}
+                options={lockPeriodState.options}
+                series={lockPeriodState.series}
                 type="bar"
                 width="100%"
               />
@@ -754,8 +1041,8 @@ const StakeReward = () => {
               style={{ marginTop: "10px" }}
             >
               <Chart
-                options={state.options}
-                series={state.series}
+                options={stakedTokenState.options}
+                series={stakedTokenState.series}
                 type="area"
                 width="100%"
               />
@@ -766,8 +1053,8 @@ const StakeReward = () => {
               style={{ marginTop: "10px" }}
             >
               <Chart
-                options={state.options}
-                series={state.series}
+                options={rewardTokenState.options}
+                series={rewardTokenState.series}
                 type="line"
                 width="100%"
               />
