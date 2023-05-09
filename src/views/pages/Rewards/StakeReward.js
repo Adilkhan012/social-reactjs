@@ -15,11 +15,15 @@ import Button from "@material-ui/core/Button";
 import { Tooltip } from "@material-ui/core";
 import InfoIcon from "@material-ui/icons/Info";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { toast } from "react-toastify";
 
 import initMetamask from "src/blockchain/metamaskConnection";
 import initStakingContract from "src/blockchain/stakingReward";
+import initlaziTokenContract from "src/blockchain/laziTokenContract";
 import initUserNameContract from "src/blockchain/laziUserNameContract";
 import { styles } from "@material-ui/pickers/views/Clock/Clock";
+// import MetaMaskOnboarding from "@metamask/onboarding";
+const laziTokenAddress = "0xf472134D28216581F47304c66Fb18922a146e514";
 
 const useStyles = makeStyles((theme) => ({
   checkbox: {
@@ -100,6 +104,19 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
+
+// const msg_desk = "Please install MetaMask Wallet extension";
+// const msg_mobile = "Please use MetaMask!";
+// const deepLink = "https://metamask.app.link/dapp/social-reactjs.pages.dev/mint";
+
+// const showMessage = () => {
+//   if (require("is-mobile")()) {
+//     if (window.confirm(msg_mobile)) window.location.href = deepLink;
+//   } else {
+//     if (window.confirm(msg_desk));
+//   }
+// };
+
 const StakeReward = () => {
   const classes = useStyles();
   const [selectedOptions, setSelectedOptions] = useState([]);
@@ -107,6 +124,7 @@ const StakeReward = () => {
   const [sliderValue, setSliderValue] = useState(20);
   const [stakingContract, setStakingContract] = useState(null);
   const [userNameContract, setUserNameContract] = useState(null);
+  const [laziTokenContract, setLaziTokenContract] = useState(null);
   const [totalStaked, setTotalStaked] = useState(0);
   const [userRewards, setUserRewards] = useState(0);
   const [selectedUserNames, setSelectedUserNames] = useState([]);
@@ -380,7 +398,9 @@ const StakeReward = () => {
       try {
         const { address } = await initMetamask();
         const contractStaking = await initStakingContract();
+        const tokenContract = await initlaziTokenContract();
         const contractUserName = await initUserNameContract();
+        setLaziTokenContract(tokenContract);
         setStakingContract(contractStaking);
         setUserNameContract(contractUserName);
         setAddress(address);
@@ -473,7 +493,7 @@ const StakeReward = () => {
       const userRewardsValue = await stakingContract.methods
         .getUserRewards(userAddress)
         .call();
-        const etherValue = parseInt(userRewardsValue) / 10**18;
+      const etherValue = parseInt(userRewardsValue) / 10 ** 18;
       setUserRewards(etherValue);
     } catch (error) {
       console.error("Error fetching user rewards:", error);
@@ -627,6 +647,40 @@ const StakeReward = () => {
     }
   };
 
+  //funtion to add token to metamsk
+  const addTokenToMetaMask = async () => {
+    const { ethereum } = window;
+
+    if (!(ethereum && ethereum.isMetaMask)) {
+      toast.message("Use Metamask!");
+      return;
+    }
+    try {
+      // wasAdded is a boolean. Like any RPC method, an error may be thrown.
+      const wasAdded = await ethereum.request({
+        method: "wallet_watchAsset",
+        params: {
+          type: "ERC20", // Initially only supports ERC20, but eventually more!
+          options: {
+            address: laziTokenAddress, // The address that the token is at.
+            symbol: "LAZI", // A ticker symbol or shorthand, up to 5 chars.
+            decimals: 18, // The number of decimals in the token
+            image:
+              "https://pbs.twimg.com/profile_images/1609799908101324800/6RP_7TpH_400x400.jpg", // A string url of the token logo
+          },
+        },
+      });
+
+      if (wasAdded) {
+        console.log("Thanks for your interest!");
+      } else {
+        console.log("Your loss!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     // Access the selected option value whenever it changes
     if (selectedTime) {
@@ -767,7 +821,10 @@ const StakeReward = () => {
                   <div style={{ marginLeft: "auto" }}>
                     <Chart
                       options={userNameChart.options}
-                      series={[selectedUserNames.length, mintedUserNames.length]}
+                      series={[
+                        selectedUserNames.length,
+                        mintedUserNames.length +1,
+                      ]}
                       type="donut"
                       width="80%"
                     />{" "}
@@ -825,7 +882,7 @@ const StakeReward = () => {
                       </div>
                     </div>
                     <a
-                      href="https://example.com"
+                      href="https://mumbai.polygonscan.com/address/0xf472134D28216581F47304c66Fb18922a146e514"
                       style={{
                         fontSize: "20px",
                         marginTop: "15px",
@@ -842,7 +899,7 @@ const StakeReward = () => {
                     </a>
                     <br></br>
                     <a
-                      href="https://example.com"
+                      href="https://lazi.gitbook.io/whitepaper/staking-rewards"
                       style={{
                         fontSize: "20px",
                         marginTop: "15px",
@@ -859,7 +916,7 @@ const StakeReward = () => {
                     </a>
                     <br></br>
                     <a
-                      href="https://example.com"
+                      href="https://mumbai.polygonscan.com/address/0xba83dA230E4727013E7d38D8e87A6A811F1514d9"
                       style={{
                         fontSize: "20px",
                         marginTop: "15px",
@@ -879,26 +936,40 @@ const StakeReward = () => {
                       />
                     </a>
                     <br></br>
-                    <a
-                      href="https://example.com"
+                    <button
                       style={{
                         fontSize: "20px",
-                        marginTop: "15px",
+                        marginTop: "10px",
                         color: "#e31a89",
+                        border: "2px solid #e31a89",
+                        borderRadius: "5px",
+                        padding: "5px 10px",
+                        boxShadow: "0px 3px 3px rgba(0, 0, 0, 0.1)",
+                        transition: "all 0.3s ease",
+                        cursor: "pointer",
+                      }}
+                      onClick={addTokenToMetaMask}
+                      onMouseOver={(e) => {
+                        e.target.style.backgroundColor = "#e31a89";
+                        e.target.style.color = "#fff";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.backgroundColor = "transparent";
+                        e.target.style.color = "#e31a89";
                       }}
                     >
-                      {" "}
                       Add to Wallet
                       <img
                         src="./images/metamask.png"
-                        alt="External Link Icon"
+                        alt="Metamask logo"
                         style={{
-                          marginLeft: "3px",
+                          marginLeft: "5px",
                           verticalAlign: "middle",
                           width: "25px",
                         }}
                       />
-                    </a>
+                    </button>
+
                     <br></br>
                     <Button
                       variant="outlined"

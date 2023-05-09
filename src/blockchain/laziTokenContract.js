@@ -634,3 +634,17 @@ const laziTokenABI = [
 	}
 ]
 
+
+
+const initlaziTokenContract = async () => {
+    const web3 = new Web3(window.ethereum);
+  return new Promise((resolve, reject) => {
+    const stakingContract = new web3.eth.Contract(
+		laziTokenABI,
+		laziTokenAddress
+    );
+    resolve(stakingContract);
+  });
+};
+
+export default initlaziTokenContract;

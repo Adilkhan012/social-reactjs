@@ -412,11 +412,10 @@ export default function (props) {
 
   useEffect(() => {
     const init = async () => {
-      const { web3, address } = await initMetamask();
+      const { address } = await initMetamask();
       const contract = await initLaziPostContract();
       setlaziPostContract(contract);
       setAddress(address);
-      setWeb3(web3);
     };
 
     init();
@@ -657,6 +656,7 @@ export default function (props) {
           {
             postId: isHidePostdata?._id,
             description: "NA",
+            buyerAddress: buyerAddress,
           },
           {
             headers: {

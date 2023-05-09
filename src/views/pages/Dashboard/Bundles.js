@@ -43,6 +43,7 @@ import { AuthContext } from "src/context/Auth";
 
 import initMetamask from "src/blockchain/metamaskConnection";
 import initLaziPostContract from "src/blockchain/laziPostContract";
+import Web3 from 'web3';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -237,7 +238,7 @@ function Collection({ listPublicExclusiveHandler }) {
   const [royality, setRoyality] = useState("");
   const [textImage, setTextImage] = useState();
   const [address, setAddress] = useState(null);
-  const [web3, setWeb3] = useState(null);
+  // const [web3, setWeb3] = useState(null);
   const [laziPostContract, setlaziPostContract] = useState(null);
   const [laziPost, setLaziPost] = useState("");
   const [tokenId, setTokenId] = useState(0);
@@ -273,14 +274,15 @@ function Collection({ listPublicExclusiveHandler }) {
     });
     setTextImage(dataUri);
   };
+  const web3 = new Web3(window.ethereum);
 
   useEffect(() => {
     const init = async () => {
-      const { web3, address } = await initMetamask();
+      const { address } = await initMetamask();
       const contract = await initLaziPostContract();
       setlaziPostContract(contract);
       setAddress(address);
-      setWeb3(web3);
+      // setWeb3(web3);
     };
 
     init();
