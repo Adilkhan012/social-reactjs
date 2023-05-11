@@ -622,37 +622,30 @@ function Signup() {
       if (res.data.responseCode === 200) {
         const { result } = res.data;
         console.log(result);
-        window.localStorage.setItem("status", result.userInfo.status);
-        auth.setIsLogin(true);
-        setTimeout(() => {
-          auth.handleUserProfileApi();
-        }, 500);
 
-        setTimeout(() => {
-          auth.handleUserProfileApi(res.data.result.token);
-        }, 500);
+        // Set session storage
+        window.sessionStorage.setItem("token", result.token);
+        window.sessionStorage.setItem("status", result.userInfo.status);
+        window.sessionStorage.setItem("userId", result.userInfo._id);
+
+        // Set local storage
+        window.localStorage.setItem("token", result.token);
+        window.localStorage.setItem("userId", result.userInfo._id);
+        window.localStorage.setItem("status", result.userInfo.status);
+
+        // Start login session immediately
+        auth.setIsLogin(true);
+        setIsLoggedIn(true);
 
         // Sign in successful
         toast.success(res.data.responseMessage);
-        setIsLoggedIn(true);
-        // history.push("/explore");
-        toast.success("Metamask connected successfully");
         setIsLoading(false);
         setTimeout(() => {
           history.push("/mint");
         }, 2000);
-        const token = result.userInfo.token;
-        const userId = result.userInfo._id;
-        console.log(userId);
-        // Update session storage
-        window.sessionStorage.setItem("token", res.data.result.token);
-        window.sessionStorage.setItem("status", result.userInfo.status);
-        window.sessionStorage.setItem("userId", userId);
-
-        // Update local storage
-        window.localStorage.setItem("token", res.data.result.token);
-        window.localStorage.setItem("userId", userId);
-        window.localStorage.setItem("status", result.userInfo.status);
+        setTimeout(() => {
+          auth.handleUserProfileApi(res.data.result.token);
+        }, 500);
       } else {
         // Sign in failed
         setIsLoading(false);

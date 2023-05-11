@@ -405,15 +405,15 @@ const EngageReward = () => {
                 <br></br>
                 <div style={{display:'flex'}}>
                   <div>
-                <Box className={classes.heading}>
+                {/* <Box className={classes.heading}>
                   <Typography variant="h2" style={{fontSize: "26px"}}>
                     <h>Flexible APY</h>
                   </Typography>
-                </Box>
+                </Box> */}
           
                 <Box className={classes.heading}>
                   <Typography variant="h2" style={{fontSize: "26px"}}>
-                    <h>Total Staked</h>
+                    <h>User Rewards</h>
                   </Typography>
                 </Box>
                 <div className={classes.radialChart}>

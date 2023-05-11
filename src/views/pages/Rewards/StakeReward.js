@@ -854,7 +854,7 @@ const StakeReward = () => {
                     <div class="info">
                       <div class="label">Total Locked:</div>
                       <div class="value">
-                        <AnimatedNumber1 targetNumber={1888888} suffix="CAKE" />
+                        <AnimatedNumber1 targetNumber={1888888} suffix="LAZI" />
                       </div>
                     </div>
                     <div class="info">
