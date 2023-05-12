@@ -16,6 +16,7 @@ import { Tooltip } from "@material-ui/core";
 import InfoIcon from "@material-ui/icons/Info";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { toast } from "react-toastify";
+import BigInt from "big-integer";
 
 import initMetamask from "src/blockchain/metamaskConnection";
 import initStakingContract from "src/blockchain/stakingReward";
@@ -130,6 +131,8 @@ const StakeReward = () => {
   const [selectedUserNames, setSelectedUserNames] = useState([]);
   const [mintedUserNames, setMintedUserNames] = useState([]);
   const [selectedTime, setSelectedTime] = useState(null);
+  const [userAPR, setUserAPR] = useState(0);
+
   //chart state
   const [state, setState] = useState({
     options: {
@@ -500,6 +503,28 @@ const StakeReward = () => {
     }
   }, [userAddress, stakingContract]);
 
+  const fetchUserAPR = useCallback(async () => {
+    try {
+      console.log("address: ", userAddress);
+      const REWARD_PER_DAY = await stakingContract.methods
+        .REWARD_PER_DAY()
+        .call();
+      const totalStaked = await stakingContract.methods.totalStaked().call();
+
+      if (totalStaked === "0") {
+        console.log("No tokens staked.");
+      } else {
+        const APR =
+          (BigInt(REWARD_PER_DAY) * BigInt(365) * BigInt(100)) /
+          BigInt(totalStaked);
+        console.log("APR = " + APR.toString() + "%");
+        setUserAPR(APR); // Assuming you want to set the APR in the state variable `userAPR`
+      }
+    } catch (error) {
+      console.error("Error fetching user APR:", error);
+    }
+  }, [userAddress, stakingContract]);
+
   const getOwnerMintedUserNames = useCallback(async () => {
     try {
       const mintedDomains = [];
@@ -600,6 +625,7 @@ const StakeReward = () => {
       fetchTotalStaked();
       getOwnerMintedUserNames();
       fetchDistributionsData();
+      fetchUserAPR();
     }
   }, [
     userAddress,
@@ -609,6 +635,7 @@ const StakeReward = () => {
     fetchTotalStaked,
     getOwnerMintedUserNames,
     fetchDistributionsData,
+    fetchUserAPR,
   ]);
 
   const handleUserRewardsClick = async () => {
@@ -823,7 +850,7 @@ const StakeReward = () => {
                       options={userNameChart.options}
                       series={[
                         selectedUserNames.length,
-                        mintedUserNames.length +1,
+                        mintedUserNames.length + 1,
                       ]}
                       type="donut"
                       width="80%"
@@ -999,14 +1026,45 @@ const StakeReward = () => {
               elevation={2}
               style={{ marginTop: "10px" }}
             >
+              <div style={{ display: "flex" }}>
+            <div>
+              <Box className={classes.heading} style={{ display: "block" }}>
+                <Typography variant="h2" style={{ fontSize: "26px" }}>
+                  Your Total Staking
+                </Typography>
+                {/* <Button onClick={handleTotalStakedClick}>Refresh</Button> */}
+              </Box>
+              <br></br>
+              <p style={{ fontSize: "17px" }}>
+                <b>{totalStaked ? `${totalStaked} LAZI` : ""}</b>
+              </p>
+              <p style={{ fontSize: "17px" }}>
+                <b>
+                  <AnimatedNumber
+                    targetNumber={
+                      totalStaked ? (totalStaked * 100) / 200000000 : 0
+                    }
+                    suffix="%"
+                  />
+                </b>
+              </p>
+            </div>
+            <br></br>
+            <div style={{ marginLeft: "auto" }}>
               <Chart
                 options={state.options}
-                series={[23, 45]}
+                series={[
+                  totalStaked ? (totalStaked * 100) / 200000000 : 0,
+                  100 - (totalStaked ? (totalStaked * 100) / 200000000 : 0),
+                ]}
                 type="donut"
-                width="80%"
+                width="70%"
               />
+            </div>
+          </div>
             </Paper>
           </Grid>{" "}
+          
           <Grid item md={isMobile ? 12 : 6} xs={isMobile ? 12 : 12}>
             <Paper className={classes.root} elevation={2}>
               <Box className={classes.root} height={400} overflow="auto">
@@ -1017,15 +1075,15 @@ const StakeReward = () => {
                       style={{ display: "block" }}
                     >
                       <Typography variant="h2" style={{ fontSize: "26px" }}>
-                        Total Staking Pool
+                        Locked APR
                       </Typography>
                       {/* <Button onClick={handleTotalStakedClick}>Refresh</Button> */}
                     </Box>
                     <br></br>
                     <p style={{ fontSize: "17px" }}>
-                      <b>{totalStaked ? `${totalStaked} LAZI` : ""}</b>
+                      <b>{userAPR ? `${userAPR} APR` : "0 APR"}</b>
                     </p>
-                    <p style={{ fontSize: "17px" }}>
+                    {/* <p style={{ fontSize: "17px" }}>
                       <b>
                         <AnimatedNumber
                           targetNumber={
@@ -1034,7 +1092,7 @@ const StakeReward = () => {
                           suffix="%"
                         />
                       </b>
-                    </p>
+                    </p> */}
                   </div>
                   <br></br>
                   <div style={{ marginLeft: "auto" }}>

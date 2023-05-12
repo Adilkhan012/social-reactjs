@@ -4,7 +4,7 @@ import Web3 from "web3";
 
 const laziPostContractAddress = "0xEF8847A82EEAE365b06F7fB487489df8b98fFb37";
 
-const laziPostContractABI = [
+export const laziPostContractABI = [
   {
     inputs: [
       {
@@ -1054,15 +1054,17 @@ const laziPostContractABI = [
   },
 ];
 
-const initLaziPostContract = async () => {
-  const web3 = new Web3(window.ethereum);
-  return new Promise((resolve, reject) => {
-    const stakingContract = new web3.eth.Contract(
-      laziPostContractABI,
-      laziPostContractAddress
-    );
-    resolve(stakingContract);
-  });
-};
 
-export default initLaziPostContract;
+
+// const initLaziPostContract = async () => {
+//   const web3 = new Web3(window.ethereum);
+//   return new Promise((resolve, reject) => {
+//     const stakingContract = new web3.eth.Contract(
+//       laziPostContractABI,
+//       laziPostContractAddress
+//     );
+//     resolve(stakingContract);
+//   });
+// };
+
+// export default initLaziPostContract;
