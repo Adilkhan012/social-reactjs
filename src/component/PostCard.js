@@ -57,7 +57,8 @@ import { tokenName } from "src/utils";
 import { BsEmojiLaughing } from "react-icons/bs";
 import Picker from "emoji-picker-react";
 import initMetamask from "src/blockchain/metamaskConnection";
-import initLaziPostContract from "src/blockchain/laziPostContract";
+import { laziPostContractABI } from "src/blockchain/laziPostContract";
+import Web3 from "web3";
 
 import {
   FacebookShareButton,
@@ -386,7 +387,7 @@ export default function (props) {
   const classes = useStyles();
   const history = useHistory();
   const { data, listPublicExclusiveHandler, isLoadingContent, index } = props;
-  const { ownerAddress, tokenId } = data;
+  const { ownerAddress, tokenId, collectionAddress } = data;
   // console.log(ownerAddress, tokenId);
   // console.log("post data", data);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -407,20 +408,19 @@ export default function (props) {
   const [updateData, setUpdateData] = useState({});
   const [open, setOpen] = React.useState(false);
   const [buyerAddress, setAddress] = useState(null);
-  const [web3, setWeb3] = useState(null);
-  const [laziPostContract, setlaziPostContract] = useState(null);
+  // const [laziPostContract, setlaziPostContract] = useState(null);
 
   useEffect(() => {
     const init = async () => {
       const { address } = await initMetamask();
-      const contract = await initLaziPostContract();
-      setlaziPostContract(contract);
+      // const contract = await initLaziPostContract();
+      // setlaziPostContract(contract);
       setAddress(address);
     };
 
     init();
   }, []);
-  
+
   // console.log("data from PostCard!", data);
   const handleClickOpen = (data) => {
     setOpen(true);
@@ -625,29 +625,35 @@ export default function (props) {
       console.log("Owner Address:", ownerAddress);
       console.log("Buyer Address:", buyerAddress);
       console.log("Token ID:", tokenId);
+      console.log("Collection Address:", collectionAddress);
       const price = 0;
       console.log("price: ", price);
+      const web3 = new Web3(window.ethereum);
+      const stakingContract = new web3.eth.Contract(
+        laziPostContractABI,
+        collectionAddress
+      );
 
       // const price = await laziPostContract.methods.getTokenPrice(tokenId).call();
-      const listing = await laziPostContract.methods.nftListings(tokenId).call();
-    if (!listing.active) {
-      throw new Error('NFT is not listed for sale');
-    }
-    // Check if payment is sufficient
-    if (price < listing.price) {
-      throw new Error('Insufficient payment');
-    }
-      
+      const listing = await stakingContract.methods.nftListings(tokenId).call();
+      if (!listing.active) {
+        throw new Error("NFT is not listed for sale");
+      }
+      // Check if payment is sufficient
+      if (price < listing.price) {
+        throw new Error("Insufficient payment");
+      }
+
       // const gasEstimate = await laziPostContract.methods
       //   .buyNft(tokenId)
       //   .estimateGas({
       //     value: price,  // Specify the desired value for the transaction (including gas fee)
       //   });
       // Send the transaction with the updated gas limit
-      const result = await laziPostContract.methods.buyNft(tokenId).send({
-      from: buyerAddress,
-      value: price,
-    });
+      const result = await stakingContract.methods.buyNft(tokenId).send({
+        from: buyerAddress,
+        value: price,
+      });
 
       // Check if the transaction was successful
       if (result.status) {

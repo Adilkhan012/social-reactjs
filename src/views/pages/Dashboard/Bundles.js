@@ -42,8 +42,8 @@ import { AuthContext } from "src/context/Auth";
 // import "react-video-trimmer/dist/style.css";
 
 import initMetamask from "src/blockchain/metamaskConnection";
-import initLaziPostContract from "src/blockchain/laziPostContract";
-import Web3 from 'web3';
+import { laziPostContractABI } from "src/blockchain/laziPostContract";
+import Web3 from "web3";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -243,6 +243,7 @@ function Collection({ listPublicExclusiveHandler }) {
   const [laziPost, setLaziPost] = useState("");
   const [tokenId, setTokenId] = useState(0);
   const [posts, setPosts] = useState({});
+  const [collectionAddress, setCollectionAddress] = useState("");
 
   const [formValueCollection, setFormValueCollection] = useState({
     image: "",
@@ -279,8 +280,8 @@ function Collection({ listPublicExclusiveHandler }) {
   useEffect(() => {
     const init = async () => {
       const { address } = await initMetamask();
-      const contract = await initLaziPostContract();
-      setlaziPostContract(contract);
+      // const contract = await initLaziPostContract();
+      // setlaziPostContract(contract);
       setAddress(address);
       // setWeb3(web3);
     };
@@ -382,18 +383,27 @@ function Collection({ listPublicExclusiveHandler }) {
 
     //contract interaction before storing to database
     try {
-      const totalSupply = await laziPostContract.methods.totalSupply().call();
+      console.log("LaziPostContractAddress", collectionAddress);
+
+      const web3 = new Web3(window.ethereum);
+      const postContract = new web3.eth.Contract(
+        laziPostContractABI,
+        collectionAddress
+      );
+
+      const totalSupply = await postContract.methods.totalSupply().call();
       const newTotalSupply = parseInt(totalSupply) + 1;
       // Get the next available tokenId
-      var tokenIdNFT = newTotalSupply;
-      console.log("totalSupply", newTotalSupply)
-      setTokenId(tokenIdNFT);
-      console.log("tokenId", tokenId)
+      console.log("totalSupply", totalSupply);
+      setTokenId(newTotalSupply);
+      console.log("tokenId", newTotalSupply);
       // setTokenId(tokenId)
-      const result = await laziPostContract.methods.MintLaziPost([titlePost]).send({
-        from: address,
-        value: web3.utils.toWei('0', 'ether'), // Set the desired amount of Ether to send along with the transaction (if required)
-      });
+      const result = await postContract.methods
+        .MintLaziPost([titlePost])
+        .send({
+          from: address,
+          value: web3.utils.toWei("0", "ether"), // Set the desired amount of Ether to send along with the transaction (if required)
+        });
 
       console.log(result); // print the transaction result
 
@@ -436,13 +446,14 @@ function Collection({ listPublicExclusiveHandler }) {
             mediaUrl: coverPost ? coverPost : textImage,
             postTitle: titlePost,
             collectionId: list,
+            collectionAddress: collectionAddress,
             amount: amount,
             tag: selectuser,
             royality: royality,
             hashTagName: hastag ? hastag : [],
             mediaType: coverPost ? "MEDIA" : "TEXT",
             ownerAddress: address,
-            tokenId: tokenIdNFT,
+            tokenId: tokenId,
           },
           headers: {
             token: localStorage.getItem("token"),
@@ -502,13 +513,14 @@ function Collection({ listPublicExclusiveHandler }) {
             mediaUrl: coverPost ? coverPost : textImage,
             postTitle: titlePost,
             collectionId: list,
+            collectionAddress: collectionAddress,
             amount: amount,
             tag: selectuser,
             royality: royality,
             hashTagName: hastag ? hastag : [],
             mediaType: coverPost ? "MEDIA" : "TEXT",
             ownerAddress: address,
-            tokenId: tokenIdNFT,
+            tokenId: tokenId,
           },
           headers: {
             token: localStorage.getItem("token"),
@@ -646,7 +658,8 @@ function Collection({ listPublicExclusiveHandler }) {
     // }
   };
 
-  const updateSelectedBundle = (data) => {
+  const updateSelectedBundle = (data, collectionAddress) => {
+    setCollectionAddress(collectionAddress);
     setlist(data);
   };
 
@@ -1191,7 +1204,10 @@ function Collection({ listPublicExclusiveHandler }) {
                               }
                         }
                         onClick={() => {
-                          updateSelectedBundle(data._id);
+                          updateSelectedBundle(
+                            data._id,
+                            data.collectionAddress
+                          );
                         }}
                       >
                         {!statusData ? (

@@ -177,6 +177,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
     event.preventDefault();
 
     try {
+      console.log("details!", details)
       if (!laziFactoryContract) {
         await initPostFactoryContract();
       }
@@ -215,22 +216,26 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
         Number(donation) <= 2000 &&
         details.length <= 200 &&
         title.length <= 60 &&
-        parseFloat(donation) > 0
+        parseFloat(donation) > 0 &&
+        deployedLaziPostAddress !== ""
       ) {
         try {
           setmessage("Creating Collection...");
           setprocess(true);
-          const formData = new FormData();
-          formData.append("image", cover);
-          formData.append("symbol", title);
-          formData.append("duration", duration);
-          formData.append("description", details);
-          formData.append("amount", 10);
+          
+          const data = {
+            image: cover,
+            title: title,
+            duration: duration,
+            description: details,
+            amount: donation,
+            collectionAddress: deployedLaziPostAddress
+          };
 
           const response = await axios.request({
             method: "POST",
             url: ApiConfig.addNft,
-            data: formData,
+            data: data,
             headers: {
               token: window.localStorage.getItem("token"),
             },
@@ -251,6 +256,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
             setdonation("");
             setimage();
             setdetails("");
+            setDeployedLaziPostAddress("");
           } else {
             setprocess(false);
             toast.error("Error creating collection");
