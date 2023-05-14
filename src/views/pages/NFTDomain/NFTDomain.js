@@ -4,7 +4,7 @@ import Web3 from "web3";
 import contractABI from "./contractABI";
 import "./styles.css";
 import ArialFont from "./Arialn.ttf";
-import LaziImage from "./lazi.jpeg";
+import LaziImage from "./lazi.png";
 
 import { AuthContext } from "src/context/Auth";
 import { MdPhoto, MdAddToPhotos } from "react-icons/md";
