@@ -3,6 +3,7 @@ import {Box, Grid, Link, makeStyles, Paper} from "@material-ui/core";
 import {useLocation} from "react-router-dom";
 import StakeReward from "../Rewards/StakeReward";
 import EngageReward from "../Rewards/EngageReward";
+import Earn from './Earn'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,9 +71,13 @@ const Rewards = () => {
   useEffect(() => {
     const ids = location.hash.split("#");
 
-    if (ids[1] && ids[1] == "stakeReward") {
+    if (ids[1] && ids[1] === "stakeReward") {
       setTabView("StakeReward");
-    } else {
+    }
+    else if (ids[1] && ids[1] === "Earn") {
+      setTabView("Earn");
+    }
+        else {
       setTabView("EngageReward");
     }
   }, [location]);
@@ -101,6 +106,15 @@ const Rewards = () => {
                     Stake Rewards
                   </Link>
                 </Box>
+
+                <Box className="buttonBox">
+                  <Link
+                    className={tabview === "Earn" ? "active" : " "}
+                    onClick={() => setTabView("Earn")}
+                  >
+                    EngageReward
+                  </Link>
+                </Box>
               </Box>
             </Grid>
             <Grid item xs={12} sm={9}>
@@ -108,6 +122,7 @@ const Rewards = () => {
                 <Box py={3}>
                   {tabview === "StakeReward" ? <StakeReward/> : ""}
                   {tabview === "EngageReward" ? <EngageReward/> : ""}
+                  {tabview === "Earn" ? <Earn/> : ""}
                 </Box>
               </Box>
             </Grid>
