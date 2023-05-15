@@ -2,28 +2,33 @@ import initMetamask from "./metamaskConnection";
 import Web3 from "web3";
 
 const laziPostFactoryContractAddress =
-  "0x3a38a796a48a55d75ff5477Eb90f76c78a237cb0";
+  "0x53d25B0928178225215d43A24bCc9B71C3e2a525";
 
 const laziPostFactoryContractABI = [
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "postAddress",
+				"type": "address"
+			}
+		],
+		"name": "LaziPostCreated",
+		"type": "event"
+	},
 	{
 		"inputs": [],
 		"name": "createLaziPost",
 		"outputs": [
 			{
 				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "createLaziPostDeploy",
-		"outputs": [
-			{
-				"internalType": "contract LaziPost",
 				"name": "",
 				"type": "address"
 			}
@@ -40,6 +45,19 @@ const laziPostFactoryContractABI = [
 			}
 		],
 		"name": "deployedLaziPosts",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "factoryOwner",
 		"outputs": [
 			{
 				"internalType": "address",
@@ -74,6 +92,32 @@ const laziPostFactoryContractABI = [
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getFactoryOwner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ]
