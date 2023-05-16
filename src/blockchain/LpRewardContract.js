@@ -1,10 +1,9 @@
-import initMetamask from "./metamaskConnection";
 import Web3 from "web3";
 
 
-const stakingRewardAddress = "0x95E11f221C6479dBbEd8eE4211dE1DBd740b3029";
+const lpRewardAddress = "0x97b54447E372b473a52Be69afdF51C1157bAdF9b";
 
-const stakingRewardABI = [
+const lpRewardABI = [
 	{
 		"inputs": [],
 		"name": "harvest",
@@ -47,56 +46,6 @@ const stakingRewardABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "contract IERC20",
-				"name": "_stakingToken",
-				"type": "address"
-			},
-			{
-				"internalType": "contract LAZI",
-				"name": "_rewardToken",
-				"type": "address"
-			},
-			{
-				"internalType": "contract IERC721",
-				"name": "_erc721",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "lockPeriodsInput",
-				"type": "uint256[]"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "erc721MultipliersInput",
-				"type": "uint256[]"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "previousOwner",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "OwnershipTransferred",
-		"type": "event"
-	},
-	{
 		"inputs": [],
 		"name": "renounceOwnership",
 		"outputs": [],
@@ -112,19 +61,6 @@ const stakingRewardABI = [
 			}
 		],
 		"name": "set_REWARD_PER_DAY",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_REWARD_STOP_TIME",
-				"type": "uint256"
-			}
-		],
-		"name": "set_REWARD_STOP_TIME",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -166,6 +102,59 @@ const stakingRewardABI = [
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "contract IERC20",
+				"name": "_stakingToken",
+				"type": "address"
+			},
+			{
+				"internalType": "contract IERC20",
+				"name": "_rewardToken",
+				"type": "address"
+			},
+			{
+				"internalType": "contract IERC721",
+				"name": "_erc721",
+				"type": "address"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "previousOwner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "OwnershipTransferred",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_REWARD_STOP_TIME",
+				"type": "uint256"
+			}
+		],
+		"name": "set_REWARD_STOP_TIME",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "unstake",
 		"outputs": [],
@@ -193,25 +182,6 @@ const stakingRewardABI = [
 				"internalType": "contract IERC721",
 				"name": "",
 				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "erc721Multipliers",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -285,25 +255,6 @@ const stakingRewardABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "lockPeriods",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"name": "owner",
 		"outputs": [
@@ -347,7 +298,7 @@ const stakingRewardABI = [
 		"name": "rewardToken",
 		"outputs": [
 			{
-				"internalType": "contract LAZI",
+				"internalType": "contract IERC20",
 				"name": "",
 				"type": "address"
 			}
@@ -473,15 +424,15 @@ const stakingRewardABI = [
 	}
 ]
 
-const initStakingContract = async () => {
+const initLpRewardContract = async () => {
     const web3 = new Web3(window.ethereum);
   return new Promise((resolve, reject) => {
     const stakingContract = new web3.eth.Contract(
-      stakingRewardABI,
-      stakingRewardAddress
+        lpRewardABI,
+      lpRewardAddress
     );
     resolve(stakingContract);
   });
 };
 
-export default initStakingContract;
+export default initLpRewardContract;

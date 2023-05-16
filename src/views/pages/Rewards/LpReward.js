@@ -19,7 +19,7 @@ import { toast } from "react-toastify";
 import BigInt from "big-integer";
 
 import initMetamask from "src/blockchain/metamaskConnection";
-import initStakingContract from "src/blockchain/stakingReward";
+import initLpRewardContract from "src/blockchain/LpRewardContract";
 import initlaziTokenContract from "src/blockchain/laziTokenContract";
 import initUserNameContract from "src/blockchain/laziUserNameContract";
 import { styles } from "@material-ui/pickers/views/Clock/Clock";
@@ -123,7 +123,7 @@ const StakeReward = () => {
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [userAddress, setAddress] = useState(null);
   const [sliderValue, setSliderValue] = useState(20);
-  const [stakingContract, setStakingContract] = useState(null);
+  const [lpRewardContract, setLpRewardContract] = useState(null);
   const [userNameContract, setUserNameContract] = useState(null);
   const [laziTokenContract, setLaziTokenContract] = useState(null);
   const [totalStaked, setTotalStaked] = useState(0);
@@ -400,11 +400,11 @@ const StakeReward = () => {
     const initialize = async () => {
       try {
         const { address } = await initMetamask();
-        const contractStaking = await initStakingContract();
+        const contractStaking = await initLpRewardContract();
         const tokenContract = await initlaziTokenContract();
         const contractUserName = await initUserNameContract();
         setLaziTokenContract(tokenContract);
-        setStakingContract(contractStaking);
+        setLpRewardContract(contractStaking);
         setUserNameContract(contractUserName);
         setAddress(address);
       } catch (error) {
@@ -465,8 +465,8 @@ const StakeReward = () => {
     console.log("selected UserName:", selectedUserNames);
     console.log("selected TimePeriod:", selectedTime);
 
-    // const erc721Ids = selectedUserNames; // Example: ERC721 token IDs    if (web3 && stakingContract) {
-    stakingContract.methods
+    // const erc721Ids = selectedUserNames; // Example: ERC721 token IDs    if (web3 && lpRewardContract) {
+    lpRewardContract.methods
       .stake(erc20Amount, selectedTime, selectedUserNames)
       .send({ from: userAddress })
       .on("transactionHash", (hash) => {
@@ -482,18 +482,18 @@ const StakeReward = () => {
 
   const fetchTotalStaked = useCallback(async () => {
     try {
-      const totalStaked = await stakingContract.methods.totalStaked().call();
+      const totalStaked = await lpRewardContract.methods.totalStaked().call();
       setTotalStaked(totalStaked);
       console.log("toktal staked! ", totalStaked);
     } catch (error) {
       console.error("Error fetching total staked:", error);
     }
-  }, [stakingContract]);
+  }, [lpRewardContract]);
 
   const fetchUserRewards = useCallback(async () => {
     try {
       console.log("address: ", userAddress);
-      const userRewardsValue = await stakingContract.methods
+      const userRewardsValue = await lpRewardContract.methods
         .getUserRewards(userAddress)
         .call();
       const etherValue = parseInt(userRewardsValue) / 10 ** 18;
@@ -501,15 +501,15 @@ const StakeReward = () => {
     } catch (error) {
       console.error("Error fetching user rewards:", error);
     }
-  }, [userAddress, stakingContract]);
+  }, [userAddress, lpRewardContract]);
 
   const fetchUserAPR = useCallback(async () => {
     try {
       console.log("address: ", userAddress);
-      const REWARD_PER_DAY = await stakingContract.methods
+      const REWARD_PER_DAY = await lpRewardContract.methods
         .REWARD_PER_DAY()
         .call();
-      const totalStaked = await stakingContract.methods.totalStaked().call();
+      const totalStaked = await lpRewardContract.methods.totalStaked().call();
 
       if (totalStaked === "0") {
         console.log("No tokens staked.");
@@ -523,7 +523,7 @@ const StakeReward = () => {
     } catch (error) {
       console.error("Error fetching user APR:", error);
     }
-  }, [userAddress, stakingContract]);
+  }, [userAddress, lpRewardContract]);
 
   const getOwnerMintedUserNames = useCallback(async () => {
     try {
@@ -548,9 +548,9 @@ const StakeReward = () => {
 
   const fetchDistributionsData = useCallback(async () => {
     try {
-      const daysToStake = [30, 91, 82, 365, 547, 730]; // Example data
+      const daysToStake = [30, 60, 91, 82, 365, 547, 730]; // Example data
 
-      const distributions = await stakingContract.methods
+      const distributions = await lpRewardContract.methods
         .getDistributions(daysToStake)
         .call();
       const lockPeriodDistributions = distributions[0];
@@ -617,10 +617,10 @@ const StakeReward = () => {
         console.error(error);
       }
     }
-  }, [userAddress, stakingContract, userNameContract]);
+  }, [userAddress, lpRewardContract, userNameContract]);
 
   useEffect(() => {
-    if (userAddress && stakingContract && userNameContract) {
+    if (userAddress && lpRewardContract && userNameContract) {
       fetchUserRewards();
       fetchTotalStaked();
       getOwnerMintedUserNames();
@@ -630,7 +630,7 @@ const StakeReward = () => {
   }, [
     userAddress,
     userNameContract,
-    stakingContract,
+    lpRewardContract,
     fetchUserRewards,
     fetchTotalStaked,
     getOwnerMintedUserNames,
@@ -647,12 +647,12 @@ const StakeReward = () => {
   const handleCollectButtonClick = async () => {
     try {
       // ensure the staking contract instance has been initialized
-      if (!stakingContract) {
-        await initStakingContract();
+      if (!lpRewardContract) {
+        await initLpRewardContract();
       }
 
       // execute the getReward function in the smart contract
-      const tx = await stakingContract.methods
+      const tx = await lpRewardContract.methods
         .harvest()
         .send({ from: userAddress });
 
@@ -764,9 +764,9 @@ const StakeReward = () => {
             <Paper className={classes.root} elevation={2}>
               <Box className={classes.root}>
                 <Box className={classes.tooltipIconHeader}>
-                  <Typography variant="h2">Stake Reward</Typography>
+                  <Typography variant="h2">LP Reward</Typography>
                   <Tooltip
-                    title="This is the stake reward tooltip."
+                    title="This is the LP Reward tooltip."
                     style={{ cursor: "pointer" }}
                     placement={"top"}
                   >
@@ -990,11 +990,11 @@ const StakeReward = () => {
                         src="./images/metamask.png"
                         alt="Metamask logo"
                         style={{
-                          border: 'none',
+                          border: "none",
                           marginLeft: "5px",
                           verticalAlign: "middle",
                           width: "25px",
-                          backgroundColor: 'transparent',
+                          backgroundColor: "transparent",
                         }}
                       />
                     </button>
@@ -1029,44 +1029,43 @@ const StakeReward = () => {
               style={{ marginTop: "10px" }}
             >
               <div style={{ display: "flex" }}>
-            <div>
-              <Box className={classes.heading} style={{ display: "block" }}>
-                <Typography variant="h2" style={{ fontSize: "26px" }}>
-                  Your Total Staking
-                </Typography>
-                {/* <Button onClick={handleTotalStakedClick}>Refresh</Button> */}
-              </Box>
-              <br></br>
-              <p style={{ fontSize: "17px" }}>
-                <b>{totalStaked ? `${totalStaked} LAZI` : ""}</b>
-              </p>
-              <p style={{ fontSize: "17px" }}>
-                <b>
-                  <AnimatedNumber
-                    targetNumber={
-                      totalStaked ? (totalStaked * 100) / 200000000 : 0
-                    }
-                    suffix="%"
+                <div>
+                  <Box className={classes.heading} style={{ display: "block" }}>
+                    <Typography variant="h2" style={{ fontSize: "26px" }}>
+                      Your Total Staking
+                    </Typography>
+                    {/* <Button onClick={handleTotalStakedClick}>Refresh</Button> */}
+                  </Box>
+                  <br></br>
+                  <p style={{ fontSize: "17px" }}>
+                    <b>{totalStaked ? `${totalStaked} LAZI` : ""}</b>
+                  </p>
+                  <p style={{ fontSize: "17px" }}>
+                    <b>
+                      <AnimatedNumber
+                        targetNumber={
+                          totalStaked ? (totalStaked * 100) / 200000000 : 0
+                        }
+                        suffix="%"
+                      />
+                    </b>
+                  </p>
+                </div>
+                <br></br>
+                <div style={{ marginLeft: "auto" }}>
+                  <Chart
+                    options={state.options}
+                    series={[
+                      totalStaked ? (totalStaked * 100) / 200000000 : 0,
+                      100 - (totalStaked ? (totalStaked * 100) / 200000000 : 0),
+                    ]}
+                    type="donut"
+                    width="70%"
                   />
-                </b>
-              </p>
-            </div>
-            <br></br>
-            <div style={{ marginLeft: "auto" }}>
-              <Chart
-                options={state.options}
-                series={[
-                  totalStaked ? (totalStaked * 100) / 200000000 : 0,
-                  100 - (totalStaked ? (totalStaked * 100) / 200000000 : 0),
-                ]}
-                type="donut"
-                width="70%"
-              />
-            </div>
-          </div>
+                </div>
+              </div>
             </Paper>
           </Grid>{" "}
-          
           <Grid item md={isMobile ? 12 : 6} xs={isMobile ? 12 : 12}>
             <Paper className={classes.root} elevation={2}>
               <Box className={classes.root} height={400} overflow="auto">

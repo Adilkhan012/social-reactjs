@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Box, Grid, Link, makeStyles, Paper} from "@material-ui/core";
 import {useLocation} from "react-router-dom";
 import StakeReward from "../Rewards/StakeReward";
-import EngageReward from "../Rewards/EngageReward";
+import LpReward from "../Rewards/LpReward";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
 const Rewards = () => {
   const location = useLocation();
   const classes = useStyles();
-  const [tabview, setTabView] = useState("EngageReward");
+  const [tabview, setTabView] = useState("LpReward");
 
   useEffect(() => {
     const ids = location.hash.split("#");
@@ -73,7 +73,7 @@ const Rewards = () => {
     if (ids[1] && ids[1] == "stakeReward") {
       setTabView("StakeReward");
     } else {
-      setTabView("EngageReward");
+      setTabView("LpReward");
     }
   }, [location]);
 
@@ -86,8 +86,8 @@ const Rewards = () => {
               <Box className="leftbox">
                 <Box className="buttonBox">
                   <Link
-                    className={tabview === "EngageReward" ? "active" : " "}
-                    onClick={() => setTabView("EngageReward")}
+                    className={tabview === "LpReward" ? "active" : " "}
+                    onClick={() => setTabView("LpReward")}
                   >
                     LP Rewards
                   </Link>
@@ -107,7 +107,7 @@ const Rewards = () => {
               <Box className="rightbox">
                 <Box py={3}>
                   {tabview === "StakeReward" ? <StakeReward/> : ""}
-                  {tabview === "EngageReward" ? <EngageReward/> : ""}
+                  {tabview === "LpReward" ? <LpReward/> : ""}
                 </Box>
               </Box>
             </Grid>
