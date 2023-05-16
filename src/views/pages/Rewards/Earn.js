@@ -1,12 +1,20 @@
-import React, {useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Chart from "react-apexcharts";
-import {Box, Checkbox, Grid, makeStyles, Paper, Slider, TextField, Typography} from "@material-ui/core";
+import {
+  Box,
+  Checkbox,
+  Grid,
+  makeStyles,
+  Paper,
+  Slider,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Button from "@material-ui/core/Button";
-import {Tooltip} from '@material-ui/core';
+import { Tooltip } from "@material-ui/core";
 import InfoIcon from "@material-ui/icons/Info";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-
 
 const useStyles = makeStyles((theme) => ({
   checkbox: {
@@ -14,26 +22,11 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     marginBottom: theme.spacing(1),
   },
-  tooltipIconHeader: {
-    display: "flex",
-    alignItems: "center",
-    marginBottom: theme.spacing(1),
-  },
-  tooltip: {
-    backgroundColor: 'secondary',
-    textAlign: 'center',
-  },
-  sliderThumb: {
-    transition: 'transform 0.2s ease-out',
-    '&:hover': {
-      transform: 'scale(1.2)',
-    },
-  },
 
   heading: {
     display: "flex",
   },
- 
+
   bannerBox: {
     padding: "10px 0px 150px 0px",
     [theme.breakpoints.down("xs")]: {
@@ -73,7 +66,6 @@ const useStyles = makeStyles((theme) => ({
         transform: "translateX(-150%) skewX(-45deg)",
         animation: "$shining 1.5s ease-in-out infinite",
       },
-
     },
   },
   "@keyframes shining": {
@@ -84,154 +76,212 @@ const useStyles = makeStyles((theme) => ({
       transform: "translateX(150%) skewX(-45deg)",
     },
   },
- input:{
-  width:"100%"
- }
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  textFieldWrapper: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    // marginBottom: 24,
+    width: "100%",
+  },
+  input: {
+    width: "100%",
+    "& .MuiOutlinedInput-root": {
+      color: "white",
+      borderRadius: 10,
+      height: "40px",
+      border: "1px solid #fff",
+      fontSize: 12,
+    },
+  },
+  inputLabel: {
+    color: "#fff",
+    fontWeight: 500,
+    fontSize: 14,
+    marginLeft: 12,
+  },
 }));
 const EngageReward = () => {
   const classes = useStyles();
-  const options = [
-    {label: '3 months (1.2x)', id: 1},
-    {label: '3 months (1.2x)', id: 2},
-  ];
-  const userOptions = [
-    {label: 'User 1', value: 1},
-    {label: 'User 2', value: 2},
-  ];
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState("");
+  const [selectedDuration, setSelectedDuration] = useState("");
 
-  const [chartData, setChartData] = useState({
-    options: {
-      chart: {
-        id: "basic-bar"
-      },
-      xaxis: {
-        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999]
-      },
-      theme: {
-        mode: "dark",
-        palette: "palette1",
-        monochrome: {
-          enabled: true,
-          color: "#EC167F"
-        }
-      }
-    },
-    series: [
-      {
-        name: "series-1",
-        data: [30, 40, 45, 50, 49, 60, 70, 91]
-      }
-    ]
-  })
-  const handleSelectedOptionsChange = (event, newValue) => {
-    setSelectedOptions(newValue);
+  const handleSelectedOptionsChange = (e) => {
+    setSelectedOptions(e.target.value);
   };
-  const isMobile = useMediaQuery('(max-width:600px)');
-  const valuetext = (value) => {
-    return `${value} LAZI`;
-  }
-  const[state,setState]=useState({
+  const handleSelectedDurationChange = (e) => {
+    setSelectedDuration(e.target.value);
+  };
+
+  const [selectedContribution, setSelectedContribution] = useState("");
+  const [selectedContribution2, setSelectedContribution2] = useState("");
+  const [selectedStakeScore, setSelectedStakeScore] = useState("");
+  const [selectedMiningReward, setSelectedMiningReward] = useState("");
+
+  const handleSelectedContribution = (e) => {
+    setSelectedContribution(e.target.value);
+  };
+  const handleSelectedContribution2 = (e) => {
+    setSelectedContribution2(e.target.value);
+  };
+  const handleSelectedStake = (e) => {
+    setSelectedStakeScore(e.target.value);
+  };
+  const handleSelectedMiningReward = (e) => {
+    setSelectedMiningReward(e.target.value);
+  };
+  const [selectedUsername, setSelectedUsername] = useState("");
+  const [valueOfT, setValueOfT] = useState("");
+  const [valueOfU, setValueOfU] = useState("");
+  const [valueOfS, setValueOfS] = useState("");
+  const [valueOfFinalMultiplier, setValueOfFinalMultiplier] = useState("");
+
+  const handleSelectedUsername = (e) => {
+    setSelectedUsername(e.target.value);
+  };
+  const handleValueOfT = (e) => {
+    setValueOfT(e.target.value);
+  };
+  const handleValueOfU = (e) => {
+    setValueOfU(e.target.value);
+  };
+  const handleValueOfS = (e) => {
+    setValueOfS(e.target.value);
+  };
+  const handleMultiplierValue = (e) => {
+    setValueOfFinalMultiplier(e.target.value);
+  };
+  // Leaderboard
+
+  const [userRank, setUserRank] = useState("");
+  const [userScore, setUserScore] = useState("");
+  const [winReward, setWinReward] = useState("");
+
+  const handleUserRank = (e) => {
+    setUserRank(e.target.value);
+  };
+  const handleUserScore = (e) => {
+    setUserScore(e.target.value);
+  };
+  const handleWinReward = (e) => {
+    setWinReward(e.target.value);
+  };
+
+  const isMobile = useMediaQuery("(max-width:600px)");
+
+  const [state, setState] = useState({
     options: {
       title: {
-        text: 'chart',
-        align: 'left',
+        text: "chart",
+        align: "left",
         margin: 10,
         offsetX: 0,
         offsetY: 0,
         floating: false,
         style: {
-          fontSize:  '14px',
-          fontWeight:  'bold',
-          fontFamily:  undefined,
-          color:  '#fff'
-        }
-    },
+          fontSize: "14px",
+          fontWeight: "bold",
+          fontFamily: undefined,
+          color: "#fff",
+        },
+      },
       tooltip: {
         enabled: true,
         style: {
-         
-          fontFamily: "'Montserrat', 'sans-serif'"
+          fontFamily: "'Montserrat', 'sans-serif'",
         },
 
-        theme:'dark'
+        theme: "dark",
       },
       toolbar: {
-        foreColor:'#ffff',
-      style:{
-        color :'black'
-      }},
-      colors:["#8a8688","#e31a89"],
-      chart: { foreColor: '#e6e5e8',
-        id: "basic-bar"
+        foreColor: "#ffff",
+        style: {
+          color: "black",
+        },
       },
+      colors: ["#8a8688", "#e31a89"],
+      chart: { foreColor: "#e6e5e8", id: "basic-bar" },
       dataLabels: {
-        enabled: false},
-        legend: {
-          show: false},
+        enabled: false,
+      },
+      legend: {
+        show: false,
+      },
       xaxis: {
-        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999]
-      }
+        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
+      },
     },
     series: [
       {
         name: "series-1",
-        data: [30, 40, 45, 50, 49, 60, 70, 91]
+        data: [30, 40, 45, 50, 49, 60, 70, 91],
       },
       {
         name: "series-2",
-        data: [40, 14, 51, 5, 42, 30, 22, 100]
-      }
-    ]
-  })
+        data: [40, 14, 51, 5, 42, 30, 22, 100],
+      },
+    ],
+  });
   function AnimatedNumber({ targetNumber, suffix }) {
     const [currentNumber, setCurrentNumber] = useState(0);
-  
+
     useEffect(() => {
       const interval = setInterval(() => {
         if (currentNumber < targetNumber) {
           setCurrentNumber((prevNumber) => prevNumber + 1);
         }
       }, 5);
-  
+
       return () => clearInterval(interval);
     }, [currentNumber, targetNumber]);
-  
-    return <b>{currentNumber}{suffix}</b>;
+
+    return (
+      <b>
+        {currentNumber}
+        {suffix}
+      </b>
+    );
   }
   function AnimatedNumber1({ targetNumber, suffix }) {
     const [currentNumber, setCurrentNumber] = useState(0);
-  
+
     useEffect(() => {
       const interval = setInterval(() => {
         if (currentNumber < targetNumber) {
           setCurrentNumber((prevNumber) => prevNumber + 1500);
         }
       }, 1);
-  
+
       return () => clearInterval(interval);
     }, [currentNumber, targetNumber]);
-  
-    return <b>{currentNumber}{suffix}</b>;
+
+    return (
+      <b>
+        {currentNumber}
+        {suffix}
+      </b>
+    );
   }
 
   return (
     <>
       <Box className={classes.bannerBox}>
         <Grid container spacing={3}>
-        <Grid item  md={isMobile ? 12 : 6}  xs={isMobile ? 12 : 12} >
+          <Grid item md={isMobile ? 12 : 6} xs={isMobile ? 12 : 12}>
             <Paper className={classes.root} elevation={2}>
               <Box className={classes.root}>
                 <Box className={classes.tooltipIconHeader}>
-                  <Typography variant="h2">
-                    Engage to Earn
-                  </Typography>
-                  </Box>
+                  <Typography variant="h2">Engage to Earn</Typography>
+                </Box>
                 <Box className={classes.Buttonbox} mt={2}>
                   <Box mt={2}>
                     <Button
                       variant="contained"
-                      style={{backgroundColor: "#e31a89", color: "#fff"}}
+                      style={{ backgroundColor: "#e31a89", color: "#fff" }}
                     >
                       Start Now
                     </Button>
@@ -239,195 +289,357 @@ const EngageReward = () => {
                 </Box>
 
                 <br></br>
-                
-                <Box mt={2}>
-                <TextField
-                className={classes.input}
-  id="duration"
-  label="Duration"
-  variant="outlined"
-  placeholder="number of days"
-/>
+
+                <Box>
+                  <form className={classes.form}>
+                    <div className={classes.textFieldWrapper}>
+                      <Typography
+                        variant="body1"
+                        className={classes.inputLabel}
+                        style={{ fontSize: "12px", marginBottom: 2 }}
+                      >
+                        Duration
+                      </Typography>
+                      <TextField
+                        className={classes.input}
+                        value={selectedDuration}
+                        onChange={handleSelectedDurationChange}
+                        placeholder="number of days"
+                        variant="outlined"
+                      />
+                    </div>
+                  </form>
                   <br></br>
                 </Box>
                 <br></br>
-                <Box mt={2}>
-                <TextField
-                className={classes.input}
-  id="lazi"
-  label="Number of Lazi"
-  variant="outlined"
-  placeholder="number of $LAZI"
-/>
+                <Box>
+                  <form className={classes.form}>
+                    <div className={classes.textFieldWrapper}>
+                      <Typography
+                        variant="body1"
+                        className={classes.inputLabel}
+                        style={{ fontSize: "12px", marginBottom: 2 }}
+                      >
+                        Number of Lazi
+                      </Typography>
+                      <TextField
+                        className={classes.input}
+                        value={selectedOptions}
+                        onChange={handleSelectedOptionsChange}
+                        placeholder="number of $LAZI"
+                        variant="outlined"
+                      />
+                    </div>
+                  </form>
 
                   <br></br>
                 </Box>
-              
-           
+
                 <Box className={classes.Buttonbox} mt={2}>
                   <Box mt={2}>
                     <Button
                       variant="contained"
-                      style={{backgroundColor: "#3C3C3C", color: "#fff"}}
+                      style={{ backgroundColor: "#3C3C3C", color: "#fff" }}
                     >
                       End Session
                     </Button>
                   </Box>
                 </Box>
                 <br></br>
-                
               </Box>
             </Paper>
-            <Paper className={classes.root} elevation={2} style={{ marginTop: '10px' }}>
-            <Box className={classes.tooltipIconHeader}>
-                  <Typography variant="h2">
-                    Engagement Mining
+            <Paper
+              className={classes.root}
+              elevation={2}
+              style={{ marginTop: "10px" }}
+            >
+              <Box className={classes.tooltipIconHeader}>
+                <Typography variant="h2">Engagement Mining</Typography>
+              </Box>
+              <Box mt={2}>
+                <form className={classes.form}>
+                  <div className={classes.textFieldWrapper}>
+                    <Typography
+                      variant="body1"
+                      className={classes.inputLabel}
+                      style={{ fontSize: "12px", marginBottom: 2 }}
+                    >
+                      Contribution Score
+                    </Typography>
+                    <TextField
+                      className={classes.input}
+                      value={selectedContribution}
+                      onChange={handleSelectedContribution}
+                      placeholder="contribution score"
+                      variant="outlined"
+                    />
+                  </div>
+                </form>
+
+                <br></br>
+              </Box>
+              <Box mt={2}>
+                <form className={classes.form}>
+                  <div className={classes.textFieldWrapper}>
+                    <Typography
+                      variant="body1"
+                      className={classes.inputLabel}
+                      style={{ fontSize: "12px", marginBottom: 2 }}
+                    >
+                      Duration Score
+                    </Typography>
+                    <TextField
+                      className={classes.input}
+                      value={selectedContribution2}
+                      onChange={handleSelectedContribution2}
+                      placeholder="duration score"
+                      variant="outlined"
+                    />
+                  </div>
+                </form>
+
+                <br></br>
+              </Box>
+              <Box mt={2}>
+                <div className={classes.textFieldWrapper}>
+                  <Typography
+                    variant="body2"
+                    className={classes.inputLabel}
+                    style={{ fontSize: "12px", marginBottom: 2 }}
+                  >
+                    Stake Amount Score
                   </Typography>
-                  </Box>
-            <Box mt={2}>
-                <TextField
-                className={classes.input}
-  id="contribution"
-  label="Contribution Score"
-  variant="outlined"
-  placeholder="contribution score"
-/>
-
-                  <br></br>
-                </Box>
-                <Box mt={2}>
-                <TextField
-                className={classes.input}
-  id="duration-score"
-  label="Duration Score"
-  variant="outlined"
-  placeholder="duration score"
-/>
-
-                  <br></br>
-                </Box>
-                <Box mt={2}>
-                <TextField
-                className={classes.input}
-  id="stake-amount-score"
-  label="Stake Amount Score"
-  variant="outlined"
-  placeholder="stake amount score"
-/>
-
-                  <br></br>
-                </Box>
-                <Box mt={2}>
-                <TextField
-                className={classes.input}
-  id="reward"
-  label="Reward for Engagement Mining"
-  variant="outlined"
-  placeholder="reward for engagement mining"
-/>
-
-                  <br></br>
-                </Box>
-              </Paper>
+                  <TextField
+                    className={classes.input}
+                    value={selectedStakeScore}
+                    onChange={handleSelectedStake}
+                    placeholder=" Stake Amount Score"
+                    variant="outlined"
+                  />
+                </div>
+                <br></br>
+              </Box>
+              <Box mt={2}>
+                <div className={classes.textFieldWrapper}>
+                  <Typography
+                    variant="body2"
+                    className={classes.inputLabel}
+                    style={{ fontSize: "12px", marginBottom: 2 }}
+                  >
+                    Rewards for Engagement Mining
+                  </Typography>
+                  <TextField
+                    className={classes.input}
+                    value={selectedMiningReward}
+                    onChange={handleSelectedMiningReward}
+                    placeholder="Rewards for Engagement Mining"
+                    variant="outlined"
+                  />
+                </div>
+                <br></br>
+              </Box>
+            </Paper>
           </Grid>
-          <Grid item md={isMobile ? 12 : 6}  xs={isMobile ? 12 : 12}>
+          <Grid item md={isMobile ? 12 : 6} xs={isMobile ? 12 : 12}>
             <Paper className={classes.root} elevation={2}>
               <Box className={classes.root} height={400} overflow="auto">
-                <div style={{display:'flex'}}>
-               <div>
-                <Box className={classes.heading}>
-                <Typography variant="h2">
-                    Multiplier
-                  </Typography>
-                
-                </Box>
-                <br></br>
-                <Box className={classes.checkbox}>
-                  <Checkbox
-                    // checked={true}
-                    // onChange={(event) => setCheckedBox(!checkBoxRemember)}
-                    defaultChecked
-                    size="small"
-                    inputProps={{
-                      "aria-label": "checkbox with small size",
-                    }}
-                  />
-                  <Typography variant="h5">{"Add a Multiplier"}</Typography>
-                </Box>
-                  
-            </div></div>
-                
-                <br></br>
-                <div style={{display:'flex'}}>
+                <div style={{ display: "flex" }}>
                   <div>
-                {/* <Box className={classes.heading}>
-                  <Typography variant="h2" style={{fontSize: "26px"}}>
-                    <h>Flexible APY</h>
-                  </Typography>
-                </Box> */}
-          
-                <Box className={classes.heading}>
-                  <Typography variant="h2" style={{fontSize: "26px"}}>
-                    <h>User Rewards</h>
-                  </Typography>
-                </Box>
-                <div className={classes.radialChart}>
-                  <p style={{fontSize: "17px"}}>
-                    <b> <AnimatedNumber targetNumber={500} suffix="LAZI" /></b>
-                  </p>   
+                    <Box className={classes.heading}>
+                      <Typography variant="h2">Multiplier</Typography>
+                    </Box>
+                    <br></br>
+                    <Box className={classes.checkbox}>
+                      <Checkbox
+                        // checked={true}
+                        // onChange={(event) => setCheckedBox(!checkBoxRemember)}
+                        defaultChecked
+                        size="small"
+                        inputProps={{
+                          "aria-label": "checkbox with small size",
+                        }}
+                      />
+                      <Typography variant="h5">{"Add a Multiplier"}</Typography>
+                    </Box>
+                  </div>
                 </div>
-                <Box className={classes.Buttonbox} mt={2}>
-                  <Box mt={2}>
-                    <Button
-                      variant="contained"
-                      style={{backgroundColor: "#e31a89", color: "#fff"}}
-                    >
-                      Collect
-                    </Button>
-                  </Box>
-                </Box>          
-            </div>
-            <div
-                  style={{marginLeft:'auto'}}>
-                  <Chart
-              options={state.options}
-              series={[23,45]}
-              type="donut"
-              width="70%"
 
-            />
-            </div></div>
-            </Box>
+                <br></br>
+
+                <Box mt={1}>
+                  <div className={classes.textFieldWrapper}>
+                    <Typography
+                      variant="body2"
+                      className={classes.inputLabel}
+                      style={{ fontSize: "12px", marginBottom: 2 }}
+                    >
+                      User Name(Max 5)
+                    </Typography>
+                    <TextField
+                      className={classes.input}
+                      value={selectedUsername}
+                      onChange={handleSelectedUsername}
+                      placeholder="Number of Lazi username"
+                      variant="outlined"
+                    />
+                  </div>
+                  <br></br>
+                </Box>
+                <Box mt={1}>
+                  <div className={classes.textFieldWrapper}>
+                    <Typography
+                      variant="body2"
+                      className={classes.inputLabel}
+                      style={{ fontSize: "12px", marginBottom: 2 }}
+                    >
+                      Value of S
+                    </Typography>
+                    <TextField
+                      className={classes.input}
+                      value={valueOfS}
+                      onChange={handleValueOfS}
+                      placeholder="(max{user's staked $LAZI/mean $LAZI staked, 1})"
+                      variant="outlined"
+                    />
+                  </div>
+                  <br></br>
+                </Box>
+
+                <Box mt={1}>
+                  <div className={classes.textFieldWrapper}>
+                    <Typography
+                      variant="body2"
+                      className={classes.inputLabel}
+                      style={{ fontSize: "12px", marginBottom: 2 }}
+                    >
+                      Value of T
+                    </Typography>
+                    <TextField
+                      className={classes.input}
+                      value={valueOfT}
+                      onChange={handleValueOfT}
+                      placeholder="(max{user's stake duration/mean duration of stake,1})"
+                      variant="outlined"
+                    />
+                  </div>
+                  <br></br>
+                </Box>
+
+                <Box mt={1}>
+                  <div className={classes.textFieldWrapper}>
+                    <Typography
+                      variant="body2"
+                      className={classes.inputLabel}
+                      style={{ fontSize: "12px", marginBottom: 2 }}
+                    >
+                      Value of U
+                    </Typography>
+                    <TextField
+                      className={classes.input}
+                      value={valueOfU}
+                      onChange={handleValueOfU}
+                      placeholder="(username multiplier)"
+                      variant="outlined"
+                    />
+                  </div>
+                  <br></br>
+                </Box>
+
+                <Box mt={1}>
+                  <div className={classes.textFieldWrapper}>
+                    <Typography
+                      variant="body2"
+                      className={classes.inputLabel}
+                      style={{ fontSize: "12px", marginBottom: 2 }}
+                    >
+                      Final Multiplier Value
+                    </Typography>
+                    <TextField
+                      className={classes.input}
+                      value={valueOfFinalMultiplier}
+                      onChange={handleMultiplierValue}
+                      placeholder="(STU)"
+                      variant="outlined"
+                    />
+                  </div>
+                  <br></br>
+                </Box>
+              </Box>
             </Paper>
-            
-            <Paper className={classes.root} elevation={2} style={{ marginTop: '10px'}}>
-            <Chart
-              options={state.options}
-              series={state.series}
-              type="bar"
-              width="100%"
-            />
-              </Paper>
-              <Paper className={classes.root} elevation={2} style={{ marginTop: '10px' }}>
-            <Chart
-              options={state.options}
-              series={state.series}
-              type="area"
-              width="100%"
-            />
-              </Paper>
-              <Paper className={classes.root} elevation={2} style={{ marginTop: '10px' }}>
-            <Chart
-              options={{ ...state.options, title: { text: "Chart 1" } }}
-              series={state.series}
-              type="line"
-              width="100%"
-            />
-              </Paper>
-             
-         
-       
-        </Grid>
+            <Paper className={classes.root} elevation={2} >
+              <Box className={classes.root} height={400} overflow="auto">
+                <div style={{ display: "flex" , marginTop: "10px" }}>
+                  <div>
+                    <Box className={classes.heading}>
+                      <Typography variant="h2">Leaderboard</Typography>
+                    </Box>
+                    <br></br>
+                  </div>
+                </div>
+
+                <br></br>
+
+                <Box mt={1}>
+                  <div className={classes.textFieldWrapper}>
+                    <Typography
+                      variant="body2"
+                      className={classes.inputLabel}
+                      style={{ fontSize: "12px", marginBottom: 2 }}
+                    >
+                      User's Rank in the Leaderboard
+                    </Typography>
+                    <TextField
+                      className={classes.input}
+                      value={userRank}
+                      onChange={handleUserRank}
+                      placeholder="User's Rank in the Leaderboard"
+                      variant="outlined"
+                    />
+                  </div>
+                  <br></br>
+                </Box>
+                <Box mt={1}>
+                  <div className={classes.textFieldWrapper}>
+                    <Typography
+                      variant="body2"
+                      className={classes.inputLabel}
+                      style={{ fontSize: "12px", marginBottom: 2 }}
+                    >
+                      User's Score for the Day
+                    </Typography>
+                    <TextField
+                      className={classes.input}
+                      value={userScore}
+                      onChange={handleUserScore}
+                      placeholder="User's Score for the Day"
+                      variant="outlined"
+                    />
+                  </div>
+                  <br></br>
+                </Box>
+
+                <Box mt={1}>
+                  <div className={classes.textFieldWrapper}>
+                    <Typography
+                      variant="body2"
+                      className={classes.inputLabel}
+                      style={{ fontSize: "12px", marginBottom: 2 }}
+                    >
+                      Rewards for Winning the Leaderboard
+                    </Typography>
+                    <TextField
+                      className={classes.input}
+                      value={winReward}
+                      onChange={handleWinReward}
+                      placeholder="Rewards for Winning the Leaderboard"
+                      variant="outlined"
+                    />
+                  </div>
+                  <br></br>
+                </Box>
+              </Box>
+            </Paper>
+          </Grid>
         </Grid>
       </Box>
     </>
