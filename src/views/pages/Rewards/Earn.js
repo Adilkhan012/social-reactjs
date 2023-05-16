@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import {
   Box,
@@ -194,6 +194,17 @@ const EngageReward = () => {
     setWinReward(e.target.value);
   };
 
+
+
+
+  const[remainingDays,setRemainingDays]=useState(2)
+
+  const handleRemainingDays=(e)=>{
+    setRemainingDays(e.target.value)
+  }
+
+
+
   const isMobile = useMediaQuery("(max-width:600px)");
 
   
@@ -208,6 +219,7 @@ const EngageReward = () => {
                 <Box >
                   <Typography variant="h2" className={classes.head}>Engage to Earn</Typography>
                 </Box>
+                {/* first screen of engage to earn */}
                 {/* <Box className={classes.Buttonbox} mt={2}>
                   <Box mt={2}>
                     <Button
@@ -220,7 +232,7 @@ const EngageReward = () => {
                 </Box> */}
 
                 <br></br>
-           {/* this commented code is write to display engage to earn reward portion */}
+           {/* second screen engage to earn */}
                  <Box>
                   <form className={classes.form}>
                     <div className={classes.textFieldWrapper}>
@@ -251,6 +263,29 @@ const EngageReward = () => {
                         className={classes.inputLabel}
                         style={{ fontSize: "12px", marginBottom: 2 }}
                       >
+                        Remaining Days
+                      </Typography>
+                      <TextField
+                        className={classes.input}
+                        value={remainingDays}
+                        onChange={handleRemainingDays}
+                        // placeholder="number of days"
+                        variant="outlined"
+                      />
+                    </div>
+                  </form>
+                  <br></br>
+                    
+                </Box>
+                <br></br>
+                <Box>
+                  <form className={classes.form}>
+                    <div className={classes.textFieldWrapper}>
+                      <Typography
+                        variant="body1"
+                        className={classes.inputLabel}
+                        style={{ fontSize: "12px", marginBottom: 2 }}
+                      >
                         Number of Lazi
                       </Typography>
                       <TextField
@@ -262,17 +297,35 @@ const EngageReward = () => {
                       />
                     </div>
                   </form>
-
+                  <Box className={classes.Buttonbox} mt={2} style={{display:'flex',justifyContent:'space-between'}}>
+                  <Box mt={2}>
+                    <Button
+                      variant="contained"
+                      style={{ backgroundColor: "#e31a89", color: "#fff",height:40, padding:10,fontSize:14 }}
+                    >
+                    Extend
+                    </Button>
+                  </Box>
+                  <Box mt={2}>
+                    <Button
+                      variant="contained"
+                      style={{ backgroundColor: "#3C3C3C", color: "#fff",height:40, padding:10,fontSize:14 }}
+                    >
+                    End Session
+                    </Button>
+                  </Box>
+                </Box> 
+                <br></br>
                   <br></br>
                 </Box>
-                <Box>
+
+
+
+{/* third Screen of Engage Buttons */}
+                {/*<Box>
                   <Typography variant="h2"  className={classes.header}>Select Stake Username</Typography>
                 </Box>
-
-
-
-{/* Second Screen of Engage Buttons */}
-                 {/* <Box className={classes.checkboxContainer} mt={4} mb={2}>
+                  <Box className={classes.checkboxContainer} mt={4} mb={2}>
                     <div className={classes.checkbox}>
                       <Checkbox
                         defaultChecked

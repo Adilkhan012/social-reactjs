@@ -4,6 +4,7 @@ import {useLocation} from "react-router-dom";
 import StakeReward from "../Rewards/StakeReward";
 import EngageReward from "../Rewards/EngageReward";
 import Earn from './Earn'
+import EngagementRewards from './EngagementRewards'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -77,6 +78,9 @@ const Rewards = () => {
     else if (ids[1] && ids[1] === "Earn") {
       setTabView("Earn");
     }
+    else if (ids[1] && ids[1] === "EngagementRewards") {
+      setTabView("EngagementRewards");
+    }
         else {
       setTabView("EngageReward");
     }
@@ -112,7 +116,17 @@ const Rewards = () => {
                     className={tabview === "Earn" ? "active" : " "}
                     onClick={() => setTabView("Earn")}
                   >
-                    EngageReward
+                    Engage Reward
+                  </Link>
+                </Box>
+
+
+                <Box className="buttonBox">
+                  <Link
+                    className={tabview === "EngagementRewards" ? "active" : " "}
+                    onClick={() => setTabView("EngagementRewards")}
+                  >
+                    Engagement Reward
                   </Link>
                 </Box>
               </Box>
@@ -123,6 +137,7 @@ const Rewards = () => {
                   {tabview === "StakeReward" ? <StakeReward/> : ""}
                   {tabview === "EngageReward" ? <EngageReward/> : ""}
                   {tabview === "Earn" ? <Earn/> : ""}
+                  {tabview === "EngagementRewards" ? <EngagementRewards/> : ""}
                 </Box>
               </Box>
             </Grid>
