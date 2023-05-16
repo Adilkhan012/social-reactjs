@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Chart from "react-apexcharts";
+
 import {
   Box,
   Checkbox,
@@ -17,6 +17,11 @@ import InfoIcon from "@material-ui/icons/Info";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 const useStyles = makeStyles((theme) => ({
+  checkboxContainer: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, 1fr)', // Two columns
+    gap: theme.spacing(2), // Gap between items
+  },
   checkbox: {
     display: "flex",
     alignItems: "center",
@@ -25,6 +30,19 @@ const useStyles = makeStyles((theme) => ({
 
   heading: {
     display: "flex",
+   
+  },
+  head :{
+    fontSize:20,
+    fontWeight:600,
+   whiteSpace:'nowrap',
+   fontFamily:'Montserrat'
+  },
+  header:{
+    fontSize:14,
+    fontWeight:600,
+    whiteSpace:'nowrap',
+    fontFamily:'Montserrat'
   },
 
   bannerBox: {
@@ -88,6 +106,10 @@ const useStyles = makeStyles((theme) => ({
     // marginBottom: 24,
     width: "100%",
   },
+  checboxText:{
+fontSize:14,
+whiteSpace:'nowrap'
+  },
   input: {
     width: "100%",
     "& .MuiOutlinedInput-root": {
@@ -104,6 +126,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     marginLeft: 12,
   },
+ 
 }));
 const EngageReward = () => {
   const classes = useStyles();
@@ -173,99 +196,7 @@ const EngageReward = () => {
 
   const isMobile = useMediaQuery("(max-width:600px)");
 
-  const [state, setState] = useState({
-    options: {
-      title: {
-        text: "chart",
-        align: "left",
-        margin: 10,
-        offsetX: 0,
-        offsetY: 0,
-        floating: false,
-        style: {
-          fontSize: "14px",
-          fontWeight: "bold",
-          fontFamily: undefined,
-          color: "#fff",
-        },
-      },
-      tooltip: {
-        enabled: true,
-        style: {
-          fontFamily: "'Montserrat', 'sans-serif'",
-        },
-
-        theme: "dark",
-      },
-      toolbar: {
-        foreColor: "#ffff",
-        style: {
-          color: "black",
-        },
-      },
-      colors: ["#8a8688", "#e31a89"],
-      chart: { foreColor: "#e6e5e8", id: "basic-bar" },
-      dataLabels: {
-        enabled: false,
-      },
-      legend: {
-        show: false,
-      },
-      xaxis: {
-        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
-      },
-    },
-    series: [
-      {
-        name: "series-1",
-        data: [30, 40, 45, 50, 49, 60, 70, 91],
-      },
-      {
-        name: "series-2",
-        data: [40, 14, 51, 5, 42, 30, 22, 100],
-      },
-    ],
-  });
-  function AnimatedNumber({ targetNumber, suffix }) {
-    const [currentNumber, setCurrentNumber] = useState(0);
-
-    useEffect(() => {
-      const interval = setInterval(() => {
-        if (currentNumber < targetNumber) {
-          setCurrentNumber((prevNumber) => prevNumber + 1);
-        }
-      }, 5);
-
-      return () => clearInterval(interval);
-    }, [currentNumber, targetNumber]);
-
-    return (
-      <b>
-        {currentNumber}
-        {suffix}
-      </b>
-    );
-  }
-  function AnimatedNumber1({ targetNumber, suffix }) {
-    const [currentNumber, setCurrentNumber] = useState(0);
-
-    useEffect(() => {
-      const interval = setInterval(() => {
-        if (currentNumber < targetNumber) {
-          setCurrentNumber((prevNumber) => prevNumber + 1500);
-        }
-      }, 1);
-
-      return () => clearInterval(interval);
-    }, [currentNumber, targetNumber]);
-
-    return (
-      <b>
-        {currentNumber}
-        {suffix}
-      </b>
-    );
-  }
+  
 
   return (
     <>
@@ -274,10 +205,10 @@ const EngageReward = () => {
           <Grid item md={isMobile ? 12 : 6} xs={isMobile ? 12 : 12}>
             <Paper className={classes.root} elevation={2}>
               <Box className={classes.root}>
-                <Box className={classes.tooltipIconHeader}>
-                  <Typography variant="h2">Engage to Earn</Typography>
+                <Box >
+                  <Typography variant="h2" className={classes.head}>Engage to Earn</Typography>
                 </Box>
-                <Box className={classes.Buttonbox} mt={2}>
+                {/* <Box className={classes.Buttonbox} mt={2}>
                   <Box mt={2}>
                     <Button
                       variant="contained"
@@ -286,11 +217,11 @@ const EngageReward = () => {
                       Start Now
                     </Button>
                   </Box>
-                </Box>
+                </Box> */}
 
                 <br></br>
-
-                <Box>
+           {/* this commented code is write to display engage to earn reward portion */}
+                 <Box>
                   <form className={classes.form}>
                     <div className={classes.textFieldWrapper}>
                       <Typography
@@ -334,18 +265,71 @@ const EngageReward = () => {
 
                   <br></br>
                 </Box>
+                <Box>
+                  <Typography variant="h2"  className={classes.header}>Select Stake Username</Typography>
+                </Box>
 
-                <Box className={classes.Buttonbox} mt={2}>
+
+
+{/* Second Screen of Engage Buttons */}
+                 {/* <Box className={classes.checkboxContainer} mt={4} mb={2}>
+                    <div className={classes.checkbox}>
+                      <Checkbox
+                        defaultChecked
+                        size="small"
+                        inputProps={{
+                          'aria-label': 'checkbox with small size',
+                        }}
+                      />
+                      <Typography variant="h5" className={classes.checboxText}>Adil Khan</Typography>
+                    </div>
+
+                    <div className={classes.checkbox}>
+                      <Checkbox
+                        defaultChecked
+                        size="small"
+                        inputProps={{
+                          'aria-label': 'checkbox with small size',
+                        }}
+                      />
+                      <Typography variant="h5" className={classes.checboxText}>Muneeb Khan</Typography>
+                    </div>
+
+                    <div className={classes.checkbox}>
+                      <Checkbox
+                        defaultChecked
+                        size="small"
+                        inputProps={{
+                          'aria-label': 'checkbox with small size',
+                        }}
+                      />
+                      <Typography variant="h5" className={classes.checboxText}>Ahmad Raza</Typography>
+                    </div>
+
+                    <div className={classes.checkbox}>
+                      <Checkbox
+                        defaultChecked
+                        size="small"
+                        inputProps={{
+                          'aria-label': 'checkbox with small size',
+                        }}
+                      />
+                      <Typography variant="h5" className={classes.checboxText}>Fahid Farooq</Typography>
+                    </div>
+                  </Box> */}
+                {/* <Box className={classes.Buttonbox} mt={1}>
                   <Box mt={2}>
                     <Button
                       variant="contained"
-                      style={{ backgroundColor: "#3C3C3C", color: "#fff" }}
+                      style={{ backgroundColor: "#e31a89", color: "#fff",height:40, padding:10,fontSize:14 }}
                     >
-                      End Session
+                      Start New
                     </Button>
                   </Box>
-                </Box>
-                <br></br>
+                </Box> 
+                <br></br> */}
+
+                {/* start of third screen */}
               </Box>
             </Paper>
             <Paper
@@ -353,8 +337,8 @@ const EngageReward = () => {
               elevation={2}
               style={{ marginTop: "10px" }}
             >
-              <Box className={classes.tooltipIconHeader}>
-                <Typography variant="h2">Engagement Mining</Typography>
+              <Box >
+                <Typography variant="h2" className={classes.head}>Engagement Mining</Typography>
               </Box>
               <Box mt={2}>
                 <form className={classes.form}>
@@ -442,11 +426,11 @@ const EngageReward = () => {
           </Grid>
           <Grid item md={isMobile ? 12 : 6} xs={isMobile ? 12 : 12}>
             <Paper className={classes.root} elevation={2}>
-              <Box className={classes.root} height={400} overflow="auto">
+              <Box className={classes.root} height='auto' width='auto' overflow="auto">
                 <div style={{ display: "flex" }}>
                   <div>
-                    <Box className={classes.heading}>
-                      <Typography variant="h2">Multiplier</Typography>
+                    <Box >
+                      <Typography variant="h2" className={classes.head}>Multiplier</Typography>
                     </Box>
                     <br></br>
                     <Box className={classes.checkbox}>
@@ -566,12 +550,12 @@ const EngageReward = () => {
                 </Box>
               </Box>
             </Paper>
-            <Paper className={classes.root} elevation={2} >
-              <Box className={classes.root} height={400} overflow="auto">
-                <div style={{ display: "flex" , marginTop: "10px" }}>
+            <Paper className={classes.root} elevation={2}    style={{ marginTop: "10px" }}>
+              <Box className={classes.root} height="auto" width='auto' overflow="auto">
+                <div style={{ display: "flex" }}>
                   <div>
-                    <Box className={classes.heading}>
-                      <Typography variant="h2">Leaderboard</Typography>
+                    <Box>
+                      <Typography variant="h2" className={classes.head}>Leaderboard</Typography>
                     </Box>
                     <br></br>
                   </div>
