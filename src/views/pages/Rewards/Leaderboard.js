@@ -5,7 +5,7 @@ import {
   makeStyles,
   Slider,
   Typography,
-  withStyles
+  withStyles,
 } from "@material-ui/core";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import ArrowDropDownCircleIcon from "@mui/icons-material/ArrowDropDownCircle";
@@ -32,9 +32,9 @@ const useStyles = makeStyles((theme) => ({
       width: "100%", // Adjust the width of the slider wrapper for mobile screens
     },
   },
-  
+
   container: {
-    width:'100%',
+    width: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-evenly",
@@ -53,10 +53,10 @@ const useStyles = makeStyles((theme) => ({
 
 function MyComponent() {
   const classes = useStyles();
-  const [sliderValue1, setSliderValue1] = useState('10000'); 
-  const [sliderValue2, setSliderValue2] = useState('30000');
-  const [sliderValue3, setSliderValue3] = useState('30000');
-  const [sliderValue4, setSliderValue4] = useState('1000');
+  const [sliderValue1, setSliderValue1] = useState("10000");
+  const [sliderValue2, setSliderValue2] = useState("30000");
+  const [sliderValue3, setSliderValue3] = useState("30000");
+  const [sliderValue4, setSliderValue4] = useState("1000");
 
   const handleSliderChange1 = (event, newValue) => {
     setSliderValue1(newValue); // Update the slider value when it changes
@@ -80,32 +80,38 @@ function MyComponent() {
 
   return (
     <>
-    <Box style={{marginBottom:50}}>
-                  <Typography variant="h2" >Leaderboard</Typography>
-    </Box>
+      <Box style={{ marginBottom: 50 }}>
+        <Typography variant="h2">Leaderboard</Typography>
+      </Box>
 
-    <Box style={{display:"flex",marginBottom:isMobile?10:20}}> 
-   
-        <img src="/images/Creators/CreatorProfile.png" alt="user" style={{ width:isMobile?"20%":'20%',margin:'auto'  }} />
-        <img src="/images/Creators/CreatorProfile.png" alt="user" style={{ width:isMobile?'30%':'30%',margin:'auto' }} />
-        <img src="/images/Creators/CreatorProfile.png" alt="user" style={{ width:isMobile?'20%':'20%',margin:'auto' }} />
-    
-    </Box>
+      <Box style={{ display: "flex", marginBottom: isMobile ? 10 : 20 }}>
+        <img
+          src="/images/Creators/CreatorProfile.png"
+          alt="user"
+          style={{ width: isMobile ? "20%" : "20%", margin: "auto" }}
+        />
+        <img
+          src="/images/Creators/CreatorProfile.png"
+          alt="user"
+          style={{ width: isMobile ? "30%" : "30%", margin: "auto" }}
+        />
+        <img
+          src="/images/Creators/CreatorProfile.png"
+          alt="user"
+          style={{ width: isMobile ? "20%" : "20%", margin: "auto" }}
+        />
+      </Box>
 
-
-
-
-    <Box className={classes.container}>
+      <Box className={classes.container}>
         {/* Image section */}
         <div style={{ width: "50px", height: "50px", marginTop: 26 }}>
           <img src={"/images/ifs.png"} alt="user" />
         </div>
-
         {/* Slider */}
         <form className={classes.form}>
           <div className={classes.sliderWrapper}>
             <Typography variant="body1" className={classes.inputLabel}>
-           Adil Khan
+              Adil Khan
             </Typography>
             <CustomSlider
               className={classes.slider}
@@ -118,36 +124,39 @@ function MyComponent() {
             />
           </div>
         </form>
-
         {/* Slider value */}
-        <span className={classes.sliderValue}>{`$${sliderValue1}`}</span> {/* Display the value of the slider here */}
-
+        <span className={classes.sliderValue}>{`$${sliderValue1}`}</span>{" "}
+        {/* Display the value of the slider here */}
         {/* Dropdown */}
-       
-         <Box style={{ marginLeft: isMobile ? 0 : 22 ,marginTop:isMobile?2:10}}>
-           <ArrowDropDownCircleIcon />
-         </Box>
-         
-
+        <Box
+          style={{
+            marginLeft: isMobile ? 0 : 22,
+            marginTop: isMobile ? 2 : 10,
+          }}
+        >
+          <ArrowDropDownCircleIcon />
+        </Box>
         {/* Button */}
-        <Button variant="contained" color="primary" style={{ marginLeft: 'auto' }}>
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ marginLeft: "auto" }}
+        >
           1st
-
         </Button>
       </Box>
-      <hr style={{opacity:0.3}}></hr>
-    
+      <hr style={{ opacity: 0.3 }}></hr>
+
       <Box className={classes.container}>
         {/* Image section */}
         <div style={{ width: "50px", height: "50px", marginTop: 26 }}>
           <img src={"/images/ifs.png"} alt="user" />
         </div>
-
         {/* Slider */}
         <form className={classes.form}>
           <div className={classes.sliderWrapper}>
             <Typography variant="body1" className={classes.inputLabel}>
-            Muneeb Zubair
+              Muneeb Zubair
             </Typography>
             <CustomSlider
               className={classes.slider}
@@ -160,36 +169,39 @@ function MyComponent() {
             />
           </div>
         </form>
-
         {/* Slider value */}
-        <span className={classes.sliderValue}>{`$${sliderValue2}`}</span> {/* Display the value of the slider here */}
-
+        <span className={classes.sliderValue}>{`$${sliderValue2}`}</span>{" "}
+        {/* Display the value of the slider here */}
         {/* Dropdown */}
-       
-         <Box style={{ marginLeft: isMobile ? 0 : 22 ,marginTop:isMobile?2:10}}>
-           <ArrowDropDownCircleIcon />
-         </Box>
-         
-
+        <Box
+          style={{
+            marginLeft: isMobile ? 0 : 22,
+            marginTop: isMobile ? 2 : 10,
+          }}
+        >
+          <ArrowDropDownCircleIcon />
+        </Box>
         {/* Button */}
-        <Button variant="contained" color="primary" style={{ marginLeft: 'auto' }}>
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ marginLeft: "auto" }}
+        >
           2nd
-
         </Button>
       </Box>
-   
-      <hr style={{opacity:0.3}}></hr>
+
+      <hr style={{ opacity: 0.3 }}></hr>
       <Box className={classes.container}>
         {/* Image section */}
         <div style={{ width: "50px", height: "50px", marginTop: 26 }}>
           <img src={"/images/ifs.png"} alt="user" />
         </div>
-
         {/* Slider */}
         <form className={classes.form}>
           <div className={classes.sliderWrapper}>
             <Typography variant="body1" className={classes.inputLabel}>
-           Ahmad Raza
+              Ahmad Raza
             </Typography>
             <CustomSlider
               className={classes.slider}
@@ -202,36 +214,39 @@ function MyComponent() {
             />
           </div>
         </form>
-
         {/* Slider value */}
-        <span className={classes.sliderValue}>{`$${sliderValue3}`}</span> {/* Display the value of the slider here */}
-
+        <span className={classes.sliderValue}>{`$${sliderValue3}`}</span>{" "}
+        {/* Display the value of the slider here */}
         {/* Dropdown */}
-       
-         <Box style={{ marginLeft: isMobile ? 0 : 22 ,marginTop:isMobile?2:10}}>
-           <ArrowDropDownCircleIcon />
-         </Box>
-         
-
+        <Box
+          style={{
+            marginLeft: isMobile ? 0 : 22,
+            marginTop: isMobile ? 2 : 10,
+          }}
+        >
+          <ArrowDropDownCircleIcon />
+        </Box>
         {/* Button */}
-        <Button variant="contained" color="primary" style={{ marginLeft: 'auto' }}>
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ marginLeft: "auto" }}
+        >
           3rd
-
         </Button>
       </Box>
 
-      <hr style={{opacity:0.3}}></hr>
+      <hr style={{ opacity: 0.3 }}></hr>
       <Box className={classes.container}>
         {/* Image section */}
-        <div style={{ width: "50px", height: "50px", marginTop: 26  }}>
+        <div style={{ width: "50px", height: "50px", marginTop: 26 }}>
           <img src={"/images/ifs.png"} alt="user" />
         </div>
-
         {/* Slider */}
         <form className={classes.form}>
           <div className={classes.sliderWrapper}>
             <Typography variant="body1" className={classes.inputLabel}>
-            Adil khan
+              Adil khan
             </Typography>
             <CustomSlider
               className={classes.slider}
@@ -244,26 +259,28 @@ function MyComponent() {
             />
           </div>
         </form>
-
         {/* Slider value */}
-        <span className={classes.sliderValue}>{`$${sliderValue4}`}</span> {/* Display the value of the slider here */}
-
+        <span className={classes.sliderValue}>{`$${sliderValue4}`}</span>{" "}
+        {/* Display the value of the slider here */}
         {/* Dropdown */}
-       
-         <Box style={{ marginLeft: isMobile ? 0 : 22 ,marginTop:isMobile?2:10}}>
-           <ArrowDropDownCircleIcon />
-         </Box>
-         
-
+        <Box
+          style={{
+            marginLeft: isMobile ? 0 : 22,
+            marginTop: isMobile ? 2 : 10,
+          }}
+        >
+          <ArrowDropDownCircleIcon />
+        </Box>
         {/* Button */}
-        <Button variant="contained" color="primary" style={{ marginLeft: 'auto' }}>
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ marginLeft: "auto" }}
+        >
           4th
-
         </Button>
       </Box>
-      <hr style={{opacity:0.3}}></hr>
-
-
+      <hr style={{ opacity: 0.3 }}></hr>
     </>
   );
 }

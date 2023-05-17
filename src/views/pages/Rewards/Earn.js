@@ -18,8 +18,8 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 const useStyles = makeStyles((theme) => ({
   checkboxContainer: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)', // Two columns
+    display: "grid",
+    gridTemplateColumns: "repeat(2, 1fr)", // Two columns
     gap: theme.spacing(2), // Gap between items
   },
   checkbox: {
@@ -30,19 +30,18 @@ const useStyles = makeStyles((theme) => ({
 
   heading: {
     display: "flex",
-   
   },
-  head :{
-    fontSize:20,
-    fontWeight:600,
-   whiteSpace:'nowrap',
-   fontFamily:'Montserrat'
+  head: {
+    fontSize: 20,
+    fontWeight: 600,
+    whiteSpace: "nowrap",
+    fontFamily: "Montserrat",
   },
-  header:{
-    fontSize:14,
-    fontWeight:600,
-    whiteSpace:'nowrap',
-    fontFamily:'Montserrat'
+  header: {
+    fontSize: 14,
+    fontWeight: 600,
+    whiteSpace: "nowrap",
+    fontFamily: "Montserrat",
   },
 
   bannerBox: {
@@ -106,9 +105,9 @@ const useStyles = makeStyles((theme) => ({
     // marginBottom: 24,
     width: "100%",
   },
-  checboxText:{
-fontSize:14,
-whiteSpace:'nowrap'
+  checboxText: {
+    fontSize: 14,
+    whiteSpace: "nowrap",
   },
   input: {
     width: "100%",
@@ -126,12 +125,24 @@ whiteSpace:'nowrap'
     fontSize: 14,
     marginLeft: 12,
   },
- 
 }));
 const EngageReward = () => {
   const classes = useStyles();
   const [selectedOptions, setSelectedOptions] = useState("");
   const [selectedDuration, setSelectedDuration] = useState("");
+  const [selectedContribution, setSelectedContribution] = useState("");
+  const [selectedContribution2, setSelectedContribution2] = useState("");
+  const [selectedStakeScore, setSelectedStakeScore] = useState("");
+  const [selectedMiningReward, setSelectedMiningReward] = useState("");
+  const [selectedUsername, setSelectedUsername] = useState("");
+  const [valueOfT, setValueOfT] = useState("");
+  const [valueOfU, setValueOfU] = useState("");
+  const [valueOfS, setValueOfS] = useState("");
+  const [valueOfFinalMultiplier, setValueOfFinalMultiplier] = useState("");
+  const [userRank, setUserRank] = useState("");
+  const [userScore, setUserScore] = useState("");
+  const [winReward, setWinReward] = useState("");
+  const [remainingDays, setRemainingDays] = useState(2);
 
   const handleSelectedOptionsChange = (e) => {
     setSelectedOptions(e.target.value);
@@ -139,12 +150,6 @@ const EngageReward = () => {
   const handleSelectedDurationChange = (e) => {
     setSelectedDuration(e.target.value);
   };
-
-  const [selectedContribution, setSelectedContribution] = useState("");
-  const [selectedContribution2, setSelectedContribution2] = useState("");
-  const [selectedStakeScore, setSelectedStakeScore] = useState("");
-  const [selectedMiningReward, setSelectedMiningReward] = useState("");
-
   const handleSelectedContribution = (e) => {
     setSelectedContribution(e.target.value);
   };
@@ -157,12 +162,6 @@ const EngageReward = () => {
   const handleSelectedMiningReward = (e) => {
     setSelectedMiningReward(e.target.value);
   };
-  const [selectedUsername, setSelectedUsername] = useState("");
-  const [valueOfT, setValueOfT] = useState("");
-  const [valueOfU, setValueOfU] = useState("");
-  const [valueOfS, setValueOfS] = useState("");
-  const [valueOfFinalMultiplier, setValueOfFinalMultiplier] = useState("");
-
   const handleSelectedUsername = (e) => {
     setSelectedUsername(e.target.value);
   };
@@ -180,10 +179,6 @@ const EngageReward = () => {
   };
   // Leaderboard
 
-  const [userRank, setUserRank] = useState("");
-  const [userScore, setUserScore] = useState("");
-  const [winReward, setWinReward] = useState("");
-
   const handleUserRank = (e) => {
     setUserRank(e.target.value);
   };
@@ -193,21 +188,11 @@ const EngageReward = () => {
   const handleWinReward = (e) => {
     setWinReward(e.target.value);
   };
-
-
-
-
-  const[remainingDays,setRemainingDays]=useState(2)
-
-  const handleRemainingDays=(e)=>{
-    setRemainingDays(e.target.value)
-  }
-
-
+  const handleRemainingDays = (e) => {
+    setRemainingDays(e.target.value);
+  };
 
   const isMobile = useMediaQuery("(max-width:600px)");
-
-  
 
   return (
     <>
@@ -216,8 +201,10 @@ const EngageReward = () => {
           <Grid item md={isMobile ? 12 : 6} xs={isMobile ? 12 : 12}>
             <Paper className={classes.root} elevation={2}>
               <Box className={classes.root}>
-                <Box >
-                  <Typography variant="h2" className={classes.head}>Engage to Earn</Typography>
+                <Box>
+                  <Typography variant="h2" className={classes.head}>
+                    Engage to Earn
+                  </Typography>
                 </Box>
                 {/* first screen of engage to earn */}
                 {/* <Box className={classes.Buttonbox} mt={2}>
@@ -232,8 +219,8 @@ const EngageReward = () => {
                 </Box> */}
 
                 <br></br>
-           {/* second screen engage to earn */}
-                 <Box>
+                {/* second screen engage to earn */}
+                <Box>
                   <form className={classes.form}>
                     <div className={classes.textFieldWrapper}>
                       <Typography
@@ -275,7 +262,6 @@ const EngageReward = () => {
                     </div>
                   </form>
                   <br></br>
-                    
                 </Box>
                 <br></br>
                 {/* <Box>
@@ -319,67 +305,81 @@ const EngageReward = () => {
                   <br></br>
                 </Box>  */}
 
-
-
-{/* third Screen of Engage Buttons */}
+                {/* third Screen of Engage Buttons */}
                 <Box>
-                  <Typography variant="h2"  className={classes.header}>Select Stake Username</Typography>
+                  <Typography variant="h2" className={classes.header}>
+                    Select Stake Username
+                  </Typography>
                 </Box>
-                  <Box className={classes.checkboxContainer} mt={4} mb={2}>
-                    <div className={classes.checkbox}>
-                      <Checkbox
-                        defaultChecked
-                        size="small"
-                        inputProps={{
-                          'aria-label': 'checkbox with small size',
-                        }}
-                      />
-                      <Typography variant="h5" className={classes.checboxText}>Adil Khan</Typography>
-                    </div>
+                <Box className={classes.checkboxContainer} mt={4} mb={2}>
+                  <div className={classes.checkbox}>
+                    <Checkbox
+                      defaultChecked
+                      size="small"
+                      inputProps={{
+                        "aria-label": "checkbox with small size",
+                      }}
+                    />
+                    <Typography variant="h5" className={classes.checboxText}>
+                      Adil Khan
+                    </Typography>
+                  </div>
 
-                    <div className={classes.checkbox}>
-                      <Checkbox
-                        defaultChecked
-                        size="small"
-                        inputProps={{
-                          'aria-label': 'checkbox with small size',
-                        }}
-                      />
-                      <Typography variant="h5" className={classes.checboxText}>Muneeb Khan</Typography>
-                    </div>
+                  <div className={classes.checkbox}>
+                    <Checkbox
+                      defaultChecked
+                      size="small"
+                      inputProps={{
+                        "aria-label": "checkbox with small size",
+                      }}
+                    />
+                    <Typography variant="h5" className={classes.checboxText}>
+                      Muneeb Khan
+                    </Typography>
+                  </div>
 
-                    <div className={classes.checkbox}>
-                      <Checkbox
-                        defaultChecked
-                        size="small"
-                        inputProps={{
-                          'aria-label': 'checkbox with small size',
-                        }}
-                      />
-                      <Typography variant="h5" className={classes.checboxText}>Ahmad Raza</Typography>
-                    </div>
+                  <div className={classes.checkbox}>
+                    <Checkbox
+                      defaultChecked
+                      size="small"
+                      inputProps={{
+                        "aria-label": "checkbox with small size",
+                      }}
+                    />
+                    <Typography variant="h5" className={classes.checboxText}>
+                      Ahmad Raza
+                    </Typography>
+                  </div>
 
-                    <div className={classes.checkbox}>
-                      <Checkbox
-                        defaultChecked
-                        size="small"
-                        inputProps={{
-                          'aria-label': 'checkbox with small size',
-                        }}
-                      />
-                      <Typography variant="h5" className={classes.checboxText}>Fahid Farooq</Typography>
-                    </div>
-                  </Box>
+                  <div className={classes.checkbox}>
+                    <Checkbox
+                      defaultChecked
+                      size="small"
+                      inputProps={{
+                        "aria-label": "checkbox with small size",
+                      }}
+                    />
+                    <Typography variant="h5" className={classes.checboxText}>
+                      Fahid Farooq
+                    </Typography>
+                  </div>
+                </Box>
                 <Box className={classes.Buttonbox} mt={1}>
                   <Box mt={2}>
                     <Button
                       variant="contained"
-                      style={{ backgroundColor: "#e31a89", color: "#fff",height:40, padding:10,fontSize:14 }}
+                      style={{
+                        backgroundColor: "#e31a89",
+                        color: "#fff",
+                        height: 40,
+                        padding: 10,
+                        fontSize: 14,
+                      }}
                     >
                       Start New
                     </Button>
                   </Box>
-                </Box> 
+                </Box>
                 <br></br>
 
                 {/* start of third screen */}
@@ -390,8 +390,10 @@ const EngageReward = () => {
               elevation={2}
               style={{ marginTop: "10px" }}
             >
-              <Box >
-                <Typography variant="h2" className={classes.head}>Engagement Mining</Typography>
+              <Box>
+                <Typography variant="h2" className={classes.head}>
+                  Engagement Mining
+                </Typography>
               </Box>
               <Box mt={2}>
                 <form className={classes.form}>
@@ -479,11 +481,18 @@ const EngageReward = () => {
           </Grid>
           <Grid item md={isMobile ? 12 : 6} xs={isMobile ? 12 : 12}>
             <Paper className={classes.root} elevation={2}>
-              <Box className={classes.root} height='auto' width='auto' overflow="auto">
+              <Box
+                className={classes.root}
+                height="auto"
+                width="auto"
+                overflow="auto"
+              >
                 <div style={{ display: "flex" }}>
                   <div>
-                    <Box >
-                      <Typography variant="h2" className={classes.head}>Multiplier</Typography>
+                    <Box>
+                      <Typography variant="h2" className={classes.head}>
+                        Multiplier
+                      </Typography>
                     </Box>
                     <br></br>
                     <Box className={classes.checkbox}>
@@ -603,12 +612,23 @@ const EngageReward = () => {
                 </Box>
               </Box>
             </Paper>
-            <Paper className={classes.root} elevation={2}    style={{ marginTop: "10px" }}>
-              <Box className={classes.root} height="auto" width='auto' overflow="auto">
+            <Paper
+              className={classes.root}
+              elevation={2}
+              style={{ marginTop: "10px" }}
+            >
+              <Box
+                className={classes.root}
+                height="auto"
+                width="auto"
+                overflow="auto"
+              >
                 <div style={{ display: "flex" }}>
                   <div>
                     <Box>
-                      <Typography variant="h2" className={classes.head}>Leaderboard</Typography>
+                      <Typography variant="h2" className={classes.head}>
+                        Leaderboard
+                      </Typography>
                     </Box>
                     <br></br>
                   </div>

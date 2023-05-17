@@ -990,11 +990,11 @@ const StakeReward = () => {
                         src="./images/metamask.png"
                         alt="Metamask logo"
                         style={{
-                          border: 'none',
+                          border: "none",
                           marginLeft: "5px",
                           verticalAlign: "middle",
                           width: "25px",
-                          backgroundColor: 'transparent',
+                          backgroundColor: "transparent",
                         }}
                       />
                     </button>
@@ -1029,44 +1029,43 @@ const StakeReward = () => {
               style={{ marginTop: "10px" }}
             >
               <div style={{ display: "flex" }}>
-            <div>
-              <Box className={classes.heading} style={{ display: "block" }}>
-                <Typography variant="h2" style={{ fontSize: "26px" }}>
-                  Your Total Staking
-                </Typography>
-                {/* <Button onClick={handleTotalStakedClick}>Refresh</Button> */}
-              </Box>
-              <br></br>
-              <p style={{ fontSize: "17px" }}>
-                <b>{totalStaked ? `${totalStaked} LAZI` : ""}</b>
-              </p>
-              <p style={{ fontSize: "17px" }}>
-                <b>
-                  <AnimatedNumber
-                    targetNumber={
-                      totalStaked ? (totalStaked * 100) / 200000000 : 0
-                    }
-                    suffix="%"
+                <div>
+                  <Box className={classes.heading} style={{ display: "block" }}>
+                    <Typography variant="h2" style={{ fontSize: "26px" }}>
+                      Your Total Staking
+                    </Typography>
+                    {/* <Button onClick={handleTotalStakedClick}>Refresh</Button> */}
+                  </Box>
+                  <br></br>
+                  <p style={{ fontSize: "17px" }}>
+                    <b>{totalStaked ? `${totalStaked} LAZI` : ""}</b>
+                  </p>
+                  <p style={{ fontSize: "17px" }}>
+                    <b>
+                      <AnimatedNumber
+                        targetNumber={
+                          totalStaked ? (totalStaked * 100) / 200000000 : 0
+                        }
+                        suffix="%"
+                      />
+                    </b>
+                  </p>
+                </div>
+                <br></br>
+                <div style={{ marginLeft: "auto" }}>
+                  <Chart
+                    options={state.options}
+                    series={[
+                      totalStaked ? (totalStaked * 100) / 200000000 : 0,
+                      100 - (totalStaked ? (totalStaked * 100) / 200000000 : 0),
+                    ]}
+                    type="donut"
+                    width="70%"
                   />
-                </b>
-              </p>
-            </div>
-            <br></br>
-            <div style={{ marginLeft: "auto" }}>
-              <Chart
-                options={state.options}
-                series={[
-                  totalStaked ? (totalStaked * 100) / 200000000 : 0,
-                  100 - (totalStaked ? (totalStaked * 100) / 200000000 : 0),
-                ]}
-                type="donut"
-                width="70%"
-              />
-            </div>
-          </div>
+                </div>
+              </div>
             </Paper>
           </Grid>{" "}
-          
           <Grid item md={isMobile ? 12 : 6} xs={isMobile ? 12 : 12}>
             <Paper className={classes.root} elevation={2}>
               <Box className={classes.root} height={400} overflow="auto">
