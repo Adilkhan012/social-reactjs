@@ -1,8 +1,11 @@
-import React, {useEffect, useState} from "react";
-import {Box, Grid, Link, makeStyles, Paper} from "@material-ui/core";
-import {useLocation} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Box, Grid, Link, makeStyles, Paper } from "@material-ui/core";
+import { useLocation } from "react-router-dom";
 import StakeReward from "../Rewards/StakeReward";
 import LpReward from "../Rewards/LpReward";
+import Earn from "./Earn";
+import EngagementRewards from "./EngagementRewards";
+import Leaderboard from "./Leaderboard";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,10 +73,16 @@ const Rewards = () => {
   useEffect(() => {
     const ids = location.hash.split("#");
 
-    if (ids[1] && ids[1] == "stakeReward") {
+    if (ids[1] && ids[1] === "stakeReward") {
       setTabView("StakeReward");
-    } else {
+    } else if (ids[1] && ids[1] === "LpReward") {
       setTabView("LpReward");
+    } else if (ids[1] && ids[1] === "Earn") {
+      setTabView("Earn");
+    } else if (ids[1] && ids[1] === "EngagementRewards") {
+      setTabView("EngagementRewards");
+    } else {
+      setTabView("Leaderboard");
     }
   }, [location]);
 
@@ -101,13 +110,42 @@ const Rewards = () => {
                     Stake Rewards
                   </Link>
                 </Box>
+
+                <Box className="buttonBox">
+                  <Link
+                    className={tabview === "Earn" ? "active" : " "}
+                    onClick={() => setTabView("Earn")}
+                  >
+                    Engage Reward
+                  </Link>
+                </Box>
+
+                <Box className="buttonBox">
+                  <Link
+                    className={tabview === "EngagementRewards" ? "active" : " "}
+                    onClick={() => setTabView("EngagementRewards")}
+                  >
+                    Engagement Reward
+                  </Link>
+                </Box>
+                <Box className="buttonBox">
+                  <Link
+                    className={tabview === "Leaderboard" ? "active" : " "}
+                    onClick={() => setTabView("Leaderboard")}
+                  >
+                    Leaderboard
+                  </Link>
+                </Box>
               </Box>
             </Grid>
             <Grid item xs={12} sm={9}>
               <Box className="rightbox">
                 <Box py={3}>
-                  {tabview === "StakeReward" ? <StakeReward/> : ""}
-                  {tabview === "LpReward" ? <LpReward/> : ""}
+                  {tabview === "StakeReward" ? <StakeReward /> : ""}
+                  {tabview === "LpReward" ? <LpReward /> : ""}
+                  {tabview === "Earn" ? <Earn /> : ""}
+                  {tabview === "EngagementRewards" ? <EngagementRewards /> : ""}
+                  {tabview === "Leaderboard" ? <Leaderboard /> : ""}
                 </Box>
               </Box>
             </Grid>
@@ -116,5 +154,5 @@ const Rewards = () => {
       </Paper>
     </>
   );
-}
+};
 export default Rewards;
