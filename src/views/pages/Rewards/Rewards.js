@@ -5,6 +5,7 @@ import StakeReward from "../Rewards/StakeReward";
 import EngageReward from "../Rewards/EngageReward";
 import Earn from './Earn'
 import EngagementRewards from './EngagementRewards'
+import Leaderboard from './Leaderboard'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -81,6 +82,9 @@ const Rewards = () => {
     else if (ids[1] && ids[1] === "EngagementRewards") {
       setTabView("EngagementRewards");
     }
+    else if (ids[1] && ids[1] === "Leaderboard") {
+      setTabView("Leaderboard");
+    }
         else {
       setTabView("EngageReward");
     }
@@ -129,6 +133,14 @@ const Rewards = () => {
                     Engagement Reward
                   </Link>
                 </Box>
+                <Box className="buttonBox">
+                  <Link
+                    className={tabview === "Leaderboard" ? "active" : " "}
+                    onClick={() => setTabView("Leaderboard")}
+                  >
+                    Leaderboard
+                  </Link>
+                </Box>
               </Box>
             </Grid>
             <Grid item xs={12} sm={9}>
@@ -138,6 +150,7 @@ const Rewards = () => {
                   {tabview === "EngageReward" ? <EngageReward/> : ""}
                   {tabview === "Earn" ? <Earn/> : ""}
                   {tabview === "EngagementRewards" ? <EngagementRewards/> : ""}
+                  {tabview === "Leaderboard" ? <Leaderboard/> : ""}
                 </Box>
               </Box>
             </Grid>

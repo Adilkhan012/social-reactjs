@@ -278,7 +278,7 @@ const EngageReward = () => {
                     
                 </Box>
                 <br></br>
-                <Box>
+                {/* <Box>
                   <form className={classes.form}>
                     <div className={classes.textFieldWrapper}>
                       <Typography
@@ -317,12 +317,12 @@ const EngageReward = () => {
                 </Box> 
                 <br></br>
                   <br></br>
-                </Box>
+                </Box>  */}
 
 
 
 {/* third Screen of Engage Buttons */}
-                {/*<Box>
+                <Box>
                   <Typography variant="h2"  className={classes.header}>Select Stake Username</Typography>
                 </Box>
                   <Box className={classes.checkboxContainer} mt={4} mb={2}>
@@ -369,8 +369,8 @@ const EngageReward = () => {
                       />
                       <Typography variant="h5" className={classes.checboxText}>Fahid Farooq</Typography>
                     </div>
-                  </Box> */}
-                {/* <Box className={classes.Buttonbox} mt={1}>
+                  </Box>
+                <Box className={classes.Buttonbox} mt={1}>
                   <Box mt={2}>
                     <Button
                       variant="contained"
@@ -380,7 +380,7 @@ const EngageReward = () => {
                     </Button>
                   </Box>
                 </Box> 
-                <br></br> */}
+                <br></br>
 
                 {/* start of third screen */}
               </Box>
