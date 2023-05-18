@@ -416,11 +416,11 @@ const StakeReward = () => {
   }, []);
 
   const monthOptions = [
-    { label: "3 months (1.25x)", value: 91 },
-    { label: "6 months (1.5x)", value: 182 },
-    { label: "1 year (2x)", value: 365 },
-    { label: "1.5 year (1.75x)", value: 547 },
-    { label: "2 year (3.5x)", value: 730 },
+    { label: "90 Days (1.25x)", value: 90 },
+    { label: "180 Days (1.5x)", value: 18 },
+    { label: "365 Days (2x)", value: 365 },
+    { label: "547 Days (1.75x)", value: 547 },
+    { label: "730 Days (3.5x)", value: 730 },
   ];
   const userOptions = [
     { label: "User 1", value: 1 },
@@ -884,7 +884,7 @@ const StakeReward = () => {
                         <AnimatedNumber1 targetNumber={1888888} suffix="LAZI" />
                       </div>
                     </div>
-                    <div class="info">
+                    {/* <div class="info">
                       <div class="label">Average lock duration:</div>
                       <div
                         class="value"
@@ -907,7 +907,7 @@ const StakeReward = () => {
                         <AnimatedNumber targetNumber={0} suffix="" />
                         ~ <AnimatedNumber targetNumber={2} suffix="%" />
                       </div>
-                    </div>
+                    </div> */}
                     <a
                       href="https://mumbai.polygonscan.com/address/0xf472134D28216581F47304c66Fb18922a146e514"
                       style={{
