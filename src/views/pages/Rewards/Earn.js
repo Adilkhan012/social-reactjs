@@ -158,22 +158,16 @@ const EngageReward = () => {
     setSelectedMiningReward(e.target.value);
   };
   const [selectedUsername, setSelectedUsername] = useState("");
-  const [valueOfT, setValueOfT] = useState("");
-  const [valueOfU, setValueOfU] = useState("");
-  const [valueOfS, setValueOfS] = useState("");
+  const [averageStakeAmount,setAverageStakeAmount ] = useState("");
   const [valueOfFinalMultiplier, setValueOfFinalMultiplier] = useState("");
 
   const handleSelectedUsername = (e) => {
     setSelectedUsername(e.target.value);
   };
-  const handleValueOfT = (e) => {
-    setValueOfT(e.target.value);
-  };
-  const handleValueOfU = (e) => {
-    setValueOfU(e.target.value);
-  };
-  const handleValueOfS = (e) => {
-    setValueOfS(e.target.value);
+
+ 
+  const handleAverageStakeAmount = (e) => {
+    setAverageStakeAmount(e.target.value);
   };
   const handleMultiplierValue = (e) => {
     setValueOfFinalMultiplier(e.target.value);
@@ -206,7 +200,7 @@ const EngageReward = () => {
 
 
   const isMobile = useMediaQuery("(max-width:600px)");
-
+  https://meet.google.com/tdr-grfk-vzg
   
 
   return (
@@ -529,52 +523,12 @@ const EngageReward = () => {
                       className={classes.inputLabel}
                       style={{ fontSize: "12px", marginBottom: 2 }}
                     >
-                      Value of S
+                      Average Stake Amoount
                     </Typography>
                     <TextField
                       className={classes.input}
-                      value={valueOfS}
-                      onChange={handleValueOfS}
-                      placeholder="(max{user's staked $LAZI/mean $LAZI staked, 1})"
-                      variant="outlined"
-                    />
-                  </div>
-                  <br></br>
-                </Box>
-
-                <Box mt={1}>
-                  <div className={classes.textFieldWrapper}>
-                    <Typography
-                      variant="body2"
-                      className={classes.inputLabel}
-                      style={{ fontSize: "12px", marginBottom: 2 }}
-                    >
-                      Value of T
-                    </Typography>
-                    <TextField
-                      className={classes.input}
-                      value={valueOfT}
-                      onChange={handleValueOfT}
-                      placeholder="(max{user's stake duration/mean duration of stake,1})"
-                      variant="outlined"
-                    />
-                  </div>
-                  <br></br>
-                </Box>
-
-                <Box mt={1}>
-                  <div className={classes.textFieldWrapper}>
-                    <Typography
-                      variant="body2"
-                      className={classes.inputLabel}
-                      style={{ fontSize: "12px", marginBottom: 2 }}
-                    >
-                      Value of U
-                    </Typography>
-                    <TextField
-                      className={classes.input}
-                      value={valueOfU}
-                      onChange={handleValueOfU}
+                      value={averageStakeAmount}
+                      onChange={handleAverageStakeAmount}
                       placeholder="(username multiplier)"
                       variant="outlined"
                     />

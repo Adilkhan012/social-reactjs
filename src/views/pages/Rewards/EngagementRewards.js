@@ -223,7 +223,7 @@ const EngageReward = () => {
                     <Typography
                       variant="body2"
                       className={classes.inputLabel}
-                      style={{ fontSize: "12px", marginBottom: 2 }}
+                      style={{ fontSize: "12px", marginBottom: 2,whiteSpace:'nowrap' }}
                     >
                      Engagement Session Length
                     </Typography>
@@ -237,7 +237,7 @@ const EngageReward = () => {
                   </div>
                   <br></br>
                    <Box className={classes.Buttonbox} marginLeft={2} marginTop={3}>
-                  <Box mt={2}>
+                  <Box style={{marginTop:-4}}>
                     <Button
                       variant="contained"
                       style={{ backgroundColor: "#e31a89", color: "#fff",height:40, padding:10,fontSize:14 }}
