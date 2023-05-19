@@ -6,15 +6,29 @@ import {
   Grid,
   makeStyles,
   Paper,
-  Slider,
   TextField,
   Typography,
+  LinearProgress,
+  withStyles
 } from "@material-ui/core";
-import Autocomplete from "@material-ui/lab/Autocomplete";
 import Button from "@material-ui/core/Button";
-import { Tooltip } from "@material-ui/core";
-import InfoIcon from "@material-ui/icons/Info";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+
+
+
+
+const CustomBar = withStyles({
+  root: {
+    backgroundColor: "#E9E9E9",
+    borderRadius: 4,
+    height: 6,
+  },
+  bar: {
+    backgroundColor: "#E71486",
+    borderRadius: 4,
+  },
+})(LinearProgress);
+
 
 const useStyles = makeStyles((theme) => ({
   checkboxContainer: {
@@ -125,6 +139,23 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     marginLeft: 12,
   },
+  containerProgress: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    // minHeight: "100vh",
+  },
+  progressBar: {
+    width: 400,
+    padding: theme.spacing(2),
+  },
+  progressValue: {
+    display: "flex",
+    justifyContent: "space-between",
+    marginTop: theme.spacing(1),
+    fontWeight: "bold",
+  },
+ 
 }));
 const EngageReward = () => {
   const classes = useStyles();
@@ -185,9 +216,31 @@ const EngageReward = () => {
   const handleWinReward = (e) => {
     setWinReward(e.target.value);
   };
-  const handleRemainingDays = (e) => {
-    setRemainingDays(e.target.value);
-  };
+  const handleRemainingDays=(e)=>{
+    setRemainingDays(e.target.value)
+  }
+
+
+  //Contribution Score
+  const [value1, setValue1] = useState(50);
+  const [value2, setValue2] = useState(40);
+  const [value3, setValue3] = useState(70);
+  const [value4, setValue4] = useState(90);
+
+  const handleValueChange = (event, newValue) => {
+    setValue1(newValue);
+  }; 
+  const handleValueChange2 = (event, newValue) => {
+    setValue1(newValue);
+  }; 
+  const handleValueChange3 = (event, newValue) => {
+    setValue1(newValue);
+  }; 
+  const handleValueChange4 = (event, newValue) => {
+    setValue1(newValue);
+  }; 
+
+
 
   const isMobile = useMediaQuery("(max-width:600px)");
   // https://meet.google.com/tdr-grfk-vzg
@@ -389,93 +442,62 @@ const EngageReward = () => {
               elevation={2}
               style={{ marginTop: "10px" }}
             >
-              <Box>
-                <Typography variant="h2" className={classes.head}>
-                  Engagement Mining
-                </Typography>
+              <Box >
+                <Typography variant="h2" className={classes.head}>Contribution Reward</Typography>
               </Box>
-              <Box mt={2}>
-                <form className={classes.form}>
-                  <div className={classes.textFieldWrapper}>
-                    <Typography
-                      variant="body1"
-                      className={classes.inputLabel}
-                      style={{ fontSize: "12px", marginBottom: 2 }}
-                    >
-                      Contribution Score
-                    </Typography>
-                    <TextField
-                      className={classes.input}
-                      value={selectedContribution}
-                      onChange={handleSelectedContribution}
-                      placeholder="contribution score"
-                      variant="outlined"
-                    />
-                  </div>
-                </form>
 
-                <br></br>
-              </Box>
-              <Box mt={2}>
-                <form className={classes.form}>
-                  <div className={classes.textFieldWrapper}>
-                    <Typography
-                      variant="body1"
-                      className={classes.inputLabel}
-                      style={{ fontSize: "12px", marginBottom: 2 }}
-                    >
-                      Duration Score
-                    </Typography>
-                    <TextField
-                      className={classes.input}
-                      value={selectedContribution2}
-                      onChange={handleSelectedContribution2}
-                      placeholder="duration score"
-                      variant="outlined"
-                    />
-                  </div>
-                </form>
 
-                <br></br>
-              </Box>
-              <Box mt={2}>
-                <div className={classes.textFieldWrapper}>
-                  <Typography
-                    variant="body2"
-                    className={classes.inputLabel}
-                    style={{ fontSize: "12px", marginBottom: 2 }}
-                  >
-                    Stake Amount Score
-                  </Typography>
-                  <TextField
-                    className={classes.input}
-                    value={selectedStakeScore}
-                    onChange={handleSelectedStake}
-                    placeholder=" Stake Amount Score"
-                    variant="outlined"
-                  />
-                </div>
-                <br></br>
-              </Box>
-              <Box mt={2}>
-                <div className={classes.textFieldWrapper}>
-                  <Typography
-                    variant="body2"
-                    className={classes.inputLabel}
-                    style={{ fontSize: "12px", marginBottom: 2 }}
-                  >
-                    Rewards for Engagement Mining
-                  </Typography>
-                  <TextField
-                    className={classes.input}
-                    value={selectedMiningReward}
-                    onChange={handleSelectedMiningReward}
-                    placeholder="Rewards for Engagement Mining"
-                    variant="outlined"
-                  />
-                </div>
-                <br></br>
-              </Box>
+              <div className={classes.containerProgress}>
+      <Box className={classes.progressBar}>
+        <Typography variant="h6" component="h2" style={{fontSize:12}}>
+          Contribution Score
+        </Typography>
+        <CustomBar variant="determinate" value={value1} onChange={handleValueChange} />
+      </Box>
+        <Box className={classes.progressValue}>
+          <Typography variant="body1">{value1}%</Typography>
+        </Box>
+      
+    </div>
+              <div className={classes.containerProgress}>
+      <Box className={classes.progressBar}>
+        <Typography variant="h6" component="h2" style={{fontSize:12}}>
+         Duration Score
+        </Typography>
+        <CustomBar variant="determinate" value={value2} onChange={handleValueChange2} />
+      </Box>
+        <Box className={classes.progressValue}>
+          <Typography variant="body1">{value2}%</Typography>
+        </Box>
+      
+    </div>
+    <div className={classes.containerProgress}>
+      <Box className={classes.progressBar}>
+        <Typography variant="h6" component="h2" style={{fontSize:12}}>
+          Stake Amount Score
+        </Typography>
+        <CustomBar variant="determinate" value={value3} onChange={handleValueChange3} />
+      </Box>
+        <Box className={classes.progressValue}>
+          <Typography variant="body1">{value3}%</Typography>
+        </Box>
+      
+    </div>
+
+
+
+    <div className={classes.containerProgress}>
+      <Box className={classes.progressBar}>
+        <Typography variant="h6" component="h2" style={{fontSize:12}}>
+          Stake Amount Score
+        </Typography>
+        <CustomBar variant="determinate" value={value4} onChange={handleValueChange4} />
+      </Box>
+        <Box className={classes.progressValue}>
+          <Typography variant="body1">{value4}%</Typography>
+        </Box>
+      
+    </div>
             </Paper>
           </Grid>
           <Grid item md={isMobile ? 12 : 6} xs={isMobile ? 12 : 12}>
@@ -537,7 +559,7 @@ const EngageReward = () => {
                       className={classes.inputLabel}
                       style={{ fontSize: "12px", marginBottom: 2 }}
                     >
-                      Average Stake Amoount
+                      Rewards for Contribution
                     </Typography>
                     <TextField
                       className={classes.input}
