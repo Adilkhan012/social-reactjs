@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 
+
   heading: {
     display: "flex",
   },
@@ -94,6 +95,31 @@ const useStyles = makeStyles((theme) => ({
       transform: "translateX(150%) skewX(-45deg)",
     },
   },
+
+
+
+
+  input: {
+    width: "100%",
+    "& .MuiOutlinedInput-root": {
+      color: "white",
+      borderRadius: 10,
+      height: "40px",
+      border: "1px solid #575758",
+      fontSize: 12,
+    },
+  },
+  inputLabel: {
+    color: "#fff",
+    fontWeight: 500,
+    fontSize: 14,
+    marginLeft: 12,
+  },
+
+
+
+
+
 }));
 const EngageReward = () => {
   const classes = useStyles();
@@ -221,7 +247,7 @@ const EngageReward = () => {
   
     return <b>{currentNumber}{suffix}</b>;
   }
-
+  // input field replace by slider
   return (
     <>
       <Box className={classes.bannerBox}>
@@ -240,23 +266,22 @@ const EngageReward = () => {
 
                 <br></br>
                 <Box mt={2}>
-                  <Slider
-                    aria-label="Default"
-                    defaultValue={20}
-                    getAriaValueText={valuetext}
-                    valueLabelFormat={valuetext}
-                    step={5}
-                    min={10}
-                    max={100}
-                    classes={{
-                      valueLabel: classes.tooltip,
-                      thumb: classes.sliderThumb,
-                    }}
-                    valueLabelDisplay="on"
-                    color="secondary"
-                  />
+                <Typography
+                      variant="body2"
+                      className={classes.inputLabel}
+                      style={{ fontSize: "12px", marginBottom: 2 }}
+                    >
+                    Enter Token to Stake
+                    </Typography>
+                <TextField
+                      className={classes.input}
+                       defaultValue={20}
+                     
+                    
+                      variant="outlined"
+                    />
                 </Box>
-                <Box mt={2}>
+                <Box mt={4}>
                   <Autocomplete
                     disablePortal
                     id="tags-standard"

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import {
   Box,
   Checkbox,
@@ -11,6 +10,7 @@ import {
   LinearProgress,
   withStyles
 } from "@material-ui/core";
+
 import Button from "@material-ui/core/Button";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
@@ -28,6 +28,8 @@ const CustomBar = withStyles({
     borderRadius: 4,
   },
 })(LinearProgress);
+
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -78,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
 
   Buttonbox: {
     "& Button": {
-      padding: "11px 16px",
+      // padding: "11px 16px",
       borderRadius: "4px",
       color: "#fff",
       fontSize: "16px",
@@ -91,7 +93,7 @@ const useStyles = makeStyles((theme) => ({
         content: '""',
         position: "absolute",
         top: "0",
-        left: "-50%",
+        // left: "-50%",
         width: "100%",
         height: "100%",
         backgroundColor: "rgba(255, 255, 255, 0.2)",
@@ -261,7 +263,7 @@ const EngageReward = () => {
             <Paper className={classes.root} elevation={2}>
               <Box className={classes.root}>
                 <Box >
-                  <Typography variant="h2" className={classes.head}>Engage to Earn</Typography>
+                  <Typography variant="h2" className={classes.head}>Start Engagement Session</Typography>
                 </Box>
                 {/* first screen of engage to earn */}
                 {/* <Box className={classes.Buttonbox} mt={2}>
@@ -277,27 +279,39 @@ const EngageReward = () => {
 
                 <br></br>
            {/* second screen engage to earn */}
-                 <Box>
-                  <form className={classes.form}>
-                    <div className={classes.textFieldWrapper}>
-                      <Typography
-                        variant="body1"
-                        className={classes.inputLabel}
-                        style={{ fontSize: "12px", marginBottom: 2 }}
+                 <Box  style={{display:'flex',justifyContent:'space-between'}}>
+                   <Box>
+                    <form className={classes.form}>
+                      <div className={classes.textFieldWrapper}>
+                        <Typography
+                          variant="body1"
+                          className={classes.inputLabel}
+                          style={{ fontSize: "12px", marginBottom: 2 }}
+                        >
+                        Tokens to Stake
+                        </Typography>
+                        <TextField
+                          className={classes.input}
+                          value={selectedDuration}
+                          onChange={handleSelectedDurationChange}
+                          placeholder="number of $LAZI"
+                          variant="outlined"
+                        />
+                      </div>
+                    </form>
+                    <br></br>
+                                   </Box>
+                               <Box className={classes.Buttonbox} >
+                    <Box mt={2}>
+                      <Button
+                        variant="contained"
+                        style={{ backgroundColor: "#e31a89", color: "#fff",height:40,fontSize:14,marginTop:2 }}
                       >
-                        Duration
-                      </Typography>
-                      <TextField
-                        className={classes.input}
-                        value={selectedDuration}
-                        onChange={handleSelectedDurationChange}
-                        placeholder="number of days"
-                        variant="outlined"
-                      />
-                    </div>
-                  </form>
-                  <br></br>
-                </Box>
+                        Max
+                      </Button>
+                    </Box>
+                    </Box>
+                 </Box>
                 <br></br>
                 <Box>
                   <form className={classes.form}>
@@ -322,7 +336,7 @@ const EngageReward = () => {
                     
                 </Box>
                 <br></br>
-                {/* <Box>
+                 <Box>
                   <form className={classes.form}>
                     <div className={classes.textFieldWrapper}>
                       <Typography
@@ -330,13 +344,13 @@ const EngageReward = () => {
                         className={classes.inputLabel}
                         style={{ fontSize: "12px", marginBottom: 2 }}
                       >
-                        Number of Lazi
+                        Stake $LAZI
                       </Typography>
                       <TextField
                         className={classes.input}
                         value={selectedOptions}
                         onChange={handleSelectedOptionsChange}
-                        placeholder="number of $LAZI"
+                        placeholder="Stake $LAZI"
                         variant="outlined"
                       />
                     </div>
@@ -353,15 +367,15 @@ const EngageReward = () => {
                   <Box mt={2}>
                     <Button
                       variant="contained"
-                      style={{ backgroundColor: "#3C3C3C", color: "#fff",height:40, padding:10,fontSize:14 }}
+                      style={{ backgroundColor: "#e31a89", color: "#fff",height:40, padding:10,fontSize:14 }}
                     >
-                    End Session
+                 Max
                     </Button>
                   </Box>
                 </Box> 
                 <br></br>
                   <br></br>
-                </Box>  */}
+                </Box>  
 
 
 
@@ -501,19 +515,12 @@ const EngageReward = () => {
                       <Typography variant="h2" className={classes.head}>Multiplier</Typography>
                     </Box>
                     <br></br>
-                    <Box className={classes.checkbox}>
-                      <Checkbox
-                        // checked={true}
-                        // onChange={(event) => setCheckedBox(!checkBoxRemember)}
-                        defaultChecked
-                        size="small"
-                        inputProps={{
-                          "aria-label": "checkbox with small size",
-                        }}
-                      />
-                      <Typography variant="h5">{"Add a Multiplier"}</Typography>
+                    
+                    <Box >
+                      <Typography variant="h2" className={classes.inputLabel}>Your Multiplier = <span>12</span></Typography>
                     </Box>
-                  </div>
+                   </div>
+              
                 </div>
 
                 <br></br>
@@ -525,13 +532,13 @@ const EngageReward = () => {
                       className={classes.inputLabel}
                       style={{ fontSize: "12px", marginBottom: 2 }}
                     >
-                      User Name(Max 5)
+                      Average Lazi Stake
                     </Typography>
                     <TextField
                       className={classes.input}
                       value={selectedUsername}
                       onChange={handleSelectedUsername}
-                      placeholder="Number of Lazi username"
+                      placeholder=" Average Lazi Stake"
                       variant="outlined"
                     />
                   </div>
@@ -544,7 +551,7 @@ const EngageReward = () => {
                       className={classes.inputLabel}
                       style={{ fontSize: "12px", marginBottom: 2 }}
                     >
-                      Rewards for Contribution
+                      Average Stake Duration
                     </Typography>
                     <TextField
                       className={classes.input}
@@ -557,7 +564,7 @@ const EngageReward = () => {
                   <br></br>
                 </Box>
 
-                <Box mt={1}>
+                {/* <Box mt={1}>
                   <div className={classes.textFieldWrapper}>
                     <Typography
                       variant="body2"
@@ -575,82 +582,14 @@ const EngageReward = () => {
                     />
                   </div>
                   <br></br>
-                </Box>
+                </Box> */}
               </Box>
             </Paper>
-            <Paper className={classes.root} elevation={2}    style={{ marginTop: "10px" }}>
-              <Box className={classes.root} height="auto" width='auto' overflow="auto">
-                <div style={{ display: "flex" }}>
-                  <div>
-                    <Box>
-                      <Typography variant="h2" className={classes.head}>Leaderboard</Typography>
-                    </Box>
-                    <br></br>
-                  </div>
-                </div>
 
-                <br></br>
 
-                <Box mt={1}>
-                  <div className={classes.textFieldWrapper}>
-                    <Typography
-                      variant="body2"
-                      className={classes.inputLabel}
-                      style={{ fontSize: "12px", marginBottom: 2 }}
-                    >
-                      User's Rank in the Leaderboard
-                    </Typography>
-                    <TextField
-                      className={classes.input}
-                      value={userRank}
-                      onChange={handleUserRank}
-                      placeholder="User's Rank in the Leaderboard"
-                      variant="outlined"
-                    />
-                  </div>
-                  <br></br>
-                </Box>
-                <Box mt={1}>
-                  <div className={classes.textFieldWrapper}>
-                    <Typography
-                      variant="body2"
-                      className={classes.inputLabel}
-                      style={{ fontSize: "12px", marginBottom: 2 }}
-                    >
-                      User's Score for the Day
-                    </Typography>
-                    <TextField
-                      className={classes.input}
-                      value={userScore}
-                      onChange={handleUserScore}
-                      placeholder="User's Score for the Day"
-                      variant="outlined"
-                    />
-                  </div>
-                  <br></br>
-                </Box>
 
-                <Box mt={1}>
-                  <div className={classes.textFieldWrapper}>
-                    <Typography
-                      variant="body2"
-                      className={classes.inputLabel}
-                      style={{ fontSize: "12px", marginBottom: 2 }}
-                    >
-                      Rewards for Winning the Leaderboard
-                    </Typography>
-                    <TextField
-                      className={classes.input}
-                      value={winReward}
-                      onChange={handleWinReward}
-                      placeholder="Rewards for Winning the Leaderboard"
-                      variant="outlined"
-                    />
-                  </div>
-                  <br></br>
-                </Box>
-              </Box>
-            </Paper>
+         
+            
           </Grid>
         </Grid>
       </Box>
@@ -658,3 +597,5 @@ const EngageReward = () => {
   );
 };
 export default EngageReward;
+
+

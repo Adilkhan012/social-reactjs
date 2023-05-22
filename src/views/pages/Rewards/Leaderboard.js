@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-around",
+    gap: 1,
     marginBottom: 10,
     [theme.breakpoints.down("sm")]: {
       flexDirection: "row",
@@ -49,28 +50,30 @@ const useStyles = makeStyles((theme) => ({
   },
   containerProgress: {
     display: "flex",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
   },
   progressBar: {
-    width: "400px", // Default width
-    padding: theme.spacing(2),
-    [theme.breakpoints.down("xs")]: {
-      width: "150px", // Width for extra small screens
-    },
-    [theme.breakpoints.down("sm")]: {
-      width: "200px", // Width for small screens
-    },
-    [theme.breakpoints.between(600, 700)]: {
-      width: "120px", // Width for screen widths between 600 and 700px
-    },
-    [theme.breakpoints.down(460)]: {
-      width: "100px", // Width for screen widths below 400px
-    },
-    [theme.breakpoints.down(345)]: {
-      width: "41px", // Width for screen widths below 400px
-    },
+    flex: 1, // Allow the progress bar to expand and take up remaining space
+    width: "100%", // Set the width to 100%
+    marginBottom:'auto'
   },
+  circleImage: {
+    height: "3vw", // Set the height to a percentage of the viewport width
+    width: "3vw", // Set the width to a percentage of the viewport width
+    background: "#E75AA6",
+    marginTop: '-6px',
+    borderRadius: "50%",
+    marginRight:10,
+    [theme.breakpoints.down(600)]: {
+      height: "5vw", // Set the height to a percentage of the viewport width
+      width: "5vw", // Set the width to a percentage of the viewport width
+      marginTop: "-3px",
+      marginRight:4,
+    },
+    
+  },
+  
   
   progressValue: {
     display: "flex",
@@ -103,27 +106,7 @@ const useStyles = makeStyles((theme) => ({
       width: "50px",
     },
   },
-  circleImage: {
-    height: "50px",
-    width: "50px",
-    marginTop: 24,
-    borderRadius: "50%",
-    [theme.breakpoints.down("sm")]: {
-      height: "40px",
-      width: "40px",
-      marginTop: 14,
-    },
-    [theme.breakpoints.down("xs")]: {
-      height: "30px",
-      width: "30px",
-      marginTop: 9,
-    },
-    [theme.breakpoints.down(400)]: {
-      height: "25px",
-      width: "25px",
-      marginTop: 5,
-    },
-  },
+ 
   centerCircle: {
     height: "200px",
     width: "200px",
@@ -146,12 +129,31 @@ const useStyles = makeStyles((theme) => ({
     },
     // for icons showing the numbers
     topperboard:{
-
-
     }
+  },
+  dropdown: {
+    marginTop: 10,
+    marginBottom: theme.spacing(2),
+    marginLeft:'30px',
 
+    [theme.breakpoints.down("sm")]: {
+      marginTop: 0,
+      marginBottom: theme.spacing(0.5), // Adjust marginBottom for smaller screens
+      marginLeft:'10px',
+    },
+  },
 
-  }
+  button: {
+    marginTop: 10,
+    marginBottom: theme.spacing(2), // Add marginBottom for small distance
+    marginLeft:"50px",
+
+    [theme.breakpoints.down("sm")]: {
+      marginTop: 0,
+      marginBottom: theme.spacing(0.5), // Adjust marginBottom for smaller screens
+      marginLeft:"20px",
+    },
+  },
 }));
 
 function MyComponent() {
@@ -334,7 +336,7 @@ function MyComponent() {
               align="center"
               style={{
                 color: "black",
-                fontSize: 14,
+                fontSize: isMobile?10:14,
                 fontWeight: "bold",
                 position: "absolute",
                 top: "50%",
@@ -352,7 +354,7 @@ function MyComponent() {
               align="center"
               style={{
                 color: "white",
-                fontSize: 14,
+                fontSize: isMobile?10:14,
                 fontWeight: "bold",
                 position: "absolute",
                 whiteSpace:'nowrap',
@@ -406,7 +408,7 @@ function MyComponent() {
               align="center"
               style={{
                 color: "black",
-                fontSize: 14,
+                fontSize: isMobile?10:14,
                 fontWeight: "bold",
                 position: "absolute",
                 top: "50%",
@@ -422,7 +424,7 @@ function MyComponent() {
               align="center"
               style={{
                 color: "white",
-                fontSize: 14,
+                fontSize: isMobile?10:14,
                 fontWeight: "bold",
                 position: "absolute",
                 whiteSpace:'nowrap',
@@ -475,7 +477,7 @@ function MyComponent() {
               align="center"
               style={{
                 color: "black",
-                fontSize: 14,
+                fontSize: isMobile?10:14,
                 fontWeight: "bold",
                 position: "absolute",
                 top: "50%",
@@ -483,12 +485,7 @@ function MyComponent() {
               }}
             >
               3
-            </Typography>
-
-
-
-
-            
+            </Typography>            
             <Typography
               variant="caption"
               align="center"
@@ -511,1381 +508,180 @@ function MyComponent() {
 
       <Box className={classes.container}>
         {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
+        <Box className={classes.circleImage}></Box>
         {/* Slider */}
-
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={value1}
-              onChange={handleValueChange}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{value1}%</Typography>
-          </Box>
-        </div>
-        {/* Dropdown */}
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
+        <Box className={classes.progressBar}>
+          <Typography variant="h6" component="h2" style={{ fontSize: 12,marginBottom:isMobile?2:4 }}>
+            Adil Khan
+          </Typography>
+          <CustomBar
+            variant="determinate"
+            value={value1}
+            onChange={handleValueChange}
+          />
         </Box>
+        <Box mb={1} ml={2}>
+            <Typography variant="body1"   style={{ fontSize: 12 }}>{value1}%</Typography>
+          </Box>
+       
+        {/* Dropdown */}
+       
         {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
+        <Button variant="contained" color="primary"   className={classes.button}>
           1st
         </Button>
       </Box>
       <hr style={{ opacity: 0.3 }}></hr>
 
-      <Box className={classes.container}>
+
+     
+
+
+
+         {/* 2nd */}
+
+     
+         <Box className={classes.container}>
         {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
+        <Box className={classes.circleImage}></Box>
         {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-             yabla
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue2}
-              onChange={handleProgressChange2}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue2}%</Typography>
-          </Box>
-        </div>
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
+        <Box className={classes.progressBar}>
+          <Typography variant="h6" component="h2" style={{ fontSize: 12,marginBottom:isMobile?2:4 }}>
+            Adil Khan
+          </Typography>
+          <CustomBar
+            variant="determinate"
+            value={progressValue2}
+            onChange={handleProgressChange2}
+          />
         </Box>
-
+         <Box mb={1} ml={2}>
+            <Typography variant="body1"   style={{ fontSize: 12 }}>{progressValue2}%</Typography>
+          </Box>
+       
+        {/* Dropdown */}
+       
         {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
+        <Button variant="contained" color="primary"   className={classes.button}>
           2nd
         </Button>
       </Box>
-
       <hr style={{ opacity: 0.3 }}></hr>
+
+
+
+
+
       <Box className={classes.container}>
         {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
+        <Box className={classes.circleImage}></Box>
         {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue3}
-              onChange={handleProgressChange3}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue3}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
+        <Box className={classes.progressBar}>
+          <Typography variant="h6" component="h2" style={{ fontSize: 12,marginBottom:isMobile?2:4 }}>
+            Adil Khan
+          </Typography>
+          <CustomBar
+            variant="determinate"
+            value={progressValue3}
+            onChange={handleProgressChange3}
+          />
         </Box>
-
+        <Box mb={1} ml={2}>
+            <Typography variant="body1"   style={{ fontSize: 12 }}>{progressValue3}%</Typography>
+          </Box>
+        {/* Dropdown */}
+       
         {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
+        <Button variant="contained" color="primary"   className={classes.button}>
           3rd
         </Button>
       </Box>
-
       <hr style={{ opacity: 0.3 }}></hr>
+
+
+
+
+
       <Box className={classes.container}>
         {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
+        <Box className={classes.circleImage}></Box>
         {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue4}
-              onChange={handleProgressChange4}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue4}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
+        <Box className={classes.progressBar}>
+          <Typography variant="h6" component="h2" style={{ fontSize: 12,marginBottom:isMobile?2:4 }}>
+            Adil Khan
+          </Typography>
+          <CustomBar
+            variant="determinate"
+            value={progressValue4}
+            onChange={handleProgressChange4}
+          />
         </Box>
-
+        <Box mb={1} ml={2}>
+            <Typography variant="body1"   style={{ fontSize: 12 }}>{progressValue4}%</Typography>
+          </Box>
+       
+        {/* Dropdown */}
+       
         {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
+        <Button variant="contained" color="primary"   className={classes.button}>
           4th
         </Button>
       </Box>
       <hr style={{ opacity: 0.3 }}></hr>
-      <Box className={classes.container}>
+       <Box className={classes.container}>
         {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
+        <Box className={classes.circleImage}></Box>
         {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue5}
-              onChange={handleProgressChange5}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue5}%</Typography>
-          </Box>
-        </div>
-
-        {/* Slider value */}
-        {/* Display the value of the slider here */}
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
+        <Box className={classes.progressBar}>
+          <Typography variant="h6" component="h2" style={{ fontSize: 12,marginBottom:isMobile?2:4 }}>
+            Adil Khan
+          </Typography>
+          <CustomBar
+            variant="determinate"
+            value={progressValue5}
+            onChange={handleProgressChange5}
+          />
         </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          5th
-        </Button>
-      </Box>
-      <hr style={{ opacity: 0.3 }}></hr>
-      <Box className={classes.container}>
-        {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
-        {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue6}
-              onChange={handleProgressChange6}
-            />
+         <Box mb={1} ml={2}>
+            <Typography variant="body1"   style={{ fontSize: 12 }}>{progressValue5}%</Typography>
           </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue6}%</Typography>
-          </Box>
-        </div>
-
         {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
-        </Box>
-
+       
         {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          6th
+        <Button variant="contained" color="primary"   className={classes.button}>
+          1st
         </Button>
       </Box>
       <hr style={{ opacity: 0.3 }}></hr>
 
-      <Box className={classes.container}>
-        {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
-        {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue7}
-              onChange={handleProgressChange7}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue7}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
-        </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          7th
-        </Button>
-      </Box>
-      <hr style={{ opacity: 0.3 }}></hr>
 
       <Box className={classes.container}>
         {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
+        <Box className={classes.circleImage}></Box>
         {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue8}
-              onChange={handleProgressChange8}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue8}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
+        <Box className={classes.progressBar}>
+          <Typography variant="h6" component="h2" style={{ fontSize: 12,marginBottom:isMobile?2:4 }}>
+            Adil Khan
+          </Typography>
+          <CustomBar
+            variant="determinate"
+            value={progressValue6}
+            onChange={handleProgressChange6}
+          />
         </Box>
-
+         <Box mb={1} ml={2}>
+            <Typography variant="body1"   style={{ fontSize: 12 }}>{progressValue6}%</Typography>
+          </Box>
+       
+        {/* Dropdown */}
+       
         {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          8th
-        </Button>
+        <Button variant="contained" color="primary"   className={classes.button}>
+          6th        </Button>
       </Box>
       <hr style={{ opacity: 0.3 }}></hr>
 
-      <Box className={classes.container}>
-        {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
-        {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue10}
-              onChange={handleProgressChange10}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{value1}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
-        </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          9th
-        </Button>
-      </Box>
-      <hr style={{ opacity: 0.3 }}></hr>
-
-      <Box className={classes.container}>
-        {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
-        {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue11}
-              onChange={handleProgressChange11}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue11}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
-        </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          10th
-        </Button>
-      </Box>
-      <hr style={{ opacity: 0.3 }}></hr>
-
-      <Box className={classes.container}>
-        {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
-        {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue12}
-              onChange={handleProgressChange12}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue12}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
-        </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          8th
-        </Button>
-      </Box>
-      <hr style={{ opacity: 0.3 }}></hr>
-
-      <Box className={classes.container}>
-        {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
-        {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue13}
-              onChange={handleProgressChange13}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue13}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
-        </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          8th
-        </Button>
-      </Box>
-      <hr style={{ opacity: 0.3 }}></hr>
-
-      <Box className={classes.container}>
-        {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
-        {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue14}
-              onChange={handleProgressChange14}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue14}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
-        </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          8th
-        </Button>
-      </Box>
-      <hr style={{ opacity: 0.3 }}></hr>
-
-      <Box className={classes.container}>
-        {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
-        {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue15}
-              onChange={handleProgressChange15}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue15}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
-        </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          8th
-        </Button>
-      </Box>
-      <hr style={{ opacity: 0.3 }}></hr>
-
-      <Box className={classes.container}>
-        {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
-        {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue16}
-              onChange={handleProgressChange16}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue16}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
-        </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          8th
-        </Button>
-      </Box>
-      <hr style={{ opacity: 0.3 }}></hr>
-
-      <Box className={classes.container}>
-        {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
-        {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue17}
-              onChange={handleProgressChange17}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue17}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
-        </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          8th
-        </Button>
-      </Box>
-      <hr style={{ opacity: 0.3 }}></hr>
-
-      <Box className={classes.container}>
-        {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
-        {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue18}
-              onChange={handleProgressChange18}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue18}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
-        </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          8th
-        </Button>
-      </Box>
-      <hr style={{ opacity: 0.3 }}></hr>
-
-      <Box className={classes.container}>
-        {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
-        {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue19}
-              onChange={handleProgressChange19}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue19}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
-        </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          8th
-        </Button>
-      </Box>
-      <hr style={{ opacity: 0.3 }}></hr>
-
-      <Box className={classes.container}>
-        {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
-        {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue20}
-              onChange={handleProgressChange20}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue20}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
-        </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          8th
-        </Button>
-      </Box>
-      <hr style={{ opacity: 0.3 }}></hr>
-
-      <Box className={classes.container}>
-        {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
-        {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue21}
-              onChange={handleProgressChange21}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue21}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
-        </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          8th
-        </Button>
-      </Box>
-      <hr style={{ opacity: 0.3 }}></hr>
-
-      <Box className={classes.container}>
-        {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
-        {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue22}
-              onChange={handleProgressChange22}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue22}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
-        </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          8th
-        </Button>
-      </Box>
-      <hr style={{ opacity: 0.3 }}></hr>
-
-      <Box className={classes.container}>
-        {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
-        {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue23}
-              onChange={handleProgressChange23}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue23}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
-        </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          8th
-        </Button>
-      </Box>
-      <hr style={{ opacity: 0.3 }}></hr>
-
-      <Box className={classes.container}>
-        {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
-        {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue24}
-              onChange={handleProgressChange24}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue24}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
-        </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          8th
-        </Button>
-      </Box>
-      <hr style={{ opacity: 0.3 }}></hr>
-
-      <Box className={classes.container}>
-        {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
-        {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue25}
-              onChange={handleProgressChange25}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue25}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
-        </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          8th
-        </Button>
-      </Box>
-      <hr style={{ opacity: 0.3 }}></hr>
-
-      <Box className={classes.container}>
-        {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
-        {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue26}
-              onChange={handleProgressChange26}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue26}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
-        </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          8th
-        </Button>
-      </Box>
-      <hr style={{ opacity: 0.3 }}></hr>
-
-      <Box className={classes.container}>
-        {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
-        {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue27}
-              onChange={handleProgressChange27}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue27}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
-        </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          8th
-        </Button>
-      </Box>
-      <hr style={{ opacity: 0.3 }}></hr>
-
-      <Box className={classes.container}>
-        {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
-        {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue28}
-              onChange={handleProgressChange28}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue28}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
-        </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          8th
-        </Button>
-      </Box>
-      <hr style={{ opacity: 0.3 }}></hr>
-
-      <Box className={classes.container}>
-        {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
-        {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue29}
-              onChange={handleProgressChange29}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue29}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
-        </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          8th
-        </Button>
-      </Box>
-      <hr style={{ opacity: 0.3 }}></hr>
-
-      <Box className={classes.container}>
-        {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
-        {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue30}
-              onChange={handleProgressChange30}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue30}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
-        </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          8th
-        </Button>
-      </Box>
-      <hr style={{ opacity: 0.3 }}></hr>
-
-      <Box className={classes.container}>
-        {/* Image section */}
-        <div
-          className={`${classes.circleImage}`}
-          style={{ background: "#E75AA6" }}
-        ></div>
-
-        {/* Slider */}
-        <div className={classes.containerProgress}>
-          <Box className={classes.progressBar}>
-            <Typography variant="h6" component="h2" style={{ fontSize: 12 }}>
-              Adil Khan
-            </Typography>
-            <CustomBar
-              variant="determinate"
-              value={progressValue9}
-              onChange={handleProgressChange9}
-            />
-          </Box>
-          <Box className={classes.progressValue}>
-            <Typography variant="body1">{progressValue9}%</Typography>
-          </Box>
-        </div>
-
-        {/* Dropdown */}
-
-        <Box
-          style={{
-            marginLeft: isMobile ? 0 : 22,
-            marginTop: isMobile ? 10 : 12,
-          }}
-        >
-          <ArrowDropDownCircleIcon />
-        </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
-          8th
-        </Button>
-      </Box>
-      <hr style={{ opacity: 0.3 }}></hr>
+     
     </>
   );
 }
