@@ -12,6 +12,7 @@ import {
   LinearProgress,
   withStyles,
 } from "@material-ui/core";
+
 import Button from "@material-ui/core/Button";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import ApiConfig from "src/ApiConfig/ApiConfig";
@@ -76,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
 
   Buttonbox: {
     "& Button": {
-      padding: "11px 16px",
+      // padding: "11px 16px",
       borderRadius: "4px",
       color: "#fff",
       fontSize: "16px",
@@ -89,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
         content: '""',
         position: "absolute",
         top: "0",
-        left: "-50%",
+        // left: "-50%",
         width: "100%",
         height: "100%",
         backgroundColor: "rgba(255, 255, 255, 0.2)",
@@ -286,184 +287,212 @@ const EngageReward = () => {
                   <Typography variant="h2" className={classes.head}>
                     Engage to Earn
                   </Typography>
-                </Box>
-                {/* first screen of engage to earn */}
-                {/* <Box className={classes.Buttonbox} mt={2}>
-                  <Box mt={2}>
-                    <Button
-                      variant="contained"
-                      style={{ backgroundColor: "#e31a89", color: "#fff" }}
-                    >
-                      Start Now
-                    </Button>
+                  <Box>
+                    <Typography variant="h2" className={classes.head}>
+                      Start Engagement Session
+                    </Typography>
                   </Box>
-                </Box> */}
-
-                <br></br>
-                {/* second screen engage to earn */}
-                <Box>
-                  <form className={classes.form}>
-                    <div className={classes.textFieldWrapper}>
-                      <Typography
-                        variant="body1"
-                        className={classes.inputLabel}
-                        style={{ fontSize: "12px", marginBottom: 2 }}
-                      >
-                        Duration
-                      </Typography>
-                      <TextField
-                        className={classes.input}
-                        value={selectedDuration}
-                        onChange={handleSelectedDurationChange}
-                        placeholder="number of days"
-                        variant="outlined"
-                      />
-                    </div>
-                  </form>
-                  <br></br>
-                </Box>
-                <br></br>
-                <Box>
-                  <form className={classes.form}>
-                    <div className={classes.textFieldWrapper}>
-                      <Typography
-                        variant="body1"
-                        className={classes.inputLabel}
-                        style={{ fontSize: "12px", marginBottom: 2 }}
-                      >
-                        Remaining Days
-                      </Typography>
-                      <TextField
-                        className={classes.input}
-                        value={remainingDays}
-                        onChange={handleRemainingDays}
-                        // placeholder="number of days"
-                        variant="outlined"
-                      />
-                    </div>
-                  </form>
-                  <br></br>
-                </Box>
-                <br></br>
-                {/* <Box>
-                  <form className={classes.form}>
-                    <div className={classes.textFieldWrapper}>
-                      <Typography
-                        variant="body1"
-                        className={classes.inputLabel}
-                        style={{ fontSize: "12px", marginBottom: 2 }}
-                      >
-                        Number of Lazi
-                      </Typography>
-                      <TextField
-                        className={classes.input}
-                        value={selectedOptions}
-                        onChange={handleSelectedOptionsChange}
-                        placeholder="number of $LAZI"
-                        variant="outlined"
-                      />
-                    </div>
-                  </form>
-                  <Box className={classes.Buttonbox} mt={2} style={{display:'flex',justifyContent:'space-between'}}>
-                  <Box mt={2}>
-                    <Button
-                      variant="contained"
-                      style={{ backgroundColor: "#e31a89", color: "#fff",height:40, padding:10,fontSize:14 }}
-                    >
-                    Extend
-                    </Button>
+                  <Box
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <Box>
+                      <form className={classes.form}>
+                        <div className={classes.textFieldWrapper}>
+                          <Typography
+                            variant="body1"
+                            className={classes.inputLabel}
+                            style={{ fontSize: "12px", marginBottom: 2 }}
+                          >
+                            Tokens to Stake
+                          </Typography>
+                          <TextField
+                            className={classes.input}
+                            value={selectedDuration}
+                            onChange={handleSelectedDurationChange}
+                            placeholder="number of $LAZI"
+                            variant="outlined"
+                          />
+                        </div>
+                      </form>
+                      <br></br>
+                    </Box>
+                    <Box className={classes.Buttonbox}>
+                      <Box mt={2}>
+                        <Button
+                          variant="contained"
+                          style={{
+                            backgroundColor: "#e31a89",
+                            color: "#fff",
+                            height: 40,
+                            fontSize: 14,
+                            marginTop: 2,
+                          }}
+                        >
+                          Max
+                        </Button>
+                      </Box>
+                    </Box>
                   </Box>
-                  <Box mt={2}>
-                    <Button
-                      variant="contained"
-                      style={{ backgroundColor: "#3C3C3C", color: "#fff",height:40, padding:10,fontSize:14 }}
-                    >
-                    End Session
-                    </Button>
-                  </Box>
-                </Box> 
-                <br></br>
                   <br></br>
-                </Box>  */}
-
-                {/* third Screen of Engage Buttons */}
-                <Box>
-                  <Typography variant="h2" className={classes.header}>
-                    Select Stake Username
-                  </Typography>
-                </Box>
-                <Box className={classes.checkboxContainer} mt={4} mb={2}>
-                  <div className={classes.checkbox}>
-                    <Checkbox
-                      defaultChecked
-                      size="small"
-                      inputProps={{
-                        "aria-label": "checkbox with small size",
-                      }}
-                    />
-                    <Typography variant="h5" className={classes.checboxText}>
-                      Adil Khan
-                    </Typography>
-                  </div>
-
-                  <div className={classes.checkbox}>
-                    <Checkbox
-                      defaultChecked
-                      size="small"
-                      inputProps={{
-                        "aria-label": "checkbox with small size",
-                      }}
-                    />
-                    <Typography variant="h5" className={classes.checboxText}>
-                      Muneeb Khan
-                    </Typography>
-                  </div>
-
-                  <div className={classes.checkbox}>
-                    <Checkbox
-                      defaultChecked
-                      size="small"
-                      inputProps={{
-                        "aria-label": "checkbox with small size",
-                      }}
-                    />
-                    <Typography variant="h5" className={classes.checboxText}>
-                      Ahmad Raza
-                    </Typography>
-                  </div>
-
-                  <div className={classes.checkbox}>
-                    <Checkbox
-                      defaultChecked
-                      size="small"
-                      inputProps={{
-                        "aria-label": "checkbox with small size",
-                      }}
-                    />
-                    <Typography variant="h5" className={classes.checboxText}>
-                      Fahid Farooq
-                    </Typography>
-                  </div>
-                </Box>
-                <Box className={classes.Buttonbox} mt={1}>
-                  <Box mt={2}>
-                    <Button
-                      variant="contained"
+                  <Box>
+                    <form className={classes.form}>
+                      <div className={classes.textFieldWrapper}>
+                        <Typography
+                          variant="body1"
+                          className={classes.inputLabel}
+                          style={{ fontSize: "12px", marginBottom: 2 }}
+                        >
+                          Remaining Days
+                        </Typography>
+                        <TextField
+                          className={classes.input}
+                          value={remainingDays}
+                          onChange={handleRemainingDays}
+                          // placeholder="number of days"
+                          variant="outlined"
+                        />
+                      </div>
+                    </form>
+                    <br></br>
+                  </Box>
+                  <br></br>
+                  <Box>
+                    <form className={classes.form}>
+                      <div className={classes.textFieldWrapper}>
+                        <Typography
+                          variant="body1"
+                          className={classes.inputLabel}
+                          style={{ fontSize: "12px", marginBottom: 2 }}
+                        >
+                          Stake $LAZI
+                        </Typography>
+                        <TextField
+                          className={classes.input}
+                          value={selectedOptions}
+                          onChange={handleSelectedOptionsChange}
+                          placeholder="Stake $LAZI"
+                          variant="outlined"
+                        />
+                      </div>
+                    </form>
+                    <Box
+                      className={classes.Buttonbox}
+                      mt={2}
                       style={{
-                        backgroundColor: "#e31a89",
-                        color: "#fff",
-                        height: 40,
-                        padding: 10,
-                        fontSize: 14,
+                        display: "flex",
+                        justifyContent: "space-between",
                       }}
                     >
-                      Start New
-                    </Button>
+                      <Box mt={2}>
+                        <Button
+                          variant="contained"
+                          style={{
+                            backgroundColor: "#e31a89",
+                            color: "#fff",
+                            height: 40,
+                            padding: 10,
+                            fontSize: 14,
+                          }}
+                        >
+                          Extend
+                        </Button>
+                      </Box>
+                      <Box mt={2}>
+                        <Button
+                          variant="contained"
+                          style={{
+                            backgroundColor: "#e31a89",
+                            color: "#fff",
+                            height: 40,
+                            padding: 10,
+                            fontSize: 14,
+                          }}
+                        >
+                          Max
+                        </Button>
+                      </Box>
+                    </Box>
+                    <br></br>
+                    <br></br>
                   </Box>
-                </Box>
-                <br></br>
 
-                {/* start of third screen */}
+                  {/* third Screen of Engage Buttons */}
+                  <Box>
+                    <Typography variant="h2" className={classes.header}>
+                      Select Stake Username
+                    </Typography>
+                  </Box>
+                  <Box className={classes.checkboxContainer} mt={4} mb={2}>
+                    <div className={classes.checkbox}>
+                      <Checkbox
+                        defaultChecked
+                        size="small"
+                        inputProps={{
+                          "aria-label": "checkbox with small size",
+                        }}
+                      />
+                      <Typography variant="h5" className={classes.checboxText}>
+                        Adil Khan
+                      </Typography>
+                    </div>
+
+                    <div className={classes.checkbox}>
+                      <Checkbox
+                        defaultChecked
+                        size="small"
+                        inputProps={{
+                          "aria-label": "checkbox with small size",
+                        }}
+                      />
+                      <Typography variant="h5" className={classes.checboxText}>
+                        Muneeb Khan
+                      </Typography>
+                    </div>
+
+                    <div className={classes.checkbox}>
+                      <Checkbox
+                        defaultChecked
+                        size="small"
+                        inputProps={{
+                          "aria-label": "checkbox with small size",
+                        }}
+                      />
+                      <Typography variant="h5" className={classes.checboxText}>
+                        Ahmad Raza
+                      </Typography>
+                    </div>
+
+                    <div className={classes.checkbox}>
+                      <Checkbox
+                        defaultChecked
+                        size="small"
+                        inputProps={{
+                          "aria-label": "checkbox with small size",
+                        }}
+                      />
+                      <Typography variant="h5" className={classes.checboxText}>
+                        Fahid Farooq
+                      </Typography>
+                    </div>
+                  </Box>
+                  <Box className={classes.Buttonbox} mt={1}>
+                    <Box mt={2}>
+                      <Button
+                        variant="contained"
+                        style={{
+                          backgroundColor: "#e31a89",
+                          color: "#fff",
+                          height: 40,
+                          padding: 10,
+                          fontSize: 14,
+                        }}
+                      >
+                        Start New
+                      </Button>
+                    </Box>
+                  </Box>
+                  <br></br>
+                </Box>
               </Box>
             </Paper>
             <Paper
@@ -569,17 +598,11 @@ const EngageReward = () => {
                       </Typography>
                     </Box>
                     <br></br>
-                    <Box className={classes.checkbox}>
-                      <Checkbox
-                        // checked={true}
-                        // onChange={(event) => setCheckedBox(!checkBoxRemember)}
-                        defaultChecked
-                        size="small"
-                        inputProps={{
-                          "aria-label": "checkbox with small size",
-                        }}
-                      />
-                      <Typography variant="h5">{"Add a Multiplier"}</Typography>
+
+                    <Box>
+                      <Typography variant="h2" className={classes.inputLabel}>
+                        Your Multiplier = <span>12</span>
+                      </Typography>
                     </Box>
                   </div>
                 </div>
@@ -593,13 +616,13 @@ const EngageReward = () => {
                       className={classes.inputLabel}
                       style={{ fontSize: "12px", marginBottom: 2 }}
                     >
-                      User Name(Max 5)
+                      Average Lazi Stake
                     </Typography>
                     <TextField
                       className={classes.input}
                       value={selectedUsername}
                       onChange={handleSelectedUsername}
-                      placeholder="Number of Lazi username"
+                      placeholder=" Average Lazi Stake"
                       variant="outlined"
                     />
                   </div>
@@ -612,117 +635,13 @@ const EngageReward = () => {
                       className={classes.inputLabel}
                       style={{ fontSize: "12px", marginBottom: 2 }}
                     >
-                      Rewards for Contribution
+                      Average Stake Duration
                     </Typography>
                     <TextField
                       className={classes.input}
                       value={averageStakeAmount}
                       onChange={handleAverageStakeAmount}
                       placeholder="(username multiplier)"
-                      variant="outlined"
-                    />
-                  </div>
-                  <br></br>
-                </Box>
-
-                <Box mt={1}>
-                  <div className={classes.textFieldWrapper}>
-                    <Typography
-                      variant="body2"
-                      className={classes.inputLabel}
-                      style={{ fontSize: "12px", marginBottom: 2 }}
-                    >
-                      Final Multiplier Value
-                    </Typography>
-                    <TextField
-                      className={classes.input}
-                      value={valueOfFinalMultiplier}
-                      onChange={handleMultiplierValue}
-                      placeholder="(STU)"
-                      variant="outlined"
-                    />
-                  </div>
-                  <br></br>
-                </Box>
-              </Box>
-            </Paper>
-            <Paper
-              className={classes.root}
-              elevation={2}
-              style={{ marginTop: "10px" }}
-            >
-              <Box
-                className={classes.root}
-                height="auto"
-                width="auto"
-                overflow="auto"
-              >
-                <div style={{ display: "flex" }}>
-                  <div>
-                    <Box>
-                      <Typography variant="h2" className={classes.head}>
-                        Leaderboard
-                      </Typography>
-                    </Box>
-                    <br></br>
-                  </div>
-                </div>
-
-                <br></br>
-
-                <Box mt={1}>
-                  <div className={classes.textFieldWrapper}>
-                    <Typography
-                      variant="body2"
-                      className={classes.inputLabel}
-                      style={{ fontSize: "12px", marginBottom: 2 }}
-                    >
-                      User's Rank in the Leaderboard
-                    </Typography>
-                    <TextField
-                      className={classes.input}
-                      value={userRank}
-                      onChange={handleUserRank}
-                      placeholder="User's Rank in the Leaderboard"
-                      variant="outlined"
-                    />
-                  </div>
-                  <br></br>
-                </Box>
-                <Box mt={1}>
-                  <div className={classes.textFieldWrapper}>
-                    <Typography
-                      variant="body2"
-                      className={classes.inputLabel}
-                      style={{ fontSize: "12px", marginBottom: 2 }}
-                    >
-                      User's Score for the Day
-                    </Typography>
-                    <TextField
-                      className={classes.input}
-                      value={userScore}
-                      onChange={handleUserScore}
-                      placeholder="User's Score for the Day"
-                      variant="outlined"
-                    />
-                  </div>
-                  <br></br>
-                </Box>
-
-                <Box mt={1}>
-                  <div className={classes.textFieldWrapper}>
-                    <Typography
-                      variant="body2"
-                      className={classes.inputLabel}
-                      style={{ fontSize: "12px", marginBottom: 2 }}
-                    >
-                      Rewards for Winning the Leaderboard
-                    </Typography>
-                    <TextField
-                      className={classes.input}
-                      value={winReward}
-                      onChange={handleWinReward}
-                      placeholder="Rewards for Winning the Leaderboard"
                       variant="outlined"
                     />
                   </div>
