@@ -79,6 +79,7 @@ const Apiconfigs = {
   likeDislikeAuction: `${url}/user/likeDislikeAuction/`,
   deleteAuction: `${url}/user/deleteAuction`,
   buyAuctionList: `${url}/user/buyAuctionList`,
+  contributionScore: `${url}/user/contributionScore`,
 
   // story
   storyListWithFollowing: `${url}/user/storyListWithFollowing`,

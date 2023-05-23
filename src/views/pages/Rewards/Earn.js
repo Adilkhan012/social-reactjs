@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 import {
   Box,
@@ -9,13 +10,12 @@ import {
   TextField,
   Typography,
   LinearProgress,
-  withStyles
+  withStyles,
 } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-
-
-
+import ApiConfig from "src/ApiConfig/ApiConfig";
+import { toast } from "react-toastify";
 
 const CustomBar = withStyles({
   root: {
@@ -28,7 +28,6 @@ const CustomBar = withStyles({
     borderRadius: 4,
   },
 })(LinearProgress);
-
 
 const useStyles = makeStyles((theme) => ({
   checkboxContainer: {
@@ -155,7 +154,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
     fontWeight: "bold",
   },
- 
 }));
 const EngageReward = () => {
   const classes = useStyles();
@@ -174,6 +172,8 @@ const EngageReward = () => {
   const [userScore, setUserScore] = useState("");
   const [winReward, setWinReward] = useState("");
   const [remainingDays, setRemainingDays] = useState(2);
+  // const [totalContribution, setTotalContribution] = useState(0);
+  const [userContribution, setUserContribution] = useState(0);
 
   const handleSelectedOptionsChange = (e) => {
     setSelectedOptions(e.target.value);
@@ -193,12 +193,11 @@ const EngageReward = () => {
   const handleSelectedMiningReward = (e) => {
     setSelectedMiningReward(e.target.value);
   };
-  const [averageStakeAmount,setAverageStakeAmount ] = useState("");
+  const [averageStakeAmount, setAverageStakeAmount] = useState("");
   const handleSelectedUsername = (e) => {
     setSelectedUsername(e.target.value);
   };
 
- 
   const handleAverageStakeAmount = (e) => {
     setAverageStakeAmount(e.target.value);
   };
@@ -216,10 +215,9 @@ const EngageReward = () => {
   const handleWinReward = (e) => {
     setWinReward(e.target.value);
   };
-  const handleRemainingDays=(e)=>{
-    setRemainingDays(e.target.value)
-  }
-
+  const handleRemainingDays = (e) => {
+    setRemainingDays(e.target.value);
+  };
 
   //Contribution Score
   const [value1, setValue1] = useState(50);
@@ -229,22 +227,53 @@ const EngageReward = () => {
 
   const handleValueChange = (event, newValue) => {
     setValue1(newValue);
-  }; 
+  };
   const handleValueChange2 = (event, newValue) => {
     setValue1(newValue);
-  }; 
+  };
   const handleValueChange3 = (event, newValue) => {
     setValue1(newValue);
-  }; 
+  };
   const handleValueChange4 = (event, newValue) => {
     setValue1(newValue);
-  }; 
-
-
+  };
 
   const isMobile = useMediaQuery("(max-width:600px)");
   // https://meet.google.com/tdr-grfk-vzg
-  
+
+  const fetchScore = async () => {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: ApiConfig.contributionScore,
+        headers: {
+          token: localStorage.getItem("token"),
+        },
+      });
+
+      const userScore = response.data.userScore;
+      // setTotalContribution(totalContribution);
+      setUserContribution(userScore);
+      console.log(userScore);
+      toast.success("Contribution score fetched successfully!");
+    } catch (error) {
+      console.error("Error fetching contribution score:", error.response);
+
+      // Display error toast message
+      toast.error("Error fetching contribution score. Please try again.");
+
+      // Handle specific error scenarios
+      if (error.response && error.response.status === 401) {
+        console.log("Error 401");
+      } else {
+        console.log("Error Fetching Scores!!!");
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchScore();
+  }, []);
 
   return (
     <>
@@ -442,62 +471,86 @@ const EngageReward = () => {
               elevation={2}
               style={{ marginTop: "10px" }}
             >
-              <Box >
-                <Typography variant="h2" className={classes.head}>Contribution Reward</Typography>
+              <Box>
+                <Typography variant="h2" className={classes.head}>
+                  Contribution Reward
+                </Typography>
               </Box>
 
+              <div className={classes.containerProgress}>
+                <Box className={classes.progressBar}>
+                  <Typography
+                    variant="h6"
+                    component="h2"
+                    style={{ fontSize: 12 }}
+                  >
+                    Contribution Score
+                  </Typography>
+                  <CustomBar variant="determinate" value={userContribution} />
+                </Box>
+                <Box className={classes.progressValue}>
+                  <Typography variant="body1">100%</Typography>
+                </Box>
+              </div>
 
               <div className={classes.containerProgress}>
-      <Box className={classes.progressBar}>
-        <Typography variant="h6" component="h2" style={{fontSize:12}}>
-          Contribution Score
-        </Typography>
-        <CustomBar variant="determinate" value={value1} onChange={handleValueChange} />
-      </Box>
-        <Box className={classes.progressValue}>
-          <Typography variant="body1">{value1}%</Typography>
-        </Box>
-      
-    </div>
+                <Box className={classes.progressBar}>
+                  <Typography
+                    variant="h6"
+                    component="h2"
+                    style={{ fontSize: 12 }}
+                  >
+                    Duration Score
+                  </Typography>
+                  <CustomBar
+                    variant="determinate"
+                    value={value2}
+                    onChange={handleValueChange2}
+                  />
+                </Box>
+                <Box className={classes.progressValue}>
+                  <Typography variant="body1">{value2}%</Typography>
+                </Box>
+              </div>
               <div className={classes.containerProgress}>
-      <Box className={classes.progressBar}>
-        <Typography variant="h6" component="h2" style={{fontSize:12}}>
-         Duration Score
-        </Typography>
-        <CustomBar variant="determinate" value={value2} onChange={handleValueChange2} />
-      </Box>
-        <Box className={classes.progressValue}>
-          <Typography variant="body1">{value2}%</Typography>
-        </Box>
-      
-    </div>
-    <div className={classes.containerProgress}>
-      <Box className={classes.progressBar}>
-        <Typography variant="h6" component="h2" style={{fontSize:12}}>
-          Stake Amount Score
-        </Typography>
-        <CustomBar variant="determinate" value={value3} onChange={handleValueChange3} />
-      </Box>
-        <Box className={classes.progressValue}>
-          <Typography variant="body1">{value3}%</Typography>
-        </Box>
-      
-    </div>
+                <Box className={classes.progressBar}>
+                  <Typography
+                    variant="h6"
+                    component="h2"
+                    style={{ fontSize: 12 }}
+                  >
+                    Stake Amount Score
+                  </Typography>
+                  <CustomBar
+                    variant="determinate"
+                    value={value3}
+                    onChange={handleValueChange3}
+                  />
+                </Box>
+                <Box className={classes.progressValue}>
+                  <Typography variant="body1">{value3}%</Typography>
+                </Box>
+              </div>
 
-
-
-    <div className={classes.containerProgress}>
-      <Box className={classes.progressBar}>
-        <Typography variant="h6" component="h2" style={{fontSize:12}}>
-          Stake Amount Score
-        </Typography>
-        <CustomBar variant="determinate" value={value4} onChange={handleValueChange4} />
-      </Box>
-        <Box className={classes.progressValue}>
-          <Typography variant="body1">{value4}%</Typography>
-        </Box>
-      
-    </div>
+              <div className={classes.containerProgress}>
+                <Box className={classes.progressBar}>
+                  <Typography
+                    variant="h6"
+                    component="h2"
+                    style={{ fontSize: 12 }}
+                  >
+                    Stake Amount Score
+                  </Typography>
+                  <CustomBar
+                    variant="determinate"
+                    value={value4}
+                    onChange={handleValueChange4}
+                  />
+                </Box>
+                <Box className={classes.progressValue}>
+                  <Typography variant="body1">{value4}%</Typography>
+                </Box>
+              </div>
             </Paper>
           </Grid>
           <Grid item md={isMobile ? 12 : 6} xs={isMobile ? 12 : 12}>
