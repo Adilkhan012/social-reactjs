@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
 import {
@@ -11,12 +11,19 @@ import {
   Typography,
   LinearProgress,
   withStyles,
+  Tooltip,
 } from "@material-ui/core";
+import InfoIcon from "@material-ui/icons/Info";
 
 import Button from "@material-ui/core/Button";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import ApiConfig from "src/ApiConfig/ApiConfig";
 import { toast } from "react-toastify";
+import initMetamask from "src/blockchain/metamaskConnection";
+import initEngagementContract from "src/blockchain/engagementContract";
+import initlaziTokenContract from "src/blockchain/laziTokenContract";
+import initUserNameContract from "src/blockchain/laziUserNameContract";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 
 const CustomBar = withStyles({
   root: {
@@ -31,17 +38,32 @@ const CustomBar = withStyles({
 })(LinearProgress);
 
 const useStyles = makeStyles((theme) => ({
-  checkboxContainer: {
-    display: "grid",
-    gridTemplateColumns: "repeat(2, 1fr)", // Two columns
-    gap: theme.spacing(2), // Gap between items
-  },
   checkbox: {
     display: "flex",
     alignItems: "center",
     marginBottom: theme.spacing(1),
   },
-
+  tooltipIconHeader: {
+    display: "flex",
+    alignItems: "center",
+    marginBottom: theme.spacing(1),
+  },
+  tooltip: {
+    backgroundColor: "secondary",
+    textAlign: "center",
+    fontSize: "20px",
+  },
+  sliderThumb: {
+    transition: "transform 0.2s ease-out",
+    "&:hover": {
+      transform: "scale(1.2)",
+    },
+  },
+  checkboxContainer: {
+    display: "grid",
+    gridTemplateColumns: "repeat(2, 1fr)", // Two columns
+    gap: theme.spacing(2), // Gap between items
+  },
   heading: {
     display: "flex",
   },
@@ -173,8 +195,71 @@ const EngageReward = () => {
   const [userScore, setUserScore] = useState("");
   const [winReward, setWinReward] = useState("");
   const [remainingDays, setRemainingDays] = useState(2);
+  const [engagementContract, setEngagementContract] = useState(null);
+  const [userNameContract, setUserNameContract] = useState(null);
+  const [laziTokenContract, setLaziTokenContract] = useState(null);
+  const [userAddress, setUserAddress] = useState(null);
+  const [selectedUserNames, setSelectedUserNames] = useState([]);
+  const [mintedUserNames, setMintedUserNames] = useState([]);
+  const [selectedTime, setSelectedTime] = useState(null);
+  const [tokenStakeValue, setTokenStakeValue] = useState(20);
+  const [userBalance, setUserBalance] = useState(0);
   // const [totalContribution, setTotalContribution] = useState(0);
-  const [userContribution, setUserContribution] = useState(0);
+  const [userContributionScore, setUserContributionScore] = useState(0);
+  const [userStakedDuration, setUserStakedDuration] = useState(0);
+  const [userStakedTokens, setUserStakedTokens] = useState(0);
+  const [totalStakedLazi, setTotalStakedLazi] = useState(0);
+  const [totalStakedDuration, setTotalStakedDuration] = useState(0);
+  const [userStakedScore, setUserStakedScore] = useState(0);
+  const [userDurationScore, setUserDurationScore] = useState(0);
+
+  const monthOptions = [
+    { label: "90 Days (1.25x)", value: 90 },
+    { label: "180 Days (1.5x)", value: 180 },
+    { label: "365 Days (2x)", value: 365 },
+    { label: "547 Days (1.75x)", value: 547 },
+    { label: "730 Days (3.5x)", value: 730 },
+  ];
+
+  useEffect(() => {
+    const initialize = async () => {
+      try {
+        const { address } = await initMetamask();
+        const engagementStaking = await initEngagementContract();
+        const tokenContract = await initlaziTokenContract();
+        const contractUserName = await initUserNameContract();
+        setLaziTokenContract(tokenContract);
+        setEngagementContract(engagementStaking);
+        setUserNameContract(contractUserName);
+        setUserAddress(address);
+      } catch (error) {
+        console.error("Contract initialization failed:", error);
+      }
+    };
+
+    initialize();
+    fetchScore();
+  }, []);
+
+  const handleStakeTokenChange = (event) => {
+    setTokenStakeValue(event.target.value);
+  };
+
+  const handleCheckboxChange = (event, userName, tokenId) => {
+    const selectedTokenId = event.target.value;
+    console.log("Selected Token ID:", selectedTokenId);
+
+    if (event.target.checked) {
+      setSelectedUserNames((prevSelectedUserNames) => [
+        ...prevSelectedUserNames,
+        tokenId,
+      ]);
+    } else {
+      setSelectedUserNames((prevSelectedUserNames) =>
+        prevSelectedUserNames.filter((id) => id !== tokenId)
+      );
+    }
+  };
 
   const handleSelectedOptionsChange = (e) => {
     setSelectedOptions(e.target.value);
@@ -229,11 +314,11 @@ const EngageReward = () => {
   const handleValueChange = (event, newValue) => {
     setValue1(newValue);
   };
-  const handleValueChange2 = (event, newValue) => {
-    setValue1(newValue);
+  const handleDurationScoreChange = (event, newValue) => {
+    setUserDurationScore(newValue);
   };
-  const handleValueChange3 = (event, newValue) => {
-    setValue1(newValue);
+  const handleStakedScoreChange = (event, newValue) => {
+    setUserStakedScore(newValue);
   };
   const handleValueChange4 = (event, newValue) => {
     setValue1(newValue);
@@ -254,7 +339,7 @@ const EngageReward = () => {
 
       const userScore = response.data.userScore;
       // setTotalContribution(totalContribution);
-      setUserContribution(userScore);
+      setUserContributionScore(userScore);
       console.log(userScore);
       toast.success("Contribution score fetched successfully!");
     } catch (error) {
@@ -272,9 +357,117 @@ const EngageReward = () => {
     }
   };
 
+  //function to fetch UserNames
+  const getOwnerMintedUserNames = useCallback(async () => {
+    try {
+      const mintedDomains = [];
+      // Get the token IDs owned by the connected account
+      const tokenIds = await userNameContract.methods
+        .tokensOfOwner(userAddress)
+        .call();
+      console.log("tokenIDs: ", tokenIds);
+      for (const tokenId of tokenIds) {
+        const mintedDomain = await userNameContract.methods
+          .domainNameOf(tokenId)
+          .call();
+        mintedDomains.push({ domainName: mintedDomain + ".lazi", tokenId });
+      }
+
+      setMintedUserNames(mintedDomains);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [userAddress, userNameContract]);
+
+  const handleStake = async () => {
+    const erc20Amount = tokenStakeValue; // Use sliderValue state variable
+    console.log("selected Amount:", erc20Amount);
+
+    // const daysToStake = selectedTime; // Example: 30 days
+    console.log("selected UserName:", selectedUserNames);
+    console.log("selected TimePeriod:", selectedTime);
+    console.log("user Duration:", userStakedDuration);
+    console.log("user Tokens:", userStakedTokens);
+    console.log("Total Duration:", totalStakedDuration);
+    console.log("Total StakedTokens:", totalStakedLazi);
+
+    // const erc721Ids = selectedUserNames; // Example: ERC721 token IDs    if (web3 && lpRewardContract) {
+    if (engagementContract) {
+      try {
+        const gasEstimate = await engagementContract.methods
+          .stake(erc20Amount, selectedTime, selectedUserNames)
+          .estimateGas({ from: userAddress });
+
+        engagementContract.methods
+          .stake(erc20Amount, selectedTime, selectedUserNames)
+          .send({ from: userAddress, gas: gasEstimate })
+          .on("transactionHash", (hash) => {
+            console.log(hash);
+          })
+          .on("receipt", (receipt) => {
+            console.log(receipt);
+            toast.success("Stake successful!", {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+          })
+          .on("error", (error) => {
+            console.log(error);
+            const errorMessage = error.message.split("reverted: ")[1];
+            toast.error(errorMessage, { position: toast.POSITION.TOP_RIGHT });
+          });
+      } catch (error) {
+        console.log(error);
+        const errorMessage = error.message.split("reverted: ")[1];
+        toast.error(errorMessage, { position: toast.POSITION.TOP_RIGHT });
+      }
+    }
+  };
+
+  const fetchUserBalance = useCallback(async () => {
+    try {
+      // Call the balanceOf() function to get the user's balance
+      const balance = await laziTokenContract.methods
+        .balanceOf(userAddress)
+        .call();
+      setUserBalance(balance);
+      const totalStakedLazi = await engagementContract.methods
+        .totalStakedLazi()
+        .call();
+      setTotalStakedLazi(totalStakedLazi);
+      const totalStakedDuration = await engagementContract.methods
+        .totalStakedDuration()
+        .call();
+      setTotalStakedDuration(totalStakedDuration);
+
+      const userInfo = await engagementContract.methods
+        .users(userAddress)
+        .call();
+      setUserStakedDuration(userInfo.stakeDuration);
+      setUserStakedTokens(userInfo.stakedLazi);
+      const userDurationScore =
+        (userInfo.stakeDuration / totalStakedDuration) * 100;
+      const userStakedScore = (userInfo.stakedLazi / totalStakedLazi) * 100;
+      setUserStakedScore(userStakedScore);
+      setUserDurationScore(userDurationScore);
+      // Update the userBalance state variable with the retrieved balance
+      console.log("UserBalance", balance);
+    } catch (error) {
+      console.error("Error fetching balance:", error);
+    }
+  }, [userAddress, laziTokenContract, engagementContract]);
+
   useEffect(() => {
-    fetchScore();
-  }, []);
+    if (userAddress && engagementContract && userNameContract) {
+      getOwnerMintedUserNames();
+      fetchUserBalance();
+    }
+  }, [
+    userAddress,
+    userNameContract,
+    engagementContract,
+    fetchUserBalance,
+    getOwnerMintedUserNames,
+  ]);
 
   return (
     <>
@@ -283,303 +476,112 @@ const EngageReward = () => {
           <Grid item md={isMobile ? 12 : 6} xs={isMobile ? 12 : 12}>
             <Paper className={classes.root} elevation={2}>
               <Box className={classes.root}>
-                <Box>
-                  <Typography variant="h2" className={classes.head}>
-                    Engage to Earn
-                  </Typography>
-                  <Box>
-                    <Typography variant="h2" className={classes.head}>
-                      Start Engagement Session
-                    </Typography>
-                  </Box>
-                  <Box
-                    style={{ display: "flex", justifyContent: "space-between" }}
+                <Box className={classes.tooltipIconHeader}>
+                  <Typography variant="h2">Start Engagement</Typography>
+                  <Tooltip
+                    title="This is the Engagement Session."
+                    style={{ cursor: "pointer" }}
+                    placement={"top"}
+                    classes={{ tooltip: classes.tooltip }}
                   >
+                    <InfoIcon fontSize={"medium"} />
+                  </Tooltip>
+                </Box>
+
+                <br></br>
+                <Box mt={2} mb={2}>
+                  <Typography
+                    variant="body2"
+                    className={classes.inputLabel}
+                    style={{ fontSize: "12px", marginBottom: 2 }}
+                  >
+                    Enter Token to Stake
+                  </Typography>
+                  <TextField
+                    className={classes.input}
+                    value={tokenStakeValue}
+                    onChange={handleStakeTokenChange}
+                    variant="outlined"
+                  />
+                  <Button
+                    variant="contained"
+                    style={{
+                      backgroundColor: "#e31a89",
+                      color: "#fff",
+                      height: 40,
+                      fontSize: 14,
+                      marginTop: 2,
+                    }}
+                    onClick={() => setTokenStakeValue(userBalance)}
+                  >
+                    Max
+                  </Button>
+                </Box>
+                <Box mt={4}>
+                  <Autocomplete
+                    disablePortal
+                    id="tags-standard"
+                    sx={{ width: 300 }}
+                    options={monthOptions}
+                    value={
+                      monthOptions.find(
+                        (option) => option.value === selectedTime
+                      ) || null
+                    }
+                    getOptionLabel={(option) => option.label}
+                    onChange={(event, newValue) =>
+                      setSelectedTime(newValue?.value || null)
+                    }
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="outlined"
+                        label="Month Stake"
+                      />
+                    )}
+                  />
+                  <br></br>
+                </Box>
+                <br></br>
+                <div style={{ display: "flex" }}>
+                  <div>
+                    <Box className={classes.heading}>
+                      <Typography variant="h2">Users Stake</Typography>
+                    </Box>
+                    <br></br>
                     <Box>
-                      <form className={classes.form}>
-                        <div className={classes.textFieldWrapper}>
-                          <Typography
-                            variant="body1"
-                            className={classes.inputLabel}
-                            style={{ fontSize: "12px", marginBottom: 2 }}
-                          >
-                            Tokens to Stake
-                          </Typography>
-                          <TextField
-                            className={classes.input}
-                            value={selectedDuration}
-                            onChange={handleSelectedDurationChange}
-                            placeholder="number of $LAZI"
-                            variant="outlined"
+                      {mintedUserNames.map(({ domainName, tokenId }) => (
+                        <Box className={classes.checkbox} key={domainName}>
+                          <Checkbox
+                            checked={selectedUserNames.includes(tokenId)}
+                            onChange={(event) =>
+                              handleCheckboxChange(event, domainName, tokenId)
+                            }
+                            value={tokenId}
+                            size="small"
+                            inputProps={{
+                              "aria-label": "checkbox with small size",
+                            }}
                           />
-                        </div>
-                      </form>
-                      <br></br>
+                          <Typography variant="h5">{domainName}</Typography>
+                        </Box>
+                      ))}
                     </Box>
-                    <Box className={classes.Buttonbox}>
-                      <Box mt={2}>
-                        <Button
-                          variant="contained"
-                          style={{
-                            backgroundColor: "#e31a89",
-                            color: "#fff",
-                            height: 40,
-                            fontSize: 14,
-                            marginTop: 2,
-                          }}
-                        >
-                          Max
-                        </Button>
-                      </Box>
-                    </Box>
-                  </Box>
-                  <br></br>
-                  <Box>
-                    <form className={classes.form}>
-                      <div className={classes.textFieldWrapper}>
-                        <Typography
-                          variant="body1"
-                          className={classes.inputLabel}
-                          style={{ fontSize: "12px", marginBottom: 2 }}
-                        >
-                          Remaining Days
-                        </Typography>
-                        <TextField
-                          className={classes.input}
-                          value={remainingDays}
-                          onChange={handleRemainingDays}
-                          // placeholder="number of days"
-                          variant="outlined"
-                        />
-                      </div>
-                    </form>
-                    <br></br>
-                  </Box>
-                  <br></br>
-                  <Box>
-                    <form className={classes.form}>
-                      <div className={classes.textFieldWrapper}>
-                        <Typography
-                          variant="body1"
-                          className={classes.inputLabel}
-                          style={{ fontSize: "12px", marginBottom: 2 }}
-                        >
-                          Stake $LAZI
-                        </Typography>
-                        <TextField
-                          className={classes.input}
-                          value={selectedOptions}
-                          onChange={handleSelectedOptionsChange}
-                          placeholder="Stake $LAZI"
-                          variant="outlined"
-                        />
-                      </div>
-                    </form>
-                    <Box
-                      className={classes.Buttonbox}
-                      mt={2}
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
+                  </div>
+                </div>
+                <Box className={classes.Buttonbox} mt={2}>
+                  <Box mt={2}>
+                    <Button
+                      variant="contained"
+                      style={{ backgroundColor: "#e31a89", color: "#fff" }}
+                      onClick={handleStake}
                     >
-                      <Box mt={2}>
-                        <Button
-                          variant="contained"
-                          style={{
-                            backgroundColor: "#e31a89",
-                            color: "#fff",
-                            height: 40,
-                            padding: 10,
-                            fontSize: 14,
-                          }}
-                        >
-                          Extend
-                        </Button>
-                      </Box>
-                      <Box mt={2}>
-                        <Button
-                          variant="contained"
-                          style={{
-                            backgroundColor: "#e31a89",
-                            color: "#fff",
-                            height: 40,
-                            padding: 10,
-                            fontSize: 14,
-                          }}
-                        >
-                          Max
-                        </Button>
-                      </Box>
-                    </Box>
-                    <br></br>
-                    <br></br>
+                      Start Now
+                    </Button>
                   </Box>
-
-                  {/* third Screen of Engage Buttons */}
-                  <Box>
-                    <Typography variant="h2" className={classes.header}>
-                      Select Stake Username
-                    </Typography>
-                  </Box>
-                  <Box className={classes.checkboxContainer} mt={4} mb={2}>
-                    <div className={classes.checkbox}>
-                      <Checkbox
-                        defaultChecked
-                        size="small"
-                        inputProps={{
-                          "aria-label": "checkbox with small size",
-                        }}
-                      />
-                      <Typography variant="h5" className={classes.checboxText}>
-                        Adil Khan
-                      </Typography>
-                    </div>
-
-                    <div className={classes.checkbox}>
-                      <Checkbox
-                        defaultChecked
-                        size="small"
-                        inputProps={{
-                          "aria-label": "checkbox with small size",
-                        }}
-                      />
-                      <Typography variant="h5" className={classes.checboxText}>
-                        Muneeb Khan
-                      </Typography>
-                    </div>
-
-                    <div className={classes.checkbox}>
-                      <Checkbox
-                        defaultChecked
-                        size="small"
-                        inputProps={{
-                          "aria-label": "checkbox with small size",
-                        }}
-                      />
-                      <Typography variant="h5" className={classes.checboxText}>
-                        Ahmad Raza
-                      </Typography>
-                    </div>
-
-                    <div className={classes.checkbox}>
-                      <Checkbox
-                        defaultChecked
-                        size="small"
-                        inputProps={{
-                          "aria-label": "checkbox with small size",
-                        }}
-                      />
-                      <Typography variant="h5" className={classes.checboxText}>
-                        Fahid Farooq
-                      </Typography>
-                    </div>
-                  </Box>
-                  <Box className={classes.Buttonbox} mt={1}>
-                    <Box mt={2}>
-                      <Button
-                        variant="contained"
-                        style={{
-                          backgroundColor: "#e31a89",
-                          color: "#fff",
-                          height: 40,
-                          padding: 10,
-                          fontSize: 14,
-                        }}
-                      >
-                        Start New
-                      </Button>
-                    </Box>
-                  </Box>
-                  <br></br>
                 </Box>
+                <br></br>
               </Box>
-            </Paper>
-            <Paper
-              className={classes.root}
-              elevation={2}
-              style={{ marginTop: "10px" }}
-            >
-              <Box>
-                <Typography variant="h2" className={classes.head}>
-                  Contribution Reward
-                </Typography>
-              </Box>
-
-              <div className={classes.containerProgress}>
-                <Box className={classes.progressBar}>
-                  <Typography
-                    variant="h6"
-                    component="h2"
-                    style={{ fontSize: 12 }}
-                  >
-                    Contribution Score
-                  </Typography>
-                  <CustomBar variant="determinate" value={userContribution} />
-                </Box>
-                <Box className={classes.progressValue}>
-                  <Typography variant="body1">100%</Typography>
-                </Box>
-              </div>
-
-              <div className={classes.containerProgress}>
-                <Box className={classes.progressBar}>
-                  <Typography
-                    variant="h6"
-                    component="h2"
-                    style={{ fontSize: 12 }}
-                  >
-                    Duration Score
-                  </Typography>
-                  <CustomBar
-                    variant="determinate"
-                    value={value2}
-                    onChange={handleValueChange2}
-                  />
-                </Box>
-                <Box className={classes.progressValue}>
-                  <Typography variant="body1">{value2}%</Typography>
-                </Box>
-              </div>
-              <div className={classes.containerProgress}>
-                <Box className={classes.progressBar}>
-                  <Typography
-                    variant="h6"
-                    component="h2"
-                    style={{ fontSize: 12 }}
-                  >
-                    Stake Amount Score
-                  </Typography>
-                  <CustomBar
-                    variant="determinate"
-                    value={value3}
-                    onChange={handleValueChange3}
-                  />
-                </Box>
-                <Box className={classes.progressValue}>
-                  <Typography variant="body1">{value3}%</Typography>
-                </Box>
-              </div>
-
-              <div className={classes.containerProgress}>
-                <Box className={classes.progressBar}>
-                  <Typography
-                    variant="h6"
-                    component="h2"
-                    style={{ fontSize: 12 }}
-                  >
-                    Stake Amount Score
-                  </Typography>
-                  <CustomBar
-                    variant="determinate"
-                    value={value4}
-                    onChange={handleValueChange4}
-                  />
-                </Box>
-                <Box className={classes.progressValue}>
-                  <Typography variant="body1">{value4}%</Typography>
-                </Box>
-              </div>
             </Paper>
           </Grid>
           <Grid item md={isMobile ? 12 : 6} xs={isMobile ? 12 : 12}>
@@ -648,6 +650,81 @@ const EngageReward = () => {
                   <br></br>
                 </Box>
               </Box>
+              <Paper
+                className={classes.root}
+                elevation={2}
+                style={{ marginTop: "10px" }}
+              >
+                <Box>
+                  <Typography variant="h2" className={classes.head}>
+                    Contribution Reward
+                  </Typography>
+                </Box>
+
+                <div className={classes.containerProgress}>
+                  <Box className={classes.progressBar}>
+                    <Typography
+                      variant="h6"
+                      component="h2"
+                      style={{ fontSize: 12 }}
+                    >
+                      Contribution Score
+                    </Typography>
+                    <CustomBar
+                      variant="determinate"
+                      value={userContributionScore}
+                    />
+                  </Box>
+                  <Box className={classes.progressValue}>
+                    <Typography variant="body1">
+                      {userContributionScore.toFixed(2)}%
+                    </Typography>
+                  </Box>
+                </div>
+
+                <div className={classes.containerProgress}>
+                  <Box className={classes.progressBar}>
+                    <Typography
+                      variant="h6"
+                      component="h2"
+                      style={{ fontSize: 12 }}
+                    >
+                      Duration Score
+                    </Typography>
+                    <CustomBar
+                      variant="determinate"
+                      value={userDurationScore}
+                      onChange={handleDurationScoreChange}
+                    />
+                  </Box>
+                  <Box className={classes.progressValue}>
+                    <Typography variant="body1">
+                      {userDurationScore.toFixed(2)}%
+                    </Typography>
+                  </Box>
+                </div>
+                <div className={classes.containerProgress}>
+                  <Box className={classes.progressBar}>
+                    <Typography
+                      variant="h6"
+                      component="h2"
+                      style={{ fontSize: 12 }}
+                    >
+                      Staked Lazi Score
+                    </Typography>
+                    <CustomBar
+                      variant="determinate"
+                      value={userStakedScore}
+                      onChange={handleStakedScoreChange}
+                    />
+                  </Box>
+                  <Box className={classes.progressValue}>
+                    <Typography variant="body1">
+                      {userStakedScore.toFixed(2)}%
+                    </Typography>
+                  </Box>
+                </div>
+              </Paper>
             </Paper>
           </Grid>
         </Grid>

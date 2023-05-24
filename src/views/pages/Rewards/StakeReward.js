@@ -434,7 +434,7 @@ const StakeReward = () => {
 
   const monthOptions = [
     { label: "90 Days (1.25x)", value: 90 },
-    { label: "180 Days (1.5x)", value: 18 },
+    { label: "180 Days (1.5x)", value: 180 },
     { label: "365 Days (2x)", value: 365 },
     { label: "547 Days (1.75x)", value: 547 },
     { label: "730 Days (3.5x)", value: 730 },

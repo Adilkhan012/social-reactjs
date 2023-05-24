@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from "react";
 import {
   Box,
-  Checkbox,
   Grid,
   makeStyles,
   Paper,
-  Slider,
   TextField,
   Typography,
 } from "@material-ui/core";
-import Autocomplete from "@material-ui/lab/Autocomplete";
 import Button from "@material-ui/core/Button";
 import { Tooltip } from "@material-ui/core";
-import IconButton from "@mui/material/IconButton";
 import InfoIcon from "@mui/icons-material/Info";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -28,10 +25,14 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
   },
   head: {
-    fontSize: 20,
-    fontWeight: 600,
-    whiteSpace: "nowrap",
-    fontFamily: "Montserrat",
+    padding: "0px 0px 0px 0px",
+    [theme.breakpoints.down("xs")]: {
+      padding: "90px 0",
+    },
+    "& label": {
+      color: "#e8aa3e",
+      fontSize: "14px",
+    },
   },
   header: {
     fontSize: 14,
@@ -123,10 +124,8 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     marginLeft: 12,
   },
-  tooltip: {
-    fontSize: "12px",
-    backgroundColor: "#fff",
-    color: "black",
+  tooltipSetting: {
+    fontSize: "20px",
   },
 }));
 const EngageReward = () => {
@@ -135,8 +134,13 @@ const EngageReward = () => {
   const [yesterdayRewards, setYesterdayRewards] = useState("$5000");
   const [totalRewards, setTotalRewards] = useState("$10000");
   const [sessionLength, setSessionLength] = useState("30 days");
-  const [averageAmount, setAverageAmount] = useState("$10000");
-  const [averagaSessionLength, setAverageSessionLength] = useState("21 days");
+  const [showPopUp, setShowPopUp] = useState(false);
+
+  const handlePopUp = () => {
+    setTimeout(() => {
+      setShowPopUp(true);
+    }, 3000);
+  };
 
   const handleYesterdayRewards = (e) => {
     setYesterdayRewards(e.target.value);
@@ -147,15 +151,7 @@ const EngageReward = () => {
   const handleSessionLength = (e) => {
     setSessionLength(e.target.value);
   };
-  const handleAverageAmount = (e) => {
-    setAverageAmount(e.target.value);
-  };
-  const handleAverageSessionLength = (e) => {
-    setAverageSessionLength(e.target.value);
-  };
-
   const isMobile = useMediaQuery("(max-width:600px)");
-
   return (
     <>
       <Box className={classes.bannerBox}>
@@ -267,13 +263,17 @@ const EngageReward = () => {
                 </Box>
 
                 <Box
-                  style={{ display: "flex", justifyContent: "space-around" }}
+                  style={{
+                    display: "flex",
+                    marginTop: 12,
+                    justifyContent: "center",
+                  }}
                 >
                   <Box mt={2}>
                     <Button
                       variant="contained"
                       style={{
-                        backgroundColor: "#3c3c3c",
+                        backgroundColor: "#e31a89",
                         color: "#fff",
                         height: 40,
                         padding: 10,
@@ -283,36 +283,18 @@ const EngageReward = () => {
                       End Session Now
                     </Button>
                   </Box>
-                  <Box mt={3}>
+                  <Box mt={2} ml={1}>
                     <Tooltip
-                      title="You might incur penalties if you end session before your selected duratio"
-                      style={{ cursor: "pointer" }}
+                      title="You might incur penalties if you end session before your selected duration"
+                      style={{ cursor: "pointer", fontWeight: "bold" }}
                       placement={"bottom-end"}
+                      className={classes.tooltipSetting}
                     >
-                      <InfoIcon fontSize={"large"} />
+                      <InfoIcon />
                     </Tooltip>
                   </Box>
                 </Box>
 
-                <br></br>
-              </Box>
-
-              <Box mt={1}>
-                <div className={classes.textFieldWrapper}>
-                  <Typography
-                    variant="body2"
-                    className={classes.inputLabel}
-                    style={{ fontSize: "12px", marginBottom: 2 }}
-                  >
-                    Average Session Length
-                  </Typography>
-                  <TextField
-                    className={classes.input}
-                    value={averagaSessionLength}
-                    onChange={handleAverageSessionLength}
-                    variant="outlined"
-                  />
-                </div>
                 <br></br>
               </Box>
             </Paper>
