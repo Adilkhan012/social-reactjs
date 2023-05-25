@@ -125,7 +125,7 @@ const Rewards = () => {
                     className={tabview === "EngagementRewards" ? "active" : " "}
                     onClick={() => setTabView("EngagementRewards")}
                   >
-                    Engagement Reward
+                    Engagement Pool Info
                   </Link>
                 </Box>
                 <Box className="buttonBox">

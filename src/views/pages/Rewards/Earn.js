@@ -212,6 +212,9 @@ const EngageReward = () => {
   const [totalStakedDuration, setTotalStakedDuration] = useState(0);
   const [userStakedScore, setUserStakedScore] = useState(0);
   const [userDurationScore, setUserDurationScore] = useState(0);
+  const [totalStakers, setTotalStakers] = useState(0);
+  const [avgStakedLazi, setAvgStakedLazi] = useState(0);
+  const [avgStakedDuration, setAvgStakedDuration] = useState(0);
 
   const monthOptions = [
     { label: "90 Days (1.25x)", value: 90 },
@@ -220,6 +223,36 @@ const EngageReward = () => {
     { label: "547 Days (1.75x)", value: 547 },
     { label: "730 Days (3.5x)", value: 730 },
   ];
+  const calculateTotalMultiplier = () => {
+    let multiplier = 1;
+
+    if (selectedTime) {
+      switch (selectedTime) {
+        case 90:
+          multiplier += 0.25;
+          break;
+        case 180:
+          multiplier += 0.5;
+          break;
+        case 365:
+          multiplier += 1;
+          break;
+        case 547:
+          multiplier += 0.75;
+          break;
+        case 730:
+          multiplier += 2.5;
+          break;
+        default:
+          break;
+      }
+    }
+
+    multiplier += 0.25 * selectedUserNames.length;
+    return multiplier;
+  };
+
+  const totalMultiplier = calculateTotalMultiplier();
 
   useEffect(() => {
     const initialize = async () => {
@@ -260,68 +293,11 @@ const EngageReward = () => {
       );
     }
   };
-
-  const handleSelectedOptionsChange = (e) => {
-    setSelectedOptions(e.target.value);
-  };
-  const handleSelectedDurationChange = (e) => {
-    setSelectedDuration(e.target.value);
-  };
-  const handleSelectedContribution = (e) => {
-    setSelectedContribution(e.target.value);
-  };
-  const handleSelectedContribution2 = (e) => {
-    setSelectedContribution2(e.target.value);
-  };
-  const handleSelectedStake = (e) => {
-    setSelectedStakeScore(e.target.value);
-  };
-  const handleSelectedMiningReward = (e) => {
-    setSelectedMiningReward(e.target.value);
-  };
-  const [averageStakeAmount, setAverageStakeAmount] = useState("");
-  const handleSelectedUsername = (e) => {
-    setSelectedUsername(e.target.value);
-  };
-
-  const handleAverageStakeAmount = (e) => {
-    setAverageStakeAmount(e.target.value);
-  };
-  const handleMultiplierValue = (e) => {
-    setValueOfFinalMultiplier(e.target.value);
-  };
-  // Leaderboard
-
-  const handleUserRank = (e) => {
-    setUserRank(e.target.value);
-  };
-  const handleUserScore = (e) => {
-    setUserScore(e.target.value);
-  };
-  const handleWinReward = (e) => {
-    setWinReward(e.target.value);
-  };
-  const handleRemainingDays = (e) => {
-    setRemainingDays(e.target.value);
-  };
-
-  //Contribution Score
-  const [value1, setValue1] = useState(50);
-  const [value2, setValue2] = useState(40);
-  const [value3, setValue3] = useState(70);
-  const [value4, setValue4] = useState(90);
-
-  const handleValueChange = (event, newValue) => {
-    setValue1(newValue);
-  };
   const handleDurationScoreChange = (event, newValue) => {
     setUserDurationScore(newValue);
   };
   const handleStakedScoreChange = (event, newValue) => {
     setUserStakedScore(newValue);
-  };
-  const handleValueChange4 = (event, newValue) => {
-    setValue1(newValue);
   };
 
   const isMobile = useMediaQuery("(max-width:600px)");
@@ -423,7 +399,7 @@ const EngageReward = () => {
     }
   };
 
-  const fetchUserBalance = useCallback(async () => {
+  const fetchInformation = useCallback(async () => {
     try {
       // Call the balanceOf() function to get the user's balance
       const balance = await laziTokenContract.methods
@@ -434,6 +410,9 @@ const EngageReward = () => {
         .totalStakedLazi()
         .call();
       setTotalStakedLazi(totalStakedLazi);
+      const totalStakers = await engagementContract.methods.totalUsers().call();
+      setTotalStakers(totalStakers);
+
       const totalStakedDuration = await engagementContract.methods
         .totalStakedDuration()
         .call();
@@ -447,6 +426,10 @@ const EngageReward = () => {
       const userDurationScore =
         (userInfo.stakeDuration / totalStakedDuration) * 100;
       const userStakedScore = (userInfo.stakedLazi / totalStakedLazi) * 100;
+      const averageStakedLazi = totalStakedLazi / totalStakers;
+      const averageStakedDuration = totalStakedDuration / totalStakers;
+      setAvgStakedDuration(averageStakedDuration);
+      setAvgStakedLazi(averageStakedLazi);
       setUserStakedScore(userStakedScore);
       setUserDurationScore(userDurationScore);
       // Update the userBalance state variable with the retrieved balance
@@ -459,13 +442,13 @@ const EngageReward = () => {
   useEffect(() => {
     if (userAddress && engagementContract && userNameContract) {
       getOwnerMintedUserNames();
-      fetchUserBalance();
+      fetchInformation();
     }
   }, [
     userAddress,
     userNameContract,
     engagementContract,
-    fetchUserBalance,
+    fetchInformation,
     getOwnerMintedUserNames,
   ]);
 
@@ -592,63 +575,46 @@ const EngageReward = () => {
                 width="auto"
                 overflow="auto"
               >
-                <div style={{ display: "flex" }}>
-                  <div>
-                    <Box>
-                      <Typography variant="h2" className={classes.head}>
-                        Multiplier
-                      </Typography>
-                    </Box>
-                    <br></br>
+                <div>
+                  <Box
+                    bgcolor="#EC167F"
+                    borderRadius={10}
+                    p={2}
+                    mb={4}
+                    display="flex"
+                    alignItems="center"
+                  >
+                    <Typography
+                      variant="h2"
+                      className={classes.head}
+                      style={{ color: "white" }}
+                    >
+                      Multiplier
+                    </Typography>
+                  </Box>
 
-                    <Box>
-                      <Typography variant="h2" className={classes.inputLabel}>
-                        Your Multiplier = <span>12</span>
-                      </Typography>
-                    </Box>
-                  </div>
+                  <Box
+                    bgcolor="#EC167F"
+                    borderRadius={10}
+                    p={2}
+                    mb={4}
+                    display="flex"
+                    alignItems="center"
+                  >
+                    <Typography variant="h4" style={{ color: "white" }}>
+                      Total Multiplier: {totalMultiplier}x{" "}
+                    </Typography>
+                  </Box>
+
+                  <Box bgcolor="#EC167F" borderRadius={10} p={2} mb={4}>
+                    <Typography variant="h4" style={{ color: "white" }}>
+                      Average Stake Duration: {avgStakedDuration} days{" "}
+                    </Typography>
+                    <Typography variant="h4" style={{ color: "white" }}>
+                      Average Staked Lazi: {avgStakedLazi}{" "}
+                    </Typography>
+                  </Box>
                 </div>
-
-                <br></br>
-
-                <Box mt={1}>
-                  <div className={classes.textFieldWrapper}>
-                    <Typography
-                      variant="body2"
-                      className={classes.inputLabel}
-                      style={{ fontSize: "12px", marginBottom: 2 }}
-                    >
-                      Average Lazi Stake
-                    </Typography>
-                    <TextField
-                      className={classes.input}
-                      value={selectedUsername}
-                      onChange={handleSelectedUsername}
-                      placeholder=" Average Lazi Stake"
-                      variant="outlined"
-                    />
-                  </div>
-                  <br></br>
-                </Box>
-                <Box mt={1}>
-                  <div className={classes.textFieldWrapper}>
-                    <Typography
-                      variant="body2"
-                      className={classes.inputLabel}
-                      style={{ fontSize: "12px", marginBottom: 2 }}
-                    >
-                      Average Stake Duration
-                    </Typography>
-                    <TextField
-                      className={classes.input}
-                      value={averageStakeAmount}
-                      onChange={handleAverageStakeAmount}
-                      placeholder="(username multiplier)"
-                      variant="outlined"
-                    />
-                  </div>
-                  <br></br>
-                </Box>
               </Box>
               <Paper
                 className={classes.root}
