@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
   tooltip: {
     backgroundColor: "secondary",
     textAlign: "center",
-    fontSize: "20px",
+    fontSize: "14px",
   },
   sliderThumb: {
     transition: "transform 0.2s ease-out",
@@ -169,6 +169,7 @@ const useStyles = makeStyles((theme) => ({
   },
   progressBar: {
     width: 400,
+    height: 7,
     padding: theme.spacing(2),
   },
   progressValue: {
@@ -178,7 +179,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
   },
 }));
-const EngageReward = () => {
+const Earn = () => {
   const classes = useStyles();
   const [selectedOptions, setSelectedOptions] = useState("");
   const [selectedDuration, setSelectedDuration] = useState("");
@@ -202,7 +203,7 @@ const EngageReward = () => {
   const [selectedUserNames, setSelectedUserNames] = useState([]);
   const [mintedUserNames, setMintedUserNames] = useState([]);
   const [selectedTime, setSelectedTime] = useState(null);
-  const [tokenStakeValue, setTokenStakeValue] = useState(20);
+  const [tokenStakeValue, setTokenStakeValue] = useState(0);
   const [userBalance, setUserBalance] = useState(0);
   // const [totalContribution, setTotalContribution] = useState(0);
   const [userContributionScore, setUserContributionScore] = useState(0);
@@ -366,6 +367,15 @@ const EngageReward = () => {
     console.log("user Tokens:", userStakedTokens);
     console.log("Total Duration:", totalStakedDuration);
     console.log("Total StakedTokens:", totalStakedLazi);
+    if (erc20Amount === 0) {
+      toast.error("Select a valid Amount to stake!");
+      return; // Break the flow if erc20Amount is 0
+    }
+
+    if (!selectedTime) {
+      toast.error("Select the Time Period to stake!");
+      return; // Break the flow if time period is not selected
+    }
 
     // const erc721Ids = selectedUserNames; // Example: ERC721 token IDs    if (web3 && lpRewardContract) {
     if (engagementContract) {
@@ -388,13 +398,21 @@ const EngageReward = () => {
           })
           .on("error", (error) => {
             console.log(error);
-            const errorMessage = error.message.split("reverted: ")[1];
+            const errorMessage = error.message.split("message: ")[2];
             toast.error(errorMessage, { position: toast.POSITION.TOP_RIGHT });
           });
       } catch (error) {
         console.log(error);
-        const errorMessage = error.message.split("reverted: ")[1];
-        toast.error(errorMessage, { position: toast.POSITION.TOP_RIGHT });
+        let errorMessage = "An error occurred during the transaction.";
+
+        if (error.message) {
+          const startIndex = error.message.indexOf(" reverted: ") + 10;
+          const endIndex = error.message.indexOf(",", startIndex);
+          errorMessage = error.message.substring(startIndex, endIndex);
+        }
+
+        toast.error(errorMessage); // Display toast error message
+        throw new Error(errorMessage); // Rethrow the error with custom message
       }
     }
   };
@@ -460,7 +478,9 @@ const EngageReward = () => {
             <Paper className={classes.root} elevation={2}>
               <Box className={classes.root}>
                 <Box className={classes.tooltipIconHeader}>
-                  <Typography variant="h2">Start Engagement</Typography>
+                  <Typography variant="h2" className={classes.head}>
+                    Start Engagement
+                  </Typography>
                   <Tooltip
                     title="This is the Engagement Session."
                     style={{ cursor: "pointer" }}
@@ -472,20 +492,26 @@ const EngageReward = () => {
                 </Box>
 
                 <br></br>
-                <Box mt={2} mb={2}>
-                  <Typography
-                    variant="body2"
-                    className={classes.inputLabel}
-                    style={{ fontSize: "12px", marginBottom: 2 }}
-                  >
-                    Enter Token to Stake
-                  </Typography>
-                  <TextField
-                    className={classes.input}
-                    value={tokenStakeValue}
-                    onChange={handleStakeTokenChange}
-                    variant="outlined"
-                  />
+                <Box
+                  mt={2}
+                  mb={2}
+                  style={{ display: "flex", justifyContent: "space-around" }}
+                >
+                  <Box>
+                    <Typography
+                      variant="body2"
+                      className={classes.inputLabel}
+                      style={{ fontSize: "13px", marginBottom: 2 }}
+                    >
+                      Enter Token to Stake
+                    </Typography>
+                    <TextField
+                      className={classes.input}
+                      value={tokenStakeValue}
+                      onChange={handleStakeTokenChange}
+                      variant="outlined"
+                    />
+                  </Box>
                   <Button
                     variant="contained"
                     style={{
@@ -493,7 +519,7 @@ const EngageReward = () => {
                       color: "#fff",
                       height: 40,
                       fontSize: 14,
-                      marginTop: 2,
+                      marginTop: 16,
                     }}
                     onClick={() => setTokenStakeValue(userBalance)}
                   >
@@ -520,6 +546,7 @@ const EngageReward = () => {
                         {...params}
                         variant="outlined"
                         label="Month Stake"
+                        style={{ color: "white" }}
                       />
                     )}
                   />
@@ -529,26 +556,34 @@ const EngageReward = () => {
                 <div style={{ display: "flex" }}>
                   <div>
                     <Box className={classes.heading}>
-                      <Typography variant="h2">Users Stake</Typography>
+                      <Typography variant="h2" className={classes.head}>
+                        User Names Stake
+                      </Typography>
                     </Box>
                     <br></br>
                     <Box>
-                      {mintedUserNames.map(({ domainName, tokenId }) => (
-                        <Box className={classes.checkbox} key={domainName}>
-                          <Checkbox
-                            checked={selectedUserNames.includes(tokenId)}
-                            onChange={(event) =>
-                              handleCheckboxChange(event, domainName, tokenId)
-                            }
-                            value={tokenId}
-                            size="small"
-                            inputProps={{
-                              "aria-label": "checkbox with small size",
-                            }}
-                          />
-                          <Typography variant="h5">{domainName}</Typography>
-                        </Box>
-                      ))}
+                      {mintedUserNames.length === 0 ? (
+                        <Typography variant="h5">
+                          No User Name minted yet.
+                        </Typography>
+                      ) : (
+                        mintedUserNames.map(({ domainName, tokenId }) => (
+                          <Box className={classes.checkbox} key={domainName}>
+                            <Checkbox
+                              checked={selectedUserNames.includes(tokenId)}
+                              onChange={(event) =>
+                                handleCheckboxChange(event, domainName, tokenId)
+                              }
+                              value={tokenId}
+                              size="small"
+                              inputProps={{
+                                "aria-label": "checkbox with small size",
+                              }}
+                            />
+                            <Typography variant="h5">{domainName}</Typography>
+                          </Box>
+                        ))
+                      )}
                     </Box>
                   </div>
                 </div>
@@ -601,16 +636,37 @@ const EngageReward = () => {
                     display="flex"
                     alignItems="center"
                   >
-                    <Typography variant="h4" style={{ color: "white" }}>
+                    <Typography
+                      variant="h4"
+                      style={{
+                        color: "white",
+                        fontSize: 16,
+                        fontWeight: "600",
+                      }}
+                    >
                       Total Multiplier: {totalMultiplier}x{" "}
                     </Typography>
                   </Box>
 
                   <Box bgcolor="#EC167F" borderRadius={10} p={2} mb={4}>
-                    <Typography variant="h4" style={{ color: "white" }}>
+                    <Typography
+                      variant="h4"
+                      style={{
+                        color: "white",
+                        fontSize: 16,
+                        fontWeight: "600",
+                      }}
+                    >
                       Average Stake Duration: {avgStakedDuration} days{" "}
                     </Typography>
-                    <Typography variant="h4" style={{ color: "white" }}>
+                    <Typography
+                      variant="h4"
+                      style={{
+                        color: "white",
+                        fontSize: 16,
+                        fontWeight: "600",
+                      }}
+                    >
                       Average Staked Lazi: {avgStakedLazi}{" "}
                     </Typography>
                   </Box>
@@ -632,7 +688,7 @@ const EngageReward = () => {
                     <Typography
                       variant="h6"
                       component="h2"
-                      style={{ fontSize: 12 }}
+                      style={{ fontSize: 13 }}
                     >
                       Contribution Score
                     </Typography>
@@ -653,7 +709,7 @@ const EngageReward = () => {
                     <Typography
                       variant="h6"
                       component="h2"
-                      style={{ fontSize: 12 }}
+                      style={{ fontSize: 13 }}
                     >
                       Duration Score
                     </Typography>
@@ -674,7 +730,7 @@ const EngageReward = () => {
                     <Typography
                       variant="h6"
                       component="h2"
-                      style={{ fontSize: 12 }}
+                      style={{ fontSize: 13 }}
                     >
                       Staked Lazi Score
                     </Typography>
@@ -698,4 +754,4 @@ const EngageReward = () => {
     </>
   );
 };
-export default EngageReward;
+export default Earn;

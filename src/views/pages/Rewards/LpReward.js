@@ -104,6 +104,22 @@ const useStyles = makeStyles((theme) => ({
       transform: "translateX(150%) skewX(-45deg)",
     },
   },
+  input: {
+    width: "100%",
+    "& .MuiOutlinedInput-root": {
+      color: "white",
+      borderRadius: 10,
+      height: "40px",
+      border: "1px solid #575758",
+      fontSize: 12,
+    },
+  },
+  inputLabel: {
+    color: "#fff",
+    fontWeight: 500,
+    fontSize: 14,
+    marginLeft: 12,
+  },
 }));
 
 // const msg_desk = "Please install MetaMask Wallet extension";
@@ -122,7 +138,7 @@ const StakeReward = () => {
   const classes = useStyles();
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [userAddress, setAddress] = useState(null);
-  const [sliderValue, setSliderValue] = useState(20);
+  const [sliderValue, setSliderValue] = useState(0);
   const [lpRewardContract, setLpRewardContract] = useState(null);
   const [userNameContract, setUserNameContract] = useState(null);
   const [laziTokenContract, setLaziTokenContract] = useState(null);
@@ -130,7 +146,7 @@ const StakeReward = () => {
   const [userRewards, setUserRewards] = useState(0);
   const [selectedUserNames, setSelectedUserNames] = useState([]);
   const [mintedUserNames, setMintedUserNames] = useState([]);
-  const [selectedTime, setSelectedTime] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(0);
   const [userAPR, setUserAPR] = useState(0);
 
   //chart state
@@ -392,8 +408,8 @@ const StakeReward = () => {
     ],
   });
 
-  const handleSliderChange = (event, newValue) => {
-    setSliderValue(newValue);
+  const handleSliderChange = (event) => {
+    setSliderValue(event.target.value);
   };
 
   useEffect(() => {
@@ -417,7 +433,7 @@ const StakeReward = () => {
 
   const monthOptions = [
     { label: "90 Days (1.25x)", value: 90 },
-    { label: "180 Days (1.5x)", value: 180 },
+    { label: "180 Days (1.5x)", value: 18 },
     { label: "365 Days (2x)", value: 365 },
     { label: "547 Days (1.75x)", value: 547 },
     { label: "730 Days (3.5x)", value: 730 },
@@ -457,27 +473,66 @@ const StakeReward = () => {
     return `${value} LAZI`;
   };
 
-  const handleStake = () => {
-    const erc20Amount = sliderValue; // Use sliderValue state variable
-    console.log("selected Amount:", erc20Amount);
+  const handleStake = async () => {
+    try {
+      const erc20Amount = sliderValue; // Use sliderValue state variable
+      console.log("Selected Amount:", erc20Amount);
 
-    // const daysToStake = selectedTime; // Example: 30 days
-    console.log("selected UserName:", selectedUserNames);
-    console.log("selected TimePeriod:", selectedTime);
+      console.log("Selected UserName:", selectedUserNames);
+      console.log("Selected TimePeriod:", selectedTime);
 
-    // const erc721Ids = selectedUserNames; // Example: ERC721 token IDs    if (web3 && lpRewardContract) {
-    lpRewardContract.methods
-      .stake(erc20Amount, selectedTime, selectedUserNames)
-      .send({ from: userAddress })
-      .on("transactionHash", (hash) => {
-        console.log(hash);
-      })
-      .on("receipt", (receipt) => {
-        console.log(receipt);
-      })
-      .on("error", (error) => {
-        console.log(error);
-      });
+      if (erc20Amount === 0) {
+        toast.error("Select a valid Amount to stake!");
+        return; // Break the flow if erc20Amount is 0
+      }
+
+      if (!selectedTime) {
+        toast.error("Select the Time Period to stake!");
+        return; // Break the flow if time period is not selected
+      }
+      // Estimate gas fees
+      const gasEstimate = await lpRewardContract.methods
+        .stake(erc20Amount, selectedTime, selectedUserNames)
+        .estimateGas({ from: userAddress });
+
+      console.log("Estimated Gas Fees:", gasEstimate);
+
+      // Execute the transaction
+      const transaction = await lpRewardContract.methods
+        .stake(erc20Amount, selectedTime, selectedUserNames)
+        .send({ from: userAddress, gas: gasEstimate })
+        .on("transactionHash", (hash) => {
+          console.log("Transaction Hash:", hash);
+        })
+        .on("receipt", (receipt) => {
+          console.log("Receipt:", receipt);
+          const successMessage = "Stake transaction successful.";
+          toast.success(successMessage); // Display toast success message
+          console.log(successMessage);
+        })
+        .catch((error) => {
+          console.log("Error:", error);
+          const errorMessage =
+            error.message || "An error occurred during the transaction.";
+          toast.error(errorMessage); // Display toast error message
+          throw new Error(errorMessage); // Rethrow the error with custom message
+        });
+
+      console.log("Transaction Successful:", transaction);
+    } catch (error) {
+      console.log(error);
+      let errorMessage = "An error occurred during the transaction.";
+
+      if (error.message) {
+        const startIndex = error.message.indexOf(" reverted: ") + 10;
+        const endIndex = error.message.indexOf(",", startIndex);
+        const Message = error.message.substring(startIndex, endIndex);
+        toast.error(Message); // Display toast error message
+      }
+
+      toast.error(errorMessage); // Display toast error message
+      throw new Error(errorMessage); // Rethrow the error with custom message
+    }
   };
 
   const fetchTotalStaked = useCallback(async () => {
@@ -519,7 +574,7 @@ const StakeReward = () => {
           BigInt(totalStaked);
         console.log("APR = " + APR.toString() + "%");
         const etherValue = parseInt(APR) / 10 ** 18;
-        setUserAPR(etherValue);
+        setUserAPR(etherValue); // Assuming you want to set the APR in the state variable `userAPR`
       }
     } catch (error) {
       console.error("Error fetching user APR:", error);
@@ -776,23 +831,19 @@ const StakeReward = () => {
                 </Box>
 
                 <br></br>
-                <Box mt={2}>
-                  <Slider
-                    aria-label="Default"
+                <Box mt={2} mb={2}>
+                  <Typography
+                    variant="body2"
+                    className={classes.inputLabel}
+                    style={{ fontSize: "12px", marginBottom: 2 }}
+                  >
+                    Enter Token to Stake
+                  </Typography>
+                  <TextField
+                    className={classes.input}
+                    value={sliderValue}
                     onChange={handleSliderChange}
-                    value={sliderValue} // Use sliderValue state variable
-                    defaultValue={20}
-                    getAriaValueText={valuetext}
-                    valueLabelFormat={valuetext}
-                    step={5}
-                    min={10}
-                    max={100}
-                    classes={{
-                      valueLabel: classes.tooltip,
-                      thumb: classes.sliderThumb,
-                    }}
-                    valueLabelDisplay="on"
-                    color="secondary"
+                    variant="outlined"
                   />
                 </Box>
                 <Box mt={2}>
@@ -828,22 +879,28 @@ const StakeReward = () => {
                     </Box>
                     <br></br>
                     <Box>
-                      {mintedUserNames.map(({ domainName, tokenId }) => (
-                        <Box className={classes.checkbox} key={domainName}>
-                          <Checkbox
-                            checked={selectedUserNames.includes(tokenId)}
-                            onChange={(event) =>
-                              handleCheckboxChange(event, domainName, tokenId)
-                            }
-                            value={tokenId}
-                            size="small"
-                            inputProps={{
-                              "aria-label": "checkbox with small size",
-                            }}
-                          />
-                          <Typography variant="h5">{domainName}</Typography>
-                        </Box>
-                      ))}
+                      {mintedUserNames.length === 0 ? (
+                        <Typography variant="h5">
+                          No User Name minted yet.
+                        </Typography>
+                      ) : (
+                        mintedUserNames.map(({ domainName, tokenId }) => (
+                          <Box className={classes.checkbox} key={domainName}>
+                            <Checkbox
+                              checked={selectedUserNames.includes(tokenId)}
+                              onChange={(event) =>
+                                handleCheckboxChange(event, domainName, tokenId)
+                              }
+                              value={tokenId}
+                              size="small"
+                              inputProps={{
+                                "aria-label": "checkbox with small size",
+                              }}
+                            />
+                            <Typography variant="h5">{domainName}</Typography>
+                          </Box>
+                        ))
+                      )}
                     </Box>
                   </div>
                   <div style={{ marginLeft: "auto" }}>

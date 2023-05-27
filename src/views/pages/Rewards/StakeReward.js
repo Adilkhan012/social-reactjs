@@ -139,7 +139,7 @@ const StakeReward = () => {
   const classes = useStyles();
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [userAddress, setAddress] = useState(null);
-  const [sliderValue, setSliderValue] = useState(40);
+  const [sliderValue, setSliderValue] = useState(0);
   const [stakingContract, setStakingContract] = useState(null);
   const [userNameContract, setUserNameContract] = useState(null);
   const [laziTokenContract, setLaziTokenContract] = useState(null);
@@ -475,27 +475,66 @@ const StakeReward = () => {
     return `${value} LAZI`;
   };
 
-  const handleStake = () => {
-    const erc20Amount = sliderValue; // Use sliderValue state variable
-    console.log("selected Amount:", erc20Amount);
+  const handleStake = async () => {
+    try {
+      const erc20Amount = sliderValue; // Use sliderValue state variable
+      console.log("Selected Amount:", erc20Amount);
 
-    // const daysToStake = selectedTime; // Example: 30 days
-    console.log("selected UserName:", selectedUserNames);
-    console.log("selected TimePeriod:", selectedTime);
+      console.log("Selected UserName:", selectedUserNames);
+      console.log("Selected TimePeriod:", selectedTime);
 
-    // const erc721Ids = selectedUserNames; // Example: ERC721 token IDs    if (web3 && stakingContract) {
-    stakingContract.methods
-      .stake(erc20Amount, selectedTime, selectedUserNames)
-      .send({ from: userAddress })
-      .on("transactionHash", (hash) => {
-        console.log(hash);
-      })
-      .on("receipt", (receipt) => {
-        console.log(receipt);
-      })
-      .on("error", (error) => {
-        console.log(error);
-      });
+      if (erc20Amount === 0) {
+        toast.error("Select a valid Amount to stake!");
+        return; // Break the flow if erc20Amount is 0
+      }
+
+      if (!selectedTime) {
+        toast.error("Select the Time Period to stake!");
+        return; // Break the flow if time period is not selected
+      }
+      // Estimate gas fees
+      const gasEstimate = await stakingContract.methods
+        .stake(erc20Amount, selectedTime, selectedUserNames)
+        .estimateGas({ from: userAddress });
+
+      console.log("Estimated Gas Fees:", gasEstimate);
+
+      // Execute the transaction
+      const transaction = await stakingContract.methods
+        .stake(erc20Amount, selectedTime, selectedUserNames)
+        .send({ from: userAddress, gas: gasEstimate })
+        .on("transactionHash", (hash) => {
+          console.log("Transaction Hash:", hash);
+        })
+        .on("receipt", (receipt) => {
+          console.log("Receipt:", receipt);
+          const successMessage = "Stake transaction successful.";
+          toast.success(successMessage); // Display toast success message
+          console.log(successMessage);
+        })
+        .catch((error) => {
+          console.log("Error:", error);
+          const errorMessage =
+            error.message || "An error occurred during the transaction.";
+          toast.error(errorMessage); // Display toast error message
+          throw new Error(errorMessage); // Rethrow the error with custom message
+        });
+
+      console.log("Transaction Successful:", transaction);
+    } catch (error) {
+      console.log(error);
+      let errorMessage = "An error occurred during the transaction.";
+
+      if (error.message) {
+        const startIndex = error.message.indexOf(" reverted: ") + 10;
+        const endIndex = error.message.indexOf(",", startIndex);
+        const Message = error.message.substring(startIndex, endIndex);
+        toast.error(Message); // Display toast error message
+      }
+
+      toast.error(errorMessage); // Display toast error message
+      throw new Error(errorMessage); // Rethrow the error with custom message
+    }
   };
 
   const fetchTotalStaked = useCallback(async () => {
@@ -842,22 +881,28 @@ const StakeReward = () => {
                     </Box>
                     <br></br>
                     <Box>
-                      {mintedUserNames.map(({ domainName, tokenId }) => (
-                        <Box className={classes.checkbox} key={domainName}>
-                          <Checkbox
-                            checked={selectedUserNames.includes(tokenId)}
-                            onChange={(event) =>
-                              handleCheckboxChange(event, domainName, tokenId)
-                            }
-                            value={tokenId}
-                            size="small"
-                            inputProps={{
-                              "aria-label": "checkbox with small size",
-                            }}
-                          />
-                          <Typography variant="h5">{domainName}</Typography>
-                        </Box>
-                      ))}
+                      {mintedUserNames.length === 0 ? (
+                        <Typography variant="h5">
+                          No User Name minted yet.
+                        </Typography>
+                      ) : (
+                        mintedUserNames.map(({ domainName, tokenId }) => (
+                          <Box className={classes.checkbox} key={domainName}>
+                            <Checkbox
+                              checked={selectedUserNames.includes(tokenId)}
+                              onChange={(event) =>
+                                handleCheckboxChange(event, domainName, tokenId)
+                              }
+                              value={tokenId}
+                              size="small"
+                              inputProps={{
+                                "aria-label": "checkbox with small size",
+                              }}
+                            />
+                            <Typography variant="h5">{domainName}</Typography>
+                          </Box>
+                        ))
+                      )}
                     </Box>
                   </div>
                   <div style={{ marginLeft: "auto" }}>

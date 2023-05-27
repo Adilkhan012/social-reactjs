@@ -151,7 +151,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function MyComponent() {
+function Leaderboard() {
   const classes = useStyles();
 
   const [value1, setValue1] = useState(50);
@@ -689,4 +689,4 @@ function MyComponent() {
   );
 }
 
-export default MyComponent;
+export default Leaderboard;

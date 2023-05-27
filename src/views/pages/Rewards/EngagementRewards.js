@@ -85,13 +85,25 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 16,
   },
   label: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 600,
     marginBottom: 8,
   },
   value: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 700,
+  },
+  infoBox: {
+    marginTop: 9,
+  },
+  infoLabel: {
+    marginTop: 9,
+    fontSize: 14,
+    fontWeight: 600,
+  },
+  infoValue: {
+    fontSize: 16,
+    fontWeight: "700",
   },
 }));
 const EngageReward = () => {
@@ -196,15 +208,20 @@ const EngageReward = () => {
       setUserStakedDuration(userInfo.stakeDuration);
       setUserStakedTokens(userInfo.stakedLazi);
       setUserStakedLaziWeighted(userInfo.stakedLaziWeighted);
-      const startTimestamp = Number(userInfo.stakeStartTime) * 1000; // Convert to milliseconds
-      const startDate = new Date(startTimestamp); // Create a Date object from the timestamp
+      if (userInfo.stakedLazi == 0) {
+        setUserStakedStartTime(0);
+      } else {
+        const startTimestamp = Number(userInfo.stakeStartTime) * 1000; // Convert to milliseconds
+        const startDate = new Date(startTimestamp); // Create a Date object from the timestamp
 
-      const formattedStartTime = startDate.toLocaleString("en-US", {
-        dateStyle: "medium",
-        timeStyle: "medium",
-      });
+        const formattedStartTime = startDate.toLocaleString("en-US", {
+          dateStyle: "medium",
+          timeStyle: "medium",
+        });
 
-      setUserStakedStartTime(formattedStartTime);
+        setUserStakedStartTime(formattedStartTime);
+      }
+
       setUserStakedDurationWeighted(userInfo.stakeDurationWeighted);
       setUserStakedERC721Ids(userInfo.erc721TokenIds);
 
@@ -240,7 +257,11 @@ const EngageReward = () => {
             <Paper className={classes.root} elevation={2}>
               <Card className={classes.card}>
                 <CardContent>
-                  <Typography variant="h5" component="h2">
+                  <Typography
+                    variant="h5"
+                    component="h2"
+                    style={{ fontSize: 20, fontWeight: "700" }}
+                  >
                     User Dashboard
                   </Typography>
                   <Box mt={2}>
@@ -318,7 +339,11 @@ const EngageReward = () => {
             <Paper className={classes.root} elevation={2}>
               <Card className={classes.card}>
                 <CardContent>
-                  <Typography variant="h5" component="h2">
+                  <Typography
+                    variant="h5"
+                    component="h2"
+                    style={{ fontSize: 20, fontWeight: 700 }}
+                  >
                     Engagement Pool Dashboard
                   </Typography>
 
