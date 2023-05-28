@@ -392,21 +392,25 @@ function Collection({ listPublicExclusiveHandler }) {
       );
 
       const totalSupply = await postContract.methods.totalSupply().call();
-      const newTotalSupply = parseInt(totalSupply) + 1;
-      // Get the next available tokenId
+      var newTotalSupply = parseInt(totalSupply) + 1;
+
       console.log("totalSupply", totalSupply);
       setTokenId(newTotalSupply);
       console.log("tokenId", newTotalSupply);
-      // setTokenId(tokenId)
-      const result = await postContract.methods
-        .MintLaziPost([titlePost])
-        .send({
-          from: address,
-          value: web3.utils.toWei("0", "ether"), // Set the desired amount of Ether to send along with the transaction (if required)
-        });
 
-      console.log(result); // print the transaction result
+      const method = postContract.methods.mintLaziPost([titlePost]);
+      const gasLimit = await method.estimateGas({ from: address });
+      const gasPrice = await web3.eth.getGasPrice();
+      const transactionParams = {
+        from: address,
+        gas: gasLimit,
+        gasPrice: gasPrice,
+        value: web3.utils.toWei("0", "ether"),
+      };
 
+      const result = await method.send(transactionParams);
+      console.log(result);
+      toast.success("NFT Minted Success: Now Saving!");
       // Add the post to the posts object with its tokenId as the key
       // setPosts({
       //   ...posts,
@@ -415,9 +419,19 @@ function Collection({ listPublicExclusiveHandler }) {
     } catch (error) {
       if (error.code === 4001) {
         console.log("User denied transaction");
+        toast.message("User Denied Transaction");
       } else {
         console.error(error);
       }
+      let errorMessage = "An error occurred during the transaction.";
+
+      if (error.message) {
+        const startIndex = error.message.indexOf(" reverted: ") + 10;
+        const endIndex = error.message.indexOf(",", startIndex);
+        errorMessage = error.message.substring(startIndex, endIndex);
+      }
+      toast.error(errorMessage); // Display toast error message
+      throw new Error(errorMessage);
       return;
     }
 
@@ -453,7 +467,7 @@ function Collection({ listPublicExclusiveHandler }) {
             hashTagName: hastag ? hastag : [],
             mediaType: coverPost ? "MEDIA" : "TEXT",
             ownerAddress: address,
-            tokenId: tokenId,
+            tokenId: newTotalSupply,
           },
           headers: {
             token: localStorage.getItem("token"),
@@ -520,7 +534,7 @@ function Collection({ listPublicExclusiveHandler }) {
             hashTagName: hastag ? hastag : [],
             mediaType: coverPost ? "MEDIA" : "TEXT",
             ownerAddress: address,
-            tokenId: tokenId,
+            tokenId: newTotalSupply,
           },
           headers: {
             token: localStorage.getItem("token"),

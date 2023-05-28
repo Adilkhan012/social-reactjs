@@ -2,7 +2,7 @@ import initMetamask from "./metamaskConnection";
 import Web3 from "web3";
 
 const laziPostFactoryContractAddress =
-  "0x53d25B0928178225215d43A24bCc9B71C3e2a525";
+  "0x43AEC522AA7F25c4a9F40Cee6a3763492A6542b3";
 
 const laziPostFactoryContractABI = [
 	{

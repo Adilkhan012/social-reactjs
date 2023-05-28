@@ -626,34 +626,36 @@ export default function (props) {
       console.log("Buyer Address:", buyerAddress);
       console.log("Token ID:", tokenId);
       console.log("Collection Address:", collectionAddress);
-      const price = 0;
-      console.log("price: ", price);
       const web3 = new Web3(window.ethereum);
       const stakingContract = new web3.eth.Contract(
         laziPostContractABI,
         collectionAddress
       );
 
-      // const price = await laziPostContract.methods.getTokenPrice(tokenId).call();
       const listing = await stakingContract.methods.nftListings(tokenId).call();
       if (!listing.active) {
         throw new Error("NFT is not listed for sale");
       }
-      // Check if payment is sufficient
-      if (price < listing.price) {
-        throw new Error("Insufficient payment");
-      }
 
-      // const gasEstimate = await laziPostContract.methods
-      //   .buyNft(tokenId)
-      //   .estimateGas({
-      //     value: price,  // Specify the desired value for the transaction (including gas fee)
-      //   });
-      // Send the transaction with the updated gas limit
-      const result = await stakingContract.methods.buyNft(tokenId).send({
+      console.log("price: ", listing.price);
+
+
+      // const price = await laziPostContract.methods.getTokenPrice(tokenId).call();
+      const method = stakingContract.methods.buyNft(tokenId);
+      const gasLimit = await method.estimateGas({
         from: buyerAddress,
-        value: price,
+        value: listing.price,
       });
+      const gasPrice = await web3.eth.getGasPrice();
+      const transactionParams = {
+        from: buyerAddress,
+        gas: gasLimit,
+        gasPrice: gasPrice,
+        value: listing.price,
+      };
+
+      const result = await method.send(transactionParams);
+      console.log(result);
 
       // Check if the transaction was successful
       if (result.status) {

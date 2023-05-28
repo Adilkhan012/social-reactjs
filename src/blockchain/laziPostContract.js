@@ -2,7 +2,7 @@ import initMetamask from "./metamaskConnection";
 import Web3 from "web3";
 
 
-const laziPostContractAddress = "";
+const laziPostContractAddress = "0xA0dAdBcB23E6Dd63428B20f36ab3e367103c9Ff9";
 
 export const laziPostContractABI = [
 	{
@@ -177,19 +177,6 @@ export const laziPostContractABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "string[]",
-				"name": "_laziNames",
-				"type": "string[]"
-			}
-		],
-		"name": "MintLaziPost",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "bytes",
 				"name": "",
 				"type": "bytes"
@@ -329,6 +316,29 @@ export const laziPostContractABI = [
 			}
 		],
 		"name": "buyNft",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "_signedMessageHash",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes",
+				"name": "_signature",
+				"type": "bytes"
+			}
+		],
+		"name": "buyNftSigned",
 		"outputs": [],
 		"stateMutability": "payable",
 		"type": "function"
@@ -575,6 +585,47 @@ export const laziPostContractABI = [
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "string[]",
+				"name": "_laziNames",
+				"type": "string[]"
+			}
+		],
+		"name": "mintLaziPost",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string[]",
+				"name": "_laziNames",
+				"type": "string[]"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_laziPostPrice",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "_signedMessageHash",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes",
+				"name": "_signature",
+				"type": "bytes"
+			}
+		],
+		"name": "mintLaziPostSigned",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "mintSigner",
 		"outputs": [
@@ -677,12 +728,12 @@ export const laziPostContractABI = [
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "_tokenId",
+				"name": "tokenId",
 				"type": "uint256"
 			},
 			{
 				"internalType": "uint256",
-				"name": "_salePrice",
+				"name": "salePrice",
 				"type": "uint256"
 			}
 		],
