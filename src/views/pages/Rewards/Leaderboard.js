@@ -70,7 +70,16 @@ const useStyles = makeStyles((theme) => ({
       marginRight: 4,
     },
   },
-
+head:{
+  padding: "0px 0px 20px 0px",
+    [theme.breakpoints.down("xs")]: {
+      padding: "90px 0",
+    },
+    "& label": {
+      color: "#e8aa3e",
+      fontSize: "14px",
+    },
+},
   progressValue: {
     display: "flex",
     justifyContent: "space-between",
@@ -293,7 +302,7 @@ function MyComponent() {
 
   return (
     <>
-      <Box style={{ marginBottom: 50 }}>
+      <Box className={classes.head}>
         <Typography variant="h2">Leaderboard</Typography>
       </Box>
       <Box className={classes.containerheader}>

@@ -1050,6 +1050,7 @@ const StakeReward = () => {
                     </Typography>
                     {/* <Button onClick={handleTotalStakedClick}>Refresh</Button> */}
                   </Box>
+                  
                   <br></br>
                   <p style={{ fontSize: "17px" }}>
                     <b>{totalStaked ? `${totalStaked} LAZI` : ""}</b>

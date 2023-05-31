@@ -104,6 +104,22 @@ const useStyles = makeStyles((theme) => ({
       transform: "translateX(150%) skewX(-45deg)",
     },
   },
+  input: {
+    width: "100%",
+    "& .MuiOutlinedInput-root": {
+      color: "white",
+      borderRadius: 10,
+      height: "40px",
+      border: "1px solid #575758",
+      fontSize: 12,
+    },
+  },
+  inputLabel: {
+    color: "#fff",
+    fontWeight: 500,
+    fontSize: 14,
+    marginLeft: 12,
+  },
 }));
 
 // const msg_desk = "Please install MetaMask Wallet extension";
@@ -392,8 +408,8 @@ const StakeReward = () => {
     ],
   });
 
-  const handleSliderChange = (event, newValue) => {
-    setSliderValue(newValue);
+  const handleSliderChange = (event) => {
+    setSliderValue(event.target.value);
   };
 
   useEffect(() => {
@@ -775,23 +791,19 @@ const StakeReward = () => {
                 </Box>
 
                 <br></br>
-                <Box mt={2}>
-                  <Slider
-                    aria-label="Default"
+                <Box mt={2} mb={2}>
+                  <Typography
+                    variant="body2"
+                    className={classes.inputLabel}
+                    style={{ fontSize: "12px", marginBottom: 2 }}
+                  >
+                    Enter Token to Stake
+                  </Typography>
+                  <TextField
+                    className={classes.input}
+                    value={sliderValue}
                     onChange={handleSliderChange}
-                    value={sliderValue} // Use sliderValue state variable
-                    defaultValue={20}
-                    getAriaValueText={valuetext}
-                    valueLabelFormat={valuetext}
-                    step={5}
-                    min={10}
-                    max={100}
-                    classes={{
-                      valueLabel: classes.tooltip,
-                      thumb: classes.sliderThumb,
-                    }}
-                    valueLabelDisplay="on"
-                    color="secondary"
+                    variant="outlined"
                   />
                 </Box>
                 <Box mt={2}>
