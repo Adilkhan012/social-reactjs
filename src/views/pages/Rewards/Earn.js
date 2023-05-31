@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useHistory } from 'react-router-dom';
 import {
   Box,
   Checkbox,
@@ -25,6 +26,7 @@ import initlaziTokenContract from "src/blockchain/laziTokenContract";
 import initUserNameContract from "src/blockchain/laziUserNameContract";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { CgSpaceBetween } from "react-icons/cg";
+
 
 const CustomBar = withStyles({
   root: {
@@ -219,10 +221,24 @@ const Earn = () => {
   const [avgStakedDuration, setAvgStakedDuration] = useState(0);
   const[flexible,setFlexible]=useState(false)
 const[locked,setLocked]=useState(false)
+const[afterFlexible,setAfterFlexible]=useState(false)
+const[afterLocked,setAfterLocked]=useState(false)
 
+
+
+const handleGoBack = () => {
+  setFlexible(false)
+  setLocked(false)
+};
+
+const handleLockedButton=()=>{
+  setLocked(!locked)
+  setFlexible(false)
+}
 
 const handleFlexibleButton=()=>{
   setFlexible(!flexible)
+  setLocked(false)
 }
 
 
@@ -249,13 +265,13 @@ const handleFlexibleButton=()=>{
         multiplier += 0;
       } else if (selectedTime >= 90 && selectedTime < 180) {
         multiplier += 0.25;
-      } else if (selectedTime >= 180 && selectedTime < 365) {
+      } else if (selectedTime >= 180 && selectedTime < 270) {
         multiplier += 0.5;
-      } else if (selectedTime >= 365 && selectedTime < 547) {
+      } else if (selectedTime >= 270 && selectedTime < 360) {
         multiplier += 1;
-      } else if (selectedTime >= 547 && selectedTime < 730) {
+      } else if (selectedTime >= 360 && selectedTime < 450) {
         multiplier += 1.5;
-      } else if (selectedTime >= 730) {
+      } else if (selectedTime >= 450) {
         multiplier += 2;
       }
     }
@@ -480,6 +496,7 @@ const handleFlexibleButton=()=>{
     fetchInformation,
     getOwnerMintedUserNames,
   ]);
+  
 
   return (
     <>
@@ -488,6 +505,7 @@ const handleFlexibleButton=()=>{
           <Grid item md={isMobile ? 12 : 6} xs={isMobile ? 12 : 12}>
             <Paper className={classes.root} elevation={2}>
               <Box className={classes.root}>
+             {(locked||flexible)?<ArrowBackIcon onClick={handleGoBack} />:''}
                 <Box className={classes.tooltipIconHeader}>
                   <Typography variant="h2" className={classes.head}>
                     Start Engagement
@@ -503,7 +521,7 @@ const handleFlexibleButton=()=>{
                 </Box>
 
                 <br></br>
-                <Box
+              {( !(locked ||flexible) &&  <Box 
                 
                   mt={2}
                   mb={2}
@@ -547,14 +565,14 @@ const handleFlexibleButton=()=>{
                         height: 30,
                         fontSize: 14,
                       }}
-                      onClick={() => setTokenStakeValue(userBalance)}
+                      onClick={handleLockedButton}
                     >
                       Locked
                     </Button>
                   </Box>
-                </Box>
+                </Box>)}
 {/* Content to be shown when Clicked on flexible button */}
-{flexible &&( <Box>
+{flexible &&( <Box style={{ height: flexible ? 'auto' : 0, overflow: 'hidden' }}>
                    <Box
                     mt={2}
                     mb={2}
@@ -563,7 +581,6 @@ const handleFlexibleButton=()=>{
                       justifyContent: "center",
                       flexDirection: "row",
                     }}
-                   
                                    >
                     <Box>
                       <Typography
@@ -728,43 +745,18 @@ const handleFlexibleButton=()=>{
                         fontSize: 16,
                         marginTop: 25,
                         marginLeft: 50,
+                        marginBottom:5
                       }}
                       onClick={() => setTokenStakeValue(userBalance)} 
                       // this onclick function is to be change
                     >
                       Confirm
                     </Button>
-                 </Box>)}
 
-                {/* <Box mt={8} mb={6}>
-                  <Autocomplete
-                    disablePortal
-                    id="tags-standard"
-                    sx={{ width: 300 }}
-                    options={monthOptions}
-                    value={
-                      monthOptions.find(
-                        (option) => option.value === selectedTime
-                      ) || null
-                    }
-                    getOptionLabel={(option) => option.label}
-                    onChange={(event, newValue) =>
-                      setSelectedTime(newValue?.value || null)
-                    }
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        variant="outlined"
-                        label="Month Stake"
-                        style={{ color: "white" }}
-                      />
-                    )}
-                  />
-                  <br></br>
-                </Box> */}
 
-                <br></br>
-                <div style={{ display: "flex" }}>
+
+                    <br></br>
+                <div style={{ display: "flex",marginTop:20 }}>
                   <div>
                     <Box className={classes.heading}>
                       <Typography variant="h2" className={classes.head}>
@@ -836,6 +828,303 @@ const handleFlexibleButton=()=>{
                     </Box>
                   </Box>
                 </Box>
+                 </Box>)}
+
+          {locked &&( <Box>
+                   <Box
+                    mt={2}
+                    mb={2}
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      flexDirection: "row",
+                    }}
+                   
+                     >
+                    <Box>
+                      <Typography
+                        variant="body2"
+                        className={classes.inputLabel}
+                        style={{ fontSize: "13px", marginBottom: 2 }}
+                      >
+                        Enter Token to Stake
+                      </Typography>
+                      <TextField
+                        className={classes.input}
+                        value={tokenStakeValue}
+                        onChange={handleStakeTokenChange}
+                        variant="outlined"
+                      />
+                    </Box>
+                    <Button
+                      variant="contained"
+                      style={{
+                        backgroundColor: "#e31a89",
+                        color: "#fff",
+                        height: 30,
+                        fontSize: 14,
+                        marginTop: 25,
+                        marginInline: 10,
+                      }}
+                      onClick={() => setTokenStakeValue(userBalance)}
+                    >
+                      Max
+                    </Button>
+                                   </Box>
+                   
+                                   <Box
+                    mt={2}
+                    mb={2}
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      flexDirection: "row",
+                    }}
+                                   >
+                    <Box>
+                      <Typography
+                        variant="body2"
+                        className={classes.inputLabel}
+                        style={{
+                          fontSize: "13px",
+                          marginBottom: 2,
+                          paddingLeft: 2,
+                        }}
+                      >
+                        Day Stake
+                      </Typography>
+                      <TextField
+                        className={classes.input}
+                        value={selectedTime}
+                        onChange={handleDayStake}
+                        variant="outlined"
+                      />
+                    </Box>
+                    <div
+                      variant="contained"
+                      style={{
+                        color: "#fff",
+                        height: 30,
+                        fontSize: 14,
+                        marginTop: 25,
+                        paddingInline: 22,
+                      }}
+                      onClick={() => setTokenStakeValue(userBalance)}
+                    >
+                      Days
+                    </div>
+                                   </Box>
+                                   <Box
+                    style={{ display: "flex", justifyContent: "space-around" }}
+                                   >
+                    <Button
+                      variant="contained"
+                      style={{
+                        backgroundColor: "#e31a89",
+                        color: "#fff",
+                        height: 25,
+                        borderRadius: 20,
+                        fontSize: 12,
+                        fontWeight: "bold",
+                        marginTop: 17,
+                      }}
+                      onClick={() => handleDayStakeButton(1)}
+                    >
+                      1W
+                    </Button>
+                    <Button
+                      variant="contained"
+                      style={{
+                        backgroundColor: "#e31a89",
+                        color: "#fff",
+                        height: 25,
+                        borderRadius: 20,
+                        fontSize: 12,
+                        fontWeight: "bold",
+                        marginTop: 17,
+                      }}
+                      onClick={() => handleDayStakeButton(2)}
+                    >
+                      2W
+                    </Button>
+                    <Button
+                      variant="contained"
+                      style={{
+                        backgroundColor: "#e31a89",
+                        color: "#fff",
+                        height: 25,
+                        borderRadius: 20,
+                        fontSize: 12,
+                        fontWeight: "bold",
+                        marginTop: 17,
+                      }}
+                      onClick={() => handleDayStakeButton(3)}
+                    >
+                      3W
+                    </Button>
+                    <Button
+                      variant="contained"
+                      style={{
+                        backgroundColor: "#e31a89",
+                        color: "#fff",
+                        height: 25,
+                        borderRadius: 20,
+                        fontSize: 12,
+                        fontWeight: "bold",
+                        marginTop: 17,
+                      }}
+                      onClick={() => handleDayStakeButton(4)}
+                    >
+                      4W
+                    </Button>
+                    <Button
+                      variant="contained"
+                      style={{
+                        backgroundColor: "#e31a89",
+                        color: "#fff",
+                        height: 25,
+                        borderRadius: 20,
+                        fontSize: 12,
+                        fontWeight: "bold",
+                        marginTop: 17,
+                      }}
+                      onClick={() => handleDayStakeButton(52)}
+                    >
+                      Max
+                    </Button>
+                     </Box>
+                     <Button
+                      variant="contained"
+                      style={{
+                        backgroundColor: "#e31a89",
+                        color: "#fff",
+                        height: 40,
+                       paddingInline:45,
+                       borderRadius:5,
+                        fontSize: 16,
+                        marginTop: 25,
+                        marginLeft: 50,
+                        marginBottom:5
+                      }}
+                      onClick={() => setTokenStakeValue(userBalance)} 
+                      // this onclick function is to be change
+                    >
+                      Confirm
+                    </Button>
+
+
+
+                    <br></br>
+                {/* <div style={{ display: "flex",marginTop:20 }}>
+                  <div>
+                    <Box className={classes.heading}>
+                      <Typography variant="h2" className={classes.head}>
+                        User Names Stake
+                      </Typography>
+                    </Box>
+                    <br></br>
+                    <Box>
+                      {mintedUserNames.length === 0 ? (
+                        <Typography variant="h5" style={{ fontSize: 14 }}>
+                          No User Name minted yet.
+                        </Typography>
+                      ) : (
+                        mintedUserNames.map(({ domainName, tokenId }) => (
+                          <Box className={classes.checkbox} key={domainName}>
+                            <Checkbox
+                              checked={selectedUserNames.includes(tokenId)}
+                              onChange={(event) =>
+                                handleCheckboxChange(event, domainName, tokenId)
+                              }
+                              value={tokenId}
+                              size="small"
+                              inputProps={{
+                                "aria-label": "checkbox with small size",
+                              }}
+                            />
+                            <Typography variant="h5">{domainName}</Typography>
+                          </Box>
+                        ))
+                      )}
+                    </Box>
+                  </div>
+                </div>
+                <Box className={classes.Buttonbox} mt={2}>
+                  <Box mt={2}>
+                    <Button
+                      variant="contained"
+                      style={{ backgroundColor: "#e31a89", color: "#fff" }}
+                      onClick={handleStake}
+                    >
+                      Start Now
+                    </Button>
+
+                    <Box>
+                      <Box className={classes.tooltipIconHeader}>
+                        <Button
+                          variant="contained"
+                          style={{
+                            backgroundColor: "#3C3C3C",
+                            color: "#fff",
+                            height: 40,
+                            fontSize: 14,
+                            marginTop: 25,
+                            // marginInline: 10,
+                          }}
+                          onClick={() => setTokenStakeValue(userBalance)}
+                        >
+                          End Session Now
+                        </Button>
+                        <Tooltip
+                          title="You might incur penalties if you end session before your selected duration"
+                          style={{ cursor: "pointer", marginTop: 18 }}
+                          placement={"top"}
+                          classes={{ tooltip: classes.tooltip }}
+                        >
+                          <InfoIcon fontSize={"medium"} />
+                        </Tooltip>
+                      </Box>
+                    </Box>
+                  </Box>
+                </Box> */}
+                 </Box>)}
+
+
+
+
+
+
+
+
+
+                {/* <Box mt={8} mb={6}>
+                  <Autocomplete
+                    disablePortal
+                    id="tags-standard"
+                    sx={{ width: 300 }}
+                    options={monthOptions}
+                    value={
+                      monthOptions.find(
+                        (option) => option.value === selectedTime
+                      ) || null
+                    }
+                    getOptionLabel={(option) => option.label}
+                    onChange={(event, newValue) =>
+                      setSelectedTime(newValue?.value || null)
+                    }
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="outlined"
+                        label="Month Stake"
+                        style={{ color: "white" }}
+                      />
+                    )}
+                  />
+                  <br></br>
+                </Box> */}
+
+               
 
                 <br></br>
               </Box>
