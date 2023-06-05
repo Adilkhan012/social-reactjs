@@ -491,20 +491,20 @@ const Earn = () => {
     return new Promise(async (resolve, reject) => {
       const erc20Amount = tokenStakeValue;
       console.log("selected Amount:", erc20Amount);
-
+  
       console.log("selected UserName:", selectedUserNames);
       console.log("selected TimePeriod:", selectedTime);
       console.log("user Duration:", userStakedDuration);
       console.log("user Tokens:", userStakedTokens);
       console.log("Total Duration:", totalStakedDuration);
       console.log("Total StakedTokens:", totalStakedLazi);
-
+  
       if (engagementContract) {
         try {
           const gasEstimate = await engagementContract.methods
             .stake(erc20Amount, selectedTime, selectedUserNames)
             .estimateGas({ from: userAddress });
-
+  
           engagementContract.methods
             .stake(erc20Amount, selectedTime, selectedUserNames)
             .send({ from: userAddress, gas: gasEstimate })
@@ -521,28 +521,36 @@ const Earn = () => {
             })
             .on("error", (error) => {
               console.log(error);
-              const errorMessage = error.message.split("message: ")[2];
-              toast.error(errorMessage, { position: toast.POSITION.TOP_RIGHT });
-              reject(new Error(errorMessage)); // Reject the promise with an error when the transaction fails
+              if (error.code === 4001) {
+                toast.error("Transaction rejected by the user.", {
+                  position: toast.POSITION.TOP_RIGHT,
+                });
+                reject(new Error("Transaction rejected by the user."));
+              } else {
+                const errorMessage = error.message.split("message: ")[2];
+                toast.error(errorMessage, { position: toast.POSITION.TOP_RIGHT });
+                reject(new Error(errorMessage));
+              }
             });
         } catch (error) {
           console.log(error);
           let errorMessage = "An error occurred during the transaction.";
-
+  
           if (error.message) {
             const startIndex = error.message.indexOf(" reverted: ") + 10;
             const endIndex = error.message.indexOf(",", startIndex);
             errorMessage = error.message.substring(startIndex, endIndex);
           }
-
+  
           toast.error(errorMessage);
-          reject(new Error(errorMessage)); // Reject the promise with an error
+          reject(new Error(errorMessage));
         }
       } else {
-        reject(new Error("engagementContract is not available!")); // Reject the promise with an error
+        reject(new Error("EngagementContract is not available!"));
       }
     });
   };
+  
 
   const fetchInformation = useCallback(async () => {
     try {
@@ -648,6 +656,21 @@ const Earn = () => {
                     >
                       <InfoIcon fontSize={"medium"} />
                     </Tooltip>
+                    <Button
+                        variant="contained"
+                        style={{
+                          backgroundColor: "#e31a89",
+                          color: "#fff",
+                          height: 40,
+                          paddingInline: 30,
+                          fontSize: 16,
+                          marginTop: 25,
+                          marginLeft: 70,
+                        }}
+                        onClick={handleStakeInfoButton}
+                      >
+                        Stake Info
+                      </Button>
                   </Box>
                 )}
                 <br></br>
@@ -1395,22 +1418,6 @@ const Earn = () => {
                         onClick={handleConfirmLockedButton}
                       >
                         Confirm Stake
-                      </Button>
-
-                      <Button
-                        variant="contained"
-                        style={{
-                          backgroundColor: "#e31a89",
-                          color: "#fff",
-                          height: 40,
-                          paddingInline: 30,
-                          fontSize: 16,
-                          marginTop: 25,
-                          marginLeft: 70,
-                        }}
-                        onClick={handleStakeInfoButton}
-                      >
-                        Stake Info
                       </Button>
                     </Box>
                   </Box>
