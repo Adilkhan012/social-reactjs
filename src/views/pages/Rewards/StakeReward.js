@@ -6,7 +6,6 @@ import {
   Grid,
   makeStyles,
   Paper,
-  Slider,
   TextField,
   Typography,
 } from "@material-ui/core";
@@ -17,12 +16,14 @@ import InfoIcon from "@material-ui/icons/Info";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { toast } from "react-toastify";
 import BigInt from "big-integer";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import initMetamask from "src/blockchain/metamaskConnection";
 import initStakingContract from "src/blockchain/stakingReward";
 import initlaziTokenContract from "src/blockchain/laziTokenContract";
 import initUserNameContract from "src/blockchain/laziUserNameContract";
 import { styles } from "@material-ui/pickers/views/Clock/Clock";
+import { Balance } from "@mui/icons-material";
 // import MetaMaskOnboarding from "@metamask/onboarding";
 const laziTokenAddress = "0xf472134D28216581F47304c66Fb18922a146e514";
 
@@ -139,7 +140,6 @@ const StakeReward = () => {
   const classes = useStyles();
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [userAddress, setAddress] = useState(null);
-  const [sliderValue, setSliderValue] = useState(0);
   const [stakingContract, setStakingContract] = useState(null);
   const [userNameContract, setUserNameContract] = useState(null);
   const [laziTokenContract, setLaziTokenContract] = useState(null);
@@ -147,8 +147,133 @@ const StakeReward = () => {
   const [userRewards, setUserRewards] = useState(0);
   const [selectedUserNames, setSelectedUserNames] = useState([]);
   const [mintedUserNames, setMintedUserNames] = useState([]);
-  const [selectedTime, setSelectedTime] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(0);
   const [userAPR, setUserAPR] = useState(0);
+  const [flexible, setFlexible] = useState(false);
+  const [locked, setLocked] = useState(false);
+  const [tokenStakeValue, setTokenStakeValue] = useState(0);
+  const [confirmStaking, setConfirmStaking] = useState(false);
+  const [lazinessProfit, setLazinessProfit] = useState(0);
+  const [afterLocked, setAfterLocked] = useState(false);
+  const [AddLockedButton, setAddLockedButton] = useState(false);
+  const [addFlexibleButton, setAddFlexibleButton] = useState(false);
+  const [switchToLock, setSwitchToLocked] = useState(false);
+  const [userBalance, setUserBalance] = useState(false);
+  const [totalStakers, setTotalStakers] = useState(0);
+  const [userStakedDuration, setUserStakedDuration] = useState(0);
+  const [userStakedTokens, setUserStakedTokens] = useState(0);
+
+  // function editing here
+
+  const handleGoBacktoLocked = () => {
+    setAddLockedButton(false);
+    setAfterLocked(true);
+  };
+
+  const handleAddFlexibleButton = () => {
+    setAddFlexibleButton(true);
+    setFlexible(false);
+    setConfirmStaking(false);
+    setLocked(false);
+    setAfterLocked(false);
+  };
+  const handleAddLockedButton = () => {
+    setAddLockedButton(true);
+    setConfirmStaking(false);
+    setLocked(false);
+    setAfterLocked(false);
+  };
+
+  const handleGoBackOfLocked = () => {
+    setLocked(true);
+    setFlexible(false);
+    setAfterLocked(false);
+  };
+  const handleSwitchLockedGoBack = () => {
+    setFlexible(true);
+    setSwitchToLocked(false);
+  };
+
+  const handleConfirmLockedButton = () => {
+    // await handleStake()
+    setAfterLocked(true);
+    setLocked(false);
+    setFlexible(false);
+    setAddLockedButton(false);
+  };
+
+  const handleSwitchToLock = () => {
+    setFlexible(false);
+    // setSwitchToLocked(true);
+    setLocked(true);
+  };
+
+  const handleDayStake = (e) => {
+    setSelectedTime(e.target.value);
+  };
+
+  const handleGoBacktoFlexible = () => {
+    setFlexible(true);
+    setLocked(false);
+    setConfirmStaking(false);
+    setAddFlexibleButton(false);
+  };
+
+  const handleConfirmFlexibleButton = () => {
+    // await handleStake()
+    setFlexible(true);
+    setLocked(false);
+    setConfirmStaking(false);
+    setAddFlexibleButton(false);
+  };
+  const handleGoBackforFlexibleIncrement = () => {
+    setFlexible(false);
+    setLocked(false);
+    setConfirmStaking(true);
+    setAddFlexibleButton(false);
+  };
+
+  const handleIncrement = () => {
+    setLazinessProfit((prevProfit) => prevProfit + 0.1);
+  };
+
+  const handleDecrement = () => {
+    setLazinessProfit((prevProfit) => prevProfit - 0.1);
+  };
+
+  const handleConfirmStakingButton = () => {
+    setConfirmStaking(true);
+    setFlexible(false);
+  };
+
+  const handleDayStakeButton = (weeks) => {
+    setSelectedTime(weeks * 7);
+  };
+
+  // Back Icon
+
+  const handleGoBack = () => {
+    setFlexible(false);
+    setLocked(false);
+    // setConfirmStaking(false);
+  };
+
+  // Flexbile Button Function
+  const handleFlexibleButton = async () => {
+    // await handleStake()
+    setTimeout(() => {
+      setFlexible(!flexible);
+      setLocked(false);
+    }, 500);
+  };
+  // Locked Button Function
+
+  const handleLockedButton = () => {
+    setTimeout(() => {
+      setLocked(!locked);
+      setFlexible(false);
+    }, 500);
+  };
 
   //chart state
   const [state, setState] = useState({
@@ -409,10 +534,33 @@ const StakeReward = () => {
     ],
   });
 
-  const handleSliderChange = (event) => {
-    setSliderValue(event.target.value);
+  const handleStakeTokenChange = (event) => {
+    setTokenStakeValue(event.target.value);
   };
 
+  const calculateTotalMultiplier = () => {
+    let multiplier = 1;
+
+    if (selectedTime) {
+      if (selectedTime >= 0 && selectedTime < 90) {
+        multiplier += 0;
+      } else if (selectedTime >= 90 && selectedTime < 180) {
+        multiplier += 0.25;
+      } else if (selectedTime >= 180 && selectedTime < 270) {
+        multiplier += 0.5;
+      } else if (selectedTime >= 270 && selectedTime < 360) {
+        multiplier += 1;
+      } else if (selectedTime >= 360 && selectedTime < 450) {
+        multiplier += 1.5;
+      } else if (selectedTime >= 450) {
+        multiplier += 2;
+      }
+    }
+
+    multiplier += 0.25 * selectedUserNames.length;
+    return multiplier;
+  };
+  const totalMultiplier = calculateTotalMultiplier();
   useEffect(() => {
     const initialize = async () => {
       try {
@@ -475,23 +623,30 @@ const StakeReward = () => {
     return `${value} LAZI`;
   };
 
+  const handlePercentageBalance = (percentage) => {
+    // Calculate the selected percentage of your balance
+    const balance = userBalance; // Replace with your actual balance
+    const selectedValue = (balance * percentage) / 100;
+    setTokenStakeValue(selectedValue.toString());
+  };
+
   const handleStake = async () => {
     try {
-      const erc20Amount = sliderValue; // Use sliderValue state variable
+      const erc20Amount = tokenStakeValue; // Use sliderValue state variable
       console.log("Selected Amount:", erc20Amount);
 
       console.log("Selected UserName:", selectedUserNames);
       console.log("Selected TimePeriod:", selectedTime);
 
-      if (erc20Amount === 0) {
-        toast.error("Select a valid Amount to stake!");
-        return; // Break the flow if erc20Amount is 0
-      }
+      // if (erc20Amount === 0) {
+      //   toast.error("Select a valid Amount to stake!");
+      //   return; // Break the flow if erc20Amount is 0
+      // }
 
-      if (!selectedTime) {
-        toast.error("Select the Time Period to stake!");
-        return; // Break the flow if time period is not selected
-      }
+      // if (!selectedTime) {
+      //   toast.error("Select the Time Period to stake!");
+      //   return; // Break the flow if time period is not selected
+      // }
       // Estimate gas fees
       const gasEstimate = await stakingContract.methods
         .stake(erc20Amount, selectedTime, selectedUserNames)
@@ -559,6 +714,17 @@ const StakeReward = () => {
       console.error("Error fetching user rewards:", error);
     }
   }, [userAddress, stakingContract]);
+  const fetchUserBalance = useCallback(async () => {
+    try {
+      console.log("address: ", userAddress);
+      const balance = await laziTokenContract.methods
+        .balanceOf(userAddress)
+        .call();
+      setUserBalance(balance);
+    } catch (error) {
+      console.error("Error fetching user Balance:", error);
+    }
+  }, [userAddress, laziTokenContract]);
 
   const fetchUserAPR = useCallback(async () => {
     try {
@@ -675,7 +841,44 @@ const StakeReward = () => {
         console.error(error);
       }
     }
-  }, [userAddress, stakingContract, userNameContract]);
+  }, [stakingContract]);
+
+  const fetchInformation = useCallback(async () => {
+    try {
+      // Call the balanceOf() function to get the user's balance
+      const balance = await laziTokenContract.methods
+        .balanceOf(userAddress)
+        .call();
+      setUserBalance(balance);
+      // const totalStakers = await stakingContract.methods.totalUsers().call();
+      // setTotalStakers(totalStakers);
+
+      // const totalStakedDuration = await stakingContract.methods
+      //   .totalStakedDuration()
+      //   .call();
+      // setTotalStakedDuration(totalStakedDuration);
+
+      const userInfo = await stakingContract.methods.stakes(userAddress).call();
+      setUserStakedDuration(userInfo.lockPeriod);
+      setUserStakedTokens(userInfo.stakingAmount);
+      console.log("user Staked!:  ", userInfo.stakingAmount);
+      console.log("user Staked Duration!:  ", userInfo.lockPeriod);
+
+      // const userDurationScore =
+      //   (userInfo.stakeDuration / totalStakedDuration) * 100;
+      // const userStakedScore = (userInfo.stakedLazi / totalStakedLazi) * 100;
+      // const averageStakedLazi = totalStakedLazi / totalStakers;
+      // const averageStakedDuration = totalStakedDuration / totalStakers;
+      // setAvgStakedDuration(averageStakedDuration);
+      // setAvgStakedLazi(averageStakedLazi);
+      // setUserStakedScore(userStakedScore);
+      // setUserDurationScore(userDurationScore);
+      // Update the userBalance state variable with the retrieved balance
+      console.log("UserBalance", balance);
+    } catch (error) {
+      console.error("Error fetching balance:", error);
+    }
+  }, [userAddress, laziTokenContract, stakingContract]);
 
   useEffect(() => {
     if (userAddress && stakingContract && userNameContract) {
@@ -684,6 +887,8 @@ const StakeReward = () => {
       getOwnerMintedUserNames();
       fetchDistributionsData();
       fetchUserAPR();
+      fetchUserBalance();
+      fetchInformation();
     }
   }, [
     userAddress,
@@ -694,6 +899,8 @@ const StakeReward = () => {
     getOwnerMintedUserNames,
     fetchDistributionsData,
     fetchUserAPR,
+    fetchUserBalance,
+    fetchInformation,
   ]);
 
   const handleUserRewardsClick = async () => {
@@ -819,21 +1026,38 @@ const StakeReward = () => {
       <Box className={classes.bannerBox}>
         <Grid container spacing={3}>
           <Grid item md={isMobile ? 12 : 6} xs={isMobile ? 12 : 12}>
-            <Paper className={classes.root} elevation={2}>
+            <Paper
+              className={classes.root}
+              elevation={2}
+              style={{
+                border: "3px solid rgba(236, 22, 127, 0.5) ",
+                borderRadius: 10,
+              }}
+            >
               <Box className={classes.root}>
-                <Box className={classes.tooltipIconHeader}>
-                  <Typography variant="h2">Stake Reward</Typography>
-                  <Tooltip
-                    title="This is the stake reward tooltip."
-                    style={{ cursor: "pointer" }}
-                    placement={"top"}
-                  >
-                    <InfoIcon fontSize={"medium"} />
-                  </Tooltip>
-                </Box>
+                {!(
+                  locked ||
+                  flexible ||
+                  // confirmStaking ||
+                  afterLocked ||
+                  AddLockedButton ||
+                  addFlexibleButton ||
+                  switchToLock
+                ) && (
+                  <Box className={classes.tooltipIconHeader}>
+                    <Typography variant="h2">Stake Reward</Typography>
+                    <Tooltip
+                      title="This is the stake reward tooltip."
+                      style={{ cursor: "pointer" }}
+                      placement={"top"}
+                    >
+                      <InfoIcon fontSize={"medium"} />
+                    </Tooltip>
+                  </Box>
+                )}
 
                 <br></br>
-                <Box mt={2} mb={2}>
+                {/* <Box mt={2} mb={2}>
                   <Typography
                     variant="body2"
                     className={classes.inputLabel}
@@ -847,8 +1071,8 @@ const StakeReward = () => {
                     onChange={handleSliderChange}
                     variant="outlined"
                   />
-                </Box>
-                <Box mt={4}>
+                </Box> */}
+                {/* <Box mt={4}>
                   <Autocomplete
                     disablePortal
                     id="tags-standard"
@@ -872,9 +1096,9 @@ const StakeReward = () => {
                     )}
                   />
                   <br></br>
-                </Box>
+                </Box> */}
                 <br></br>
-                <div style={{ display: "flex" }}>
+                {/* <div style={{ display: "flex" }}>
                   <div>
                     <Box className={classes.heading}>
                       <Typography variant="h2">Users Stake</Typography>
@@ -916,8 +1140,8 @@ const StakeReward = () => {
                       width="80%"
                     />{" "}
                   </div>
-                </div>
-                <Box className={classes.Buttonbox} mt={2}>
+                </div>  */}
+                {/* <Box className={classes.Buttonbox} mt={2}>
                   <Box mt={2}>
                     <Button
                       variant="contained"
@@ -927,9 +1151,9 @@ const StakeReward = () => {
                       Stake
                     </Button>
                   </Box>
-                </Box>
+                </Box> */}
                 <br></br>
-                <Box mt={2}>
+                {/* <Box mt={2}>
                   <h3>Text Area</h3>
                   <div
                     style={{
@@ -938,13 +1162,13 @@ const StakeReward = () => {
                       borderRadius: "7px",
                     }}
                   >
-                    <div class="info">
+                     <div class="info">
                       <div class="label">Total Locked:</div>
                       <div class="value">
                         <AnimatedNumber1 targetNumber={1888888} suffix="LAZI" />
                       </div>
-                    </div>
-                    {/* <div class="info">
+                    </div> 
+                    <div class="info">
                       <div class="label">Average lock duration:</div>
                       <div
                         class="value"
@@ -967,7 +1191,7 @@ const StakeReward = () => {
                         <AnimatedNumber targetNumber={0} suffix="" />
                         ~ <AnimatedNumber targetNumber={2} suffix="%" />
                       </div>
-                    </div> */}
+                    </div> 
                     <a
                       href="https://mumbai.polygonscan.com/address/0xf472134D28216581F47304c66Fb18922a146e514"
                       style={{
@@ -1080,13 +1304,1963 @@ const StakeReward = () => {
                       <div class="info-text">information</div>
                     </div>
                   </div>
+                </Box> */}
+
+                {/* <Box
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-around",
+                        marginTop:-40
+                      }}
+                    >
+                      <Button
+                        variant="contained"
+                        style={{
+                          backgroundColor: "#e31a89",
+                          color: "#fff",
+                          height: 25,
+                          borderRadius: 20,
+                          fontSize: 12,
+                          fontWeight: "bold",
+                          marginTop: 17,
+                        }}
+                        // onClick={() => handleDayStakeButton(1)}
+                      >
+                        25%
+                      </Button>
+                      <Button
+                        variant="contained"
+                        style={{
+                          backgroundColor: "#e31a89",
+                          color: "#fff",
+                          height: 25,
+                          borderRadius: 20,
+                          fontSize: 12,
+                          fontWeight: "bold",
+                          marginTop: 17,
+                        }}
+                        // onClick={() => handleDayStakeButton(2)}
+                      >
+                        50%
+                      </Button>
+                      <Button
+                        variant="contained"
+                        style={{
+                          backgroundColor: "#e31a89",
+                          color: "#fff",
+                          height: 25,
+                          borderRadius: 20,
+                          fontSize: 12,
+                          fontWeight: "bold",
+                          marginTop: 17,
+                        }}
+                        // onClick={() => handleDayStakeButton(3)}
+                      >
+                        75%
+                      </Button>
+                      <Button
+                        variant="contained"
+                        style={{
+                          backgroundColor: "#e31a89",
+                          color: "#fff",
+                          height: 25,
+                          borderRadius: 20,
+                          fontSize: 12,
+                          fontWeight: "bold",
+                          marginTop: 17,
+                        }}
+                        // onClick={() => handleDayStakeButton(4)}
+                      >
+                        max
+                      </Button>
+                    </Box> */}
+
+                {!(
+                  locked ||
+                  flexible ||
+                  // confirmStaking ||
+                  afterLocked ||
+                  AddLockedButton ||
+                  addFlexibleButton ||
+                  switchToLock
+                ) && (
+                  <Box
+                    mt={2}
+                    mb={2}
+                    style={{
+                      border: "2px solid #3C3C3C",
+                      borderRadius: 8,
+                      padding: 5,
+                      paddingBlock: 10,
+                      transition: "all 0.5s",
+                      marginTop: -28,
+                    }}
+                  >
+                    <Typography
+                      variant="h2"
+                      style={{
+                        fontSize: 14,
+                        whiteSpace: "nowrap",
+                        marginLeft: 10,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      LAZI Stake
+                    </Typography>
+                    <Box marginBottom={3}>
+                      <Typography
+                        variant="body2"
+                        className={classes.inputLabel}
+                        style={{ fontSize: "13px", marginBottom: 5 }}
+                      >
+                        Enter Token to Stake
+                      </Typography>
+                      <TextField
+                        className={classes.input}
+                        value={tokenStakeValue}
+                        onChange={handleStakeTokenChange}
+                        variant="outlined"
+                        style={{ marginBottom: 5 }}
+                      />
+                    </Box>
+
+                    {/* Percentage buttons in Locked buttons */}
+                    <Box
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-around",
+                        marginTop: -25,
+                        marginBottom: 22,
+                      }}
+                    >
+                      <Button
+                        variant="contained"
+                        style={{
+                          backgroundColor: "#e31a89",
+                          color: "#fff",
+                          height: 25,
+                          borderRadius: 20,
+                          fontSize: 12,
+                          fontWeight: "bold",
+                          marginTop: 17,
+                        }}
+                        onClick={() => handlePercentageBalance(25)}
+                      >
+                        25%
+                      </Button>
+                      <Button
+                        variant="contained"
+                        style={{
+                          backgroundColor: "#e31a89",
+                          color: "#fff",
+                          height: 25,
+                          borderRadius: 20,
+                          fontSize: 12,
+                          fontWeight: "bold",
+                          marginTop: 17,
+                        }}
+                        onClick={() => handlePercentageBalance(50)}
+                      >
+                        50%
+                      </Button>
+                      <Button
+                        variant="contained"
+                        style={{
+                          backgroundColor: "#e31a89",
+                          color: "#fff",
+                          height: 25,
+                          borderRadius: 20,
+                          fontSize: 12,
+                          fontWeight: "bold",
+                          marginTop: 17,
+                        }}
+                        onClick={() => handlePercentageBalance(75)}
+                      >
+                        75%
+                      </Button>
+                      <Button
+                        variant="contained"
+                        style={{
+                          backgroundColor: "#e31a89",
+                          color: "#fff",
+                          height: 25,
+                          borderRadius: 20,
+                          fontSize: 12,
+                          fontWeight: "bold",
+                          marginTop: 17,
+                        }}
+                        onClick={() => handlePercentageBalance(100)}
+                      >
+                        Max
+                      </Button>
+                    </Box>
+
+                    {/* Added minted usernames */}
+
+                    <Box style={{ marginTop: 22, marginBottom: 15 }}>
+                      <div style={{ display: "flex" }}>
+                        <div>
+                          <Box className={classes.heading}>
+                            <Typography variant="h2" style={{ fontSize: 16 }}>
+                              Users Stake
+                            </Typography>
+                          </Box>
+                          <br></br>
+                          <Box>
+                            {mintedUserNames.length === 0 ? (
+                              <Typography variant="h5" style={{ fontSize: 14 }}>
+                                No User Name minted yet.
+                              </Typography>
+                            ) : (
+                              mintedUserNames.map(({ domainName, tokenId }) => (
+                                <Box
+                                  className={classes.checkbox}
+                                  key={domainName}
+                                >
+                                  <Checkbox
+                                    checked={selectedUserNames.includes(
+                                      tokenId
+                                    )}
+                                    onChange={(event) =>
+                                      handleCheckboxChange(
+                                        event,
+                                        domainName,
+                                        tokenId
+                                      )
+                                    }
+                                    value={tokenId}
+                                    size="small"
+                                    inputProps={{
+                                      "aria-label": "checkbox with small size",
+                                    }}
+                                  />
+                                  <Typography variant="h5">
+                                    {domainName}
+                                  </Typography>
+                                </Box>
+                              ))
+                            )}
+                          </Box>
+                        </div>
+                        {/* <div style={{ marginLeft: "auto" }}>
+                          <Chart
+                            options={userNameChart.options}
+                            series={[
+                              selectedUserNames.length,
+                              mintedUserNames.length + 1,
+                            ]}
+                            type="donut"
+                            width="80%"
+                          />{" "}
+                        </div> */}
+                      </div>
+                    </Box>
+
+                    <Box display="flex" justifyContent="space-around" mt={2}>
+                      <Button
+                        variant="contained"
+                        style={{
+                          backgroundColor: "#e31a89",
+                          color: "#fff",
+                          height: 30,
+                          fontSize: 14,
+                          marginLeft: 5,
+                          transition: "opacity 0.5s ease-in-out",
+                        }}
+                        onClick={handleFlexibleButton}
+                      >
+                        Flexible
+                      </Button>
+                      <Button
+                        variant="contained"
+                        style={{
+                          backgroundColor: "#e31a89",
+                          color: "#fff",
+                          height: 30,
+                          fontSize: 14,
+                          transition: "all 0.5s",
+                        }}
+                        onClick={handleLockedButton}
+                      >
+                        Locked
+                      </Button>
+                    </Box>
+                  </Box>
+                )}
+
+                {/* Content to be shown when Clicked on flexible button */}
+                {flexible && (
+                  <Box>
+                    <Box
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Box>
+                        <Typography
+                          variant="h2"
+                          style={{ fontSize: 14, whiteSpace: "none" }}
+                        >
+                          My position
+                          <span
+                            style={{
+                              backgroundColor: "#e31a89",
+                              paddingInline: 4,
+                              fontSize: 16,
+                              borderRadius: 2,
+                              marginLeft: 2,
+                            }}
+                          >
+                            Flexible
+                          </span>
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <ArrowBackIcon
+                          onClick={handleConfirmStakingButton}
+                          style={{ cursor: "pointer" }}
+                        />
+                      </Box>
+                    </Box>
+                    <Box
+                      bgcolor={"black"}
+                      paddingBlock={4}
+                      borderRadius={8}
+                      marginTop={4}
+                    >
+                      <Box paddingBottom={2} paddingTop={2}>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            paddingInline: 15,
+                            paddingBlock: 6,
+                          }}
+                        >
+                          <div>Your Rewards </div>
+                          <div style={{ fontWeight: "bold" }}>
+                            {userRewards}
+                          </div>
+                        </div>
+
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            paddingInline: 15,
+                            paddingBlock: 6,
+                          }}
+                        >
+                          <div>Your Stake</div>
+                          <div style={{ fontWeight: "bold" }}>
+                            {userStakedTokens}{" "}
+                            <span>
+                              <Button
+                                style={{
+                                  border: "2px solid #e31a89",
+                                  borderRadius: 8,
+                                  color: "#e31a89",
+                                  height: 25,
+                                }}
+                                onClick={handleAddFlexibleButton}
+                              >
+                                +
+                              </Button>
+                            </span>
+                          </div>
+                        </div>
+
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            paddingInline: 15,
+                            paddingBlock: 6,
+                          }}
+                        >
+                          <div>APR</div>
+                          <div style={{ fontWeight: "bold" }}>{userAPR}</div>
+                        </div>
+
+                        {/* <Box
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-evenly",
+                          }}
+                        >
+                          <Button
+                            variant="contained"
+                            style={{
+                              backgroundColor: "#e31a89",
+                              color: "#fff",
+                              height: 25,
+                              borderRadius: 20,
+                              fontSize: 12,
+                              fontWeight: "bold",
+                              marginTop: 17,
+                              width: 35,
+                            }}
+                            onClick={() => handleDayStakeButton(1)}
+                          >
+                            1W
+                          </Button>
+                          <Button
+                            variant="contained"
+                            style={{
+                              backgroundColor: "#e31a89",
+                              color: "#fff",
+                              height: 25,
+                              borderRadius: 20,
+                              fontSize: 12,
+                              fontWeight: "bold",
+                              marginTop: 17,
+                              width: 35,
+                            }}
+                            onClick={() => handleDayStakeButton(2)}
+                          >
+                            2W
+                          </Button>
+                          <Button
+                            variant="contained"
+                            style={{
+                              backgroundColor: "#e31a89",
+                              color: "#fff",
+                              height: 25,
+                              borderRadius: 20,
+                              fontSize: 12,
+                              fontWeight: "bold",
+                              marginTop: 17,
+                              width: 35,
+                            }}
+                            onClick={() => handleDayStakeButton(3)}
+                          >
+                            3W
+                          </Button>
+                          <Button
+                            variant="contained"
+                            style={{
+                              backgroundColor: "#e31a89",
+                              color: "#fff",
+                              height: 25,
+                              borderRadius: 20,
+                              fontSize: 12,
+                              fontWeight: "bold",
+                              marginTop: 17,
+                              width: 35,
+                            }}
+                            onClick={() => handleDayStakeButton(4)}
+                          >
+                            4W
+                          </Button>
+                          <Button
+                            variant="contained"
+                            style={{
+                              backgroundColor: "#e31a89",
+                              color: "#fff",
+                              height: 25,
+                              borderRadius: 20,
+                              fontSize: 12,
+                              fontWeight: "bold",
+                              marginTop: 17,
+                              width: 35,
+                            }}
+                            onClick={() => handleDayStakeButton(52)}
+                          >
+                            Max
+                          </Button>
+                        </Box> */}
+                        <Button
+                          variant="contained"
+                          style={{
+                            backgroundColor: "#e31a89",
+                            color: "#fff",
+                            height: 40,
+                            // paddingInline: 30,
+                            fontSize: 16,
+                            marginTop: 25,
+                            marginLeft: 50,
+                          }}
+                          onClick={handleSwitchToLock}
+                        >
+                          Switch to Lock
+                        </Button>
+
+                        {/* <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            paddingInline: 15,
+                            paddingBlock: 6,
+                          }}
+                        >
+                          <div>User Balance</div>
+                          <div style={{ fontWeight: "bold" }}>444</div>
+                        </div> */}
+
+                        {/* <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            paddingInline: 15,
+                            paddingBlock: 6,
+                          }}
+                        >
+                          <div>Yield Boost</div>
+                          <div style={{ fontWeight: "bold" }}>2x</div>
+                        </div> */}
+                      </Box>
+                    </Box>
+                  </Box>
+                )}
+                {switchToLock && (
+                  <Box>
+                    <Box
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Box>
+                        <Typography
+                          variant="h2"
+                          style={{ fontSize: 14, whiteSpace: "none" }}
+                        >
+                          Switch to
+                          <span
+                            style={{
+                              backgroundColor: "#e31a89",
+                              paddingInline: 4,
+                              fontSize: 16,
+                              borderRadius: 2,
+                              marginLeft: 2,
+                            }}
+                          >
+                            Locked
+                          </span>
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <ArrowBackIcon
+                          onClick={handleSwitchLockedGoBack}
+                          style={{ cursor: "pointer" }}
+                        />
+                      </Box>
+                    </Box>
+
+                    {/* <Box
+  style={{
+    border: "1px solid #3C3C3C",
+    borderRadius: 10,
+    marginTop: 40,
+    paddingBottom: 20,
+    paddingTop: 10,
+    paddingInline: 10,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  }}
+>
+  <div>
+    <Typography
+      variant="h4"
+      style={{ fontSize: 15, fontWeight: "bold" }}
+    >
+      Recent Lazi Profit
+    </Typography>
+    <Typography variant="body1" component="div">
+      0.00000
+    </Typography>
+  </div>
+
+  <div>
+    <Typography
+      variant="h4"
+      style={{ fontSize: 15, fontWeight: "bold" }}
+    >
+      Yield Boost
+    </Typography>
+    <Typography variant="body1" component="div">
+      1.3x
+    </Typography>
+  </div>
+</Box> */}
+                    <Box
+                      bgcolor={"black"}
+                      paddingBlock={4}
+                      borderRadius={8}
+                      marginTop={4}
+                    >
+                      <Box paddingBottom={2} paddingTop={2}>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            paddingInline: 15,
+                            paddingBlock: 6,
+                          }}
+                        >
+                          <div>Your Rewards </div>
+                          <div style={{ fontWeight: "bold" }}>
+                            {userRewards}
+                          </div>
+                        </div>
+
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            paddingInline: 15,
+                            paddingBlock: 6,
+                          }}
+                        >
+                          <div>Your Stake</div>
+                          <div style={{ fontWeight: "bold" }}>
+                            {userStakedTokens}{" "}
+                            <span>
+                              <Button
+                                style={{
+                                  border: "2px solid #e31a89",
+                                  borderRadius: 8,
+                                  color: "#e31a89",
+                                  height: 25,
+                                }}
+                                onClick={handleAddLockedButton}
+                              >
+                                +
+                              </Button>
+                            </span>
+                          </div>
+                        </div>
+
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            paddingInline: 15,
+                            paddingBlock: 6,
+                          }}
+                        >
+                          <div>APR</div>
+                          <div style={{ fontWeight: "bold" }}>{userAPR}</div>
+                        </div>
+
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            paddingInline: 15,
+                            paddingBlock: 6,
+                          }}
+                        >
+                          <div>Unlocks In </div>
+                          <div style={{ fontWeight: "bold" }}>
+                            7 Days 8 Hrs Left
+                          </div>
+                        </div>
+
+                        <Box
+                          style={{
+                            marginLeft: 5,
+                            marginBottom: 5,
+                            marginTop: 9,
+                          }}
+                        >
+                          {/* <Button
+        variant="contained"
+        color="primary"
+        style={{
+          backgroundColor: "#e31a89",
+          color: "#fff",
+        }}
+        // onClick={handleAddLockedButton}
+      >
+        Extend
+      </Button> */}
+                        </Box>
+
+                        <Box
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-evenly",
+                          }}
+                        >
+                          <Button
+                            variant="contained"
+                            style={{
+                              backgroundColor: "#e31a89",
+                              color: "#fff",
+                              height: 25,
+                              borderRadius: 20,
+                              fontSize: 12,
+                              fontWeight: "bold",
+                              marginTop: 17,
+                              width: 35,
+                            }}
+                            onClick={() => handleDayStakeButton(1)}
+                          >
+                            1W
+                          </Button>
+                          <Button
+                            variant="contained"
+                            style={{
+                              backgroundColor: "#e31a89",
+                              color: "#fff",
+                              height: 25,
+                              borderRadius: 20,
+                              fontSize: 12,
+                              fontWeight: "bold",
+                              marginTop: 17,
+                              width: 35,
+                            }}
+                            onClick={() => handleDayStakeButton(2)}
+                          >
+                            2W
+                          </Button>
+                          <Button
+                            variant="contained"
+                            style={{
+                              backgroundColor: "#e31a89",
+                              color: "#fff",
+                              height: 25,
+                              borderRadius: 20,
+                              fontSize: 12,
+                              fontWeight: "bold",
+                              marginTop: 17,
+                              width: 35,
+                            }}
+                            onClick={() => handleDayStakeButton(3)}
+                          >
+                            3W
+                          </Button>
+                          <Button
+                            variant="contained"
+                            style={{
+                              backgroundColor: "#e31a89",
+                              color: "#fff",
+                              height: 25,
+                              borderRadius: 20,
+                              fontSize: 12,
+                              fontWeight: "bold",
+                              marginTop: 17,
+                              width: 35,
+                            }}
+                            onClick={() => handleDayStakeButton(4)}
+                          >
+                            4W
+                          </Button>
+                          <Button
+                            variant="contained"
+                            style={{
+                              backgroundColor: "#e31a89",
+                              color: "#fff",
+                              height: 25,
+                              borderRadius: 20,
+                              fontSize: 12,
+                              fontWeight: "bold",
+                              marginTop: 17,
+                              width: 35,
+                            }}
+                            onClick={() => handleDayStakeButton(52)}
+                          >
+                            Max
+                          </Button>
+                        </Box>
+                        <Button
+                          variant="contained"
+                          style={{
+                            backgroundColor: "#e31a89",
+                            color: "#fff",
+                            height: 40,
+                            paddingInline: 30,
+                            fontSize: 16,
+                            marginTop: 25,
+                            marginLeft: 70,
+                          }}
+                          onClick={handleConfirmLockedButton}
+                        >
+                          Extend
+                        </Button>
+
+                        {/* <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          paddingInline: 15,
+          paddingBlock: 6,
+        }}
+      >
+        <div>User Balance</div>
+        <div style={{ fontWeight: "bold" }}>444</div>
+      </div> */}
+
+                        {/* <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          paddingInline: 15,
+          paddingBlock: 6,
+        }}
+      >
+        <div>BooBoost</div>
+        <div style={{ fontWeight: "bold" }}>2x</div>
+      </div> */}
+                      </Box>
+                    </Box>
+                  </Box>
+                )}
+
+                {addFlexibleButton && (
+                  <Box>
+                    <Box
+                      display={"flex"}
+                      justifyContent={"space-between"}
+                      style={{ marginBottom: 4 }}
+                    >
+                      <Box>
+                        <Typography
+                          variant="h2"
+                          style={{ fontSize: 16, fontWeight: "bold" }}
+                        >
+                          Add $LAZI Flexible
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <ArrowBackIcon
+                          onClick={handleGoBacktoFlexible}
+                          style={{ cursor: "pointer" }}
+                        />
+                      </Box>
+                    </Box>
+
+                    <Box
+                      marginBottom={3}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-around",
+                        marginTop: 8,
+                      }}
+                    >
+                      <Box>
+                        <TextField
+                          className={classes.input}
+                          value={tokenStakeValue}
+                          onChange={handleStakeTokenChange}
+                          variant="outlined"
+                          style={{ marginTop: 5 }}
+                        />
+                      </Box>
+
+                      <Button
+                        variant="contained"
+                        style={{
+                          backgroundColor: "#e31a89",
+                          color: "#fff",
+                          height: 25,
+                          borderRadius: 20,
+                          fontSize: 12,
+                          fontWeight: "bold",
+                          marginTop: 17,
+                        }}
+                        onClick={() => handlePercentageBalance(100)}
+                      >
+                        Max
+                      </Button>
+                    </Box>
+
+                    {/* <Box>
+      <Typography
+        variant="body2"
+        className={classes.inputLabel}
+        style={{
+          fontSize: "13px",
+          marginBottom: 5,
+          paddingLeft: 2,
+        }}
+      >
+        Day Stake
+      </Typography>
+      <TextField
+        className={classes.input}
+        value={selectedTime}
+        onChange={handleDayStake}
+        variant="outlined"
+      />
+    </Box>
+    <Box
+      style={{
+        display: "flex",
+        justifyContent: "space-around",
+      }}
+    >
+      <Button
+        variant="contained"
+        style={{
+          backgroundColor: "#e31a89",
+          color: "#fff",
+          height: 25,
+          borderRadius: 20,
+          fontSize: 12,
+          fontWeight: "bold",
+          marginTop: 17,
+        }}
+        onClick={() => handleDayStakeButton(1)}
+      >
+        1W
+      </Button>
+      <Button
+        variant="contained"
+        style={{
+          backgroundColor: "#e31a89",
+          color: "#fff",
+          height: 25,
+          borderRadius: 20,
+          fontSize: 12,
+          fontWeight: "bold",
+          marginTop: 17,
+        }}
+        onClick={() => handleDayStakeButton(2)}
+      >
+        2W
+      </Button>
+      <Button
+        variant="contained"
+        style={{
+          backgroundColor: "#e31a89",
+          color: "#fff",
+          height: 25,
+          borderRadius: 20,
+          fontSize: 12,
+          fontWeight: "bold",
+          marginTop: 17,
+        }}
+        onClick={() => handleDayStakeButton(3)}
+      >
+        3W
+      </Button>
+      <Button
+        variant="contained"
+        style={{
+          backgroundColor: "#e31a89",
+          color: "#fff",
+          height: 25,
+          borderRadius: 20,
+          fontSize: 12,
+          fontWeight: "bold",
+          marginTop: 17,
+        }}
+        onClick={() => handleDayStakeButton(4)}
+      >
+        4W
+      </Button>
+      <Button
+        variant="contained"
+        style={{
+          backgroundColor: "#e31a89",
+          color: "#fff",
+          height: 25,
+          borderRadius: 20,
+          fontSize: 12,
+          fontWeight: "bold",
+          marginTop: 17,
+        }}
+        onClick={() => handleDayStakeButton(52)}
+      >
+        Max
+      </Button>
+    </Box> */}
+                    {/* Card Place */}
+
+                    {/* <Box
+                        bgcolor={"black"}
+                        paddingBlock={4}
+                        borderRadius={8}
+                        marginTop={4}
+                      >
+                        <Box paddingBottom={2} paddingTop={2}>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              paddingInline: 15,
+                              paddingBlock: 6,
+                            }}
+                          >
+                            <div>Lazi to be locked </div>
+                            <div style={{ fontWeight: "bold" }}>11111</div>
+                          </div>
+  
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              paddingInline: 15,
+                              paddingBlock: 6,
+                            }}
+                          >
+                            <div>Duration</div>
+                            <div style={{ fontWeight: "bold" }}>2222</div>
+                          </div>
+  
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              paddingInline: 15,
+                              paddingBlock: 6,
+                            }}
+                          >
+                            <div>APR</div>
+                            <div style={{ fontWeight: "bold" }}>3333</div>
+                          </div>
+  
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              paddingInline: 15,
+                              paddingBlock: 6,
+                            }}
+                          >
+                            <div>User Balance</div>
+                            <div style={{ fontWeight: "bold" }}>444</div>
+                          </div>
+  
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              paddingInline: 15,
+                              paddingBlock: 6,
+                            }}
+                          >
+                            <div>Yield Boost</div>
+                            <div style={{ fontWeight: "bold" }}>2x</div>
+                          </div>
+                        </Box>
+                      </Box> */}
+
+                    {/* Confirm Button */}
+
+                    <Button
+                      variant="contained"
+                      style={{
+                        backgroundColor: "#e31a89",
+                        color: "#fff",
+                        height: 40,
+                        paddingInline: 30,
+                        fontSize: 16,
+                        marginTop: 25,
+                        marginLeft: 70,
+                      }}
+                      onClick={handleConfirmFlexibleButton}
+                    >
+                      Confirm
+                    </Button>
+                  </Box>
+                )}
+
+                {/* For Lccked Button */}
+                {/* For Locked */}
+
+                <Box>
+                  {locked && (
+                    <Box
+                      style={{
+                        marginBottom: 4,
+                        border: "2px solid #3C3C3C",
+                        borderRadius: 8,
+                        padding: 10,
+                      }}
+                    >
+                      <Box display={"flex"} justifyContent={"space-between"}>
+                        <Box>
+                          <Typography
+                            variant="h2"
+                            style={{
+                              fontSize: 14,
+                              whiteSpace: "nowrap",
+                              marginLeft: 10,
+                              fontWeight: "bold",
+                            }}
+                          >
+                            Select Duration
+                          </Typography>
+                        </Box>
+                        <Box>
+                          <ArrowBackIcon
+                            onClick={handleGoBack}
+                            style={{ cursor: "pointer" }}
+                          />
+                        </Box>
+                      </Box>
+
+                      {/* <Box marginBottom={3}>
+                        <Typography
+                          variant="body2"
+                          className={classes.inputLabel}
+                          style={{ fontSize: "13px", marginBottom: 5 }}
+                        >
+                          Enter Token to Stake
+                        </Typography>
+                        <TextField
+                          className={classes.input}
+                          value={tokenStakeValue}
+                          // onChange={handleStakeTokenChange}
+                          variant="outlined"
+                          style={{ marginBottom: 5 }}
+                        />
+                      </Box> */}
+
+                      {/* Percentage buttons in Locked buttons */}
+                      {/* <Box
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-around",
+                          marginTop: -25,
+                          marginBottom: 22,
+                        }}
+                      >
+                        <Button
+                          variant="contained"
+                          style={{
+                            backgroundColor: "#e31a89",
+                            color: "#fff",
+                            height: 25,
+                            borderRadius: 20,
+                            fontSize: 12,
+                            fontWeight: "bold",
+                            marginTop: 17,
+                          }}
+                          onClick={() => handleDayStakeButton(1)}
+                        >
+                          25%
+                        </Button>
+                        <Button
+                          variant="contained"
+                          style={{
+                            backgroundColor: "#e31a89",
+                            color: "#fff",
+                            height: 25,
+                            borderRadius: 20,
+                            fontSize: 12,
+                            fontWeight: "bold",
+                            marginTop: 17,
+                          }}
+                          onClick={() => handleDayStakeButton(2)}
+                        >
+                          50%
+                        </Button>
+                        <Button
+                          variant="contained"
+                          style={{
+                            backgroundColor: "#e31a89",
+                            color: "#fff",
+                            height: 25,
+                            borderRadius: 20,
+                            fontSize: 12,
+                            fontWeight: "bold",
+                            marginTop: 17,
+                          }}
+                          onClick={() => handleDayStakeButton(3)}
+                        >
+                          75%
+                        </Button>
+                        <Button
+                          variant="contained"
+                          style={{
+                            backgroundColor: "#e31a89",
+                            color: "#fff",
+                            height: 25,
+                            borderRadius: 20,
+                            fontSize: 12,
+                            fontWeight: "bold",
+                            marginTop: 17,
+                          }}
+                          onClick={() => handleDayStakeButton(4)}
+                        >
+                          max
+                        </Button>
+                      </Box> */}
+
+                      {/* <Box>
+                        <Typography
+                          variant="body2"
+                          className={classes.inputLabel}
+                          style={{
+                            fontSize: "13px",
+                            marginBottom: 5,
+                            paddingLeft: 2,
+                          }}
+                        >
+                          Day Stake
+                        </Typography>
+                        <TextField
+                          className={classes.input}
+                          value={selectedTime}
+                          onChange={handleDayStake}
+                          variant="outlined"
+                        />
+                      </Box> */}
+                      <Box marginBottom={2}>
+                        <Typography
+                          variant="body2"
+                          className={classes.inputLabel}
+                          style={{ fontSize: "13px", marginBottom: 5 }}
+                        >
+                          Enter Days to Stake
+                        </Typography>
+                        <TextField
+                          className={classes.input}
+                          value={selectedTime}
+                          onChange={handleDayStake}
+                          variant="outlined"
+                          style={{ marginBottom: 2 }}
+                        />
+                      </Box>
+                      <Box
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-around",
+                        }}
+                      >
+                        <Button
+                          variant="contained"
+                          style={{
+                            backgroundColor: "#e31a89",
+                            color: "#fff",
+                            height: 25,
+                            borderRadius: 20,
+                            fontSize: 12,
+                            fontWeight: "bold",
+                            marginTop: 17,
+                          }}
+                          onClick={() => handleDayStakeButton(1)}
+                        >
+                          1W
+                        </Button>
+                        <Button
+                          variant="contained"
+                          style={{
+                            backgroundColor: "#e31a89",
+                            color: "#fff",
+                            height: 25,
+                            borderRadius: 20,
+                            fontSize: 12,
+                            fontWeight: "bold",
+                            marginTop: 17,
+                          }}
+                          onClick={() => handleDayStakeButton(2)}
+                        >
+                          2W
+                        </Button>
+                        <Button
+                          variant="contained"
+                          style={{
+                            backgroundColor: "#e31a89",
+                            color: "#fff",
+                            height: 25,
+                            borderRadius: 20,
+                            fontSize: 12,
+                            fontWeight: "bold",
+                            marginTop: 17,
+                          }}
+                          onClick={() => handleDayStakeButton(3)}
+                        >
+                          3W
+                        </Button>
+                        <Button
+                          variant="contained"
+                          style={{
+                            backgroundColor: "#e31a89",
+                            color: "#fff",
+                            height: 25,
+                            borderRadius: 20,
+                            fontSize: 12,
+                            fontWeight: "bold",
+                            marginTop: 17,
+                          }}
+                          onClick={() => handleDayStakeButton(4)}
+                        >
+                          4W
+                        </Button>
+                        <Button
+                          variant="contained"
+                          style={{
+                            backgroundColor: "#e31a89",
+                            color: "#fff",
+                            height: 25,
+                            borderRadius: 20,
+                            fontSize: 12,
+                            fontWeight: "bold",
+                            marginTop: 17,
+                          }}
+                          onClick={() => handleDayStakeButton(52)}
+                        >
+                          Max
+                        </Button>
+                      </Box>
+                      {/* Card Place */}
+
+                      <Box
+                        bgcolor={"black"}
+                        paddingBlock={4}
+                        borderRadius={8}
+                        marginTop={4}
+                      >
+                        {/* <Box paddingBottom={2} paddingTop={2}>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              paddingInline: 15,
+                              paddingBlock: 6,
+                            }}
+                          >
+                            <div>Lazi to be locked </div>
+                            <div style={{ fontWeight: "bold" }}>11111</div>
+                          </div>
+
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              paddingInline: 15,
+                              paddingBlock: 6,
+                            }}
+                          >
+                            <div>Duration</div>
+                            <div style={{ fontWeight: "bold" }}>2222</div>
+                          </div>
+
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              paddingInline: 15,
+                              paddingBlock: 6,
+                            }}
+                          >
+                            <div>APR</div>
+                            <div style={{ fontWeight: "bold" }}>3333</div>
+                          </div>
+
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              paddingInline: 15,
+                              paddingBlock: 6,
+                            }}
+                          >
+                            <div>User Balance</div>
+                            <div style={{ fontWeight: "bold" }}>444</div>
+                          </div>
+
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              paddingInline: 15,
+                              paddingBlock: 6,
+                            }}
+                          >
+                            <div>Yield Boost</div>
+                            <div style={{ fontWeight: "bold" }}>2x</div>
+                          </div>
+                        </Box> */}
+                      </Box>
+
+                      {/* Confirm Button */}
+
+                      <Button
+                        variant="contained"
+                        style={{
+                          backgroundColor: "#e31a89",
+                          color: "#fff",
+                          height: 40,
+                          paddingInline: 30,
+                          fontSize: 16,
+                          marginTop: 25,
+                          marginLeft: 70,
+                        }}
+                        onClick={handleConfirmLockedButton}
+                      >
+                        Confirm
+                      </Button>
+                    </Box>
+                  )}
                 </Box>
+
+                {/* After Locking is Confirm */}
+                {afterLocked && (
+                  <Box>
+                    <Box
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Box>
+                        <Typography
+                          variant="h2"
+                          style={{ fontSize: 14, whiteSpace: "none" }}
+                        >
+                          My position
+                          <span
+                            style={{
+                              backgroundColor: "#e31a89",
+                              paddingInline: 4,
+                              fontSize: 16,
+                              borderRadius: 2,
+                              marginLeft: 2,
+                            }}
+                          >
+                            Locked
+                          </span>
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <ArrowBackIcon
+                          onClick={handleGoBackOfLocked}
+                          style={{ cursor: "pointer" }}
+                        />
+                      </Box>
+                    </Box>
+
+                    {/* <Box
+                      style={{
+                        border: "1px solid #3C3C3C",
+                        borderRadius: 10,
+                        marginTop: 40,
+                        paddingBottom: 20,
+                        paddingTop: 10,
+                        paddingInline: 10,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <div>
+                        <Typography
+                          variant="h4"
+                          style={{ fontSize: 15, fontWeight: "bold" }}
+                        >
+                          Recent Lazi Profit
+                        </Typography>
+                        <Typography variant="body1" component="div">
+                          0.00000
+                        </Typography>
+                      </div>
+
+                      <div>
+                        <Typography
+                          variant="h4"
+                          style={{ fontSize: 15, fontWeight: "bold" }}
+                        >
+                          Yield Boost
+                        </Typography>
+                        <Typography variant="body1" component="div">
+                          1.3x
+                        </Typography>
+                      </div>
+                    </Box> */}
+                    <Box
+                      bgcolor={"black"}
+                      paddingBlock={4}
+                      borderRadius={8}
+                      marginTop={4}
+                    >
+                      <Box paddingBottom={2} paddingTop={2}>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            paddingInline: 15,
+                            paddingBlock: 6,
+                          }}
+                        >
+                          <div>Your Rewards </div>
+                          <div style={{ fontWeight: "bold" }}>
+                            {userRewards}
+                          </div>
+                        </div>
+
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            paddingInline: 15,
+                            paddingBlock: 6,
+                          }}
+                        >
+                          <div>Your Stake</div>
+                          <div style={{ fontWeight: "bold" }}>
+                            {userStakedTokens}{" "}
+                            <span>
+                              <Button
+                                style={{
+                                  border: "2px solid #e31a89",
+                                  borderRadius: 8,
+                                  color: "#e31a89",
+                                  height: 25,
+                                }}
+                                onClick={handleAddLockedButton}
+                              >
+                                +
+                              </Button>
+                            </span>
+                          </div>
+                        </div>
+
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            paddingInline: 15,
+                            paddingBlock: 6,
+                          }}
+                        >
+                          <div>APR</div>
+                          <div style={{ fontWeight: "bold" }}>{userAPR}</div>
+                        </div>
+
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            paddingInline: 15,
+                            paddingBlock: 6,
+                          }}
+                        >
+                          <div>Unlocks In </div>
+                          <div style={{ fontWeight: "bold" }}>
+                            7 Days 8 Hrs Left
+                          </div>
+                        </div>
+
+                        <Box
+                          style={{
+                            marginLeft: 5,
+                            marginBottom: 5,
+                            marginTop: 9,
+                          }}
+                        >
+                          {/* <Button
+                            variant="contained"
+                            color="primary"
+                            style={{
+                              backgroundColor: "#e31a89",
+                              color: "#fff",
+                            }}
+                            // onClick={handleAddLockedButton}
+                          >
+                            Extend
+                          </Button> */}
+                        </Box>
+
+                        <Box marginBottom={2}>
+                          <Typography
+                            variant="body2"
+                            className={classes.inputLabel}
+                            style={{ fontSize: "13px", marginBottom: 5 }}
+                          >
+                            Enter Days to Stake
+                          </Typography>
+                          <TextField
+                            className={classes.input}
+                            value={selectedTime}
+                            onChange={handleDayStake}
+                            variant="outlined"
+                            style={{ marginBottom: 2 }}
+                          />
+                        </Box>
+                        <Box
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-around",
+                          }}
+                        >
+                          <Button
+                            variant="contained"
+                            style={{
+                              backgroundColor: "#e31a89",
+                              color: "#fff",
+                              height: 25,
+                              borderRadius: 20,
+                              fontSize: 12,
+                              fontWeight: "bold",
+                              marginTop: 17,
+                            }}
+                            onClick={() => handleDayStakeButton(1)}
+                          >
+                            1W
+                          </Button>
+                          <Button
+                            variant="contained"
+                            style={{
+                              backgroundColor: "#e31a89",
+                              color: "#fff",
+                              height: 25,
+                              borderRadius: 20,
+                              fontSize: 12,
+                              fontWeight: "bold",
+                              marginTop: 17,
+                            }}
+                            onClick={() => handleDayStakeButton(2)}
+                          >
+                            2W
+                          </Button>
+                          <Button
+                            variant="contained"
+                            style={{
+                              backgroundColor: "#e31a89",
+                              color: "#fff",
+                              height: 25,
+                              borderRadius: 20,
+                              fontSize: 12,
+                              fontWeight: "bold",
+                              marginTop: 17,
+                            }}
+                            onClick={() => handleDayStakeButton(3)}
+                          >
+                            3W
+                          </Button>
+                          <Button
+                            variant="contained"
+                            style={{
+                              backgroundColor: "#e31a89",
+                              color: "#fff",
+                              height: 25,
+                              borderRadius: 20,
+                              fontSize: 12,
+                              fontWeight: "bold",
+                              marginTop: 17,
+                            }}
+                            onClick={() => handleDayStakeButton(4)}
+                          >
+                            4W
+                          </Button>
+                          <Button
+                            variant="contained"
+                            style={{
+                              backgroundColor: "#e31a89",
+                              color: "#fff",
+                              height: 25,
+                              borderRadius: 20,
+                              fontSize: 12,
+                              fontWeight: "bold",
+                              marginTop: 17,
+                            }}
+                            onClick={() => handleDayStakeButton(52)}
+                          >
+                            Max
+                          </Button>
+                        </Box>
+                        <Button
+                          variant="contained"
+                          style={{
+                            backgroundColor: "#e31a89",
+                            color: "#fff",
+                            height: 40,
+                            paddingInline: 30,
+                            fontSize: 16,
+                            marginTop: 25,
+                            marginLeft: 70,
+                          }}
+                          onClick={handleConfirmLockedButton}
+                        >
+                          Extend
+                        </Button>
+
+                        {/* <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              paddingInline: 15,
+                              paddingBlock: 6,
+                            }}
+                          >
+                            <div>User Balance</div>
+                            <div style={{ fontWeight: "bold" }}>444</div>
+                          </div> */}
+
+                        {/* <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              paddingInline: 15,
+                              paddingBlock: 6,
+                            }}
+                          >
+                            <div>BooBoost</div>
+                            <div style={{ fontWeight: "bold" }}>2x</div>
+                          </div> */}
+                      </Box>
+                    </Box>
+                  </Box>
+                )}
+
+                {/* Extend Locked Screen */}
+                {AddLockedButton && (
+                  <Box>
+                    <Box
+                      display={"flex"}
+                      justifyContent={"space-between"}
+                      style={{ marginBottom: 4 }}
+                    >
+                      <Box>
+                        <Typography
+                          variant="h2"
+                          style={{ fontSize: 16, fontWeight: "bold" }}
+                        >
+                          Add $LAZI To Locked
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <ArrowBackIcon
+                          onClick={handleGoBacktoLocked}
+                          style={{ cursor: "pointer" }}
+                        />
+                      </Box>
+                    </Box>
+
+                    <Box
+                      marginBottom={3}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-around",
+                        marginTop: 8,
+                      }}
+                    >
+                      <Box>
+                        <TextField
+                          className={classes.input}
+                          value={tokenStakeValue}
+                          onChange={handleStakeTokenChange}
+                          variant="outlined"
+                          style={{ marginTop: 5 }}
+                        />
+                      </Box>
+
+                      <Button
+                        variant="contained"
+                        style={{
+                          backgroundColor: "#e31a89",
+                          color: "#fff",
+                          height: 25,
+                          borderRadius: 20,
+                          fontSize: 12,
+                          fontWeight: "bold",
+                          marginTop: 17,
+                        }}
+                        onClick={() => handlePercentageBalance(100)}
+                      >
+                        Max
+                      </Button>
+                    </Box>
+
+                    {/* <Box>
+    <Typography
+      variant="body2"
+      className={classes.inputLabel}
+      style={{
+        fontSize: "13px",
+        marginBottom: 5,
+        paddingLeft: 2,
+      }}
+    >
+      Day Stake
+    </Typography>
+    <TextField
+      className={classes.input}
+      value={selectedTime}
+      onChange={handleDayStake}
+      variant="outlined"
+    />
+  </Box>
+  <Box
+    style={{
+      display: "flex",
+      justifyContent: "space-around",
+    }}
+  >
+    <Button
+      variant="contained"
+      style={{
+        backgroundColor: "#e31a89",
+        color: "#fff",
+        height: 25,
+        borderRadius: 20,
+        fontSize: 12,
+        fontWeight: "bold",
+        marginTop: 17,
+      }}
+      onClick={() => handleDayStakeButton(1)}
+    >
+      1W
+    </Button>
+    <Button
+      variant="contained"
+      style={{
+        backgroundColor: "#e31a89",
+        color: "#fff",
+        height: 25,
+        borderRadius: 20,
+        fontSize: 12,
+        fontWeight: "bold",
+        marginTop: 17,
+      }}
+      onClick={() => handleDayStakeButton(2)}
+    >
+      2W
+    </Button>
+    <Button
+      variant="contained"
+      style={{
+        backgroundColor: "#e31a89",
+        color: "#fff",
+        height: 25,
+        borderRadius: 20,
+        fontSize: 12,
+        fontWeight: "bold",
+        marginTop: 17,
+      }}
+      onClick={() => handleDayStakeButton(3)}
+    >
+      3W
+    </Button>
+    <Button
+      variant="contained"
+      style={{
+        backgroundColor: "#e31a89",
+        color: "#fff",
+        height: 25,
+        borderRadius: 20,
+        fontSize: 12,
+        fontWeight: "bold",
+        marginTop: 17,
+      }}
+      onClick={() => handleDayStakeButton(4)}
+    >
+      4W
+    </Button>
+    <Button
+      variant="contained"
+      style={{
+        backgroundColor: "#e31a89",
+        color: "#fff",
+        height: 25,
+        borderRadius: 20,
+        fontSize: 12,
+        fontWeight: "bold",
+        marginTop: 17,
+      }}
+      onClick={() => handleDayStakeButton(52)}
+    >
+      Max
+    </Button>
+  </Box> */}
+                    {/* Card Place */}
+
+                    {/* <Box
+                      bgcolor={"black"}
+                      paddingBlock={4}
+                      borderRadius={8}
+                      marginTop={4}
+                    >
+                      <Box paddingBottom={2} paddingTop={2}>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            paddingInline: 15,
+                            paddingBlock: 6,
+                          }}
+                        >
+                          <div>Lazi to be locked </div>
+                          <div style={{ fontWeight: "bold" }}>11111</div>
+                        </div>
+
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            paddingInline: 15,
+                            paddingBlock: 6,
+                          }}
+                        >
+                          <div>Duration</div>
+                          <div style={{ fontWeight: "bold" }}>2222</div>
+                        </div>
+
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            paddingInline: 15,
+                            paddingBlock: 6,
+                          }}
+                        >
+                          <div>APR</div>
+                          <div style={{ fontWeight: "bold" }}>3333</div>
+                        </div>
+
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            paddingInline: 15,
+                            paddingBlock: 6,
+                          }}
+                        >
+                          <div>User Balance</div>
+                          <div style={{ fontWeight: "bold" }}>444</div>
+                        </div>
+
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            paddingInline: 15,
+                            paddingBlock: 6,
+                          }}
+                        >
+                          <div>Yield Boost</div>
+                          <div style={{ fontWeight: "bold" }}>2x</div>
+                        </div>
+                      </Box>
+                    </Box> */}
+
+                    {/* Confirm Button */}
+
+                    <Button
+                      variant="contained"
+                      style={{
+                        backgroundColor: "#e31a89",
+                        color: "#fff",
+                        height: 40,
+                        paddingInline: 30,
+                        fontSize: 16,
+                        marginTop: 25,
+                        marginLeft: 70,
+                      }}
+                      onClick={handleConfirmLockedButton}
+                    >
+                      Confirm
+                    </Button>
+                  </Box>
+                )}
               </Box>
             </Paper>
             <Paper
               className={classes.root}
               elevation={2}
-              style={{ marginTop: "10px" }}
+              style={{
+                border: "3px solid rgba(236, 22, 127, 0.5) ",
+                borderRadius: 10,
+                marginTop: "10px",
+              }}
             >
               <div style={{ display: "flex" }}>
                 <div>
@@ -1127,7 +3301,14 @@ const StakeReward = () => {
             </Paper>
           </Grid>{" "}
           <Grid item md={isMobile ? 12 : 6} xs={isMobile ? 12 : 12}>
-            <Paper className={classes.root} elevation={2}>
+            <Paper
+              className={classes.root}
+              elevation={2}
+              style={{
+                border: "3px solid rgba(236, 22, 127, 0.5) ",
+                borderRadius: 10,
+              }}
+            >
               <Box className={classes.root} height={400} overflow="auto">
                 <div style={{ display: "flex" }}>
                   <div>
@@ -1183,13 +3364,36 @@ const StakeReward = () => {
                       <b>{`${userRewards} LAZI`}</b>
                     </p>
                     <br></br>
-                    {/* <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleUserRewardsClick}
-                    >
-                      Get Your Rewards
-                    </Button> */}
+                    {/* Added Yield Boost */}
+                    <Box borderRadius={10} mt={-1} mb={1}>
+                      <Typography
+                        variant="h4"
+                        style={{
+                          color: "white",
+                          fontSize: 18,
+                          // fontWeight: "600",
+                          // border: "2px solid  #575758 ",
+                          // paddingInline: 30,
+                          // paddingBlock: 8,
+                          borderRadius: 8,
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        Yield Boost:{" "}
+                        <span
+                          style={{
+                            backgroundColor: "#EC167F",
+                            padding: 3,
+                            borderRadius: 3,
+                            paddingInline: 9,
+                            textAlign: "end",
+                          }}
+                        >
+                          {totalMultiplier}x{" "}
+                        </span>
+                      </Typography>
+                    </Box>
+
                     <Box className={classes.Buttonbox} mt={2}>
                       <Box mt={2}>
                         <Button
@@ -1213,10 +3417,10 @@ const StakeReward = () => {
                 </div>
               </Box>
             </Paper>
-            <Paper
+            {/* <Paper
               className={classes.root}
               elevation={2}
-              style={{ marginTop: "10px" }}
+              style={{ border:'3px solid rgba(236, 22, 127, 0.5) ',borderRadius:10,marginTop: "10px"}}
             >
               <Chart
                 options={lockPeriodState.options}
@@ -1224,11 +3428,11 @@ const StakeReward = () => {
                 type="bar"
                 width="100%"
               />
-            </Paper>
-            <Paper
+            </Paper> */}
+            {/* <Paper
               className={classes.root}
               elevation={2}
-              style={{ marginTop: "10px" }}
+              style={{ border:'3px solid rgba(236, 22, 127, 0.5) ',borderRadius:10,marginTop: "10px"}}
             >
               <Chart
                 options={stakedTokenState.options}
@@ -1236,8 +3440,8 @@ const StakeReward = () => {
                 type="area"
                 width="100%"
               />
-            </Paper>
-            <Paper
+            </Paper> */}
+            {/* <Paper
               className={classes.root}
               elevation={2}
               style={{ marginTop: "10px" }}
@@ -1248,7 +3452,7 @@ const StakeReward = () => {
                 type="line"
                 width="100%"
               />
-            </Paper>
+            </Paper> */}
           </Grid>
         </Grid>
       </Box>

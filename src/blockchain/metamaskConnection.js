@@ -31,17 +31,17 @@ const customNetwork = {
 
 // custom network for mainnet
 
-//   const customNetwork = {
-//     chainId: '0x38', // BSC Mainnet Chain ID
-//     chainName: 'Binance Smart Chain Mainnet',
-//     nativeCurrency: {
-//       name: 'BNB',
-//       symbol: 'BNB',
-//       decimals: 18,
-//     },
-//     rpcUrls: ['https://bsc-dataseed1.binance.org'], // BSC Mainnet RPC endpoint
-//     blockExplorerUrls: ['https://bscscan.com'], // BSC Mainnet Block Explorer URL
-//   };
+  // const customNetwork = {
+  //   chainId: '0x38', // BSC Mainnet Chain ID
+  //   chainName: 'Binance Smart Chain Mainnet',
+  //   nativeCurrency: {
+  //     name: 'BNB',
+  //     symbol: 'BNB',
+  //     decimals: 18,
+  //   },
+  //   rpcUrls: ['https://bsc-dataseed1.binance.org'], // BSC Mainnet RPC endpoint
+  //   blockExplorerUrls: ['https://bscscan.com'], // BSC Mainnet Block Explorer URL
+  // };
 const initMetamask = async () => {
   let address = null;
   try {

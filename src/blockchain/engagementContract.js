@@ -1,7 +1,9 @@
 import initMetamask from "./metamaskConnection";
 import Web3 from "web3";
-
-const engagementAddress = "0x7dd64129B42a0Da223AC4ceAB9d3df6a32133B9F";
+//testnet
+const engagementAddress = "0x394CE0C1035A569bb0409602ed069e2Cec2413b6";
+// mainnet
+// const engagementAddress = "0x5fb921A4e19aD27CE6544a94893AbC7f4e3f2a66";
 
 const engagementABI = [
   {
@@ -47,7 +49,7 @@ const engagementABI = [
       },
       {
         internalType: "address",
-        name: "_erc721Token",
+        name: "_laziName",
         type: "address",
       },
     ],
@@ -103,11 +105,24 @@ const engagementABI = [
     inputs: [
       {
         internalType: "uint256",
-        name: "_REWARD_PER_DAY",
+        name: "_maxEngagementDays",
         type: "uint256",
       },
     ],
-    name: "set_REWARD_PER_DAY",
+    name: "set_maxEngagementDays",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_REWARD_PER_SEC",
+        type: "uint256",
+      },
+    ],
+    name: "set_REWARD_PER_SEC",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -129,11 +144,11 @@ const engagementABI = [
     inputs: [
       {
         internalType: "address",
-        name: "_trustedAddress",
+        name: "_smartContractLinkedAddressAPI",
         type: "address",
       },
     ],
-    name: "set_trustedAddress",
+    name: "set_smartContractLinkedAddressAPI",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -217,6 +232,16 @@ const engagementABI = [
         name: "totalWeightedContribution",
         type: "uint256",
       },
+      {
+        internalType: "uint256",
+        name: "timestamp",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes",
+        name: "_signature",
+        type: "bytes",
+      },
     ],
     name: "unstake",
     outputs: [],
@@ -251,12 +276,50 @@ const engagementABI = [
   {
     inputs: [
       {
-        internalType: "uint256[]",
-        name: "_multiplierValues",
-        type: "uint256[]",
+        internalType: "uint256",
+        name: "increment",
+        type: "uint256",
       },
     ],
-    name: "updateMultiplierValues",
+    name: "updateMultiplierIncrementErc721",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_stakePenaltyUnder50",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_stakePenaltyBetween50And80",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_stakePenaltyBetween80And100",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_rewardPenaltyUnder50",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_rewardPenaltyBetween50And80",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_rewardPenaltyBetween80And100",
+        type: "uint256",
+      },
+    ],
+    name: "updatePenalties",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -282,6 +345,38 @@ const engagementABI = [
     name: "updateWeights",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_erc20",
+        type: "address",
+      },
+    ],
+    name: "withdrawERC20",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes",
+        name: "",
+        type: "bytes",
+      },
+    ],
+    name: "_signatureUsed",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -354,38 +449,6 @@ const engagementABI = [
   },
   {
     inputs: [],
-    name: "maxUserMultiplierTokens",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "multiplierValues",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "owner",
     outputs: [
       {
@@ -431,7 +494,7 @@ const engagementABI = [
   },
   {
     inputs: [],
-    name: "REWARD_PER_DAY",
+    name: "REWARD_PER_SEC",
     outputs: [
       {
         internalType: "uint256",
@@ -445,6 +508,97 @@ const engagementABI = [
   {
     inputs: [],
     name: "REWARD_STOP_TIME",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "rewardPenaltyBetween50And80",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "rewardPenaltyBetween80And100",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "rewardPenaltyUnder50",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "smartContractLinkedAddressAPI",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "stakePenaltyBetween50And80",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "stakePenaltyBetween80And100",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "stakePenaltyUnder50",
     outputs: [
       {
         internalType: "uint256",
@@ -483,7 +637,7 @@ const engagementABI = [
   },
   {
     inputs: [],
-    name: "totalUsers",
+    name: "totalTx",
     outputs: [
       {
         internalType: "uint256",
@@ -515,19 +669,6 @@ const engagementABI = [
         internalType: "uint256",
         name: "",
         type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "trustedAddress",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
       },
     ],
     stateMutability: "view",
