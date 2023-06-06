@@ -1856,17 +1856,6 @@ const Earn = () => {
                 overflow="auto"
               >
                 <div>
-                  <Box
-                    // bgcolor="#EC167F"
-                    borderRadius={10}
-                    // p={2}
-                    // mb={4}
-                    display="flex"
-                    alignItems="center"
-                  >
-                    <Typography variant="h2" className={classes.head}>
-                      Multiplier
-                    </Typography>
                     <Button
                       variant="contained"
                       style={{
@@ -1885,6 +1874,17 @@ const Earn = () => {
                         ? "Processing..."
                         : "Approve Allowance"}
                     </Button>
+                  <Box
+                    // bgcolor="#EC167F"
+                    borderRadius={10}
+                    // p={2}
+                    // mb={4}
+                    display="flex"
+                    alignItems="center"
+                  >
+                    <Typography variant="h2" className={classes.head}>
+                      Multiplier
+                    </Typography>
                   </Box>
 
                   <Box

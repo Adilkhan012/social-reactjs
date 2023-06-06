@@ -3416,15 +3416,6 @@ const StakeReward = () => {
               }}
             >
               <Box className={classes.root} height={400} overflow="auto">
-                <div style={{ display: "flex" }}>
-                  <div>
-                    <Box
-                      className={classes.heading}
-                      style={{ display: "block" }}
-                    >
-                      <Typography variant="h2" style={{ fontSize: "26px" }}>
-                        Locked APR
-                      </Typography>
                       <Button
                       variant="contained"
                       style={{
@@ -3443,6 +3434,15 @@ const StakeReward = () => {
                         ? "Processing..."
                         : "Approve Allowance"}
                     </Button>
+                <div style={{ display: "flex" }}>
+                  <div>
+                    <Box
+                      className={classes.heading}
+                      style={{ display: "block" }}
+                    >
+                      <Typography variant="h2" style={{ fontSize: "26px" }}>
+                        Locked APR
+                      </Typography>
                       {/* <Button onClick={handleTotalStakedClick}>Refresh</Button> */}
                     </Box>
                     <br></br>
