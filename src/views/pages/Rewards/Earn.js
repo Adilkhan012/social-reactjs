@@ -675,7 +675,7 @@ const Earn = () => {
                 ) && (
                   <Box className={classes.tooltipIconHeader}>
                     <Typography variant="h2" className={classes.head}>
-                      Start Engagement
+                      Start Engagement Session
                     </Typography>
                     <Tooltip
                       title="This is the Engagement Session."
@@ -1381,7 +1381,7 @@ const Earn = () => {
                               paddingBlock: 6,
                             }}
                           >
-                            <div>Lazi to be locked </div>
+                            <div>LAZI to be Staked </div>
                             <div style={{ fontWeight: "bold" }}>
                               {tokenStakeValue}
                             </div>

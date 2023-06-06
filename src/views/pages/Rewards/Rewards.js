@@ -116,18 +116,18 @@ const Rewards = () => {
                     className={tabview === "Earn" ? "active" : " "}
                     onClick={() => setTabView("Earn")}
                   >
-                    Engage Reward
+                    Engagement Mining
                   </Link>
                 </Box>
 
-                <Box className="buttonBox">
+                {/* <Box className="buttonBox">
                   <Link
                     className={tabview === "EngagementRewards" ? "active" : " "}
                     onClick={() => setTabView("EngagementRewards")}
                   >
                     Engagement Pool Info
                   </Link>
-                </Box>
+                </Box> */}
                 <Box className="buttonBox">
                   <Link
                     className={tabview === "Leaderboard" ? "active" : " "}
