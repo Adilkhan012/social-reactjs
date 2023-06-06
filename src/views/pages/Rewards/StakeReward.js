@@ -796,7 +796,7 @@ const StakeReward = () => {
     try {
       console.log("address: ", userAddress);
       const REWARD_PER_DAY = await stakingContract.methods
-        .REWARD_PER_DAY()
+        .REWARD_PER_SEC()
         .call();
       const totalStaked = await stakingContract.methods.totalStaked().call();
 

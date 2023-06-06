@@ -760,7 +760,7 @@ const StakeReward = () => {
     try {
       console.log("address: ", userAddress);
       const REWARD_PER_DAY = await lpRewardContract.methods
-        .REWARD_PER_DAY()
+        .REWARD_PER_SEC()
         .call();
       const totalStaked = await lpRewardContract.methods.totalStaked().call();
 
