@@ -26,6 +26,8 @@ import { styles } from "@material-ui/pickers/views/Clock/Clock";
 import { Balance } from "@mui/icons-material";
 // import MetaMaskOnboarding from "@metamask/onboarding";
 const laziTokenAddress = "0xf472134D28216581F47304c66Fb18922a146e514";
+const lpRewardAddress = "0x97b54447E372b473a52Be69afdF51C1157bAdF9b";
+
 
 const useStyles = makeStyles((theme) => ({
   checkbox: {
@@ -162,6 +164,8 @@ const StakeReward = () => {
   const [totalStakers, setTotalStakers] = useState(0);
   const [userStakedDuration, setUserStakedDuration] = useState(0);
   const [userStakedTokens, setUserStakedTokens] = useState(0);
+  const [isTransactionPending, setTransactionPending] = useState(false);
+
 
   // function editing here
 
@@ -628,6 +632,32 @@ const StakeReward = () => {
     const balance = userBalance; // Replace with your actual balance
     const selectedValue = (balance * percentage) / 100;
     setTokenStakeValue(selectedValue.toString());
+  };
+
+  const handleApproval = async () => {
+    if (window.ethereum) {
+      try {
+        setTransactionPending(true);
+
+        // Call the approve function to set the allowance
+        await laziTokenContract.methods
+          .approve(lpRewardAddress, userBalance)
+          .send({ from: userAddress });
+
+        // Allowance approved successfully
+        console.log(
+          `Allowance of ${userBalance} approved for ${lpRewardAddress}`
+        );
+        toast.success("Allowance approved successfully");
+      } catch (error) {
+        console.error(error);
+        toast.error("An error occurred while approving allowance");
+      } finally {
+        setTransactionPending(false);
+      }
+    } else {
+      console.error("Web3 is not available");
+    }
   };
 
   const handleStake = async () => {
@@ -3319,6 +3349,24 @@ const StakeReward = () => {
                       <Typography variant="h2" style={{ fontSize: "26px" }}>
                         Locked APR
                       </Typography>
+                      <Button
+                      variant="contained"
+                      style={{
+                        backgroundColor: "#e31a89",
+                        color: "#fff",
+                        height: 40,
+                        paddingInline: 30,
+                        fontSize: 16,
+                        marginTop: 25,
+                        marginLeft: 70,
+                      }}
+                      onClick={handleApproval}
+                      disabled={isTransactionPending}
+                    >
+                      {isTransactionPending
+                        ? "Processing..."
+                        : "Approve Allowance"}
+                    </Button>
                       {/* <Button onClick={handleTotalStakedClick}>Refresh</Button> */}
                     </Box>
                     <br></br>
@@ -3337,7 +3385,7 @@ const StakeReward = () => {
                     </p> */}
                   </div>
                   <br></br>
-                  <div style={{ marginLeft: "auto" }}>
+                  {/* <div style={{ marginLeft: "auto" }}>
                     <Chart
                       options={state.options}
                       series={[
@@ -3348,7 +3396,7 @@ const StakeReward = () => {
                       type="donut"
                       width="70%"
                     />
-                  </div>
+                  </div> */}
                 </div>
                 <br></br>
 

@@ -29,6 +29,7 @@ import initlaziTokenContract from "src/blockchain/laziTokenContract";
 import initUserNameContract from "src/blockchain/laziUserNameContract";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import BigInt from "big-integer";
+const engagementAddress = "0x394CE0C1035A569bb0409602ed069e2Cec2413b6";
 
 const CustomBar = withStyles({
   root: {
@@ -230,6 +231,7 @@ const Earn = () => {
   const [extendLockedButtom, setExtendLockedButton] = useState(false);
   const [userReward, setUserReward] = useState(0);
   const [userAPR, setUserAPR] = useState(0);
+  const [isTransactionPending, setTransactionPending] = useState(false);
 
   const handleExtendLockedButton = () => {
     setExtendLockedButton(true);
@@ -491,20 +493,20 @@ const Earn = () => {
     return new Promise(async (resolve, reject) => {
       const erc20Amount = tokenStakeValue;
       console.log("selected Amount:", erc20Amount);
-  
+
       console.log("selected UserName:", selectedUserNames);
       console.log("selected TimePeriod:", selectedTime);
       console.log("user Duration:", userStakedDuration);
       console.log("user Tokens:", userStakedTokens);
       console.log("Total Duration:", totalStakedDuration);
       console.log("Total StakedTokens:", totalStakedLazi);
-  
+
       if (engagementContract) {
         try {
           const gasEstimate = await engagementContract.methods
             .stake(erc20Amount, selectedTime, selectedUserNames)
             .estimateGas({ from: userAddress });
-  
+
           engagementContract.methods
             .stake(erc20Amount, selectedTime, selectedUserNames)
             .send({ from: userAddress, gas: gasEstimate })
@@ -528,20 +530,22 @@ const Earn = () => {
                 reject(new Error("Transaction rejected by the user."));
               } else {
                 const errorMessage = error.message.split("message: ")[2];
-                toast.error(errorMessage, { position: toast.POSITION.TOP_RIGHT });
+                toast.error(errorMessage, {
+                  position: toast.POSITION.TOP_RIGHT,
+                });
                 reject(new Error(errorMessage));
               }
             });
         } catch (error) {
           console.log(error);
           let errorMessage = "An error occurred during the transaction.";
-  
+
           if (error.message) {
             const startIndex = error.message.indexOf(" reverted: ") + 10;
             const endIndex = error.message.indexOf(",", startIndex);
             errorMessage = error.message.substring(startIndex, endIndex);
           }
-  
+
           toast.error(errorMessage);
           reject(new Error(errorMessage));
         }
@@ -550,7 +554,32 @@ const Earn = () => {
       }
     });
   };
-  
+
+  const handleApproval = async () => {
+    if (window.ethereum) {
+      try {
+        setTransactionPending(true);
+
+        // Call the approve function to set the allowance
+        await laziTokenContract.methods
+          .approve(engagementAddress, userBalance)
+          .send({ from: userAddress });
+
+        // Allowance approved successfully
+        console.log(
+          `Allowance of ${userBalance} approved for ${engagementAddress}`
+        );
+        toast.success("Allowance approved successfully");
+      } catch (error) {
+        console.error(error);
+        toast.error("An error occurred while approving allowance");
+      } finally {
+        setTransactionPending(false);
+      }
+    } else {
+      console.error("Web3 is not available");
+    }
+  };
 
   const fetchInformation = useCallback(async () => {
     try {
@@ -657,20 +686,20 @@ const Earn = () => {
                       <InfoIcon fontSize={"medium"} />
                     </Tooltip>
                     <Button
-                        variant="contained"
-                        style={{
-                          backgroundColor: "#e31a89",
-                          color: "#fff",
-                          height: 40,
-                          paddingInline: 30,
-                          fontSize: 16,
-                          marginTop: 25,
-                          marginLeft: 70,
-                        }}
-                        onClick={handleStakeInfoButton}
-                      >
-                        Stake Info
-                      </Button>
+                      variant="contained"
+                      style={{
+                        backgroundColor: "#e31a89",
+                        color: "#fff",
+                        height: 40,
+                        paddingInline: 30,
+                        fontSize: 16,
+                        marginTop: 25,
+                        marginLeft: 70,
+                      }}
+                      onClick={handleStakeInfoButton}
+                    >
+                      Stake Info
+                    </Button>
                   </Box>
                 )}
                 <br></br>
@@ -1838,6 +1867,24 @@ const Earn = () => {
                     <Typography variant="h2" className={classes.head}>
                       Multiplier
                     </Typography>
+                    <Button
+                      variant="contained"
+                      style={{
+                        backgroundColor: "#e31a89",
+                        color: "#fff",
+                        height: 40,
+                        paddingInline: 30,
+                        fontSize: 16,
+                        marginTop: 25,
+                        marginLeft: 70,
+                      }}
+                      onClick={handleApproval}
+                      disabled={isTransactionPending}
+                    >
+                      {isTransactionPending
+                        ? "Processing..."
+                        : "Approve Allowance"}
+                    </Button>
                   </Box>
 
                   <Box

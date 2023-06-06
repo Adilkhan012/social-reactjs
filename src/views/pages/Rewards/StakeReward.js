@@ -26,6 +26,8 @@ import { styles } from "@material-ui/pickers/views/Clock/Clock";
 import { Balance } from "@mui/icons-material";
 // import MetaMaskOnboarding from "@metamask/onboarding";
 const laziTokenAddress = "0xf472134D28216581F47304c66Fb18922a146e514";
+const stakingRewardAddress = "0x3d5b20d2e8dE2FfE1C80226A82E84Dc3A67853c1";
+
 
 const useStyles = makeStyles((theme) => ({
   checkbox: {
@@ -162,6 +164,8 @@ const StakeReward = () => {
   const [totalStakers, setTotalStakers] = useState(0);
   const [userStakedDuration, setUserStakedDuration] = useState(0);
   const [userStakedTokens, setUserStakedTokens] = useState(0);
+  const [isTransactionPending, setTransactionPending] = useState(false);
+
 
   // function editing here
 
@@ -198,6 +202,15 @@ const StakeReward = () => {
     setSelectedTime(0);
     setTokenStakeValue(0);
 
+  };
+
+  const handleStakeInfoButton = () => {
+    setAfterLocked(true);
+    setLocked(false);
+    setFlexible(false);
+    // setExtendLockedButton(false);
+    setSelectedTime(0);
+    setTokenStakeValue(0);
   };
 
   const handleConfirmLockedButton = async () => {
@@ -1026,6 +1039,32 @@ const StakeReward = () => {
     }
   };
 
+  const handleApproval = async () => {
+    if (window.ethereum) {
+      try {
+        setTransactionPending(true);
+
+        // Call the approve function to set the allowance
+        await laziTokenContract.methods
+          .approve(stakingRewardAddress, userBalance)
+          .send({ from: userAddress });
+
+        // Allowance approved successfully
+        console.log(
+          `Allowance of ${userBalance} approved for ${stakingRewardAddress}`
+        );
+        toast.success("Allowance approved successfully");
+      } catch (error) {
+        console.error(error);
+        toast.error("An error occurred while approving allowance");
+      } finally {
+        setTransactionPending(false);
+      }
+    } else {
+      console.error("Web3 is not available");
+    }
+  };
+
   useEffect(() => {
     // Access the selected option value whenever it changes
     if (selectedTime) {
@@ -1106,6 +1145,21 @@ const StakeReward = () => {
                     >
                       <InfoIcon fontSize={"medium"} />
                     </Tooltip>
+                    <Button
+                      variant="contained"
+                      style={{
+                        backgroundColor: "#e31a89",
+                        color: "#fff",
+                        height: 40,
+                        paddingInline: 30,
+                        fontSize: 16,
+                        marginTop: 25,
+                        marginLeft: 70,
+                      }}
+                      onClick={handleStakeInfoButton}
+                    >
+                      Stake Info
+                    </Button>
                   </Box>
                 )}
 
@@ -3372,6 +3426,24 @@ const StakeReward = () => {
                       <Typography variant="h2" style={{ fontSize: "26px" }}>
                         Locked APR
                       </Typography>
+                      <Button
+                      variant="contained"
+                      style={{
+                        backgroundColor: "#e31a89",
+                        color: "#fff",
+                        height: 40,
+                        paddingInline: 30,
+                        fontSize: 16,
+                        marginTop: 25,
+                        marginLeft: 70,
+                      }}
+                      onClick={handleApproval}
+                      disabled={isTransactionPending}
+                    >
+                      {isTransactionPending
+                        ? "Processing..."
+                        : "Approve Allowance"}
+                    </Button>
                       {/* <Button onClick={handleTotalStakedClick}>Refresh</Button> */}
                     </Box>
                     <br></br>
@@ -3390,7 +3462,7 @@ const StakeReward = () => {
                     </p> */}
                   </div>
                   <br></br>
-                  <div style={{ marginLeft: "auto" }}>
+                  {/* <div style={{ marginLeft: "auto" }}>
                     <Chart
                       options={state.options}
                       series={[
@@ -3401,7 +3473,7 @@ const StakeReward = () => {
                       type="donut"
                       width="70%"
                     />
-                  </div>
+                  </div> */}
                 </div>
                 <br></br>
 
