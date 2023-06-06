@@ -188,24 +188,47 @@ const StakeReward = () => {
     setLocked(true);
     setFlexible(false);
     setAfterLocked(false);
+    setSelectedTime(0);
+    setTokenStakeValue(0);
+
   };
   const handleSwitchLockedGoBack = () => {
     setFlexible(true);
     setSwitchToLocked(false);
+    setSelectedTime(0);
+    setTokenStakeValue(0);
+
   };
 
-  const handleConfirmLockedButton = () => {
-    // await handleStake()
+  const handleConfirmLockedButton = async () => {
+    try{
+    await handleStake()
+    await fetchInformation();
+    fetchUserRewards();
+    fetchTotalStaked();
+
+    fetchUserAPR();
+
+    fetchUserBalance();
+
+    setSelectedTime(0);
+    setTokenStakeValue(0);
     setAfterLocked(true);
     setLocked(false);
     setFlexible(false);
     setAddLockedButton(false);
+    }catch (error) {
+      console.log(error);
+    }
   };
 
   const handleSwitchToLock = () => {
     setFlexible(false);
     // setSwitchToLocked(true);
     setLocked(true);
+    setSelectedTime(0);
+    setTokenStakeValue(0);
+
   };
 
   const handleDayStake = (e) => {
@@ -219,12 +242,26 @@ const StakeReward = () => {
     setAddFlexibleButton(false);
   };
 
-  const handleConfirmFlexibleButton = () => {
-    // await handleStake()
+  const handleConfirmFlexibleButton = async () => {
+    try {
+    await handleStake()
+    await fetchInformation();
+    fetchUserRewards();
+    fetchTotalStaked();
+
+    fetchUserAPR();
+
+    fetchUserBalance();
+
+    setSelectedTime(0);
+    setTokenStakeValue(0);
     setFlexible(true);
     setLocked(false);
     setConfirmStaking(false);
     setAddFlexibleButton(false);
+    }catch(error){
+      console.log(error);
+    }
   };
   const handleGoBackforFlexibleIncrement = () => {
     setFlexible(false);
@@ -260,11 +297,25 @@ const StakeReward = () => {
 
   // Flexbile Button Function
   const handleFlexibleButton = async () => {
-    // await handleStake()
+    try{
+    await handleStake()
+    await fetchInformation();
+    fetchUserRewards();
+    fetchTotalStaked();
+
+    fetchUserAPR();
+
+    fetchUserBalance();
+
+    setSelectedTime(0);
+    setTokenStakeValue(0);
     setTimeout(() => {
       setFlexible(!flexible);
       setLocked(false);
     }, 500);
+  }catch(error){
+    console.log(error);
+  }
   };
   // Locked Button Function
 
@@ -631,65 +682,67 @@ const StakeReward = () => {
   };
 
   const handleStake = async () => {
-    try {
-      const erc20Amount = tokenStakeValue; // Use sliderValue state variable
-      console.log("Selected Amount:", erc20Amount);
-
-      console.log("Selected UserName:", selectedUserNames);
-      console.log("Selected TimePeriod:", selectedTime);
-
-      // if (erc20Amount === 0) {
-      //   toast.error("Select a valid Amount to stake!");
-      //   return; // Break the flow if erc20Amount is 0
-      // }
-
-      // if (!selectedTime) {
-      //   toast.error("Select the Time Period to stake!");
-      //   return; // Break the flow if time period is not selected
-      // }
-      // Estimate gas fees
-      const gasEstimate = await stakingContract.methods
-        .stake(erc20Amount, selectedTime, selectedUserNames)
-        .estimateGas({ from: userAddress });
-
-      console.log("Estimated Gas Fees:", gasEstimate);
-
-      // Execute the transaction
-      const transaction = await stakingContract.methods
-        .stake(erc20Amount, selectedTime, selectedUserNames)
-        .send({ from: userAddress, gas: gasEstimate })
-        .on("transactionHash", (hash) => {
-          console.log("Transaction Hash:", hash);
-        })
-        .on("receipt", (receipt) => {
-          console.log("Receipt:", receipt);
-          const successMessage = "Stake transaction successful.";
-          toast.success(successMessage); // Display toast success message
-          console.log(successMessage);
-        })
-        .catch((error) => {
-          console.log("Error:", error);
-          const errorMessage =
-            error.message || "An error occurred during the transaction.";
-          toast.error(errorMessage); // Display toast error message
-          throw new Error(errorMessage); // Rethrow the error with custom message
-        });
-
-      console.log("Transaction Successful:", transaction);
-    } catch (error) {
-      console.log(error);
-      let errorMessage = "An error occurred during the transaction.";
-
-      if (error.message) {
-        const startIndex = error.message.indexOf(" reverted: ") + 10;
-        const endIndex = error.message.indexOf(",", startIndex);
-        const Message = error.message.substring(startIndex, endIndex);
-        toast.error(Message); // Display toast error message
+    return new Promise(async (resolve, reject) => {
+      const erc20Amount = tokenStakeValue;
+      console.log("selected Amount:", erc20Amount);
+  
+      console.log("selected UserName:", selectedUserNames);
+      console.log("selected TimePeriod:", selectedTime);
+      console.log("user Duration:", userStakedDuration);
+      console.log("user Tokens:", userStakedTokens);
+      console.log("Total Duration:", userStakedDuration);
+      console.log("Total StakedTokens:", totalStaked);
+  
+      if (stakingContract) {
+        try {
+          const gasEstimate = await stakingContract.methods
+            .stake(erc20Amount, selectedTime, selectedUserNames)
+            .estimateGas({ from: userAddress });
+  
+          stakingContract.methods
+            .stake(erc20Amount, selectedTime, selectedUserNames)
+            .send({ from: userAddress, gas: gasEstimate })
+            .on("transactionHash", (hash) => {
+              console.log(hash);
+            })
+            .on("receipt", (receipt) => {
+              console.log(receipt);
+              toast.success("Stake successful!", {
+                position: toast.POSITION.TOP_RIGHT,
+              });
+              fetchInformation(); // Fetch information after the transaction is successfully mined
+              resolve(); // Resolve the promise when the transaction is successful
+            })
+            .on("error", (error) => {
+              console.log(error);
+              if (error.code === 4001) {
+                toast.error("Transaction rejected by the user.", {
+                  position: toast.POSITION.TOP_RIGHT,
+                });
+                reject(new Error("Transaction rejected by the user."));
+              } else {
+                const errorMessage = error.message.split("message: ")[2];
+                toast.error(errorMessage, { position: toast.POSITION.TOP_RIGHT });
+                reject(new Error(errorMessage));
+              }
+            });
+        } catch (error) {
+          console.log(error);
+          let errorMessage = "An error occurred during the transaction.";
+  
+          if (error.message) {
+            const startIndex = error.message.indexOf(" reverted: ") + 10;
+            const endIndex = error.message.indexOf(",", startIndex);
+            errorMessage = error.message.substring(startIndex, endIndex);
+          }
+  
+          toast.error(errorMessage);
+          reject(new Error(errorMessage));
+        }
+      } else {
+        reject(new Error("EngagementContract is not available!"));
       }
-
-      toast.error(errorMessage); // Display toast error message
-      throw new Error(errorMessage); // Rethrow the error with custom message
-    }
+    });
   };
 
   const fetchTotalStaked = useCallback(async () => {
