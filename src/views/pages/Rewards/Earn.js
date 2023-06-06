@@ -1093,11 +1093,6 @@ const Earn = () => {
                         justifyContent={"space-between"}
                         style={{ marginBottom: 4 }}
                       >
-                        <Box>
-                          <Typography variant="h2" className={classes.head}>
-                            Locked
-                          </Typography>
-                        </Box>
                         {/* <Box>
                           <ArrowBackIcon
                             onClick={handleGoBack}
@@ -1476,7 +1471,7 @@ const Earn = () => {
                               marginLeft: 2,
                             }}
                           >
-                            Locked
+                            Staked
                           </span>
                         </Typography>
                       </Box>
