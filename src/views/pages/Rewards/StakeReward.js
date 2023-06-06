@@ -804,11 +804,10 @@ const StakeReward = () => {
         console.log("No tokens staked.");
       } else {
         const APR =
-          (BigInt(REWARD_PER_DAY) * BigInt(365) * BigInt(100)) /
+          (BigInt(REWARD_PER_DAY) * BigInt(86400) * BigInt(365) * BigInt(100)) /
           BigInt(totalStaked);
         console.log("APR = " + APR.toString() + "%");
-        const etherValue = parseInt(APR) / 10 ** 18;
-        setUserAPR(etherValue); // Assuming you want to set the APR in the state variable `userAPR`
+        setUserAPR(APR); // Assuming you want to set the APR in the state variable `userAPR`
       }
     } catch (error) {
       console.error("Error fetching user APR:", error);
