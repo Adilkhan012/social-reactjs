@@ -816,6 +816,7 @@ const StakeReward = () => {
         .REWARD_PER_SEC()
         .call();
       const totalStaked = await lpRewardContract.methods.totalStaked().call();
+      console.log("total staked! ", totalStaked)
 
       if (totalStaked === "0") {
         console.log("No tokens staked.");
