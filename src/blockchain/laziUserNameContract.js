@@ -1,8 +1,57 @@
 import Web3 from "web3";
-
-const laziUserNameAddress = '0xb6C42B011DF21A92Be48242D7a68A5b616140E1F';
+//testnet
+const laziUserNameAddress = '0x775ceD56009D79460e092581Ec2DD1c75631025a';
 
 const laziUserNameABI = [
+	{
+		"inputs": [
+			{
+				"internalType": "address[]",
+				"name": "addresses",
+				"type": "address[]"
+			}
+		],
+		"name": "addToWL",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_address",
+				"type": "address"
+			},
+			{
+				"internalType": "string[]",
+				"name": "_laziNames",
+				"type": "string[]"
+			}
+		],
+		"name": "airdrop",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address[]",
+				"name": "_addresses",
+				"type": "address[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "_laziNames",
+				"type": "string[]"
+			}
+		],
+		"name": "airdrop",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
 	{
 		"inputs": [],
 		"stateMutability": "nonpayable",
@@ -24,14 +73,58 @@ const laziUserNameABI = [
 		"type": "error"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "approve",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "ApproveToCaller",
 		"type": "error"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_spender",
+				"type": "address"
+			}
+		],
+		"name": "autoApproveMarketplace",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "BalanceQueryForZeroAddress",
 		"type": "error"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string[]",
+				"name": "_laziNames",
+				"type": "string[]"
+			}
+		],
+		"name": "buyLaziNames",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
 	},
 	{
 		"inputs": [],
@@ -54,14 +147,222 @@ const laziUserNameABI = [
 		"type": "error"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "address[]",
+				"name": "addresses",
+				"type": "address[]"
+			}
+		],
+		"name": "removeFromWL",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "safeTransferFrom",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes",
+				"name": "_data",
+				"type": "bytes"
+			}
+		],
+		"name": "safeTransferFrom",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_laziNameImages",
+				"type": "string"
+			}
+		],
+		"name": "set_laziNameImages",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_laziNamePrice",
+				"type": "uint256"
+			}
+		],
+		"name": "set_laziNamePrice",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_laziNamePriceWL",
+				"type": "uint256"
+			}
+		],
+		"name": "set_laziNamePriceWL",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_mintSigner",
+				"type": "address"
+			}
+		],
+		"name": "set_mintSigner",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_receiver",
+				"type": "address"
+			},
+			{
+				"internalType": "uint96",
+				"name": "_feeNumerator",
+				"type": "uint96"
+			}
+		],
+		"name": "set_royalty",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_saleActiveTime",
+				"type": "uint256"
+			}
+		],
+		"name": "set_saleActiveTime",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "operator",
+				"type": "address"
+			},
+			{
+				"internalType": "bool",
+				"name": "approved",
+				"type": "bool"
+			}
+		],
+		"name": "setApprovalForAll",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "TransferCallerNotOwnerNorApproved",
 		"type": "error"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "transferFrom",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "TransferFromIncorrectOwner",
 		"type": "error"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"inputs": [],
@@ -173,6 +474,13 @@ const laziUserNameABI = [
 		"type": "event"
 	},
 	{
+		"inputs": [],
+		"name": "withdraw",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "bytes",
@@ -195,73 +503,6 @@ const laziUserNameABI = [
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "_address",
-				"type": "address"
-			},
-			{
-				"internalType": "string[]",
-				"name": "_laziNames",
-				"type": "string[]"
-			}
-		],
-		"name": "airdrop",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address[]",
-				"name": "_addresses",
-				"type": "address[]"
-			},
-			{
-				"internalType": "string[]",
-				"name": "_laziNames",
-				"type": "string[]"
-			}
-		],
-		"name": "airdrop",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "approve",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_spender",
-				"type": "address"
-			}
-		],
-		"name": "autoApproveMarketplace",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
 				"name": "owner",
 				"type": "address"
 			}
@@ -275,42 +516,6 @@ const laziUserNameABI = [
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string[]",
-				"name": "_laziNames",
-				"type": "string[]"
-			}
-		],
-		"name": "buyLaziNames",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string[]",
-				"name": "_laziNames",
-				"type": "string[]"
-			},
-			{
-				"internalType": "bytes32",
-				"name": "_signedMessageHash",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "bytes",
-				"name": "_signature",
-				"type": "bytes"
-			}
-		],
-		"name": "buyLaziNamesWhitelist",
-		"outputs": [],
-		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
@@ -426,25 +631,6 @@ const laziUserNameABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "bytes32",
-				"name": "_messageHash",
-				"type": "bytes32"
-			}
-		],
-		"name": "getEthSignedMessageHash",
-		"outputs": [
-			{
-				"internalType": "bytes32",
-				"name": "",
-				"type": "bytes32"
-			}
-		],
-		"stateMutability": "pure",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "uint256",
 				"name": "_qty",
 				"type": "uint256"
@@ -518,22 +704,16 @@ const laziUserNameABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_message",
-				"type": "string"
-			}
-		],
-		"name": "messageHash",
+		"inputs": [],
+		"name": "laziNamePriceWL",
 		"outputs": [
 			{
-				"internalType": "bytes32",
+				"internalType": "uint256",
 				"name": "",
-				"type": "bytes32"
+				"type": "uint256"
 			}
 		],
-		"stateMutability": "pure",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -595,22 +775,15 @@ const laziUserNameABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "_tokenId",
+				"name": "tokenId",
 				"type": "uint256"
 			},
 			{
 				"internalType": "uint256",
-				"name": "_salePrice",
+				"name": "salePrice",
 				"type": "uint256"
 			}
 		],
@@ -631,57 +804,6 @@ const laziUserNameABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "safeTransferFrom",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bytes",
-				"name": "_data",
-				"type": "bytes"
-			}
-		],
-		"name": "safeTransferFrom",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"name": "saleActiveTime",
 		"outputs": [
@@ -692,94 +814,6 @@ const laziUserNameABI = [
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "operator",
-				"type": "address"
-			},
-			{
-				"internalType": "bool",
-				"name": "approved",
-				"type": "bool"
-			}
-		],
-		"name": "setApprovalForAll",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_laziNameImages",
-				"type": "string"
-			}
-		],
-		"name": "set_laziNameImages",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_laziNamePrice",
-				"type": "uint256"
-			}
-		],
-		"name": "set_laziNamePrice",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_mintSigner",
-				"type": "address"
-			}
-		],
-		"name": "set_mintSigner",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_receiver",
-				"type": "address"
-			},
-			{
-				"internalType": "uint96",
-				"name": "_feeNumerator",
-				"type": "uint96"
-			}
-		],
-		"name": "set_royalty",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_saleActiveTime",
-				"type": "uint256"
-			}
-		],
-		"name": "set_saleActiveTime",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -804,25 +838,6 @@ const laziUserNameABI = [
 	{
 		"inputs": [],
 		"name": "symbol",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "tokenURI",
 		"outputs": [
 			{
 				"internalType": "string",
@@ -882,6 +897,25 @@ const laziUserNameABI = [
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "tokenURI",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "totalSupply",
 		"outputs": [
@@ -898,67 +932,19 @@ const laziUserNameABI = [
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "transferFrom",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "transferOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes32",
-				"name": "_signedMessageHash",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "bytes",
-				"name": "_signature",
-				"type": "bytes"
-			}
-		],
-		"name": "verifySignature",
-		"outputs": [
-			{
-				"internalType": "address",
 				"name": "",
 				"type": "address"
 			}
 		],
-		"stateMutability": "pure",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "withdraw",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"name": "WL",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	}
 ]

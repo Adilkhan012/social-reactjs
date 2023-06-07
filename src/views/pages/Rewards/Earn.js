@@ -1209,12 +1209,6 @@ const Earn = () => {
                         />
                       </Box> */}
                       <br></br>
-
-                      <Box className={classes.heading}>
-                        <Typography variant="h2" className={classes.head}>
-                          Select Time Period To stake{" "}
-                        </Typography>
-                      </Box>
                       <Box marginBottom={2}>
                         <Typography
                           variant="body2"
