@@ -281,6 +281,14 @@ const Earn = () => {
     setTokenStakeValue(0);
   };
 
+  const handleMainMenuButton=()=>{
+    setAfterLocked(false);
+    setLocked(false);
+    setFlexible(false);
+    setSelectedTime(0);
+    setTokenStakeValue(0);
+  }
+  
   const handleGoBack = () => {
     setFlexible(false);
     setLocked(false);
@@ -294,6 +302,8 @@ const Earn = () => {
   const handleGoBacktoLocked = () => {
     setExtendLockedButton(false);
     setAfterLocked(true);
+    setSelectedTime(0);
+    setTokenStakeValue(0);
   };
 
   const handleGoBacktoFlexible = () => {
@@ -673,33 +683,36 @@ const Earn = () => {
                   afterLocked ||
                   extendLockedButtom
                 ) && (
-                  <Box className={classes.tooltipIconHeader}>
-                    <Typography variant="h2" className={classes.head}>
-                      Start Engagement Session
-                    </Typography>
-                    <Tooltip
-                      title="This is the Engagement Session."
-                      style={{ cursor: "pointer" }}
-                      placement={"top"}
-                      classes={{ tooltip: classes.tooltip }}
-                    >
-                      <InfoIcon fontSize={"medium"} />
-                    </Tooltip>
-                    <Button
-                      variant="contained"
-                      style={{
-                        backgroundColor: "#e31a89",
-                        color: "#fff",
-                        height: 40,
-                        paddingInline: 30,
-                        fontSize: 16,
-                        marginTop: 25,
-                        marginLeft: 70,
-                      }}
-                      onClick={handleStakeInfoButton}
-                    >
-                      Stake Info
-                    </Button>
+                  <Box>
+                    <Box className={classes.tooltipIconHeader}>
+                      <Typography variant="h2" className={classes.head}>
+                        Start Engagement Session
+                      </Typography>
+                      <Tooltip
+                        title="This is the Engagement Session."
+                        style={{ cursor: "pointer" }}
+                        placement={"top"}
+                        classes={{ tooltip: classes.tooltip }}
+                      >
+                        <InfoIcon fontSize={"medium"} />
+                      </Tooltip>
+                      </Box>
+                      <Button
+                        variant="contained"
+                        style={{
+                          backgroundColor: "#e31a89",
+                          color: "#fff",
+                          height: 40,
+                          paddingInline: 30,
+                          fontSize: 16,
+                          marginTop: 5,
+                    
+                        }}
+                        onClick={handleStakeInfoButton}
+                      >
+                        Stake Info
+                      </Button>
+                    
                   </Box>
                 )}
                 <br></br>
@@ -1431,7 +1444,7 @@ const Earn = () => {
                           paddingInline: 30,
                           fontSize: 16,
                           marginTop: 25,
-                          marginLeft: 70,
+                          marginLeft: 50,
                         }}
                         onClick={handleConfirmLockedButton}
                       >
@@ -1463,18 +1476,14 @@ const Earn = () => {
                               fontSize: 16,
                               borderRadius: 2,
                               marginLeft: 2,
+                              
                             }}
                           >
                             Staked
                           </span>
                         </Typography>
                       </Box>
-                      <Box>
-                        <ArrowBackIcon
-                          onClick={handleGoBackOfLocked}
-                          style={{ cursor: "pointer" }}
-                        />
-                      </Box>
+                     
                     </Box>
 
                     {/* <Box
@@ -1605,7 +1614,7 @@ const Earn = () => {
                      </Button> */}
                         </Box>
 
-                        <Box marginBottom={2}>
+                        {/* <Box marginBottom={2}>
                           <Typography
                             variant="body2"
                             className={classes.inputLabel}
@@ -1630,13 +1639,14 @@ const Earn = () => {
                           <Button
                             variant="contained"
                             style={{
-                              backgroundColor: "#e31a89",
-                              color: "#fff",
-                              height: 25,
-                              borderRadius: 20,
-                              fontSize: 12,
-                              fontWeight: "bold",
-                              marginTop: 17,
+                             backgroundColor: "#e31a89",
+                            color: "#fff",
+                            height: 25,
+                            width:45,
+                            borderRadius: 20,
+                            fontSize: 12,
+                            fontWeight: "bold",
+                            marginTop: 17,
                             }}
                             onClick={() => handleDayStakeButton(1)}
                           >
@@ -1648,6 +1658,7 @@ const Earn = () => {
                               backgroundColor: "#e31a89",
                               color: "#fff",
                               height: 25,
+                              width:45,
                               borderRadius: 20,
                               fontSize: 12,
                               fontWeight: "bold",
@@ -1663,6 +1674,7 @@ const Earn = () => {
                               backgroundColor: "#e31a89",
                               color: "#fff",
                               height: 25,
+                              width:45,
                               borderRadius: 20,
                               fontSize: 12,
                               fontWeight: "bold",
@@ -1678,6 +1690,7 @@ const Earn = () => {
                               backgroundColor: "#e31a89",
                               color: "#fff",
                               height: 25,
+                              width:45,
                               borderRadius: 20,
                               fontSize: 12,
                               fontWeight: "bold",
@@ -1693,6 +1706,7 @@ const Earn = () => {
                               backgroundColor: "#e31a89",
                               color: "#fff",
                               height: 25,
+                              width:45,
                               borderRadius: 20,
                               fontSize: 12,
                               fontWeight: "bold",
@@ -1702,7 +1716,7 @@ const Earn = () => {
                           >
                             Max
                           </Button>
-                        </Box>
+                        </Box> */}
                         <Button
                           variant="contained"
                           style={{
@@ -1712,11 +1726,11 @@ const Earn = () => {
                             paddingInline: 30,
                             fontSize: 16,
                             marginTop: 25,
-                            marginLeft: 70,
+                            marginLeft: 55,
                           }}
-                          onClick={handleConfirmLockedButton}
+                          onClick={handleMainMenuButton}
                         >
-                          Extend
+                          Main Menu
                         </Button>
 
                         {/* <div
@@ -1851,10 +1865,12 @@ const Earn = () => {
                         backgroundColor: "#e31a89",
                         color: "#fff",
                         height: 40,
-                        paddingInline: 30,
+                        paddingInline: 20,
+                        paddingBlock:20,
                         fontSize: 16,
-                        marginTop: 25,
-                        marginLeft: 70,
+                        marginTop: 10,
+                        marginLeft: 37,
+                        marginBottom:10,
                       }}
                       onClick={handleApproval}
                       disabled={isTransactionPending}

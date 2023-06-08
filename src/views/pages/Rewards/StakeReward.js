@@ -28,7 +28,6 @@ import { Balance } from "@mui/icons-material";
 const laziTokenAddress = "0xf472134D28216581F47304c66Fb18922a146e514";
 const stakingRewardAddress = "0x3d5b20d2e8dE2FfE1C80226A82E84Dc3A67853c1";
 
-
 const useStyles = makeStyles((theme) => ({
   checkbox: {
     display: "flex",
@@ -166,12 +165,13 @@ const StakeReward = () => {
   const [userStakedTokens, setUserStakedTokens] = useState(0);
   const [isTransactionPending, setTransactionPending] = useState(false);
 
-
   // function editing here
 
   const handleGoBacktoLocked = () => {
     setAddLockedButton(false);
     setAfterLocked(true);
+    setSelectedTime(0);
+    setTokenStakeValue(0);
   };
 
   const handleAddFlexibleButton = () => {
@@ -194,14 +194,12 @@ const StakeReward = () => {
     setAfterLocked(false);
     setSelectedTime(0);
     setTokenStakeValue(0);
-
   };
   const handleSwitchLockedGoBack = () => {
     setFlexible(true);
     setSwitchToLocked(false);
     setSelectedTime(0);
     setTokenStakeValue(0);
-
   };
 
   const handleStakeInfoButton = () => {
@@ -214,23 +212,22 @@ const StakeReward = () => {
   };
 
   const handleConfirmLockedButton = async () => {
-    try{
-    await handleStake()
-    await fetchInformation();
-    fetchUserRewards();
-    fetchTotalStaked();
+    try {
+      await handleStake();
+      await fetchInformation();
+      fetchUserRewards();
+      fetchTotalStaked();
 
-    fetchUserAPR();
+      fetchUserAPR();
 
-    fetchUserBalance();
-
-    setSelectedTime(0);
-    setTokenStakeValue(0);
-    setAfterLocked(true);
-    setLocked(false);
-    setFlexible(false);
-    setAddLockedButton(false);
-    }catch (error) {
+      fetchUserBalance();
+      setAfterLocked(true);
+      setLocked(false);
+      setFlexible(false);
+      setAddLockedButton(false);
+      setSelectedTime(0);
+      setTokenStakeValue(0);
+    } catch (error) {
       console.log(error);
     }
   };
@@ -241,7 +238,6 @@ const StakeReward = () => {
     setLocked(true);
     setSelectedTime(0);
     setTokenStakeValue(0);
-
   };
 
   const handleDayStake = (e) => {
@@ -253,26 +249,27 @@ const StakeReward = () => {
     setLocked(false);
     setConfirmStaking(false);
     setAddFlexibleButton(false);
+    setSelectedTime(0);
+    setTokenStakeValue(0);
   };
 
   const handleConfirmFlexibleButton = async () => {
     try {
-    await handleStake()
-    await fetchInformation();
-    fetchUserRewards();
-    fetchTotalStaked();
+      await handleStake();
+      await fetchInformation();
+      fetchUserRewards();
+      fetchTotalStaked();
 
-    fetchUserAPR();
+      fetchUserAPR();
 
-    fetchUserBalance();
-
-    setSelectedTime(0);
-    setTokenStakeValue(0);
-    setFlexible(true);
-    setLocked(false);
-    setConfirmStaking(false);
-    setAddFlexibleButton(false);
-    }catch(error){
+      fetchUserBalance();
+      setFlexible(true);
+      setLocked(false);
+      setConfirmStaking(false);
+      setAddFlexibleButton(false);
+      setSelectedTime(0);
+      setTokenStakeValue(0);
+    } catch (error) {
       console.log(error);
     }
   };
@@ -294,6 +291,8 @@ const StakeReward = () => {
   const handleConfirmStakingButton = () => {
     setConfirmStaking(true);
     setFlexible(false);
+    setSelectedTime(0);
+    setTokenStakeValue(0);
   };
 
   const handleDayStakeButton = (weeks) => {
@@ -301,34 +300,42 @@ const StakeReward = () => {
   };
 
   // Back Icon
+  const handleMainMenuButton=()=>{
+    setAfterLocked(false);
+    setLocked(false);
+    setFlexible(false);
+    setSelectedTime(0);
+    setTokenStakeValue(0);
+  }
+
+
 
   const handleGoBack = () => {
     setFlexible(false);
     setLocked(false);
     // setConfirmStaking(false);
+    setSelectedTime(0);
+    setTokenStakeValue(0);
   };
 
   // Flexbile Button Function
   const handleFlexibleButton = async () => {
-    try{
-    await handleStake()
-    await fetchInformation();
-    fetchUserRewards();
-    fetchTotalStaked();
-
-    fetchUserAPR();
-
-    fetchUserBalance();
-
-    setSelectedTime(0);
-    setTokenStakeValue(0);
-    setTimeout(() => {
-      setFlexible(!flexible);
-      setLocked(false);
-    }, 500);
-  }catch(error){
-    console.log(error);
-  }
+    try {
+      await handleStake();
+      await fetchInformation();
+      fetchUserRewards();
+      fetchTotalStaked();
+      fetchUserAPR();
+      fetchUserBalance();
+      setTimeout(() => {
+        setFlexible(!flexible);
+        setLocked(false);
+      }, 500);
+      setSelectedTime(0);
+      setTokenStakeValue(0);
+    } catch (error) {
+      console.log(error);
+    }
   };
   // Locked Button Function
 
@@ -337,6 +344,7 @@ const StakeReward = () => {
       setLocked(!locked);
       setFlexible(false);
     }, 500);
+
   };
 
   //chart state
@@ -698,20 +706,20 @@ const StakeReward = () => {
     return new Promise(async (resolve, reject) => {
       const erc20Amount = tokenStakeValue;
       console.log("selected Amount:", erc20Amount);
-  
+
       console.log("selected UserName:", selectedUserNames);
       console.log("selected TimePeriod:", selectedTime);
       console.log("user Duration:", userStakedDuration);
       console.log("user Tokens:", userStakedTokens);
       console.log("Total Duration:", userStakedDuration);
       console.log("Total StakedTokens:", totalStaked);
-  
+
       if (stakingContract) {
         try {
           const gasEstimate = await stakingContract.methods
             .stake(erc20Amount, selectedTime, selectedUserNames)
             .estimateGas({ from: userAddress });
-  
+
           stakingContract.methods
             .stake(erc20Amount, selectedTime, selectedUserNames)
             .send({ from: userAddress, gas: gasEstimate })
@@ -735,20 +743,22 @@ const StakeReward = () => {
                 reject(new Error("Transaction rejected by the user."));
               } else {
                 const errorMessage = error.message.split("message: ")[2];
-                toast.error(errorMessage, { position: toast.POSITION.TOP_RIGHT });
+                toast.error(errorMessage, {
+                  position: toast.POSITION.TOP_RIGHT,
+                });
                 reject(new Error(errorMessage));
               }
             });
         } catch (error) {
           console.log(error);
           let errorMessage = "An error occurred during the transaction.";
-  
+
           if (error.message) {
             const startIndex = error.message.indexOf(" reverted: ") + 10;
             const endIndex = error.message.indexOf(",", startIndex);
             errorMessage = error.message.substring(startIndex, endIndex);
           }
-  
+
           toast.error(errorMessage);
           reject(new Error(errorMessage));
         }
@@ -1135,15 +1145,17 @@ const StakeReward = () => {
                   addFlexibleButton ||
                   switchToLock
                 ) && (
-                  <Box className={classes.tooltipIconHeader}>
-                    <Typography variant="h2">Stake Reward</Typography>
-                    <Tooltip
-                      title="This is the stake reward tooltip."
-                      style={{ cursor: "pointer" }}
-                      placement={"top"}
-                    >
-                      <InfoIcon fontSize={"medium"} />
-                    </Tooltip>
+                  <Box>
+                    <Box className={classes.tooltipIconHeader}>
+                      <Typography variant="h2">Stake Reward</Typography>
+                      <Tooltip
+                        title="This is the stake reward tooltip."
+                        style={{ cursor: "pointer" }}
+                        placement={"top"}
+                      >
+                        <InfoIcon fontSize={"medium"} />
+                      </Tooltip>
+                    </Box>
                     <Button
                       variant="contained"
                       style={{
@@ -1152,8 +1164,7 @@ const StakeReward = () => {
                         height: 40,
                         paddingInline: 30,
                         fontSize: 16,
-                        marginTop: 25,
-                        marginLeft: 70,
+                        marginTop: 5,
                       }}
                       onClick={handleStakeInfoButton}
                     >
@@ -2636,6 +2647,7 @@ const StakeReward = () => {
                             backgroundColor: "#e31a89",
                             color: "#fff",
                             height: 25,
+                            width:45,
                             borderRadius: 20,
                             fontSize: 12,
                             fontWeight: "bold",
@@ -2651,6 +2663,7 @@ const StakeReward = () => {
                             backgroundColor: "#e31a89",
                             color: "#fff",
                             height: 25,
+                            width:45,
                             borderRadius: 20,
                             fontSize: 12,
                             fontWeight: "bold",
@@ -2666,6 +2679,7 @@ const StakeReward = () => {
                             backgroundColor: "#e31a89",
                             color: "#fff",
                             height: 25,
+                            width:45,
                             borderRadius: 20,
                             fontSize: 12,
                             fontWeight: "bold",
@@ -2681,6 +2695,7 @@ const StakeReward = () => {
                             backgroundColor: "#e31a89",
                             color: "#fff",
                             height: 25,
+                            width:45,
                             borderRadius: 20,
                             fontSize: 12,
                             fontWeight: "bold",
@@ -2696,6 +2711,7 @@ const StakeReward = () => {
                             backgroundColor: "#e31a89",
                             color: "#fff",
                             height: 25,
+                            width:45,
                             borderRadius: 20,
                             fontSize: 12,
                             fontWeight: "bold",
@@ -2788,7 +2804,7 @@ const StakeReward = () => {
                           paddingInline: 30,
                           fontSize: 16,
                           marginTop: 25,
-                          marginLeft: 70,
+                          marginLeft: 50,
                         }}
                         onClick={handleConfirmLockedButton}
                       >
@@ -2826,12 +2842,7 @@ const StakeReward = () => {
                           </span>
                         </Typography>
                       </Box>
-                      <Box>
-                        <ArrowBackIcon
-                          onClick={handleGoBackOfLocked}
-                          style={{ cursor: "pointer" }}
-                        />
-                      </Box>
+                      
                     </Box>
 
                     {/* <Box
@@ -2965,104 +2976,7 @@ const StakeReward = () => {
                           </Button> */}
                         </Box>
 
-                        <Box marginBottom={2}>
-                          <Typography
-                            variant="body2"
-                            className={classes.inputLabel}
-                            style={{ fontSize: "13px", marginBottom: 5 }}
-                          >
-                            Enter Days to Stake
-                          </Typography>
-                          <TextField
-                            className={classes.input}
-                            value={selectedTime}
-                            onChange={handleDayStake}
-                            variant="outlined"
-                            style={{ marginBottom: 2 }}
-                          />
-                        </Box>
-                        <Box
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-around",
-                          }}
-                        >
-                          <Button
-                            variant="contained"
-                            style={{
-                              backgroundColor: "#e31a89",
-                              color: "#fff",
-                              height: 25,
-                              borderRadius: 20,
-                              fontSize: 12,
-                              fontWeight: "bold",
-                              marginTop: 17,
-                            }}
-                            onClick={() => handleDayStakeButton(1)}
-                          >
-                            1W
-                          </Button>
-                          <Button
-                            variant="contained"
-                            style={{
-                              backgroundColor: "#e31a89",
-                              color: "#fff",
-                              height: 25,
-                              borderRadius: 20,
-                              fontSize: 12,
-                              fontWeight: "bold",
-                              marginTop: 17,
-                            }}
-                            onClick={() => handleDayStakeButton(2)}
-                          >
-                            2W
-                          </Button>
-                          <Button
-                            variant="contained"
-                            style={{
-                              backgroundColor: "#e31a89",
-                              color: "#fff",
-                              height: 25,
-                              borderRadius: 20,
-                              fontSize: 12,
-                              fontWeight: "bold",
-                              marginTop: 17,
-                            }}
-                            onClick={() => handleDayStakeButton(3)}
-                          >
-                            3W
-                          </Button>
-                          <Button
-                            variant="contained"
-                            style={{
-                              backgroundColor: "#e31a89",
-                              color: "#fff",
-                              height: 25,
-                              borderRadius: 20,
-                              fontSize: 12,
-                              fontWeight: "bold",
-                              marginTop: 17,
-                            }}
-                            onClick={() => handleDayStakeButton(4)}
-                          >
-                            4W
-                          </Button>
-                          <Button
-                            variant="contained"
-                            style={{
-                              backgroundColor: "#e31a89",
-                              color: "#fff",
-                              height: 25,
-                              borderRadius: 20,
-                              fontSize: 12,
-                              fontWeight: "bold",
-                              marginTop: 17,
-                            }}
-                            onClick={() => handleDayStakeButton(52)}
-                          >
-                            Max
-                          </Button>
-                        </Box>
+                    
                         <Button
                           variant="contained"
                           style={{
@@ -3072,11 +2986,11 @@ const StakeReward = () => {
                             paddingInline: 30,
                             fontSize: 16,
                             marginTop: 25,
-                            marginLeft: 70,
+                            marginLeft: 55,
                           }}
-                          onClick={handleConfirmLockedButton}
+                          onClick={handleMainMenuButton}
                         >
-                          Extend
+                          Main Menu
                         </Button>
 
                         {/* <div
@@ -3392,7 +3306,7 @@ const StakeReward = () => {
                   </p>
                 </div>
                 <br></br>
-                <div style={{ marginLeft: "auto" }}>
+                {/* <div style={{ marginLeft: "auto" }}>
                   <Chart
                     options={state.options}
                     series={[
@@ -3402,7 +3316,7 @@ const StakeReward = () => {
                     type="donut"
                     width="70%"
                   />
-                </div>
+                </div> */}
               </div>
             </Paper>
           </Grid>{" "}
@@ -3416,24 +3330,24 @@ const StakeReward = () => {
               }}
             >
               <Box className={classes.root} height={400} overflow="auto">
-                      <Button
-                      variant="contained"
-                      style={{
-                        backgroundColor: "#e31a89",
-                        color: "#fff",
-                        height: 40,
-                        paddingInline: 30,
-                        fontSize: 16,
-                        marginTop: 25,
-                        marginLeft: 70,
-                      }}
-                      onClick={handleApproval}
-                      disabled={isTransactionPending}
-                    >
-                      {isTransactionPending
-                        ? "Processing..."
-                        : "Approve Allowance"}
-                    </Button>
+                <Button
+                  variant="contained"
+                  style={{
+                    backgroundColor: "#e31a89",
+                    color: "#fff",
+                    height: 40,
+                    paddingInline: 20,
+                    paddingBlock: 20,
+                    fontSize: 16,
+                    marginTop: 4,
+                    marginLeft: 5,
+                    marginBottom: 10,
+                  }}
+                  onClick={handleApproval}
+                  disabled={isTransactionPending}
+                >
+                  {isTransactionPending ? "Processing..." : "Approve Allowance"}
+                </Button>
                 <div style={{ display: "flex" }}>
                   <div>
                     <Box
@@ -3530,14 +3444,14 @@ const StakeReward = () => {
                       </Box>
                     </Box>
                   </div>
-                  <div style={{ marginLeft: "auto" }}>
+                  {/* <div style={{ marginLeft: "auto" }}>
                     <Chart
                       options={state.options}
                       series={[23, 45]}
                       type="donut"
                       width="70%"
                     />{" "}
-                  </div>
+                  </div> */}
                 </div>
               </Box>
             </Paper>
