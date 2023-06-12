@@ -470,8 +470,8 @@ const Earn = () => {
           BigInt(totalStaked);
 
         console.log("APR = " + APR.toString() + "%");
-        setUserAPR(APR); // Assuming you want to set the APR in the state variable `userAPR`
-      }
+        const etherValue = (parseInt(APR) / 10 ** 18).toFixed(3);
+        setUserAPR(etherValue);      }
     } catch (error) {
       console.error("Error fetching user APR:", error);
     }
@@ -618,7 +618,7 @@ const Earn = () => {
       const userReward = await engagementContract.methods
         .getUserRewards(userAddress, userContributionScore, 100)
         .call();
-      const etherValueUserReward = parseInt(userReward) / 10 ** 18;
+      const etherValueUserReward = parseInt((userReward) / 10 ** 18).toFixed(3);
 
       setUserReward(etherValueUserReward);
       console.log(

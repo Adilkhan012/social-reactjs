@@ -784,8 +784,8 @@ const StakeReward = () => {
       const userRewardsValue = await stakingContract.methods
         .getUserRewards(userAddress)
         .call();
-      const etherValue = parseInt(userRewardsValue) / 10 ** 18;
-      setUserRewards(etherValue);
+        const etherValue = (parseInt(userRewardsValue) / 10 ** 18).toFixed(3);
+        setUserRewards(etherValue); 
     } catch (error) {
       console.error("Error fetching user rewards:", error);
     }
@@ -817,8 +817,8 @@ const StakeReward = () => {
           (BigInt(REWARD_PER_DAY) * BigInt(86400) * BigInt(365) * BigInt(100)) /
           BigInt(totalStaked);
         console.log("APR = " + APR.toString() + "%");
-        setUserAPR(APR); // Assuming you want to set the APR in the state variable `userAPR`
-      }
+        const etherValue = (parseInt(APR) / 10 ** 18).toFixed(3);
+        setUserAPR(etherValue);      }
     } catch (error) {
       console.error("Error fetching user APR:", error);
     }
