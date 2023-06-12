@@ -208,7 +208,6 @@ function Leaderboard() {
       </Box>
 
       <div>
-        {userRankings.map((user, index) => (
           <Box className={classes.containerheader}>
             <div style={{ position: "relative" }}>
               <div
@@ -407,7 +406,6 @@ function Leaderboard() {
               </div>
             </div>
           </Box>
-        ))}
       </div>
 
       <hr style={{ opacity: 0.3 }}></hr>
