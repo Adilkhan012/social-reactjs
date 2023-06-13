@@ -31,30 +31,30 @@ import SettingsContext from "src/context/SettingsContext";
 const history = createBrowserHistory();
 
 //mainnet network
-const customNetwork = {
-  chainId: "0x38", // BSC Mainnet Chain ID
-  chainName: "Binance Smart Chain Mainnet",
-  nativeCurrency: {
-    name: "BNB",
-    symbol: "BNB",
-    decimals: 18,
-  },
-  rpcUrls: ["https://bsc-dataseed1.binance.org"], // BSC Mainnet RPC endpoint
-  blockExplorerUrls: ["https://bscscan.com"], // BSC Mainnet Block Explorer URL
-};
-
-// custom network for testnet
 // const customNetwork = {
-//   chainId: "0x13881", // Mumbai Testnet Chain ID
-//   chainName: "Mumbai Testnet",
+//   chainId: "0x38", // BSC Mainnet Chain ID
+//   chainName: "Binance Smart Chain Mainnet",
 //   nativeCurrency: {
-//     name: "MATIC",
-//     symbol: "MATIC",
+//     name: "BNB",
+//     symbol: "BNB",
 //     decimals: 18,
 //   },
-//   rpcUrls: ["https://rpc-mumbai.maticvigil.com"], // Mumbai Testnet RPC endpoint
-//   blockExplorerUrls: ["https://explorer-mumbai.maticvigil.com"], // Mumbai Testnet Block Explorer URL
+//   rpcUrls: ["https://bsc-dataseed1.binance.org"], // BSC Mainnet RPC endpoint
+//   blockExplorerUrls: ["https://bscscan.com"], // BSC Mainnet Block Explorer URL
 // };
+
+// custom network for testnet
+const customNetwork = {
+  chainId: "0x13881", // Mumbai Testnet Chain ID
+  chainName: "Mumbai Testnet",
+  nativeCurrency: {
+    name: "MATIC",
+    symbol: "MATIC",
+    decimals: 18,
+  },
+  rpcUrls: ["https://rpc-mumbai.maticvigil.com"], // Mumbai Testnet RPC endpoint
+  blockExplorerUrls: ["https://explorer-mumbai.maticvigil.com"], // Mumbai Testnet Block Explorer URL
+};
 
 //styles
 const styles = (theme) => ({
@@ -185,7 +185,7 @@ function App() {
             Switch Network
           </Button>
         </DialogActions>
-      </Dialog> 
+      </Dialog>
     </React.StrictMode>
   );
 }

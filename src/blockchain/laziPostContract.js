@@ -2,9 +2,9 @@ import initMetamask from "./metamaskConnection";
 import Web3 from "web3";
 
 //test net
-// const laziPostContractAddress = "0xA0dAdBcB23E6Dd63428B20f36ab3e367103c9Ff9";
+const laziPostContractAddress = "0xA0dAdBcB23E6Dd63428B20f36ab3e367103c9Ff9";
 //mainnet
-const laziPostContractAddress = "0xd39Ec606b518b05261B10477405E5d665ef430fe";
+// const laziPostContractAddress = "0xd39Ec606b518b05261B10477405E5d665ef430fe";
 
 export const laziPostContractABI = [
   { inputs: [], stateMutability: "nonpayable", type: "constructor" },

@@ -270,7 +270,7 @@ function Leaderboard() {
                     transform: "translateY(-50%)",
                   }}
                 >
-                  {userRankings[2].name}
+                  {/* {userRankings[2].name} */}
                 </Typography>
               </div>
             </div>
