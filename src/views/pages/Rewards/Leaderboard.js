@@ -270,7 +270,7 @@ function Leaderboard() {
                     transform: "translateY(-50%)",
                   }}
                 >
-                  {/* {userRankings[2].name} */}
+                  {/* {userRankings[2].userName} */}
                 </Typography>
               </div>
             </div>
@@ -336,7 +336,7 @@ function Leaderboard() {
                     transform: "translateY(-50%)",
                   }}
                 >
-                  {userRankings[1].name}
+                  {/* {userRankings[1].userName} */}
                 </Typography>
               </div>
             </div>
@@ -401,7 +401,7 @@ function Leaderboard() {
                     transform: "translateY(-50%)",
                   }}
                 >
-                  {userRankings[3].name}
+                  {/* {userRankings[3].userName} */}
                 </Typography>
               </div>
             </div>
@@ -426,7 +426,7 @@ function Leaderboard() {
                   component="h2"
                   style={{ fontSize: 12, marginBottom: isMobile ? 2 : 4 }}
                 >
-                  {user.name}
+                  {user.userName}
                 </Typography>
                 <CustomBar
                   variant="determinate"
