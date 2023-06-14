@@ -385,32 +385,32 @@ function Collection({ listPublicExclusiveHandler }) {
     try {
       console.log("LaziPostContractAddress", collectionAddress);
 
-      const web3 = new Web3(window.ethereum);
-      const postContract = new web3.eth.Contract(
-        laziPostContractABI,
-        collectionAddress
-      );
+      // const web3 = new Web3(window.ethereum);
+      // const postContract = new web3.eth.Contract(
+      //   laziPostContractABI,
+      //   collectionAddress
+      // );
 
-      const totalSupply = await postContract.methods.totalSupply().call();
-      var newTotalSupply = parseInt(totalSupply) + 1;
+      // const totalSupply = await postContract.methods.totalSupply().call();
+      // var newTotalSupply = parseInt(totalSupply) + 1;
 
-      console.log("totalSupply", totalSupply);
-      setTokenId(newTotalSupply);
-      console.log("tokenId", newTotalSupply);
+      // console.log("totalSupply", totalSupply);
+      // setTokenId(newTotalSupply);
+      // console.log("tokenId", newTotalSupply);
 
-      const method = postContract.methods.mintLaziPost([titlePost]);
-      const gasLimit = await method.estimateGas({ from: address });
-      const gasPrice = await web3.eth.getGasPrice();
-      const transactionParams = {
-        from: address,
-        gas: gasLimit,
-        gasPrice: gasPrice,
-        value: web3.utils.toWei("0", "ether"),
-      };
+      // const method = postContract.methods.mintLaziPost([titlePost]);
+      // const gasLimit = await method.estimateGas({ from: address });
+      // const gasPrice = await web3.eth.getGasPrice();
+      // const transactionParams = {
+      //   from: address,
+      //   gas: gasLimit,
+      //   gasPrice: gasPrice,
+      //   value: web3.utils.toWei("0", "ether"),
+      // };
 
-      const result = await method.send(transactionParams);
-      console.log(result);
-      toast.success("NFT Minted Success: Now Saving!");
+      // const result = await method.send(transactionParams);
+      // console.log(result);
+      // toast.success("NFT Minted Success: Now Saving!");
       // Add the post to the posts object with its tokenId as the key
       // setPosts({
       //   ...posts,
@@ -442,10 +442,7 @@ function Collection({ listPublicExclusiveHandler }) {
         description !== "" &&
         titlePost !== "" &&
         list !== "" &&
-        amount !== "" &&
-        Number(amount) > 0 &&
         titlePost.length <= 280 &&
-        Number(amount) <= 2000 &&
         collectionlistAll.length !== 0
       ) {
         const hastag = description.match(/#[a-z\d]+/gi);
@@ -461,13 +458,11 @@ function Collection({ listPublicExclusiveHandler }) {
             postTitle: titlePost,
             collectionId: list,
             collectionAddress: collectionAddress,
-            amount: amount,
             tag: selectuser,
-            royality: royality,
             hashTagName: hastag ? hastag : [],
             mediaType: coverPost ? "MEDIA" : "TEXT",
             ownerAddress: address,
-            tokenId: newTotalSupply,
+            // tokenId: newTotalSupply,
           },
           headers: {
             token: localStorage.getItem("token"),
@@ -509,10 +504,7 @@ function Collection({ listPublicExclusiveHandler }) {
         description !== "" &&
         titlePost !== "" &&
         list !== "" &&
-        amount !== "" &&
-        Number(amount) > 0 &&
         titlePost.length <= 280 &&
-        Number(amount) <= 2000 &&
         collectionlistAll.length !== 0
       ) {
         const hastag = description.match(/#[a-z\d]+/gi);
@@ -528,13 +520,11 @@ function Collection({ listPublicExclusiveHandler }) {
             postTitle: titlePost,
             collectionId: list,
             collectionAddress: collectionAddress,
-            amount: amount,
             tag: selectuser,
-            royality: royality,
             hashTagName: hastag ? hastag : [],
             mediaType: coverPost ? "MEDIA" : "TEXT",
             ownerAddress: address,
-            tokenId: newTotalSupply,
+            // tokenId: newTotalSupply,
           },
           headers: {
             token: localStorage.getItem("token"),
@@ -553,7 +543,6 @@ function Collection({ listPublicExclusiveHandler }) {
               setlist("");
               setimageurl("");
               setimage("");
-              setAmount("");
               toast.success(res.data.responseMessage);
               setOpen(false);
               setLoader(false);
@@ -604,10 +593,7 @@ function Collection({ listPublicExclusiveHandler }) {
       formValueCollection.title !== "" &&
       formValueCollection.title.length < 60 &&
       formValueCollection.details !== "" &&
-      Number(formValueCollection.donation) > 0 &&
-      formValueCollection.details.length < 200 &&
-      parseFloat(formValueCollection.donation) > 0 &&
-      parseFloat(formValueCollection.donation) < 2000
+      formValueCollection.details.length < 200
     ) {
       try {
         setmessage("Creating Collection...");
@@ -615,12 +601,8 @@ function Collection({ listPublicExclusiveHandler }) {
         const formData = new FormData();
         formData.append("image", coverCollection);
         formData.append("title", formValueCollection.title);
-        formData.append("duration", duration);
         // formData.append("bundleName", name);
         formData.append("description", formValueCollection.details);
-        formData.append("amount", formValueCollection.donation);
-        formData.append("tag", formValueCollection.donation);
-
         axios
           .request({
             method: "POST",
@@ -628,9 +610,7 @@ function Collection({ listPublicExclusiveHandler }) {
             data: {
               image: coverCollection,
               title: formValueCollection.title,
-              duration: duration,
               description: formValueCollection.details,
-              amount: formValueCollection.donation,
             },
             // data: formData,
             headers: {
@@ -786,7 +766,7 @@ function Collection({ listPublicExclusiveHandler }) {
     <>
       <Paper className={classes.root} elevation={2}>
         <Box className="headingBox">
-          <Typography variant="h6">Create New Bundles</Typography>
+          <Typography variant="h6">Create New Post</Typography>
         </Box>
         <Box>
           <TextField
@@ -818,7 +798,7 @@ function Collection({ listPublicExclusiveHandler }) {
             <Grid item xs={8} sm={4}>
               <Button onClick={handleClickOpen}>
                 {" "}
-                <MdPhoto /> <label>Photo / Video</label>
+                <MdPhoto /> <label>Photo / Video / Gif</label>
               </Button>
             </Grid>
             <Grid item xs={4} sm={8} align="right">
@@ -966,7 +946,7 @@ function Collection({ listPublicExclusiveHandler }) {
                   )}
                 </Box>
 
-                <Box mt={2}>
+                {/* <Box mt={2}>
                   <TextField
                     id="outlined-basic"
                     variant="outlined"
@@ -1000,8 +980,8 @@ function Collection({ listPublicExclusiveHandler }) {
                         </Box>
                       ))}
                   </FormHelperText>
-                </Box>
-                <Box mt={2}>
+                </Box> */}
+                {/* <Box mt={2}>
                   <TextField
                     variant="outlined"
                     name="Text Field"
@@ -1028,7 +1008,7 @@ function Collection({ listPublicExclusiveHandler }) {
                       Please enter royalty between 0 to 10
                     </FormHelperText>
                   )}
-                </Box>
+                </Box> */}
 
                 <Box mt={2}>
                   {/* {searchUserList && searchUserList?.map()} */}
@@ -1143,7 +1123,9 @@ function Collection({ listPublicExclusiveHandler }) {
                       <>
                         {" "}
                         <MdAddToPhotos />
-                        <Typography variant="h5">Add photos/videos</Typography>
+                        <Typography variant="h5">
+                          Add photos/videos/Gif
+                        </Typography>
                         {/* <small>or drag and drop</small> */}
                       </>
                     )}
@@ -1291,14 +1273,7 @@ function Collection({ listPublicExclusiveHandler }) {
                   <Button
                     variant="contained"
                     fullWidth
-                    disabled={
-                      loader ||
-                      description === "" ||
-                      royality < 0 ||
-                      royality > 10 ||
-                      isDurationLess ||
-                      amount <= 0
-                    }
+                    disabled={loader || description === ""}
                     color="secondary"
                     type="submit"
                     // onClick={createBundleHandle}
@@ -1465,13 +1440,13 @@ function Collection({ listPublicExclusiveHandler }) {
                     </Grid>
                   </Box>
                 </Grid>
-                <Grid item xs={12}>
+                {/* <Grid item xs={12}>
                   <Box>
-                    <Grid container spacing={1}>
-                      {/* <Grid item xs={4} align="left">
-            <Typography variant="h6">Donation Amount</Typography>
-          </Grid> */}
-                      <Grid item xs={12}>
+                    <Grid container spacing={1}> */}
+                {/* <Grid item xs={4} align="left">
+                          <Typography variant="h6">Donation Amount</Typography>
+                        </Grid> */}
+                {/* <Grid item xs={12}>
                         <TextField
                           id="outlined-basic"
                           variant="outlined"
@@ -1513,12 +1488,12 @@ function Collection({ listPublicExclusiveHandler }) {
                                 </Box>
                               ))}
                         </FormHelperText>
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </Grid>
+                      </Grid> */}
+                {/* </Grid>
+                  </Box> */}
+                {/* </Grid> */}
                 <Grid item xs={12}>
-                  <Box>
+                  {/* <Box>
                     <Grid container spacing={1}>
                       <Grid item xs={6} align="left">
                         <Typography variant="h6">Duration</Typography>
@@ -1562,127 +1537,115 @@ function Collection({ listPublicExclusiveHandler }) {
                           >
                             1 Year
                           </span>
-                        </Box>
-                        <Box>
-                          <Grid container direction={"column"} spacing={2}>
-                            <Grid item xs={12}>
-                              <Box
-                                mt={4}
-                                className={classes.addphotosCollection}
-                              >
-                                <input
-                                  // accept="video/*"
-                                  accept=".jpg,.gif,.png,.svg,.jpeg"
-                                  // accept="image/*"
-                                  type="file"
-                                  error={Boolean(isSubmit1 && image === "")}
-                                  onChange={(e) => {
-                                    setimageCollection(e.target.files[0]);
+                        </Box> */}
+                  <Box>
+                    <Grid container direction={"column"} spacing={2}>
+                      <Grid item xs={12}>
+                        <Box mt={4} className={classes.addphotosCollection}>
+                          <input
+                            // accept="video/*"
+                            accept=".jpg,.gif,.png,.svg,.jpeg"
+                            // accept="image/*"
+                            type="file"
+                            error={Boolean(isSubmit1 && image === "")}
+                            onChange={(e) => {
+                              setimageCollection(e.target.files[0]);
 
-                                    getBase64(e.target.files[0], (result) => {
-                                      setcoverCollection(result);
-                                    });
-                                  }}
-                                />
-                                <Box>
-                                  {imageCollection?.type === "video/mp4" ||
-                                  imageCollection?.type == "image/jpeg" ||
-                                  imageCollection?.type == "image/png" ||
-                                  imageCollection?.type == "image/gif" ||
-                                  imageCollection?.type == "image/jpg" ||
-                                  imageCollection?.type == "image/svg" ? (
-                                    <>
-                                      {imageCollection?.type === "video/mp4" ? (
-                                        <>
-                                          <video
-                                            style={{
-                                              width: "100%",
-                                              maxHeight: "213px",
-                                            }}
-                                            controls
-                                          >
-                                            <source
-                                              src={coverCollection}
-                                              type="video/mp4"
-                                            />
-                                          </video>
-                                          <Box mt={2} mb={2}>
-                                            Uploaded Successfully
-                                          </Box>
-                                          <Button
-                                            variant="contained"
-                                            size="large"
-                                            color="secondary"
-                                            type="submit"
-                                            onClick={() => {
-                                              setimageCollection("");
-                                              setcoverCollection("");
-                                            }}
-                                          >
-                                            Remove
-                                          </Button>
-                                        </>
-                                      ) : (
-                                        <>
-                                          <img
-                                            src={coverCollection}
-                                            alt=""
-                                            width="200px"
-                                          />
-                                          <Box mt={2} mb={2}>
-                                            Uploaded Successfully
-                                          </Box>
-                                          <Button
-                                            variant="contained"
-                                            size="large"
-                                            color="secondary"
-                                            type="submit"
-                                            onClick={() => {
-                                              setimageCollection("");
-                                              setcoverCollection("");
-                                            }}
-                                          >
-                                            Remove
-                                          </Button>
-                                        </>
-                                      )}
-                                    </>
-                                  ) : (
-                                    <>
-                                      {" "}
-                                      <MdAddToPhotos />
-                                      <Typography variant="h5">
-                                        Add photos
-                                      </Typography>
-                                      {/* <small>or drag and drop</small> */}
-                                    </>
-                                  )}
-                                </Box>
-                              </Box>
-                              <Box mt={1}>
-                                <FormHelperText error>
-                                  {isSubmit1 && imageCollection === "" && (
-                                    <Box ml={1}>Image is required</Box>
-                                  )}
-                                </FormHelperText>
-                              </Box>
-                            </Grid>
-                          </Grid>
+                              getBase64(e.target.files[0], (result) => {
+                                setcoverCollection(result);
+                              });
+                            }}
+                          />
+                          <Box>
+                            {imageCollection?.type === "video/mp4" ||
+                            imageCollection?.type == "image/jpeg" ||
+                            imageCollection?.type == "image/png" ||
+                            imageCollection?.type == "image/gif" ||
+                            imageCollection?.type == "image/jpg" ||
+                            imageCollection?.type == "image/svg" ? (
+                              <>
+                                {imageCollection?.type === "video/mp4" ? (
+                                  <>
+                                    <video
+                                      style={{
+                                        width: "100%",
+                                        maxHeight: "213px",
+                                      }}
+                                      controls
+                                    >
+                                      <source
+                                        src={coverCollection}
+                                        type="video/mp4"
+                                      />
+                                    </video>
+                                    <Box mt={2} mb={2}>
+                                      Uploaded Successfully
+                                    </Box>
+                                    <Button
+                                      variant="contained"
+                                      size="large"
+                                      color="secondary"
+                                      type="submit"
+                                      onClick={() => {
+                                        setimageCollection("");
+                                        setcoverCollection("");
+                                      }}
+                                    >
+                                      Remove
+                                    </Button>
+                                  </>
+                                ) : (
+                                  <>
+                                    <img
+                                      src={coverCollection}
+                                      alt=""
+                                      width="200px"
+                                    />
+                                    <Box mt={2} mb={2}>
+                                      Uploaded Successfully
+                                    </Box>
+                                    <Button
+                                      variant="contained"
+                                      size="large"
+                                      color="secondary"
+                                      type="submit"
+                                      onClick={() => {
+                                        setimageCollection("");
+                                        setcoverCollection("");
+                                      }}
+                                    >
+                                      Remove
+                                    </Button>
+                                  </>
+                                )}
+                              </>
+                            ) : (
+                              <>
+                                {" "}
+                                <MdAddToPhotos />
+                                <Typography variant="h5">
+                                  Add photos/Video/Gif
+                                </Typography>
+                                {/* <small>or drag and drop</small> */}
+                              </>
+                            )}
+                          </Box>
                         </Box>
-                      </Grid>
-                      <Grid item xs={6} align="left">
-                        <Typography variant="h6">
-                          You will get profit only on Subscriber Post.
-                        </Typography>
-                        {/* <Typography variant="h6">
-                          Collection fee&nbsp;
-                          {collectionIdData && collectionIdData[0]?.amount}{" "}
-                          &nbsp;Share
-                        </Typography> */}
+                        <Box mt={1}>
+                          <FormHelperText error>
+                            {isSubmit1 && imageCollection === "" && (
+                              <Box ml={1}>Image is required</Box>
+                            )}
+                          </FormHelperText>
+                        </Box>
                       </Grid>
                     </Grid>
                   </Box>
                 </Grid>
+
+                {/* </Grid> */}
+                {/* </Box> */}
+                {/* </Grid> */}
                 <Grid item xs={12}>
                   <Box align="center" mt={2} mb={2}>
                     <Button

@@ -212,11 +212,11 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
         image !== "" &&
         title !== "" &&
         details !== "" &&
-        Number(donation) > 0 &&
-        Number(donation) <= 2000 &&
+        // Number(donation) > 0 &&
+        // Number(donation) <= 2000 &&
         details.length <= 200 &&
         title.length <= 60 &&
-        parseFloat(donation) > 0 &&
+        // parseFloat(donation) > 0 &&
         deployedLaziPostAddress !== ""
       ) {
         try {
@@ -226,9 +226,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
           const data = {
             image: cover,
             title: title,
-            duration: duration,
             description: details,
-            amount: donation,
             collectionAddress: deployedLaziPostAddress
           };
 
@@ -253,7 +251,6 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
             setfire(!fire);
             setname("");
             settitle("");
-            setdonation("");
             setimage();
             setdetails("");
             setDeployedLaziPostAddress("");
@@ -704,13 +701,13 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                         </Grid>
                       </Box>
                     </Grid>
-                    <Grid item xs={12}>
-                      <Box>
-                        <Grid container spacing={1}>
+                    {/* <Grid item xs={12}> */}
+                      {/* <Box> */}
+                        {/* <Grid container spacing={1}> */}
                           {/* <Grid item xs={4} align="left">
-                        <Typography variant="h6">Donation Amount</Typography>
-                      </Grid> */}
-                          <Grid item xs={12}>
+                          <Typography variant="h6">Donation Amount</Typography>
+                          </Grid> */}
+                          {/* <Grid item xs={12}>
                             <TextField
                               id="outlined-basic"
                               variant="outlined"
@@ -758,20 +755,20 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                                   </Box>
                                 ))}
                             </FormHelperText>
-                          </Grid>
-                        </Grid>
-                      </Box>
-                    </Grid>
+                          </Grid> */}
+                        {/* </Grid> */}
+                      {/* </Box> */}
+                    {/* </Grid> */}
                     <Grid item xs={12}>
                       <Box>
                         <Grid container spacing={1}>
-                          <Grid item xs={6} align="left">
+                          {/* <Grid item xs={6} align="left">
                             <Typography variant="h6">Duration</Typography>
-                          </Grid>
+                          </Grid> */}
                           &nbsp;
                           <Grid item xs={12} className={classes.donation}>
                             &nbsp;
-                            <Box style={{ cursor: "pointer" }}>
+                            {/* <Box style={{ cursor: "pointer" }}>
                               <span
                                 style={{ fontSize: "14px", marginRight: "8px" }}
                                 className={duration === "7" ? "active" : null}
@@ -809,7 +806,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                               >
                                 1 Year
                               </span>
-                            </Box>
+                            </Box> */}
                             <Box>
                               <Grid container direction={"column"} spacing={2}>
                                 <Grid item xs={12}>
@@ -903,7 +900,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                                           {" "}
                                           <MdAddToPhotos />
                                           <Typography variant="h5">
-                                            Add photos/videos
+                                            Add photos/videos/Gif
                                           </Typography>
                                           {/* <small>or drag and drop</small> */}
                                         </>
@@ -922,9 +919,9 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                             </Box>
                           </Grid>
                           <Grid item xs={6} align="left">
-                            <Typography variant="h6">
+                            {/* <Typography variant="h6">
                               You will get profit only on private Post.
-                            </Typography>
+                            </Typography> */}
                             {/* <Typography variant="h6">
                               Collection fee&nbsp;
                               {collectionId && collectionId[0]?.amount}{" "}

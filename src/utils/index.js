@@ -83,4 +83,4 @@ export const getBase64 = (file, cb) => {
   };
   reader.onerror = function (err) {};
 };
-export const tokenName = "Share";
+export const tokenName = "#LAZI";

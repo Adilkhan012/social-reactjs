@@ -387,7 +387,7 @@ export default function (props) {
   const classes = useStyles();
   const history = useHistory();
   const { data, listPublicExclusiveHandler, isLoadingContent, index } = props;
-  const { ownerAddress, tokenId, collectionAddress } = data;
+  const { postTitle, ownerAddress, tokenId, collectionAddress } = data;
   // console.log(ownerAddress, tokenId);
   // console.log("post data", data);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -626,36 +626,62 @@ export default function (props) {
       console.log("Buyer Address:", buyerAddress);
       console.log("Token ID:", tokenId);
       console.log("Collection Address:", collectionAddress);
+      console.log("title: ", postTitle)
       const web3 = new Web3(window.ethereum);
-      const stakingContract = new web3.eth.Contract(
+      const postContract = new web3.eth.Contract(
         laziPostContractABI,
         collectionAddress
       );
 
-      const listing = await stakingContract.methods.nftListings(tokenId).call();
-      if (!listing.active) {
-        throw new Error("NFT is not listed for sale");
-      }
 
-      console.log("price: ", listing.price);
+      const totalSupply = await postContract.methods.totalSupply().call();
+      var newTotalSupply = parseInt(totalSupply) + 1;
 
+      console.log("totalSupply", totalSupply);
+      // setTokenId(newTotalSupply);
+      console.log("tokenId", newTotalSupply);
 
-      // const price = await laziPostContract.methods.getTokenPrice(tokenId).call();
-      const method = stakingContract.methods.buyNft(tokenId);
-      const gasLimit = await method.estimateGas({
-        from: buyerAddress,
-        value: listing.price,
-      });
+      const method = postContract.methods.mintLaziPost([postTitle]);
+      const gasLimit = await method.estimateGas({ from: buyerAddress });
       const gasPrice = await web3.eth.getGasPrice();
       const transactionParams = {
         from: buyerAddress,
         gas: gasLimit,
         gasPrice: gasPrice,
-        value: listing.price,
+        value: web3.utils.toWei("0", "ether"),
       };
 
       const result = await method.send(transactionParams);
       console.log(result);
+      toast.success("NFT Minted Success: Now Saving!");
+
+
+
+
+      // const listing = await stakingContract.methods.nftListings(tokenId).call();
+      // if (!listing.active) {
+      //   throw new Error("NFT is not listed for sale");
+      // }
+
+      // console.log("price: ", listing.price);
+
+
+      // // const price = await laziPostContract.methods.getTokenPrice(tokenId).call();
+      // const method = stakingContract.methods.buyNft(tokenId);
+      // const gasLimit = await method.estimateGas({
+      //   from: buyerAddress,
+      //   value: listing.price,
+      // });
+      // const gasPrice = await web3.eth.getGasPrice();
+      // const transactionParams = {
+      //   from: buyerAddress,
+      //   gas: gasLimit,
+      //   gasPrice: gasPrice,
+      //   value: listing.price,
+      // };
+
+      // const result = await method.send(transactionParams);
+      // console.log(result);
 
       // Check if the transaction was successful
       if (result.status) {
@@ -665,6 +691,7 @@ export default function (props) {
             postId: isHidePostdata?._id,
             description: "NA",
             buyerAddress: buyerAddress,
+            tokenId: newTotalSupply,
           },
           {
             headers: {
@@ -905,11 +932,11 @@ export default function (props) {
                         <Typography variant="h6">
                           {data?.postType !== "PUBLIC" && (
                             <>
-                              {data?.amount.length >= 5
+                              {/* {data?.amount.length >= 5
                                 ? sortAddressForPrice(data?.amount)
-                                : data?.amount}
+                                : data?.amount} */}
                               &nbsp;
-                              {tokenName}
+                              {/* {tokenName} */}
                             </>
                           )}
                         </Typography>
@@ -1062,10 +1089,10 @@ export default function (props) {
                   <Typography variant="h6"> Subscribe Collection</Typography>
                   <Typography variant="body2">
                     Price :{" "}
-                    {data?.amount.length >= 5
+                    {/* {data?.amount.length >= 5
                       ? sortAddressForPrice(data?.amount)
-                      : data?.amount}{" "}
-                    {tokenName}
+                      : data?.amount}{" "} */}
+                    {/* {tokenName} */}
                   </Typography>
                 </Box>
                 {/* <Button
@@ -1141,24 +1168,24 @@ export default function (props) {
 
                     <Box mt={1} className={classes.deskiText} align="left">
                       <Grid container spacing={1}>
-                        <Grid item xs={6}>
+                        {/* <Grid item xs={6}>
                           <Typography variant="h6">
                             Collection amount:{" "}
                           </Typography>
-                        </Grid>
-                        <Grid item xs={6} align="right">
+                        </Grid> */}
+                        {/* <Grid item xs={6} align="right">
                           <Typography variant="body1">
                             {viewCollectionDetails?.amount}&nbsp;{tokenName}
                           </Typography>
-                        </Grid>
-                        <Grid item xs={6}>
+                        </Grid> */}
+                        {/* <Grid item xs={6}>
                           <Typography variant="h6">Duration: </Typography>
                         </Grid>
                         <Grid item xs={6} align="right">
                           <Typography variant="body1">
                             {viewCollectionDetails?.duration} &nbsp; Days
                           </Typography>
-                        </Grid>
+                        </Grid> */}
                         <Grid item xs={12}>
                           <Typography variant="h6">Details: </Typography>{" "}
                         </Grid>
@@ -1366,7 +1393,7 @@ export default function (props) {
               <Box>
                 {data?.userId?._id !== auth?.userData?._id && (
                   <Box mt={1} mb={1} className="price">
-                    <Box style={{ display: "flex" }}>
+                    {/* <Box style={{ display: "flex" }}>
                       <span style={{ lineHeight: 1.6, width: "45px" }}>
                         Price :
                       </span>
@@ -1376,9 +1403,9 @@ export default function (props) {
                           ? sortAddressForPrice(data?.amount)
                           : data?.amount}
                         &nbsp;
-                        {tokenName}
+                        // {tokenName}
                       </Typography>
-                    </Box>
+                    </Box> */}
 
                     {currentMoment <
                     moment(data.createdAt).add(15, "m").unix() ? (
@@ -1491,11 +1518,11 @@ export default function (props) {
                       <label>
                         {data?.postType === "PUBLIC" && (
                           <>
-                            {data?.amount.length >= 5
+                            {/* {data?.amount.length >= 5
                               ? sortAddressForPrice(data?.amount)
                               : data?.amount}
                             &nbsp;
-                            {tokenName}
+                            {tokenName} */}
                           </>
                         )}{" "}
                       </label>
