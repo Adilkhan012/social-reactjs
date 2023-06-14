@@ -60,16 +60,16 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "auto",
   },
   circleImage: {
-    height: "3vw", // Set the height to a percentage of the viewport width
-    width: "3vw", // Set the width to a percentage of the viewport width
-    background: "#E75AA6",
-    marginTop: "-6px",
+    height: "100px",
+    width: "100px",
     borderRadius: "50%",
+    overflow: "hidden",
     marginRight: 10,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
     [theme.breakpoints.down(600)]: {
-      height: "5vw", // Set the height to a percentage of the viewport width
-      width: "5vw", // Set the width to a percentage of the viewport width
-      marginTop: "-3px",
+      height: "5vw",
+      width: "5vw",
       marginRight: 4,
     },
   },
@@ -77,7 +77,6 @@ const useStyles = makeStyles((theme) => ({
   profilePic: {
     width: "100%",
     height: "100%",
-    borderRadius: "50%",
     objectFit: "cover",
   },
 
@@ -208,204 +207,204 @@ function Leaderboard() {
       </Box>
 
       <div>
-          <Box className={classes.containerheader}>
-            <div style={{ position: "relative" }}>
-              <div
+        <Box className={classes.containerheader}>
+          <div style={{ position: "relative" }}>
+            <div
+              style={{
+                position: "absolute",
+                top: isMobile ? -10 : -8,
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              <ArrowDropDownCircleIcon />
+            </div>
+            <Box
+              className={`${classes.circle}`}
+              style={{
+                backgroundColor: "yellow",
+                border: "2px solid #79D845",
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                height: isMobile ? 3 : 6,
+                top: isMobile ? "95%" : "95%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                borderRadius: "50%",
+                background: "#79D845",
+                border: "2px solid black",
+                width: isMobile ? "3%" : "5%",
+                padding: 10,
+              }}
+            >
+              <Typography
+                variant="caption"
+                align="center"
                 style={{
+                  color: "black",
+                  fontSize: isMobile ? 10 : 14,
+                  fontWeight: "bold",
                   position: "absolute",
-                  top: isMobile ? -10 : -8,
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
+                  top: "50%",
+                  transform: "translateY(-50%)",
                 }}
               >
-                <ArrowDropDownCircleIcon />
-              </div>
-              <Box
-                className={`${classes.circle}`}
-                style={{
-                  backgroundColor: "yellow",
-                  border: "2px solid #79D845",
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  height: isMobile ? 3 : 6,
-                  top: isMobile ? "95%" : "95%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  borderRadius: "50%",
-                  background: "#79D845",
-                  border: "2px solid black",
-                  width: isMobile ? "3%" : "5%",
-                  padding: 10,
-                }}
-              >
-                <Typography
-                  variant="caption"
-                  align="center"
-                  style={{
-                    color: "black",
-                    fontSize: isMobile ? 10 : 14,
-                    fontWeight: "bold",
-                    position: "absolute",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                  }}
-                >
-                  2
-                </Typography>
+                2
+              </Typography>
 
-                <Typography
-                  variant="caption"
-                  align="center"
-                  style={{
-                    color: "white",
-                    fontSize: isMobile ? 10 : 14,
-                    fontWeight: "bold",
-                    position: "absolute",
-                    whiteSpace: "nowrap",
-                    top: "170%",
-                    left: "-84%",
-                    transform: "translateY(-50%)",
-                  }}
-                >
-                  {/* {userRankings[2].userName} */}
-                </Typography>
+              <Typography
+                variant="caption"
+                align="center"
+                style={{
+                  color: "white",
+                  fontSize: isMobile ? 10 : 14,
+                  fontWeight: "bold",
+                  position: "absolute",
+                  whiteSpace: "nowrap",
+                  top: "170%",
+                  left: "-84%",
+                  transform: "translateY(-50%)",
+                }}
+              >
+                {/* {userRankings[2].userName} */}
+              </Typography>
+            </div>
+          </div>
+
+          <div style={{ position: "relative" }}>
+            <div
+              style={{
+                position: "absolute",
+                top: isMobile ? -10 : -8,
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              <div className={classes.crownIcon}>
+                <FontAwesomeIcon icon={faCrown} />
               </div>
             </div>
 
-            <div style={{ position: "relative" }}>
-              <div
+            <Box
+              className={`${classes.circle} ${classes.centerCircle}`}
+              style={{ backgroundColor: "pink", border: "3px solid #FCF838" }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                height: 6,
+                top: isMobile ? "98%" : "97%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                borderRadius: "50%",
+                background: "#FCF838",
+                border: "2px solid black",
+                width: isMobile ? "6%" : "5%",
+                padding: 10,
+              }}
+            >
+              <Typography
+                variant="caption"
+                align="center"
                 style={{
+                  color: "black",
+                  fontSize: isMobile ? 10 : 14,
+                  fontWeight: "bold",
                   position: "absolute",
-                  top: isMobile ? -10 : -8,
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
+                  top: "50%",
+                  transform: "translateY(-50%)",
                 }}
               >
-                <div className={classes.crownIcon}>
-                  <FontAwesomeIcon icon={faCrown} />
-                </div>
-              </div>
+                1
+              </Typography>
 
-              <Box
-                className={`${classes.circle} ${classes.centerCircle}`}
-                style={{ backgroundColor: "pink", border: "3px solid #FCF838" }}
-              />
-              <div
+              <Typography
+                variant="caption"
+                align="center"
                 style={{
+                  color: "white",
+                  fontSize: isMobile ? 10 : 14,
+                  fontWeight: "bold",
                   position: "absolute",
-                  height: 6,
-                  top: isMobile ? "98%" : "97%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  borderRadius: "50%",
-                  background: "#FCF838",
-                  border: "2px solid black",
-                  width: isMobile ? "6%" : "5%",
-                  padding: 10,
+                  whiteSpace: "nowrap",
+                  top: "170%",
+                  left: "-84%",
+                  transform: "translateY(-50%)",
                 }}
               >
-                <Typography
-                  variant="caption"
-                  align="center"
-                  style={{
-                    color: "black",
-                    fontSize: isMobile ? 10 : 14,
-                    fontWeight: "bold",
-                    position: "absolute",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                  }}
-                >
-                  1
-                </Typography>
-
-                <Typography
-                  variant="caption"
-                  align="center"
-                  style={{
-                    color: "white",
-                    fontSize: isMobile ? 10 : 14,
-                    fontWeight: "bold",
-                    position: "absolute",
-                    whiteSpace: "nowrap",
-                    top: "170%",
-                    left: "-84%",
-                    transform: "translateY(-50%)",
-                  }}
-                >
-                  {/* {userRankings[1].userName} */}
-                </Typography>
-              </div>
+                {/* {userRankings[1].userName} */}
+              </Typography>
             </div>
+          </div>
 
-            <div style={{ position: "relative" }}>
-              <div
-                style={{
-                  position: "absolute",
-                  top: isMobile ? -10 : -8,
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                }}
-              >
-                <ArrowDropDownCircleIcon />
-              </div>
-              <Box
-                className={`${classes.circle}`}
-                style={{
-                  backgroundColor: "#79D845",
-                  border: "2px solid #E75AA6",
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  height: isMobile ? 6 : 6,
-                  top: isMobile ? "94%" : "95%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  borderRadius: "50%",
-                  background: "#E75AA6",
-                  border: "2px solid black",
-                  width: isMobile ? "9%" : "5%",
-                  padding: 10,
-                }}
-              >
-                <Typography
-                  variant="caption"
-                  align="center"
-                  style={{
-                    color: "black",
-                    fontSize: isMobile ? 10 : 14,
-                    fontWeight: "bold",
-                    position: "absolute",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                  }}
-                >
-                  3
-                </Typography>
-                <Typography
-                  variant="caption"
-                  align="center"
-                  style={{
-                    color: "white",
-                    fontSize: isMobile ? 10 : 14,
-                    fontWeight: "bold",
-                    position: "absolute",
-                    whiteSpace: "nowrap",
-                    top: "170%",
-                    left: "-84%",
-                    transform: "translateY(-50%)",
-                  }}
-                >
-                  {/* {userRankings[3].userName} */}
-                </Typography>
-              </div>
+          <div style={{ position: "relative" }}>
+            <div
+              style={{
+                position: "absolute",
+                top: isMobile ? -10 : -8,
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              <ArrowDropDownCircleIcon />
             </div>
-          </Box>
+            <Box
+              className={`${classes.circle}`}
+              style={{
+                backgroundColor: "#79D845",
+                border: "2px solid #E75AA6",
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                height: isMobile ? 6 : 6,
+                top: isMobile ? "94%" : "95%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                borderRadius: "50%",
+                background: "#E75AA6",
+                border: "2px solid black",
+                width: isMobile ? "9%" : "5%",
+                padding: 10,
+              }}
+            >
+              <Typography
+                variant="caption"
+                align="center"
+                style={{
+                  color: "black",
+                  fontSize: isMobile ? 10 : 14,
+                  fontWeight: "bold",
+                  position: "absolute",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                }}
+              >
+                3
+              </Typography>
+              <Typography
+                variant="caption"
+                align="center"
+                style={{
+                  color: "white",
+                  fontSize: isMobile ? 10 : 14,
+                  fontWeight: "bold",
+                  position: "absolute",
+                  whiteSpace: "nowrap",
+                  top: "170%",
+                  left: "-84%",
+                  transform: "translateY(-50%)",
+                }}
+              >
+                {/* {userRankings[3].userName} */}
+              </Typography>
+            </div>
+          </div>
+        </Box>
       </div>
 
       <hr style={{ opacity: 0.3 }}></hr>
@@ -415,10 +414,14 @@ function Leaderboard() {
           <React.Fragment key={user.id}>
             <Box className={classes.container}>
               {/* Image section */}
-              <Box
-                className={classes.circleImage}
-                style={{ backgroundImage: `url(${user.profilePic})` }}
-              ></Box>
+
+              <div className={classes.circleImage}>
+                <img
+                  src={user.profilePic}
+                  alt="Profile"
+                  className={classes.profilePic}
+                />
+              </div>
               {/* Slider */}
               <Box className={classes.progressBar}>
                 <Typography
