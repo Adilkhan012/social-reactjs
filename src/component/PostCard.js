@@ -641,6 +641,9 @@ export default function (props) {
       // setTokenId(newTotalSupply);
       console.log("tokenId", newTotalSupply);
 
+      const getPostPrice = postContract.methods.laziPostPrice();
+
+
       const method = postContract.methods.mintLaziPost([postTitle]);
       const gasLimit = await method.estimateGas({ from: buyerAddress });
       const gasPrice = await web3.eth.getGasPrice();
@@ -648,7 +651,7 @@ export default function (props) {
         from: buyerAddress,
         gas: gasLimit,
         gasPrice: gasPrice,
-        value: web3.utils.toWei("0", "ether"),
+        value: web3.utils.toWei(getPostPrice, "ether"),
       };
 
       const result = await method.send(transactionParams);
