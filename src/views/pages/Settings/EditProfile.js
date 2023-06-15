@@ -503,9 +503,9 @@ function EditProfile({ userProfileData }) {
                               size="small"
                               name="userName"
                               style={{ height: "45px" }}
-                              disabled={
-                                auth?.userData.userName !== "" || isEdit
-                              }
+                              // disabled={
+                              //   auth?.userData.userName !== "" || isEdit
+                              // }
                               // disabled={true}
                               value={
                                 values.userName

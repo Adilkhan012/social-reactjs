@@ -5,7 +5,7 @@ import Activity from "./Activity";
 import Blocking from "./Blocking";
 import { toast } from "react-toastify";
 import EditProfile from "./EditProfile";
-import Interest from "../Better/Better";
+// import Interest from "../Better/Better";
 import Notification from "./Notification";
 import { AuthContext } from "src/context/Auth";
 import { useHistory, useLocation } from "react-router-dom";
@@ -73,9 +73,9 @@ const useStyles = makeStyles((theme) => ({
 function Index() {
   const auth = useContext(AuthContext);
   const location = useLocation();
-  const history = useHistory()
+  const history = useHistory();
   const classes = useStyles();
-  const [tabview, setTabView] = useState("Interest");
+  const [tabview, setTabView] = useState("EditProfile");
   const [userData1, setUserData1] = useState();
   const [userProfileData, setUserData] = useState();
 
@@ -86,13 +86,10 @@ function Index() {
   //   }
   // }, [auth?.userData?.userType])
 
-
   useEffect(() => {
     const ids = location.hash.split("#");
-    if (ids[1] && ids[1] == "editProfile") {
+    if (ids[1] && ids[1] === "editProfile") {
       setTabView("EditProfile");
-    } else {
-      setTabView("Interest");
     }
   }, [location]);
 
@@ -134,7 +131,7 @@ function Index() {
           <Grid container spacing={0}>
             <Grid item xs={12} sm={3}>
               <Box className="leftbox">
-                {auth?.userData?.userType === "User" && (
+                {/* {auth?.userData?.userType === "User" && (
                   <Box className="buttonBox">
                     <Link
                       className={tabview === "Interest" ? "active" : " "}
@@ -143,16 +140,17 @@ function Index() {
                       Add Interest
                     </Link>
                   </Box>
+                )} */}
+                {auth?.userData?.userType === "User" && (
+                  <Box className="buttonBox">
+                    <Link
+                      className={tabview === "EditProfile" ? "active" : " "}
+                      onClick={() => setTabView("EditProfile")}
+                    >
+                      Edit Profile
+                    </Link>
+                  </Box>
                 )}
-
-                <Box className="buttonBox">
-                  <Link
-                    className={tabview === "EditProfile" ? "active" : " "}
-                    onClick={() => setTabView("EditProfile")}
-                  >
-                    Edit Profile
-                  </Link>
-                </Box>
                 {auth?.userData?.userType === "User" && (
                   <Box className="buttonBox">
                     <Link
@@ -225,7 +223,7 @@ function Index() {
                     ""
                   )}
                   {tabview === "Activity" ? <Activity /> : ""}
-                  {tabview === "Interest" ? <Interest /> : ""}
+                  {/* {tabview === "Interest" ? <Interest /> : ""} */}
                 </Box>
               </Box>
             </Grid>

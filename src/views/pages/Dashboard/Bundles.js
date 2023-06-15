@@ -442,7 +442,10 @@ function Collection({ listPublicExclusiveHandler }) {
         description !== "" &&
         titlePost !== "" &&
         list !== "" &&
+        amount !== "" &&
+        Number(amount) > 0 &&
         titlePost.length <= 280 &&
+        Number(amount) <= 2000 &&
         collectionlistAll.length !== 0
       ) {
         const hastag = description.match(/#[a-z\d]+/gi);
@@ -458,7 +461,9 @@ function Collection({ listPublicExclusiveHandler }) {
             postTitle: titlePost,
             collectionId: list,
             collectionAddress: collectionAddress,
+            amount: amount,
             tag: selectuser,
+            royality: royality,
             hashTagName: hastag ? hastag : [],
             mediaType: coverPost ? "MEDIA" : "TEXT",
             ownerAddress: address,
@@ -504,7 +509,10 @@ function Collection({ listPublicExclusiveHandler }) {
         description !== "" &&
         titlePost !== "" &&
         list !== "" &&
+        amount !== "" &&
+        Number(amount) > 0 &&
         titlePost.length <= 280 &&
+        Number(amount) <= 2000 &&
         collectionlistAll.length !== 0
       ) {
         const hastag = description.match(/#[a-z\d]+/gi);
@@ -520,7 +528,9 @@ function Collection({ listPublicExclusiveHandler }) {
             postTitle: titlePost,
             collectionId: list,
             collectionAddress: collectionAddress,
+            amount: amount,
             tag: selectuser,
+            royality: royality,
             hashTagName: hastag ? hastag : [],
             mediaType: coverPost ? "MEDIA" : "TEXT",
             ownerAddress: address,
@@ -543,6 +553,7 @@ function Collection({ listPublicExclusiveHandler }) {
               setlist("");
               setimageurl("");
               setimage("");
+              setAmount("");
               toast.success(res.data.responseMessage);
               setOpen(false);
               setLoader(false);
@@ -946,7 +957,7 @@ function Collection({ listPublicExclusiveHandler }) {
                   )}
                 </Box>
 
-                {/* <Box mt={2}>
+                <Box mt={2}>
                   <TextField
                     id="outlined-basic"
                     variant="outlined"
@@ -980,7 +991,7 @@ function Collection({ listPublicExclusiveHandler }) {
                         </Box>
                       ))}
                   </FormHelperText>
-                </Box> */}
+                </Box>
                 {/* <Box mt={2}>
                   <TextField
                     variant="outlined"

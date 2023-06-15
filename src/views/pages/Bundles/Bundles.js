@@ -207,6 +207,8 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
       ]);
       console.log("transaction!: ", transaction);
       console.log("address!: ", deployedLaziPostAddress);
+      //todo add minting set functionality 
+      // todo add royality set functionality on minting 
 
       if (
         image !== "" &&

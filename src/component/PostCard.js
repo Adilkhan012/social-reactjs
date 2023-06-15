@@ -932,11 +932,11 @@ export default function (props) {
                         <Typography variant="h6">
                           {data?.postType !== "PUBLIC" && (
                             <>
-                              {/* {data?.amount.length >= 5
+                              {data?.amount.length >= 5
                                 ? sortAddressForPrice(data?.amount)
-                                : data?.amount} */}
+                                : data?.amount}
                               &nbsp;
-                              {/* {tokenName} */}
+                              {tokenName}
                             </>
                           )}
                         </Typography>
@@ -1518,11 +1518,11 @@ export default function (props) {
                       <label>
                         {data?.postType === "PUBLIC" && (
                           <>
-                            {/* {data?.amount.length >= 5
+                            {data?.amount.length >= 5
                               ? sortAddressForPrice(data?.amount)
                               : data?.amount}
                             &nbsp;
-                            {tokenName} */}
+                            {tokenName}
                           </>
                         )}{" "}
                       </label>
