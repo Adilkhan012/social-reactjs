@@ -9,6 +9,8 @@ import {
   IconButton,
   TextField,
 } from "@material-ui/core";
+import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import FavoriteIcon from "@material-ui/icons/Favorite";
 import SendIcon from "@material-ui/icons/Send";
 import { makeStyles } from "@material-ui/core/styles";
 import Page from "src/component/Page";
@@ -190,26 +192,26 @@ export default function (props) {
     setIsLoading(true);
     try {
       // if (data.isSubscribed) {
+      // Allow the user to comment on the post
+      const res = await axios({
+        method: "POST",
+        url: Apiconfigs.commentOnpost,
+        headers: {
+          token: window.localStorage.getItem("token"),
+        },
+        data: {
+          postId: idd,
+          message: message,
+        },
+      });
+      if (res.data.responseCode === 200) {
+        // if (dataList.isSubscribed) {
         // Allow the user to comment on the post
-        const res = await axios({
-          method: "POST",
-          url: Apiconfigs.commentOnpost,
-          headers: {
-            token: window.localStorage.getItem("token"),
-          },
-          data: {
-            postId: idd,
-            message: message,
-          },
-        });
-        if (res.data.responseCode === 200) {
-          // if (dataList.isSubscribed) {
-          // Allow the user to comment on the post
-          viewExclusivepostHandler();
-          toast.success(res.data.responseMessage);
-          setMessage("");
-        }
-        setIsLoading(false);
+        viewExclusivepostHandler();
+        toast.success(res.data.responseMessage);
+        setMessage("");
+      }
+      setIsLoading(false);
       // } else {
       //   // If the user is not subscribed, show a message or disable the comment functionality
       //   toast.error("You must be a subscriber to comment on this post.");
@@ -225,7 +227,7 @@ export default function (props) {
     setIsLoading(true);
     try {
       // if (data.isSubscribed) {
-        // Allow the user to comment on the post
+      // Allow the user to comment on the post
       const res = await axios({
         method: "GET",
         url: Apiconfigs.postLikeDislike + idd,
@@ -237,19 +239,18 @@ export default function (props) {
         },
       });
       if (res.data.responseCode === 200) {
-          // Allow the user to like the post
-          viewExclusivepostHandler();
-          toast.success(res.data.responseMessage);
-          // console.log("User is subscribed!!!!!!!");
-          setIsLoading(false);
-
+        // Allow the user to like the post
+        viewExclusivepostHandler();
+        toast.success(res.data.responseMessage);
+        // console.log("User is subscribed!!!!!!!");
+        setIsLoading(false);
       }
       setIsLoading(false);
-    // } else {
-    //   // If the user is not subscribed, show a message or disable the comment functionality
-    //   toast.error("You must be a subscriber to like on this post.");
-    //   console.log("User is not subscribed!!!!!!!");
-    // }
+      // } else {
+      //   // If the user is not subscribed, show a message or disable the comment functionality
+      //   toast.error("You must be a subscriber to like on this post.");
+      //   console.log("User is not subscribed!!!!!!!");
+      // }
     } catch (error) {
       toast.error(error.message);
       setIsLoading(false);
@@ -345,13 +346,30 @@ export default function (props) {
                       </Box>
                       <Accordion square>
                         <Box className={classes.commentBox} mb={3}>
-                          {showPicker && (
-                            <Box className={classes.emojiBox}>
-                              <Picker onEmojiClick={onEmojiClick} />
-                            </Box>
-                          )}
+                          <Grid item xs={4} align="right">
+                            <IconButton
+                              className={classes.iconbutton}
+                              onClick={onEmojiClick}
+                            >
+                              {isLike ? (
+                                <>
+                                  <FavoriteIcon style={{ color: "red" }} />
+                                </>
+                              ) : (
+                                <>
+                                  <FavoriteBorderIcon
+                                    style={{ color: "#BFBFBF" }}
+                                  />
+                                </>
+                              )}
+                              {/* <FavoriteBorderIcon
+                className={classes.socialbox}
+                style={isLike ? { color: "red" } : { color: "#BFBFBF" }}
+              />{" "} */}
+                            </IconButton>
+                          </Grid>
                           <Grid container>
-                            <Grid item xs={6} align="center">
+                            {/* <Grid item xs={6} align="center">
                               <Box>
                                 {inputStr && inputStr ? (
                                   <Button
@@ -381,7 +399,7 @@ export default function (props) {
                                   </Button>
                                 )}
                               </Box>
-                            </Grid>
+                            </Grid> */}
                             <Grid item xs={6} align="center">
                               <AccordionSummary
                                 aria-controls="panel1d-content"
@@ -408,7 +426,6 @@ export default function (props) {
                                     }
                                     data={dataChild}
                                     dataParent={data}
-
                                   />
                                 </AccordionDetails>
                               );

@@ -59,6 +59,8 @@ import Picker from "emoji-picker-react";
 import initMetamask from "src/blockchain/metamaskConnection";
 import { laziPostContractABI } from "src/blockchain/laziPostContract";
 import Web3 from "web3";
+import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import FavoriteIcon from "@material-ui/icons/Favorite";
 
 import {
   FacebookShareButton,
@@ -536,10 +538,11 @@ export default function (props) {
         },
       });
       if (res.data.responseCode === 200) {
+        setInputStr(null);
         setIsLoadingEmoji(false);
-
         listPublicExclusiveHandler();
         toast.success(res.data.responseMessage);
+        setInputStr(res.data.isLikeEmoji ? "Liked!" : "Not Liked!");
         // console.log("User is subscribed!!!!!!!");
       }
       // } else {
@@ -548,8 +551,8 @@ export default function (props) {
       //   console.log("User is not subscribed!!!!!!!");
       // }
     } catch (error) {
+      setInputStr(null);
       setIsLoadingEmoji(false);
-
       toast.success(error?.response?.data?.responseMessage);
     }
   };
@@ -626,13 +629,12 @@ export default function (props) {
       console.log("Buyer Address:", buyerAddress);
       console.log("Token ID:", tokenId);
       console.log("Collection Address:", collectionAddress);
-      console.log("title: ", postTitle)
+      console.log("title: ", postTitle);
       const web3 = new Web3(window.ethereum);
       const postContract = new web3.eth.Contract(
         laziPostContractABI,
         collectionAddress
       );
-
 
       const totalSupply = await postContract.methods.totalSupply().call();
       var newTotalSupply = parseInt(totalSupply) + 1;
@@ -642,7 +644,6 @@ export default function (props) {
       console.log("tokenId", newTotalSupply);
 
       const getPostPrice = postContract.methods.laziPostPrice();
-
 
       const method = postContract.methods.mintLaziPost([postTitle]);
       const gasLimit = await method.estimateGas({ from: buyerAddress });
@@ -658,16 +659,12 @@ export default function (props) {
       console.log(result);
       toast.success("NFT Minted Success: Now Saving!");
 
-
-
-
       // const listing = await stakingContract.methods.nftListings(tokenId).call();
       // if (!listing.active) {
       //   throw new Error("NFT is not listed for sale");
       // }
 
       // console.log("price: ", listing.price);
-
 
       // // const price = await laziPostContract.methods.getTokenPrice(tokenId).call();
       // const method = stakingContract.methods.buyNft(tokenId);
@@ -823,18 +820,20 @@ export default function (props) {
 
   const [showPicker, setShowPicker] = useState(false);
 
-  const [inputStr, setInputStr] = useState("");
+  const [inputStr, setInputStr] = useState(null);
 
-  const onEmojiClick = (event, emojiObject) => {
-    setInputStr(emojiObject.emoji);
+  const onEmojiClick = () => {
+    setInputStr("new");
     setShowPicker(false);
+    likesHandler(); // Call likesHandler directly when inputStr is updated
+
   };
 
-  useEffect(() => {
-    if (inputStr) {
-      likesHandler();
-    }
-  }, [inputStr]);
+  // useEffect(() => {
+  //   if (inputStr) {
+  //     likesHandler();
+  //   }
+  // }, [inputStr]);
 
   const [endTime, setEndtime] = useState(
     moment(data.createdAt).add(15, "m").unix()
@@ -996,21 +995,33 @@ export default function (props) {
                       <Box className="commentBox">
                         <Grid container>
                           <Grid item xs={4}>
-                            <BsEmojiLaughing
+                            {/* <BsEmojiLaughing
                               position="end"
                               style={{
                                 fontSize: "20px",
                                 cursor: "pointer",
                               }}
                               onClick={() => setShowPicker((val) => !val)}
-                            />
-                            <Button color="primary" size="large">
-                              <FaHeart
-                                className={classes.socialbox}
-                                style={isLike ? { color: "red" } : {}}
-                              />{" "}
-                              Like
-                            </Button>
+                            /> */}
+                            <Grid item xs={4} align="right">
+                              <IconButton
+                                className={classes.iconbutton}
+                                onClick={onEmojiClick}
+                              >
+                                {isLikeEmoji ? (
+                                  <>
+                                    <FavoriteIcon style={{ color: "red" }} />
+                                  </>
+                                ) : (
+                                  <>
+                                    <FavoriteBorderIcon
+                                      style={{ color: "#BFBFBF" }}
+                                    />
+                                  </>
+                                )}
+                                
+                              </IconButton>
+                            </Grid>
                           </Grid>
                           <Grid item xs={4} align="center">
                             <AccordionSummary
@@ -1569,41 +1580,60 @@ export default function (props) {
                                   .map((data, i) => {
                                     return (
                                       <>
-                                        <Button
-                                          key={i}
-                                          style={{
-                                            fontSize: "20px",
-                                            cursor: "pointer",
-                                          }}
-                                          onClick={() =>
-                                            setShowPicker((val) => !val)
-                                          }
-                                          className={classes.socialbox}
-                                        >
-                                          {data?.emoji}
-                                        </Button>
+                                        <Grid item xs={4} align="right">
+                                          <IconButton
+                                            className={classes.iconbutton}
+                                            onClick={onEmojiClick}
+                                          >
+                                            {isLikeEmoji ? (
+                                              <>
+                                                <FavoriteIcon
+                                                  style={{ color: "red" }}
+                                                />
+                                              </>
+                                            ) : (
+                                              <>
+                                                <FavoriteBorderIcon
+                                                  style={{ color: "#BFBFBF" }}
+                                                />
+                                              </>
+                                            )}
+                                            {/* <FavoriteBorderIcon
+                className={classes.socialbox}
+                style={isLike ? { color: "red" } : { color: "#BFBFBF" }}
+              />{" "} */}
+                                          </IconButton>
+                                        </Grid>
                                       </>
                                     );
                                   })}
                               </>
                             ) : (
                               <>
-                                <Button
-                                  style={{
-                                    fontSize: "20px",
-                                    cursor: "pointer",
-                                  }}
-                                >
-                                  <Box className="postCardEmoji">
-                                    <BsEmojiLaughing
-                                      className={classes.socialbox}
-                                      position="end"
-                                      onClick={() =>
-                                        setShowPicker((val) => !val)
-                                      }
-                                    />
-                                  </Box>
-                                </Button>
+                                <Grid item xs={4} align="right">
+                                  <IconButton
+                                    className={classes.iconbutton}
+                                    onClick={onEmojiClick}
+                                  >
+                                    {isLikeEmoji ? (
+                                      <>
+                                        <FavoriteIcon
+                                          style={{ color: "red" }}
+                                        />
+                                      </>
+                                    ) : (
+                                      <>
+                                        <FavoriteBorderIcon
+                                          style={{ color: "#BFBFBF" }}
+                                        />
+                                      </>
+                                    )}
+                                    {/* <FavoriteBorderIcon
+                className={classes.socialbox}
+                style={isLike ? { color: "red" } : { color: "#BFBFBF" }}
+              />{" "} */}
+                                  </IconButton>
+                                </Grid>
                               </>
                             )}
                           </Box>
