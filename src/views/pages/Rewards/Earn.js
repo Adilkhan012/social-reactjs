@@ -1403,7 +1403,7 @@ const Earn = () => {
                             </div>
                           </div>
 
-                          <div
+                          {/* <div
                             style={{
                               display: "flex",
                               justifyContent: "space-between",
@@ -1429,7 +1429,7 @@ const Earn = () => {
                             <div style={{ fontWeight: "bold" }}>
                               {totalMultiplier}x
                             </div>
-                          </div>
+                          </div> */}
                         </Box>
                       </Box>
 

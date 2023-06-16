@@ -701,7 +701,7 @@ function Profile() {
               <>
                 <Grid item xs={12} sm={5} md={4}>
                   <Box className="username">
-                    <Typography color="primary.main" variant="h3">
+                    {/* <Typography color="primary.main" variant="h3">
                       Referral Details
                     </Typography>
 
@@ -717,9 +717,9 @@ function Profile() {
                       {userReferralData?.totalrefferralBonus
                         ? userReferralData?.totalrefferralBonus
                         : "0"} Share
-                    </Typography>
+                    </Typography> */}
 
-                    <Box
+                    {/* <Box
                       style={{
                         display: "flex",
                         justifyContent: "start",
@@ -738,7 +738,7 @@ function Profile() {
                             : "0"}
                         </Typography>
                       </Box>
-                    </Box>
+                    </Box> */}
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={5} md={4}>
@@ -782,22 +782,18 @@ function Profile() {
                       />
                     </Box>
 
-                    {userData1?.referralCode && (
-                      <Typography variant="body1">
-                        Referral code &nbsp; {userData1?.referralCode}{" "}
-                        <CopyToClipboard text={userData1?.referralCode}>
-                          <BiCopy
-                            style={{
-                              color: "#fff",
-                              fontSize: " 14px",
-                              cursor: "pointer",
-                              marginLeft: "5px",
-                            }}
-                            onClick={() => toast.info("Copied successfully")}
-                          />
-                        </CopyToClipboard>
-                      </Typography>
-                    )}
+                    <Box className={classes.btnfollow2}>
+                        <Typography
+                          color="primary.main"
+                          variant="body1"
+
+                        >
+                          Total Refferral :{" "}
+                          {userReferralData?.totalReferralUser
+                            ? userReferralData?.totalReferralUser
+                            : "0"}
+                        </Typography>
+                      </Box>
                   </Box>
                 </Grid>
               </>

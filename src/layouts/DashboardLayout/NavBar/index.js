@@ -219,45 +219,45 @@ const NavBar = ({onMobileClose, openMobile}) => {
                 href: "/explore",
               },
               {
-                title: "Profile",
-                icon: FaUserAlt,
-                href: "/profile",
+                title: "Rewards",
+                icon: GiWantedReward,
+                href: "/rewards",
               },
+                {
+                  title: "Nft domain/ mint",
+                  icon: HiUserGroup,
+                  href: "/mint",
+                },
+                {
+                  title: "Collections",
+                  icon: MdLocalOffer,
+                  href: "/collections",
+                },
+                {
+                  title: "Auctions",
+                  icon: RiAuctionFill,
+                  href: "/auction",
+                },
               {
                 title: "Creators",
                 icon: ImUsers,
                 href: "/creators",
               },
-              {
-                title: "Collections",
-                icon: MdLocalOffer,
-                href: "/collections",
-              },
-              {
-                title: "Auctions",
-                icon: RiAuctionFill,
-                href: "/auction",
-              },
-
+              
               {
                 title: "Promotion",
                 icon: SiProcessingfoundation,
                 href: "/promotion",
               },
               {
-                title: "Rewards",
-                icon: GiWantedReward,
-                href: "/rewards",
+                title: "Profile",
+                icon: FaUserAlt,
+                href: "/profile",
               },
               {
                 title: "Settings",
                 icon: MdSettings,
                 href: "/settings",
-              },
-              {
-                title: "Nft domain/ mint",
-                icon: HiUserGroup,
-                href: "/mint",
               },
             ],
           },

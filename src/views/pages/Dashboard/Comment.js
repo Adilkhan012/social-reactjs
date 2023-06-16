@@ -27,6 +27,9 @@ import { BsEmojiLaughing } from "react-icons/bs";
 import Picker from "emoji-picker-react";
 import NoDataFound from "src/component/NoDataFound";
 import PageLoading from "src/component/PageLoading";
+import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+
 
 const useStyles = makeStyles((theme) => ({
   commentfullBox: {
@@ -134,12 +137,20 @@ export default function (props) {
   const [message, setMessage] = useState("");
   const [isLoadingEmoji, setIsLoadingEmoji] = React.useState(false);
   const [isSubmit, setIsSubmit] = React.useState(false);
+  const [inputStr, setInputStr] = useState(null);
 
   // console.log("data From Comment!!!!!! ", data);
   const handleClose = () => {
     setOpen(false);
     setReciveOpen(false);
   };
+let isLike;
+  if (auth.userData?._id && dataList) {
+    const likeUser = dataList?.reactOnPost?.filter(
+      (data) => data.userId === auth.userData?._id
+    );
+    isLike = likeUser?.length > 0;
+  }
 
   const viewExclusivepostHandler = async () => {
     try {
@@ -242,6 +253,7 @@ export default function (props) {
           // if (dataList.isSubscribed) {
           listPublicExclusiveHandler();
           viewExclusivepostHandler();
+          setInputStr(null);
 
           toast.success(res.data.responseMessage);
           setIsLoading(false);
@@ -252,36 +264,29 @@ export default function (props) {
       //   toast.error("You must be a subscriber to Like on this post.");
       //   console.log("User is not subscribed!!!!!!!");
       // }
-    } catch (error) {}
+    } catch (error) {
+      setInputStr(null);
+    }
   };
   const isVideo = dataList?.mediaUrl?.includes(".mp4");
   const [showPicker, setShowPicker] = useState(false);
-  const [inputStr, setInputStr] = useState("");
 
-  const onEmojiClick = (event, emojiObject) => {
-    setInputStr(emojiObject.emoji);
+  const onEmojiClick = () => {
+    setInputStr("new");
     setShowPicker(false);
     // likesHandler();
-    // likesHandler(dataList._id);
+    likesHandler(dataList._id);
   };
 
-  useEffect(() => {
-    if (inputStr) {
-      likesHandler(dataList._id);
-    }
-  }, [inputStr]);
-  let isLike = false;
+  // useEffect(() => {
+  //   if (inputStr) {
+  //     likesHandler(dataList._id);
+  //   }
+  // }, [inputStr]);
 
   useEffect(() => {
     viewExclusivepostHandler();
   });
-
-  if (auth.userData?._id && dataList) {
-    const likeUser = dataList?.reactOnPost?.filter(
-      (data) => data.userId === auth.userData?._id
-    );
-    isLike = likeUser?.length > 0;
-  }
 
   return (
     <Page title="Dashboard">
@@ -363,70 +368,36 @@ export default function (props) {
                           </Grid>
                         </Box>
                         <Box className={classes.commentBox} mb={3}>
-                          {showPicker && (
-                            <Box className={classes.emojiBox}>
-                              <Picker onEmojiClick={onEmojiClick} />
-                            </Box>
-                          )}
                           <Grid container>
-                            <Grid item xs={6} align="left">
-                              {isLoadingEmoji ? (
-                                <ButtonCircularProgress />
-                              ) : (
-                                <Box>
-                                  {isLike ? (
-                                    <>
-                                      {" "}
-                                      {dataList?.reactOnPost
-                                        ?.filter(
-                                          (data) =>
-                                            data.userId === auth?.userData?._id
-                                          // console.log(
-                                          //   "dat>>>>>a",
-                                          //   data.userId === auth?.userData?._id
-                                          // )
-                                        )
-                                        .map((data, i) => {
-                                          return (
-                                            <>
-                                              <Button
-                                                key={i}
-                                                style={{
-                                                  fontSize: "20px",
-                                                  cursor: "pointer",
-                                                }}
-                                                onClick={() =>
-                                                  setShowPicker((val) => !val)
-                                                }
-                                                className={classes.socialbox}
-                                              >
-                                                {data?.emoji}
-                                              </Button>
-                                            </>
-                                          );
-                                        })}
-                                    </>
-                                  ) : (
-                                    <>
-                                      <Button
-                                        style={{
-                                          fontSize: "20px",
-                                          cursor: "pointer",
-                                        }}
-                                      >
-                                        <BsEmojiLaughing
-                                          className={classes.socialbox}
-                                          position="end"
-                                          onClick={() =>
-                                            setShowPicker((val) => !val)
-                                          }
-                                        />
-                                      </Button>
-                                    </>
-                                  )}
-                                </Box>
-                              )}
+                          <Grid item xs={4}>
+                            {/* <BsEmojiLaughing
+                              position="end"
+                              style={{
+                                fontSize: "20px",
+                                cursor: "pointer",
+                              }}
+                              onClick={() => setShowPicker((val) => !val)}
+                            /> */}
+                            <Grid item xs={4} align="right">
+                              <IconButton
+                                className={classes.iconbutton}
+                                onClick={onEmojiClick}
+                              >
+                                {isLike ? (
+                                  <>
+                                    <FavoriteIcon style={{ color: "red" }} />
+                                  </>
+                                ) : (
+                                  <>
+                                    <FavoriteBorderIcon
+                                      style={{ color: "#BFBFBF" }}
+                                    />
+                                  </>
+                                )}
+                                
+                              </IconButton>
                             </Grid>
+                          </Grid>
                             <Grid item xs={6} align="center">
                               <Button color="primary" size="large">
                                 {" "}

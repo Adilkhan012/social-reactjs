@@ -379,6 +379,11 @@ const StyledMenu = withStyles({
 
 // const socket = window.io("https://node-social.mobiloitte.org/");
 // const socket = window.io(socketURL);
+const socket = window.io("https://localhost:1909/", {
+  secure: true,
+  rejectUnauthorized: false
+});
+
 
 function isEmpty(obj) {
   if (obj) {
@@ -548,18 +553,18 @@ function ChatList() {
       getoffLineUserApi();
     };
   }, []);
-  // const onlineUser = (id) => {
-  //   if (id) {
-  //     socket.on("connect", function () {
-  //       socket.emit("onlineUser", { userId: id });
-  //       socket.on("onlineUser", (event) => {
-  //         setOnlineUsersList(event);
-  //       });
-  //     });
-  //   } else {
+  const onlineUser = (id) => {
+    if (id) {
+      socket.on("connect", function () {
+        socket.emit("onlineUser", { userId: id });
+        socket.on("onlineUser", (event) => {
+          setOnlineUsersList(event);
+        });
+      });
+    } else {
 
-  //   }
-  // };
+    }
+  };
 
   // const _onhandleChange = (e) => {
   //   setSearchUserName({ ...data, [e.target.name]: e.target.value });
@@ -577,12 +582,12 @@ function ChatList() {
       setIsNewLoading(false);
     }
   };
-  // const PerticularChat = () => {
-  //   socket.emit("viewChat", { chatId: showChat1?._id });
-  //   socket.on("viewChat", (message) => {
-  //     setShowChat1(message.result);
-  //   });
-  // };
+  const PerticularChat = () => {
+    socket.emit("viewChat", { chatId: showChat1?._id });
+    socket.on("viewChat", (message) => {
+      setShowChat1(message.result);
+    });
+  };
   const chatSend = async (chattext, isImage, event) => {
     if (event) {
       event.preventDefault();
@@ -616,7 +621,7 @@ function ChatList() {
             setShowChat1();
             setNewuserDetails();
           } else {
-            // PerticularChat();
+            PerticularChat();
           }
           setShowPicker(false);
           setInputStr("");
@@ -626,16 +631,16 @@ function ChatList() {
           toast.error("Sorry, No Receiver found");
         });
 
-      // socket.emit("oneToOneChat", chatdetails);
-      // if (newuserDetails) {
-      //   setShowChat1();
-      //   setNewuserDetails();
-      // } else {
-      //   PerticularChat();
-      // }
-      // setShowPicker(false);
-      // setInputStr("");
-      // setOpenSendImage(false);
+      socket.emit("oneToOneChat", chatdetails);
+      if (newuserDetails) {
+        setShowChat1();
+        setNewuserDetails();
+      } else {
+        PerticularChat();
+      }
+      setShowPicker(false);
+      setInputStr("");
+      setOpenSendImage(false);
     } else {
       toast.error("Sorry, No Receiver found");
     }

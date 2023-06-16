@@ -180,12 +180,20 @@ export default function (props) {
   };
 
   let isLike = false;
+  let isLikeEmoji = false;
 
   if (auth.userData?._id && dataList) {
     const likeUser = dataList?.likesUsers?.filter(
       (data) => data === auth.userData?._id
     );
     isLike = likeUser?.length > 0;
+  }
+
+  if (auth.userData?._id && dataList) {
+    const likeUser = dataList?.likesUsers?.filter(
+      (data) => data === auth.userData?._id
+    );
+    isLikeEmoji = likeUser?.length > 0;
   }
   // console.log("dataList from details.js ", data);
   const commentPostHandler = async () => {
@@ -273,7 +281,7 @@ export default function (props) {
 
   const onEmojiClick = (event, emojiObject) => {
     setInputStr((data) => data + emojiObject.emoji);
-    setShowPicker(false);
+    // setShowPicker(false);
     likePostHandler();
   };
 
@@ -346,28 +354,25 @@ export default function (props) {
                       </Box>
                       <Accordion square>
                         <Box className={classes.commentBox} mb={3}>
-                          <Grid item xs={4} align="right">
-                            <IconButton
-                              className={classes.iconbutton}
-                              onClick={onEmojiClick}
-                            >
-                              {isLike ? (
-                                <>
-                                  <FavoriteIcon style={{ color: "red" }} />
-                                </>
-                              ) : (
-                                <>
-                                  <FavoriteBorderIcon
-                                    style={{ color: "#BFBFBF" }}
-                                  />
-                                </>
-                              )}
-                              {/* <FavoriteBorderIcon
-                className={classes.socialbox}
-                style={isLike ? { color: "red" } : { color: "#BFBFBF" }}
-              />{" "} */}
-                            </IconButton>
-                          </Grid>
+                        <Grid item xs={4} align="right">
+                              <IconButton
+                                className={classes.iconbutton}
+                                onClick={onEmojiClick}
+                              >
+                                {isLikeEmoji ? (
+                                  <>
+                                    <FavoriteIcon style={{ color: "red" }} />
+                                  </>
+                                ) : (
+                                  <>
+                                    <FavoriteBorderIcon
+                                      style={{ color: "#BFBFBF" }}
+                                    />
+                                  </>
+                                )}
+                                
+                              </IconButton>
+                            </Grid>
                           <Grid container>
                             {/* <Grid item xs={6} align="center">
                               <Box>
