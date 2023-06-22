@@ -18,7 +18,7 @@ import {
   Checkbox,
 } from "@material-ui/core";
 import InfoIcon from "@material-ui/icons/Info";
-
+import Web3 from "web3";
 import Button from "@material-ui/core/Button";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import ApiConfig from "src/ApiConfig/ApiConfig";
@@ -187,6 +187,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const Earn = () => {
+  const web3 = new Web3("https://rpc-mumbai.matic.today");
   const classes = useStyles();
   const [selectedOptions, setSelectedOptions] = useState("");
   const [selectedDuration, setSelectedDuration] = useState("");
@@ -232,6 +233,9 @@ const Earn = () => {
   const [userReward, setUserReward] = useState(0);
   const [userAPR, setUserAPR] = useState(0);
   const [isTransactionPending, setTransactionPending] = useState(false);
+  const [totalWeightedContribution, setTotalContributionScore] = useState(0);
+  const [userSignature, setSignature] = useState("");
+  const [signatureTimestamp, setSignatureTimestamp] = useState(0);
 
   const handleExtendLockedButton = () => {
     setExtendLockedButton(true);
@@ -281,14 +285,14 @@ const Earn = () => {
     setTokenStakeValue(0);
   };
 
-  const handleMainMenuButton=()=>{
+  const handleMainMenuButton = () => {
     setAfterLocked(false);
     setLocked(false);
     setFlexible(false);
     setSelectedTime(0);
     setTokenStakeValue(0);
-  }
-  
+  };
+
   const handleGoBack = () => {
     setFlexible(false);
     setLocked(false);
@@ -431,11 +435,18 @@ const Earn = () => {
           token: localStorage.getItem("token"),
         },
       });
-
-      const userScore = response.data.userScore;
+      const { dataObject } = response.data; // Access the dataObject property from the response
+      const { userScore, totalWeightedContribution, timestamp, signature } =
+        dataObject;
       // setTotalContribution(totalContribution);
       setUserContributionScore(userScore);
+      setTotalContributionScore(totalWeightedContribution);
+      setSignatureTimestamp(Number(timestamp));
+      setSignature(signature.signature);
       console.log(userScore);
+      console.log(totalWeightedContribution);
+      console.log(timestamp);
+      console.log(userSignature);
       toast.success("Contribution score fetched successfully!");
     } catch (error) {
       console.error("Error fetching contribution score:", error.response);
@@ -450,6 +461,80 @@ const Earn = () => {
         console.log("Error Fetching Scores!!!");
       }
     }
+  };
+  const handleUnstake = async () => {
+    return new Promise(async (resolve, reject) => {
+      console.log("selected user score:", userContributionScore);
+      console.log("selected total contribution:", totalWeightedContribution);
+      console.log("user Duration:", signatureTimestamp);
+      console.log("user Tokens:", userSignature);
+
+      if (engagementContract) {
+        try {
+          // const userSignatureBytes = Web3.utils.hexToBytes(
+          //   Web3.utils.toHex(userSignature)
+          // );
+
+          const unstakeMethod = engagementContract.methods.unstake(
+            userContributionScore,
+            totalWeightedContribution,
+            signatureTimestamp,
+            userSignature
+          );
+
+          const gasEstimate = await unstakeMethod.estimateGas({
+            from: userAddress,
+          });
+          const transaction = unstakeMethod.send({
+            from: userAddress,
+            gas: gasEstimate,
+          });
+
+          transaction.on("transactionHash", (hash) => {
+            console.log("Transaction hash:", hash);
+          });
+
+          transaction.on("receipt", (receipt) => {
+            console.log("Transaction receipt:", receipt);
+            toast.success("Unstake successful!", {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+            fetchInformation(); // Fetch information after the transaction is successfully mined
+            resolve(); // Resolve the promise when the transaction is successful
+          });
+
+          transaction.on("error", (error) => {
+            console.log("Transaction error:", error);
+            if (error.code === 4001) {
+              toast.error("Transaction rejected by the user.", {
+                position: toast.POSITION.TOP_RIGHT,
+              });
+              reject(new Error("Transaction rejected by the user."));
+            } else {
+              const errorMessage = error.message.split("message: ")[2];
+              toast.error(errorMessage, {
+                position: toast.POSITION.TOP_RIGHT,
+              });
+              reject(new Error(errorMessage));
+            }
+          });
+        } catch (error) {
+          console.log("Error occurred during the transaction:", error);
+          let errorMessage = "An error occurred during the transaction.";
+
+          if (error.message) {
+            const startIndex = error.message.indexOf(" reverted: ") + 10;
+            const endIndex = error.message.indexOf(",", startIndex);
+            errorMessage = error.message.substring(startIndex, endIndex);
+          }
+
+          toast.error(errorMessage);
+          reject(new Error(errorMessage));
+        }
+      } else {
+        reject(new Error("EngagementContract is not available!"));
+      }
+    });
   };
 
   const fetchUserAPR = useCallback(async () => {
@@ -471,7 +556,8 @@ const Earn = () => {
 
         console.log("APR = " + APR.toString() + "%");
         const etherValue = (parseInt(APR) / 10 ** 18).toFixed(3);
-        setUserAPR(etherValue);      }
+        setUserAPR(etherValue);
+      }
     } catch (error) {
       console.error("Error fetching user APR:", error);
     }
@@ -618,7 +704,7 @@ const Earn = () => {
       const userReward = await engagementContract.methods
         .getUserRewards(userAddress, userContributionScore, 100)
         .call();
-      const etherValueUserReward = parseInt((userReward) / 10 ** 18).toFixed(3);
+      const etherValueUserReward = parseInt(userReward / 10 ** 18).toFixed(3);
 
       setUserReward(etherValueUserReward);
       console.log(
@@ -696,23 +782,21 @@ const Earn = () => {
                       >
                         <InfoIcon fontSize={"medium"} />
                       </Tooltip>
-                      </Box>
-                      <Button
-                        variant="contained"
-                        style={{
-                          backgroundColor: "#e31a89",
-                          color: "#fff",
-                          height: 40,
-                          paddingInline: 30,
-                          fontSize: 16,
-                          marginTop: 5,
-                    
-                        }}
-                        onClick={handleStakeInfoButton}
-                      >
-                        Stake Info
-                      </Button>
-                    
+                    </Box>
+                    <Button
+                      variant="contained"
+                      style={{
+                        backgroundColor: "#e31a89",
+                        color: "#fff",
+                        height: 40,
+                        paddingInline: 30,
+                        fontSize: 16,
+                        marginTop: 5,
+                      }}
+                      onClick={handleStakeInfoButton}
+                    >
+                      Stake Info
+                    </Button>
                   </Box>
                 )}
                 <br></br>
@@ -1476,14 +1560,12 @@ const Earn = () => {
                               fontSize: 16,
                               borderRadius: 2,
                               marginLeft: 2,
-                              
                             }}
                           >
                             Staked
                           </span>
                         </Typography>
                       </Box>
-                     
                     </Box>
 
                     {/* <Box
@@ -1733,6 +1815,21 @@ const Earn = () => {
                           Main Menu
                         </Button>
 
+                        <Button
+                          variant="contained"
+                          style={{
+                            backgroundColor: "#e31a89",
+                            color: "#fff",
+                            height: 40,
+                            paddingInline: 30,
+                            fontSize: 16,
+                            marginTop: 5,
+                          }}
+                          onClick={handleUnstake}
+                        >
+                          Unstake
+                        </Button>
+
                         {/* <div
                        style={{
                          display: "flex",
@@ -1859,26 +1956,26 @@ const Earn = () => {
                 overflow="auto"
               >
                 <div>
-                    <Button
-                      variant="contained"
-                      style={{
-                        backgroundColor: "#e31a89",
-                        color: "#fff",
-                        height: 40,
-                        paddingInline: 20,
-                        paddingBlock:20,
-                        fontSize: 16,
-                        marginTop: 10,
-                        marginLeft: 37,
-                        marginBottom:10,
-                      }}
-                      onClick={handleApproval}
-                      disabled={isTransactionPending}
-                    >
-                      {isTransactionPending
-                        ? "Processing..."
-                        : "Approve Allowance"}
-                    </Button>
+                  <Button
+                    variant="contained"
+                    style={{
+                      backgroundColor: "#e31a89",
+                      color: "#fff",
+                      height: 40,
+                      paddingInline: 20,
+                      paddingBlock: 20,
+                      fontSize: 16,
+                      marginTop: 10,
+                      marginLeft: 37,
+                      marginBottom: 10,
+                    }}
+                    onClick={handleApproval}
+                    disabled={isTransactionPending}
+                  >
+                    {isTransactionPending
+                      ? "Processing..."
+                      : "Approve Allowance"}
+                  </Button>
                   <Box
                     // bgcolor="#EC167F"
                     borderRadius={10}
