@@ -166,6 +166,7 @@ const Apiconfigs = {
   deleteAllNotification: `${url}/notification/deleteAllNotification`,
 
   buyPost: `${url}/user/buyPost`,
+  beforeBuyPost: `${url}/user/beforeBuyPost`,
   notificationUpdate: `${url}/user/notificationUpdate`,
   listUserWithpost: `${url}/user/listUserWithpost`,
   globalSearch: `${url}/user/globalSearch`,

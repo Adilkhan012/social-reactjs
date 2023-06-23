@@ -389,7 +389,7 @@ export default function (props) {
   const classes = useStyles();
   const history = useHistory();
   const { data, listPublicExclusiveHandler, isLoadingContent, index } = props;
-  const { postTitle, ownerAddress, tokenId, collectionAddress } = data;
+  const { amount, postTitle, ownerAddress, tokenId, collectionAddress } = data;
   // console.log(ownerAddress, tokenId);
   // console.log("post data", data);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -635,53 +635,49 @@ export default function (props) {
         laziPostContractABI,
         collectionAddress
       );
+      console.log("pree Seller:", ownerAddress);
+      console.log("pree Price:", amount);
 
-      const totalSupply = await postContract.methods.totalSupply().call();
-      var newTotalSupply = parseInt(totalSupply) + 1;
+      const preRes = await Axios.post(
+        Apiconfigs.beforeBuyPost,
+        {
+          seller: ownerAddress,
+          price: amount,
+        },
+        {
+          headers: {
+            token: localStorage.getItem("token"),
+          },
+        }
+      );
 
-      console.log("totalSupply", totalSupply);
-      // setTokenId(newTotalSupply);
-      console.log("tokenId", newTotalSupply);
+      const { dataObject } = preRes.data;
+      const { seller, price, timestamp, signature } = dataObject;
 
-      const getPostPrice = postContract.methods.laziPostPrice();
+      console.log("After Seller:", seller);
+      console.log("Afer Price:", price);
+      console.log("After Timestamp:", timestamp);
+      console.log("After Signature:", signature.signature);
 
-      const method = postContract.methods.mintLaziPost([postTitle]);
+      const method = postContract.methods.buyNftSigned(
+        tokenId,
+        seller,
+        price,
+        timestamp,
+        signature.signature
+      );
       const gasLimit = await method.estimateGas({ from: buyerAddress });
       const gasPrice = await web3.eth.getGasPrice();
       const transactionParams = {
         from: buyerAddress,
         gas: gasLimit,
         gasPrice: gasPrice,
-        value: web3.utils.toWei(getPostPrice, "ether"),
+        value: web3.utils.toWei(amount, "ether"),
       };
 
       const result = await method.send(transactionParams);
       console.log(result);
       toast.success("NFT Minted Success: Now Saving!");
-
-      // const listing = await stakingContract.methods.nftListings(tokenId).call();
-      // if (!listing.active) {
-      //   throw new Error("NFT is not listed for sale");
-      // }
-
-      // console.log("price: ", listing.price);
-
-      // // const price = await laziPostContract.methods.getTokenPrice(tokenId).call();
-      // const method = stakingContract.methods.buyNft(tokenId);
-      // const gasLimit = await method.estimateGas({
-      //   from: buyerAddress,
-      //   value: listing.price,
-      // });
-      // const gasPrice = await web3.eth.getGasPrice();
-      // const transactionParams = {
-      //   from: buyerAddress,
-      //   gas: gasLimit,
-      //   gasPrice: gasPrice,
-      //   value: listing.price,
-      // };
-
-      // const result = await method.send(transactionParams);
-      // console.log(result);
 
       // Check if the transaction was successful
       if (result.status) {
@@ -691,7 +687,7 @@ export default function (props) {
             postId: isHidePostdata?._id,
             description: "NA",
             buyerAddress: buyerAddress,
-            tokenId: newTotalSupply,
+            tokenId: tokenId,
           },
           {
             headers: {
@@ -826,7 +822,6 @@ export default function (props) {
     setInputStr("new");
     setShowPicker(false);
     likesHandler(); // Call likesHandler directly when inputStr is updated
-
   };
 
   // useEffect(() => {
@@ -1019,7 +1014,6 @@ export default function (props) {
                                     />
                                   </>
                                 )}
-                                
                               </IconButton>
                             </Grid>
                           </Grid>
