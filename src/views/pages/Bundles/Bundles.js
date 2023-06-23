@@ -224,11 +224,11 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
       const laziPostContract = await initLaziPostContract();
       console.log(laziPostContract)
 
-      const setSaleActive = await laziPostContract.methods
-        .set_saleActiveTime(0)
-        .call();
+      // const setSaleActive = await laziPostContract.methods
+      //   .set_saleActiveTime(0)
+      //   .call();
 
-      console.log(setSaleActive);
+      // console.log(setSaleActive);
       // const setRoyality = await laziPostContract.methods
       // .setRoyality(0)
       // .call();
