@@ -635,44 +635,49 @@ export default function (props) {
         laziPostContractABI,
         collectionAddress
       );
-      console.log("pree Seller:", ownerAddress);
-      console.log("pree Price:", amount);
 
-      const preRes = await Axios.post(
-        Apiconfigs.beforeBuyPost,
-        {
-          seller: ownerAddress,
-          price: amount,
-        },
-        {
-          headers: {
-            token: localStorage.getItem("token"),
-          },
-        }
+      const totalSupply = await postContract.methods.totalSupply().call();
+      const currentTokenId = totalSupply + 1;
+      console.log(" Seller:", ownerAddress);
+      console.log(" Price:", amount);
+      console.log("tokenId:", currentTokenId);
+
+      // const preRes = await Axios.post(
+      //   Apiconfigs.beforeBuyPost,
+      //   {
+      //     seller: ownerAddress,
+      //     price: amount,
+      //   },
+      //   {
+      //     headers: {
+      //       token: localStorage.getItem("token"),
+      //     },
+      //   }
+      // );
+
+      // const { dataObject } = preRes.data;
+      // const { seller, price, timestamp, signature } = dataObject;
+
+      // console.log("After Seller:", seller);
+      // console.log("Afer Price:", price);
+      // console.log("After Timestamp:", timestamp);
+      // console.log("After Signature:", signature.signature);
+
+      const method = postContract.methods.buyNft(
+        currentTokenId,
+        ownerAddress,
+        amount
       );
-
-      const { dataObject } = preRes.data;
-      const { seller, price, timestamp, signature } = dataObject;
-
-      console.log("After Seller:", seller);
-      console.log("Afer Price:", price);
-      console.log("After Timestamp:", timestamp);
-      console.log("After Signature:", signature.signature);
-
-      const method = postContract.methods.buyNftSigned(
-        tokenId,
-        seller,
-        price,
-        timestamp,
-        signature.signature
-      );
-      const gasLimit = await method.estimateGas({ from: buyerAddress });
+      const gasLimit = await method.estimateGas({
+        from: buyerAddress,
+        value: amount,
+      });
       const gasPrice = await web3.eth.getGasPrice();
       const transactionParams = {
         from: buyerAddress,
         gas: gasLimit,
         gasPrice: gasPrice,
-        value: web3.utils.toWei(amount, "ether"),
+        value: amount,
       };
 
       const result = await method.send(transactionParams);
@@ -687,7 +692,7 @@ export default function (props) {
             postId: isHidePostdata?._id,
             description: "NA",
             buyerAddress: buyerAddress,
-            tokenId: tokenId,
+            tokenId: currentTokenId,
           },
           {
             headers: {

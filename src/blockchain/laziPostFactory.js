@@ -3,7 +3,7 @@ import Web3 from "web3";
 
 //testnet
 const laziPostFactoryContractAddress =
-  "0xE45fe1B2a81E286fD33723aDC4009903A5fEbd2b";
+  "0x078917751637d86B6246f074D83F33b75A07D643";
 
 // mainnet
 // const laziPostFactoryContractAddress =
