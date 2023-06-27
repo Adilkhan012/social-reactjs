@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import {
   makeStyles,
   Paper,
@@ -6,7 +6,9 @@ import {
   Typography,
   Button,
   Grid,
+  IconButton,
 } from "@material-ui/core";
+import { Alert } from "@mui/material";
 import Page from "src/component/Page";
 import CreatorsCard from "src/component/CreatorsCard";
 import axios from "axios";
@@ -14,6 +16,7 @@ import Apiconfigs from "src/ApiConfig/ApiConfig";
 import DataLoading from "src/component/DataLoading";
 import NoDataFound from "src/component/NoDataFound";
 import { Pagination } from "@material-ui/lab";
+import CloseIcon from "@mui/icons-material/Close";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,58 +31,19 @@ const useStyles = makeStyles((theme) => ({
       justifyContent: "space-between",
     },
   },
-  mainmodalBox: {
-    "& .formControl": {
-      width: "100%",
-      backgroundColor: "transparent",
-      border: "none",
-      color: "#fff",
-      "&:focus-visible": {
-        outline: "none",
-      },
-    },
-    "& .addphotos": {
-      display: "flex",
-      alignItems: "center",
-      textAlign: "center",
-      justifyContent: "center",
-      padding: "30px 20px",
-      border: "1px dashed",
-      cursor: "pointer",
-      position: "relative",
-      "& input": {
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        opacity: 0,
-      },
-      "& svg": {
-        fontSize: "30px",
-      },
-    },
-  },
-  cancelBtn: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-  },
-  btn1: {
-    marginRight: "8px",
-    "@media(max-width:767px)": {
-      marginBottom: "10px",
-    },
+  contentContainer: {
+    marginTop: "20px",
   },
 }));
 
-function Creators() {
+const Creators = () => {
   const classes = useStyles();
   const [creatorListData, setCreatorListData] = useState([]);
-
   const [page, setPage] = useState(1);
   const [noOfPages, setNoOfPages] = useState(1);
   const [isLoadingContent, setIsLoading] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
+
   const creatorHandler = async () => {
     setIsLoading(true);
     try {
@@ -106,52 +70,88 @@ function Creators() {
       setIsLoading(false);
     }
   };
+
   useEffect(() => {
     creatorHandler();
+    const interval = setInterval(() => {
+      setAlertOpen(true);
+    }, 5000);
+
+    return () => {
+      clearInterval(interval);
+    };
   }, [page]);
 
   const pageCheck = page === 1 ? 12 : 0;
 
+  const handleAlertClose = () => {
+    setAlertOpen(false);
+  };
+
   return (
     <>
-      <Page title='Creators'>
+      <Page title="Creators">
         <Paper className={classes.root} elevation={2}>
-          <Box className='heading'>
-            <Typography variant='h3'>Creators</Typography>
+          <Box className="heading">
+            <Typography variant="h3">Creators</Typography>
           </Box>
-          <Grid container spacing={2}>
+          {alertOpen && (
+            <Alert
+              severity="warning"
+              style={{ backgroundColor: "black", color: "#ffffff" }}
+              action={
+                <>
+                  <Button
+                    style={{ backgroundColor: "#e31a89" }}
+                    size="small"
+                    onClick={handleAlertClose}
+                  >
+                    Mint Now
+                  </Button>
+                  <IconButton
+                    aria-label="close"
+                    color="inherit"
+                    size="small"
+                    onClick={handleAlertClose}
+                  >
+                    <CloseIcon fontSize="inherit" />
+                  </IconButton>
+                </>
+              }
+            >
+              User has not minted yet
+            </Alert>
+          )}
+
+          <Grid container spacing={2} className={classes.contentContainer}>
             {creatorListData &&
               creatorListData.map((data, i) => {
-                return (
-                  <Grid item lg={3} md={4} sm={6} xs={6}>
-                    <CreatorsCard
-                      data={data}
-                      type='card'
-                      key={i}
-                      index={i}
-                      callbackFun={creatorHandler}
-                    />
-                  </Grid>
-                );
-              })}
-            {!isLoadingContent &&
-              creatorListData &&
-              creatorListData.length == 0 && <NoDataFound />}
-            {isLoadingContent && <DataLoading />}
-          </Grid>
-          {creatorListData && creatorListData.length >= pageCheck && (
-            <Box mt={2} display='flex' justifyContent='center'>
-              <Pagination
-                count={noOfPages}
-                page={page}
-                onChange={(e, v) => setPage(v)}
-              />
-            </Box>
-          )}
-        </Paper>
-      </Page>
-    </>
-  );
-}
+                return (               
+                  <Grid item lg={3} md={4} sm={6} xs={6} key={i}>
+                  <CreatorsCard
+                    data={data}
+                    type="card"
+                    index={i}
+                    callbackFun={creatorHandler}
+                  />
+                </Grid>
+            );
+          })}
+        {!isLoadingContent && creatorListData && creatorListData.length === 0 && (
+          <NoDataFound />
+        )}
+        {isLoadingContent && <DataLoading />}
+      </Grid>
+
+      {creatorListData && creatorListData.length >= pageCheck && (
+        <Box mt={2} display="flex" justifyContent="center">
+          <Pagination count={noOfPages} page={page} onChange={(e, v) => setPage(v)} />
+        </Box>
+      )}
+    </Paper>
+  </Page>
+</>
+);
+};
 
 export default Creators;

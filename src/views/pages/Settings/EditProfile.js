@@ -14,6 +14,9 @@ import {
   IconButton,
   InputAdornment,
   Paper,
+  Select,
+  InputLabel,
+  MenuItem,
 } from "@material-ui/core";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ErrorIcon from "@material-ui/icons/Error";
@@ -33,6 +36,8 @@ import ButtonCircularProgress from "src/component/ButtonCircularProgress";
 import { AuthContext } from "src/context/Auth";
 import Apiconfig from "src/ApiConfig/ApiConfig";
 import { toast } from "react-toastify";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+
 import EditIcon from "@material-ui/icons/Edit";
 
 const useStyles = makeStyles((theme) => ({
@@ -379,11 +384,22 @@ function EditProfile({ userProfileData }) {
         }
       }
     };
-  
+
     if (userName) {
       checkUserNameExists(userName);
     }
   }, [userName]);
+
+  const [selectedOption, setSelectedOption] = React.useState("");
+
+  const handleOptionChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    alert("Selected option: " + selectedOption);
+  };
 
   return (
     <>
@@ -488,7 +504,8 @@ function EditProfile({ userProfileData }) {
                             />
                           </Button>
                         </Grid>
-                        <Grid item lg={6} sm={6} xs={12}>
+                        {/* Existing code */}
+                        {/* <Grid item lg={6} sm={6} xs={12}>
                           <FormControl fullWidth>
                             <Typography
                               variant="h6"
@@ -542,7 +559,60 @@ function EditProfile({ userProfileData }) {
                               {touched.userName && errors.userName}
                             </FormHelperText>
                           </FormControl>
+                        </Grid> */}
+
+                        {/* Adding DropDown */}
+                        <Grid item lg={6} sm={6} xs={12}>
+                          <FormControl fullWidth style={{ paddingTop: "14px" }}>
+                            <InputLabel
+                              id="username-label"
+                            
+                              variant="h6"
+                              style={{
+                                fontSize: "14px",
+                                color: "white",
+                                
+                               
+                              }}
+                              color="primary.main"
+                            >
+                              Username
+                            </InputLabel>
+                            <Select
+                              labelId="username-label"
+                              id="username"
+                              value={selectedOption} // Assign selectedOption to the value prop
+                              onChange={handleOptionChange}
+                              label="Username"
+                              style={{ paddingTop: "8px" }}
+                              inputProps={{
+                                style: { color: "white", textAlign: "center" },
+                              }}
+                              SelectDisplayProps={{
+                                style: { alignItems: "center" },
+                              }}
+                            >
+                              <MenuItem value="john">John</MenuItem>
+                              <MenuItem value="mary">Mary</MenuItem>
+                              <MenuItem value="alex">Alex</MenuItem>
+                              <Link to="/mint">
+                                <Button
+                                  color="primary"
+                                  variant="contained"
+                                  style={{
+                                    backgroundColor: "#e31a89",
+                                    color: "#fff",
+                                    justifyContent: "center",
+                                    marginLeft:15
+                                  }}
+                                >
+                                  Mint Now
+                                </Button>
+                              </Link>
+                            </Select>
+                          </FormControl>
                         </Grid>
+
                         <Grid item lg={6} sm={6} xs={12}>
                           <FormControl fullWidth>
                             <Typography

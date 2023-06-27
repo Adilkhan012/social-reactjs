@@ -11,8 +11,15 @@ import {
   Grid,
   TextField,
   Button,
+  Snackbar,
   FormHelperText,
 } from "@material-ui/core";
+
+import CloseIcon from "@material-ui/icons/Close";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import Typography from "@material-ui/core/Typography";
+
 import SwipeableTemporaryDrawer from "./RightDrawer";
 import { GiWallet } from "react-icons/gi";
 import Logo from "src/component/Logo";
@@ -31,6 +38,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Axios from "axios";
 import Apiconfigs from "src/ApiConfig/ApiConfig";
 import { toast } from "react-toastify";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -75,7 +83,6 @@ const useStyles = makeStyles((theme) => ({
         color: "#e31a89",
       },
     },
-
   },
   iconbutton: {
     // color: theme.palette.,
@@ -137,13 +144,27 @@ const useStyles = makeStyles((theme) => ({
     "& input": {
       background: "#373636",
       borderRadius: "10px",
-
-
     },
     [theme.breakpoints.down("xs")]: {
       marginTop: "10px",
-      marginLeft: "0px"
+      marginLeft: "0px",
     },
+  },
+  alert: {
+    display: "flex",
+    alignItems: "center",
+    padding: theme.spacing(2),
+    borderRadius: theme.shape.borderRadius,
+    marginRight: theme.spacing(2),
+    backgroundColor: "#000",
+    color: "#fff",
+    "& p": {
+      marginRight: theme.spacing(2),
+    },
+  },
+  closeButton: {
+    marginLeft: "auto",
+    color: "#fff",
   },
 }));
 
@@ -159,12 +180,11 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
   );
 };
 
-
 TopBar.propTypes = {
   className: PropTypes.string,
 };
 TopBar.defaultProps = {
-  onMobileNavOpen: () => { },
+  onMobileNavOpen: () => {},
 };
 
 export default TopBar;
@@ -183,8 +203,21 @@ export function TopBarData() {
   const [isSubmit, setIsSubmit] = useState(false);
   const [socialLoginEmail, setSocialLoginEmail] = useState();
   const [formData, setFormData] = useState({
-    message: "", userId: "",
+    message: "",
+    userId: "",
   });
+  const [showAlert, setShowAlert] = useState(true);
+
+  const handleAlertClose = () => {
+    setShowAlert(false);
+  };
+
+  // useEffect(() => {
+  //   // Check if there are no NFTs minted (condition may vary)
+  //   // Replace with your logic to check if no NFTs are minted
+
+  //   setShowAlert(true);
+  // }, []);
 
   const _onInputChange = (e) => {
     const name = e.target.name;
@@ -211,10 +244,6 @@ export function TopBarData() {
     </Box>
   );
 
-
-
-
-
   const userRequest = async () => {
     setIsLoading(true);
     setIsSubmit(true);
@@ -229,7 +258,7 @@ export function TopBarData() {
           // data: formData,
           data: {
             // email: window.sessionStorage.getItem("email"),
-            userId : window.sessionStorage.getItem("userId"),
+            userId: window.sessionStorage.getItem("userId"),
             message: message,
           },
         });
@@ -248,12 +277,49 @@ export function TopBarData() {
   };
   const status = localStorage.getItem("status");
 
-  const checkStatus = window.localStorage.getItem("status")
+  const checkStatus = window.localStorage.getItem("status");
+
+  const alertContent = (
+    <Snackbar
+      open={showAlert}
+      onClose={handleAlertClose}
+      anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      ContentProps={{ style: { backgroundColor: "#000",  padding: "24px", // Adjust the padding value as per your requirement
+      maxWidth: "600px",} }}
+    >
+      <Card variant="outlined" className={classes.alert}>
+        <CardContent>
+          <Typography variant="body1" component="p">
+            No NFTs have been minted
+          </Typography>
+        </CardContent>
+        <Link to="/mint">
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={()=>setShowAlert(false)}
+            style={{ backgroundColor: "#e31a89", color: "#fff" }}
+          >
+            Mint Now
+          </Button>
+        </Link>
+        <IconButton
+          aria-label="close"
+          color="inherit"
+          className={classes.closeButton}
+          onClick={handleAlertClose}
+        >
+          <CloseIcon />
+        </IconButton>
+      </Card>
+    </Snackbar>
+  );
 
   return (
     <>
       <Box style={{ width: "100%" }}>
         <Grid container>
+          {alertContent}
           <Grid item xs={12}>
             <Box className={classes.mainheader}>
               <Box className="leftBox">
@@ -275,33 +341,31 @@ export function TopBarData() {
                   </Hidden>
                   <Grid item xs={12} sm={7} md={8}>
                     <Box className="menubox">
-
-
-                      {
-                        checkStatus !== "ACTIVE" && (
-                          <Button
-                            color="secondary"
-                            size="small"
-                            variant="contained"
-                            onClick={handleClickOpen}
-                          >
-                            Unblock
-                          </Button>
-                        )
-                      }
-
+                      {checkStatus !== "ACTIVE" && (
+                        <Button
+                          color="secondary"
+                          size="small"
+                          variant="contained"
+                          onClick={handleClickOpen}
+                        >
+                          Unblock
+                        </Button>
+                      )}
                       &nbsp; &nbsp;
                       <Box className={classes.iconbuttonHeader}>
                         <IconButton>
                           <span
-                            style={{ fontSize: "14px", marginRight: "5px", marginTop: "5px" }}
+                            style={{
+                              fontSize: "14px",
+                              marginRight: "5px",
+                              marginTop: "5px",
+                            }}
                             className={
                               location?.pathname === "/chat-history"
                                 ? "active"
                                 : ""
                             }
                             onClick={() => {
-
                               history.push("/chat-history");
                             }}
                           >
@@ -311,7 +375,7 @@ export function TopBarData() {
                         </IconButton>
                         <IconButton className={classes.iconbutton}>
                           <span
-                            style={{ fontSize: "14px", }}
+                            style={{ fontSize: "14px" }}
                             className={
                               location?.pathname === "/wallet" ? "active" : ""
                             }
@@ -330,7 +394,7 @@ export function TopBarData() {
                             }}
                           >
                             <span
-                              style={{ fontSize: "14px", marginRight: "5px", }}
+                              style={{ fontSize: "14px", marginRight: "5px" }}
                               className={
                                 location?.pathname === "/notification-list"
                                   ? "active"
@@ -342,7 +406,6 @@ export function TopBarData() {
                             </span>
                           </IconButton>
                         )}
-
                       </Box>
                       <SwipeableTemporaryDrawer />
                     </Box>
