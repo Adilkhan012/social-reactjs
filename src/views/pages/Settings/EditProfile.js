@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
 import {
   makeStyles,
   Grid,
@@ -15,6 +15,8 @@ import {
   InputAdornment,
   Paper,
 } from "@material-ui/core";
+import { Select, MenuItem } from "@mui/material";
+
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ErrorIcon from "@material-ui/icons/Error";
 import { FaTransgender } from "react-icons/fa";
@@ -34,6 +36,10 @@ import { AuthContext } from "src/context/Auth";
 import Apiconfig from "src/ApiConfig/ApiConfig";
 import { toast } from "react-toastify";
 import EditIcon from "@material-ui/icons/Edit";
+import initMetamask from "src/blockchain/metamaskConnection";
+import initEngagementContract from "src/blockchain/engagementContract";
+import initlaziTokenContract from "src/blockchain/laziTokenContract";
+import initUserNameContract from "src/blockchain/laziUserNameContract";
 
 const useStyles = makeStyles((theme) => ({
   radio: {
@@ -161,6 +167,9 @@ function EditProfile({ userProfileData }) {
   const [base64Img1, setBase64Img1] = useState("");
   const [userName, setUserName] = useState("");
   const [userExists, setUserExists] = useState(false);
+  const [userNameContract, setUserNameContract] = useState(null);
+  const [userAddress, setUserAddress] = useState(null);
+  const [mintedUserNames, setMintedUserNames] = useState([]);
 
   console.log("isEdit", isEdit);
   const [userData, setUserData] = useState({
@@ -361,29 +370,70 @@ function EditProfile({ userProfileData }) {
   };
 
   useEffect(() => {
-    const checkUserNameExists = async (username) => {
+    const initialize = async () => {
       try {
-        const res = await axios.get(Apiconfig.searchUserNameForsignUpTime, {
-          params: {
-            search: username,
-          },
-        });
-        if (res.data.responseCode === 200) {
-          setUserExists(true);
-        }
+        const { address } = await initMetamask();
+        const contractUserName = await initUserNameContract();
+        setUserNameContract(contractUserName);
+        setUserAddress(address);
       } catch (error) {
-        if (error.response && error.response.status === 404) {
-          setUserExists(false);
-        } else {
-          console.log(error);
-        }
+        console.error("Contract initialization failed:", error);
       }
     };
-  
-    if (userName) {
-      checkUserNameExists(userName);
+
+    initialize();
+  }, []);
+
+  const getOwnerMintedUserNames = useCallback(async () => {
+    try {
+      const mintedDomains = [];
+      // Get the token IDs owned by the connected account
+      const tokenIds = await userNameContract.methods
+        .tokensOfOwner(userAddress)
+        .call();
+      console.log("tokenIDs: ", tokenIds);
+      for (const tokenId of tokenIds) {
+        const mintedDomain = await userNameContract.methods
+          .domainNameOf(tokenId)
+          .call();
+        mintedDomains.push(mintedDomain + ".lazi");
+      }
+
+      setMintedUserNames(mintedDomains);
+    } catch (error) {
+      console.error(error);
     }
-  }, [userName]);
+  }, [userAddress, userNameContract]);
+  useEffect(() => {
+    if (userAddress && userNameContract) {
+      getOwnerMintedUserNames();
+    }
+  }, [userAddress, userNameContract, getOwnerMintedUserNames]);
+
+  // useEffect(() => {
+  //   const checkUserNameExists = async (username) => {
+  //     try {
+  //       const res = await axios.get(Apiconfig.searchUserNameForsignUpTime, {
+  //         params: {
+  //           search: username,
+  //         },
+  //       });
+  //       if (res.data.responseCode === 200) {
+  //         setUserExists(true);
+  //       }
+  //     } catch (error) {
+  //       if (error.response && error.response.status === 404) {
+  //         setUserExists(false);
+  //       } else {
+  //         console.log(error);
+  //       }
+  //     }
+  //   };
+
+  //   if (userName) {
+  //     checkUserNameExists(userName);
+  //   }
+  // }, [userName]);
 
   return (
     <>
@@ -497,52 +547,34 @@ function EditProfile({ userProfileData }) {
                             >
                               Username
                             </Typography>
-                            <OutlinedInput
-                              type="text"
+                            <Select
                               variant="outlined"
                               size="small"
                               name="userName"
                               style={{ height: "45px" }}
-                              // disabled={
-                              //   auth?.userData.userName !== "" || isEdit
-                              // }
-                              // disabled={true}
-                              value={
-                                values.userName
-                                  ? values.userName
-                                  : userData?.userName
-                              }
-                              placeholder="User name"
-                              // value={values.userName}
-                              error={Boolean(
-                                touched.userName && errors.userName
-                              )}
-                              onBlur={handleBlur}
+                              value={values.userName || userData?.userName}
                               onChange={(event) => {
                                 setUserName(event.target.value);
                                 handleChange(event);
                               }}
-                              endAdornment={
-                                <InputAdornment position="end">
-                                  {userName && (
-                                    <>
-                                      {userExists ? (
-                                        <ErrorIcon style={{ color: "red" }} />
-                                      ) : (
-                                        <CheckCircleIcon
-                                          style={{ color: "green" }}
-                                        />
-                                      )}
-                                    </>
-                                  )}
-                                </InputAdornment>
-                              }
-                            />
+                              displayEmpty
+                              input={<OutlinedInput />}
+                            >
+                              <MenuItem value="" disabled>
+                                Select a username
+                              </MenuItem>
+                              {mintedUserNames.map((username) => (
+                                <MenuItem key={username} value={username}>
+                                  {username}
+                                </MenuItem>
+                              ))}
+                            </Select>
                             <FormHelperText error>
                               {touched.userName && errors.userName}
                             </FormHelperText>
                           </FormControl>
                         </Grid>
+
                         <Grid item lg={6} sm={6} xs={12}>
                           <FormControl fullWidth>
                             <Typography
