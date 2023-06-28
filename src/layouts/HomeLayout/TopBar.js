@@ -218,8 +218,6 @@ export function TopBarData() {
   const [showAlert, setShowAlert] = useState(false);
   const [isLoadingAlert, setIsLoadingAlert] = useState(true);
 
-
-
   // starting changes from  here
 
   const [userNameContract, setUserNameContract] = useState(null);
@@ -242,7 +240,6 @@ export function TopBarData() {
   }, []);
 
   const isMobile = useMediaQuery("(max-width:600px)");
-
 
   const getOwnerMintedUserNames = useCallback(async () => {
     try {
@@ -272,16 +269,16 @@ export function TopBarData() {
       });
     }
   }, [userAddress, userNameContract, getOwnerMintedUserNames]);
-  
+
   const handleAlertClose = () => {
     setShowAlert(false);
   };
-  
+
   useEffect(() => {
     if (!isLoadingAlert) {
       // Check if there are no minted usernames
       // Replace with your logic to check if no minted usernames
-  
+
       setShowAlert(true);
     }
   }, [isLoadingAlert]);
