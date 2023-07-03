@@ -360,7 +360,7 @@ export function TopBarData() {
       <Card variant="outlined" className={classes.alert}>
         <CardContent>
           <Typography variant="body1" component="p">
-            No NFTs have been minted
+            You Don't have minted any Username Mint your's 👉🏻👉🏻👉🏻
           </Typography>
         </CardContent>
         <Link to="/mint">
