@@ -43,6 +43,8 @@ import { AuthContext } from "src/context/Auth";
 
 import initMetamask from "src/blockchain/metamaskConnection";
 import { laziPostContractABI } from "src/blockchain/laziPostContract";
+import initPostFactoryContract from "src/blockchain/laziPostFactory";
+
 import Web3 from "web3";
 
 const useStyles = makeStyles((theme) => ({
@@ -244,6 +246,9 @@ function Collection({ listPublicExclusiveHandler }) {
   const [tokenId, setTokenId] = useState(0);
   const [posts, setPosts] = useState({});
   const [collectionAddress, setCollectionAddress] = useState("");
+  const [laziFactoryContract, setLaziFactoryContract] = useState(null);
+  const [deployedLaziPostAddress, setDeployedLaziPostAddress] = useState("");
+  const [deployedLaziPosts, setDeployedLaziPosts] = useState([]);
 
   const [formValueCollection, setFormValueCollection] = useState({
     image: "",
@@ -280,8 +285,8 @@ function Collection({ listPublicExclusiveHandler }) {
   useEffect(() => {
     const init = async () => {
       const { address } = await initMetamask();
-      // const contract = await initLaziPostContract();
-      // setlaziPostContract(contract);
+      const contract = await initPostFactoryContract();
+      setLaziFactoryContract(contract);
       setAddress(address);
       // setWeb3(web3);
     };
@@ -595,10 +600,10 @@ function Collection({ listPublicExclusiveHandler }) {
 
   const post = async (event) => {
     event.preventDefault();
-
+  
     // if (auth?.userData?.bnbBalace > 0) {
     //   setIsSubmit1(true);
-
+  
     if (
       coverCollection !== "" &&
       formValueCollection.title !== "" &&
@@ -609,59 +614,108 @@ function Collection({ listPublicExclusiveHandler }) {
       try {
         setmessage("Creating Collection...");
         setprocess(true);
+  
+        if (!laziFactoryContract) {
+          await initPostFactoryContract();
+        }
+  
+        const gasLimit = await laziFactoryContract.methods
+          .createLaziPost()
+          .estimateGas({ from: address });
+        console.log("gasLimit: ", gasLimit);
+  
+        const transaction = await laziFactoryContract.methods
+          .createLaziPost()
+          .send({ from: address, gas: gasLimit });
+  
+        const deployedPostsCount = await laziFactoryContract.methods
+          .getDeployedLaziPostsCount()
+          .call();
+        console.log("Deployed LaziPosts count:", deployedPostsCount);
+        const index = deployedPostsCount - 1;
+        const deployedLaziPostAddress = await laziFactoryContract.methods
+          .deployedLaziPosts(index)
+          .call();
+  
+        setDeployedLaziPostAddress(deployedLaziPostAddress);
+        setDeployedLaziPosts((prevDeployedLaziPosts) => [
+          ...prevDeployedLaziPosts,
+          deployedLaziPostAddress,
+        ]);
+        console.log("transaction!: ", transaction);
+        console.log("address!: ", deployedLaziPostAddress);
+  
+        const initLaziPostContract = async () => {
+          const web3 = new Web3(window.ethereum);
+          return new Promise((resolve, reject) => {
+            const laziPostContract = new web3.eth.Contract(
+              laziPostContractABI,
+              deployedLaziPostAddress
+            );
+            resolve(laziPostContract);
+          });
+        };
+        const laziPostContract = await initLaziPostContract();
+        console.log(laziPostContract);
+  
         const formData = new FormData();
         formData.append("image", coverCollection);
         formData.append("title", formValueCollection.title);
         // formData.append("bundleName", name);
         formData.append("description", formValueCollection.details);
-        axios
-          .request({
+  
+        try {
+          // Use axios async/await syntax instead of .then/.catch
+          const res = await axios.request({
             method: "POST",
             url: ApiConfig.addNft,
             data: {
               image: coverCollection,
               title: formValueCollection.title,
               description: formValueCollection.details,
+              collectionAddress: deployedLaziPostAddress,
             },
             // data: formData,
             headers: {
               token: window.localStorage.getItem("token"),
             },
-          })
-          .then((res) => {
-            if (res.data.responseCode === 200) {
-              // if (callbackFun) {
-              //   callbackFun();
-              // }
-              setOpenAddBundle(false);
-              collectionList();
-              // user.updateUserData();
-              setOpen(false);
-              setprocess(false);
-              toast.success("Collection created");
-              // handleClose();
-            } else {
-              setprocess(false);
-              toast.error("error");
-            }
-          })
-
-          .catch((err) => {
-            setprocess(false);
-            toast.error(err?.response?.data?.responseMessage);
-
-            // toast.error("error");
           });
-      } catch {}
+  
+          if (res.data.responseCode === 200) {
+            // if (callbackFun) {
+            //   callbackFun();
+            // }
+            setOpenAddBundle(false);
+            collectionList();
+            // user.updateUserData();
+            setOpen(false);
+            setprocess(false);
+            setDeployedLaziPostAddress("");
+            toast.success("Collection created");
+            // handleClose();
+          } else {
+            setprocess(false);
+            toast.error("error");
+          }
+        } catch (err) {
+          if (err.response) {
+            toast.error(err.response.data.responseMessage);
+          } else {
+            toast.error("An error occurred during the API request");
+          }
+          setprocess(false);
+          setOpen(false);
+
+        }
+      } catch (err) {
+        toast.error(`Transaction failed: ${err.message}`);
+        setOpen(false);
+        setprocess(false);
+
+      }
     }
-    // } else {
-    //   setTimeout(() => {
-    //     setErrorMesageResend(""); // count is 0 here
-    //   }, 5000);
-    //   setErrorMesageResend("Insufficient balance");
-    //   // toast.info("Insufficient balance");
-    // }
   };
+  
 
   const updateSelectedBundle = (data, collectionAddress) => {
     setCollectionAddress(collectionAddress);
