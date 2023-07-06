@@ -484,7 +484,7 @@ const NFTDomain = () => {
         <div className={classes.warningContainer}>
               <Paper className={classes.warningMessage}>
                 <p>
-                200 $LAZI airdrop for every username minted
+                200 $LAZI Airdropped within 24 hrs After Minting
                 </p>
               </Paper>
             </div>

@@ -75,7 +75,7 @@ import MetamaskSignupForm from "src/component/MetamaskSignupForm";
 
 import Web3 from "web3";
 import metamaskLogo from "src/metamask/metamask-logo.png";
-import bgImage from "./login-bg.jpeg";
+import bgImage from "./login-bg.jpg";
 
 const msg_mobile = "Please use MetaMask!";
 const deepLink = "https://metamask.app.link/dapp/social-reactjs.pages.dev/mint";
@@ -90,6 +90,9 @@ const useStyles = makeStyles((theme) => ({
     right: 0,
     bottom: 0,
     // filter: 'blur(5px)',
+    [theme.breakpoints.down('sm')]: {
+      backgroundSize: 'auto 100%',
+    },
   },
   container: {
     marginTop: "10rem",
