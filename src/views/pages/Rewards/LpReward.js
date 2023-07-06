@@ -1145,7 +1145,7 @@ const StakeReward = () => {
                     <Box className={classes.tooltipIconHeader}>
                       <Typography variant="h2">LP Reward</Typography>
                       <Tooltip
-                        title="This is the LP reward tooltip."
+                        title="Stake LAZI-MATIC LP Here."
                         style={{ cursor: "pointer" }}
                         placement={"top"}
                       >

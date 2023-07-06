@@ -75,12 +75,25 @@ import MetamaskSignupForm from "src/component/MetamaskSignupForm";
 
 import Web3 from "web3";
 import metamaskLogo from "src/metamask/metamask-logo.png";
+import bgImage from "./login-bg.jpeg";
+
 const msg_mobile = "Please use MetaMask!";
 const deepLink = "https://metamask.app.link/dapp/social-reactjs.pages.dev/mint";
 
 const useStyles = makeStyles((theme) => ({
+  background: {
+    background: `url(${bgImage}) no-repeat center center`,
+    backgroundSize: "cover",
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    // filter: 'blur(5px)',
+  },
   container: {
     marginTop: "10rem",
+    margin: "auto",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -768,37 +781,39 @@ function Signup() {
   // };
 
   return (
-    <Box className={classes.container}>
-      <Box className={classes.greeting}>
-        <Typography variant="h1" className={classes.heading}>
-          Welcome to Lazi
-        </Typography>
-        <Typography variant="h2" className={classes.subheading}>
-          The social media platform for NFT enthusiasts
-        </Typography>
-      </Box>
-      <Button
-        variant="contained"
-        className={classes.connectButton}
-        onClick={handleMetaMaskConnect}
-      >
-        <img
-          src={metamaskLogo}
-          alt="Metamask Logo"
-          className={classes.metamaskLogo}
-        />
-        Connect Metamask
-      </Button>
-      <Box textAlign="center" my={8}>
-        <Typography variant="h4" gutterBottom>
-          Join Us using MetaMask
-        </Typography>
-        <Typography variant="h6" gutterBottom>
-          Earn via trading NFTs
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          Join our community today and start connecting.
-        </Typography>
+    <Box className={classes.background}>
+      <Box className={classes.container}>
+        <Box className={classes.greeting}>
+          <Typography variant="h1" className={classes.heading}>
+            Welcome to Lazi
+          </Typography>
+          <Typography variant="h2" className={classes.subheading}>
+            The social media platform for NFT enthusiasts
+          </Typography>
+        </Box>
+        <Button
+          variant="contained"
+          className={classes.connectButton}
+          onClick={handleMetaMaskConnect}
+        >
+          <img
+            src={metamaskLogo}
+            alt="Metamask Logo"
+            className={classes.metamaskLogo}
+          />
+          Connect Metamask
+        </Button>
+        <Box textAlign="center" my={8}>
+          <Typography variant="h4" gutterBottom>
+            Join Us using MetaMask
+          </Typography>
+          <Typography variant="h6" gutterBottom>
+            Earn via Engagement Mining
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            Join our community today and start connecting.
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );

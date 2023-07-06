@@ -481,6 +481,13 @@ const NFTDomain = () => {
             NFT Collection / User
           </h3>
         </div>
+        <div className={classes.warningContainer}>
+              <Paper className={classes.warningMessage}>
+                <p>
+                200 $LAZI airdrop for every username minted
+                </p>
+              </Paper>
+            </div>
         {/*  */}
         <div className="input-bg">
           {/* input + button flex - section */}
