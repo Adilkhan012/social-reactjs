@@ -805,6 +805,63 @@ const StakeReward = () => {
     });
   };
 
+  const handleUnstake = async () => {
+    return new Promise(async (resolve, reject) => {
+      if (lpRewardContract) {
+        try {
+          const gasEstimate = await lpRewardContract.methods
+            .unstake()
+            .estimateGas({ from: userAddress });
+  
+          lpRewardContract.methods
+            .unstake()
+            .send({ from: userAddress, gas: gasEstimate })
+            .on("transactionHash", (hash) => {
+              console.log(hash);
+            })
+            .on("receipt", (receipt) => {
+              console.log(receipt);
+              toast.success("Unstake successful!", {
+                position: toast.POSITION.TOP_RIGHT,
+              });
+              fetchInformation(); // Fetch information after the transaction is successfully mined
+              resolve(); // Resolve the promise when the transaction is successful
+            })
+            .on("error", (error) => {
+              console.log(error);
+              if (error.code === 4001) {
+                toast.error("Transaction rejected by the user.", {
+                  position: toast.POSITION.TOP_RIGHT,
+                });
+                reject(new Error("Transaction rejected by the user."));
+              } else {
+                const errorMessage = error.message.split("message: ")[2];
+                toast.error(errorMessage, {
+                  position: toast.POSITION.TOP_RIGHT,
+                });
+                reject(new Error(errorMessage));
+              }
+            });
+        } catch (error) {
+          console.log(error);
+          let errorMessage = "An error occurred during the transaction.";
+  
+          if (error.message) {
+            const startIndex = error.message.indexOf(" reverted: ") + 10;
+            const endIndex = error.message.indexOf(",", startIndex);
+            errorMessage = error.message.substring(startIndex, endIndex);
+          }
+  
+          toast.error(errorMessage);
+          reject(new Error(errorMessage));
+        }
+      } else {
+        reject(new Error("EngagementContract is not available!"));
+      }
+    });
+  };
+  
+
   const fetchTotalStaked = useCallback(async () => {
     try {
       const totalStaked = await lpRewardContract.methods.totalStaked().call();
@@ -1142,7 +1199,7 @@ const StakeReward = () => {
       <Box className={classes.bannerBox}>
         <div className={classes.warningContainer}>
           <Paper className={classes.warningMessage}>
-            <p>Staking LAZI  UserNames gives 3x - 5x Yield Boost</p>
+            <p>Staking LAZI UserNames gives 3x - 5x Yield Boost</p>
           </Paper>
         </div>
         <Grid container spacing={3}>
@@ -3106,45 +3163,38 @@ const StakeReward = () => {
                             Max
                           </Button>
                         </Box> */}
-                        <Button
-                          variant="contained"
-                          style={{
-                            backgroundColor: "#e31a89",
-                            color: "#fff",
-                            height: 40,
-                            paddingInline: 30,
-                            fontSize: 16,
-                            marginTop: 25,
-                            marginLeft: 55,
-                          }}
-                          onClick={handleMainMenuButton}
-                        >
-                          Main Menu
-                        </Button>
-
-                        {/* <div
+                        <div style={{ display: "flex" }}>
+                          <Button
+                            variant="contained"
                             style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              paddingInline: 15,
-                              paddingBlock: 6,
+                              backgroundColor: "#e31a89",
+                              color: "#fff",
+                              height: 40,
+                              paddingInline: 30,
+                              fontSize: 16,
+                              marginTop: 25,
+                              marginLeft: 55,
                             }}
+                            onClick={handleMainMenuButton}
                           >
-                            <div>User Balance</div>
-                            <div style={{ fontWeight: "bold" }}>444</div>
-                          </div> */}
-
-                        {/* <div
+                            Main Menu
+                          </Button>
+                          <Button
+                            variant="contained"
                             style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              paddingInline: 15,
-                              paddingBlock: 6,
+                              backgroundColor: "#e31a89",
+                              color: "#fff",
+                              height: 40,
+                              paddingInline: 30,
+                              fontSize: 16,
+                              marginTop: 25,
+                              marginLeft: 55,
                             }}
+                            onClick={handleUnstake}
                           >
-                            <div>BooBoost</div>
-                            <div style={{ fontWeight: "bold" }}>2x</div>
-                          </div> */}
+                            Unstake
+                          </Button>
+                        </div>
                       </Box>
                     </Box>
                   </Box>
