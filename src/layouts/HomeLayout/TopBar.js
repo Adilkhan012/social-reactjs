@@ -49,6 +49,8 @@ import initUserNameContract from "src/blockchain/laziUserNameContract";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
+const laziTokenAddress = "0xf472134D28216581F47304c66Fb18922a146e514";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.common.white,
@@ -340,6 +342,39 @@ export function TopBarData() {
     }
   };
 
+  const addTokenToMetaMask = async () => {
+    const { ethereum } = window;
+
+    if (!(ethereum && ethereum.isMetaMask)) {
+      toast.message("Use Metamask!");
+      return;
+    }
+    try {
+      // wasAdded is a boolean. Like any RPC method, an error may be thrown.
+      const wasAdded = await ethereum.request({
+        method: "wallet_watchAsset",
+        params: {
+          type: "ERC20", // Initially only supports ERC20, but eventually more!
+          options: {
+            address: laziTokenAddress, // The address that the token is at.
+            symbol: "LAZI", // A ticker symbol or shorthand, up to 5 chars.
+            decimals: 18, // The number of decimals in the token
+            image:
+              "https://pbs.twimg.com/profile_images/1609799908101324800/6RP_7TpH_400x400.jpg", // A string url of the token logo
+          },
+        },
+      });
+
+      if (wasAdded) {
+        console.log("Thanks for your interest!");
+      } else {
+        console.log("Your loss!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const status = localStorage.getItem("status");
 
   const checkStatus = window.localStorage.getItem("status");
@@ -423,6 +458,32 @@ export function TopBarData() {
                       )}
                       &nbsp; &nbsp;
                       <Box className={classes.iconbuttonHeader}>
+                        <Button
+                          style={{
+                            marginTop: "4px",
+                            border: "none",
+                            padding: "0",
+                            boxShadow: "none",
+                            transition: "all 0.3s ease",
+                            cursor: "pointer",
+                            backgroundColor: "transparent",
+
+                          }}
+                          onClick={addTokenToMetaMask}
+                        >
+                          <img
+                            src="./images/metamask.png"
+                            alt="Metamask logo"
+                            style={{
+                              border: "none",
+                              verticalAlign: "middle",
+                              width: "20px",
+                              backgroundColor: "transparent",
+                              marginRight: '8px',
+                            }}
+                          />
+                        </Button>
+
                         <IconButton>
                           <span
                             style={{
@@ -443,6 +504,7 @@ export function TopBarData() {
                             {auth?.unreadChats > 0 && <Box></Box>}
                           </span>
                         </IconButton>
+
                         <IconButton className={classes.iconbutton}>
                           <span
                             style={{ fontSize: "14px" }}

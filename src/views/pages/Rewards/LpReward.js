@@ -123,6 +123,25 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     marginLeft: 12,
   },
+  warningContainer: {
+    backgroundColor: "E70C9B",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    top: 0,
+    left: 0,
+    zIndex: 9999,
+  },
+  warningMessage: {
+    backgroundColor: "E70C9B",
+    padding: 0,
+    margin: 0,
+    color: "#E70C9B",
+    fontSize: "1.2rem",
+    fontWeight: 400,
+    textAlign: "center",
+    maxWidth: "90%",
+  },
 }));
 
 // const msg_desk = "Please install MetaMask Wallet extension";
@@ -271,13 +290,13 @@ const StakeReward = () => {
     setSelectedTime(0);
     setTokenStakeValue(0);
   };
-  const handleMainMenuButton=()=>{
+  const handleMainMenuButton = () => {
     setAfterLocked(false);
     setLocked(false);
     setFlexible(false);
     setSelectedTime(0);
     setTokenStakeValue(0);
-  }
+  };
 
   const handleIncrement = () => {
     setLazinessProfit((prevProfit) => prevProfit + 0.1);
@@ -802,8 +821,8 @@ const StakeReward = () => {
       const userRewardsValue = await lpRewardContract.methods
         .getUserRewards(userAddress)
         .call();
-        const etherValue = (parseInt(userRewardsValue) / 10 ** 18).toFixed(3);
-        setUserRewards(etherValue); 
+      const etherValue = (parseInt(userRewardsValue) / 10 ** 18).toFixed(3);
+      setUserRewards(etherValue);
     } catch (error) {
       console.error("Error fetching user rewards:", error);
     }
@@ -1121,6 +1140,11 @@ const StakeReward = () => {
   return (
     <>
       <Box className={classes.bannerBox}>
+        <div className={classes.warningContainer}>
+          <Paper className={classes.warningMessage}>
+            <p>Staking LAZI  UserNames gives 3x - 5x Yield Boost</p>
+          </Paper>
+        </div>
         <Grid container spacing={3}>
           <Grid item md={isMobile ? 12 : 6} xs={isMobile ? 12 : 12}>
             <Paper
@@ -2645,7 +2669,7 @@ const StakeReward = () => {
                             backgroundColor: "#e31a89",
                             color: "#fff",
                             height: 25,
-                            width:45,
+                            width: 45,
                             borderRadius: 20,
                             fontSize: 12,
                             fontWeight: "bold",
@@ -2661,7 +2685,7 @@ const StakeReward = () => {
                             backgroundColor: "#e31a89",
                             color: "#fff",
                             height: 25,
-                            width:45,
+                            width: 45,
                             borderRadius: 20,
                             fontSize: 12,
                             fontWeight: "bold",
@@ -2677,7 +2701,7 @@ const StakeReward = () => {
                             backgroundColor: "#e31a89",
                             color: "#fff",
                             height: 25,
-                            width:45,
+                            width: 45,
                             borderRadius: 20,
                             fontSize: 12,
                             fontWeight: "bold",
@@ -2693,7 +2717,7 @@ const StakeReward = () => {
                             backgroundColor: "#e31a89",
                             color: "#fff",
                             height: 25,
-                            width:45,
+                            width: 45,
                             borderRadius: 20,
                             fontSize: 12,
                             fontWeight: "bold",
@@ -2709,7 +2733,7 @@ const StakeReward = () => {
                             backgroundColor: "#e31a89",
                             color: "#fff",
                             height: 25,
-                            width:45,
+                            width: 45,
                             borderRadius: 20,
                             fontSize: 12,
                             fontWeight: "bold",
@@ -3480,7 +3504,6 @@ const StakeReward = () => {
                     </p> */}
                   </div>
                   <br></br>
-                  
                 </div>
                 <br></br>
 
