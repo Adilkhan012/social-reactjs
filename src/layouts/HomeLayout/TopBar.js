@@ -48,6 +48,8 @@ import initlaziTokenContract from "src/blockchain/laziTokenContract";
 import initUserNameContract from "src/blockchain/laziUserNameContract";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import laziLogo from './lazi.jpeg';
+
 
 //testnet
 // const laziTokenAddress = "0xf472134D28216581F47304c66Fb18922a146e514";
@@ -222,9 +224,9 @@ export function TopBarData() {
   });
   const [showAlert, setShowAlert] = useState(false);
   const [isLoadingAlert, setIsLoadingAlert] = useState(true);
-
+  
   // starting changes from  here
-
+  
   const [userNameContract, setUserNameContract] = useState(null);
   const [userAddress, setUserAddress] = useState(null);
   const [mintedUserNames, setMintedUserNames] = useState([]);
@@ -362,8 +364,7 @@ export function TopBarData() {
             address: laziTokenAddress, // The address that the token is at.
             symbol: "LAZI", // A ticker symbol or shorthand, up to 5 chars.
             decimals: 18, // The number of decimals in the token
-            image:
-              "https://pbs.twimg.com/profile_images/1609799908101324800/6RP_7TpH_400x400.jpg", // A string url of the token logo
+            image: laziLogo, // A string url of the token logo
           },
         },
       });
