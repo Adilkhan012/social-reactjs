@@ -30,6 +30,19 @@ import SettingsContext from "src/context/SettingsContext";
 
 const history = createBrowserHistory();
 
+//polygon mainnet
+const customNetwork = {
+  chainId: "0x89", // Polygon Mainnet Chain ID
+  chainName: "Polygon Mainnet",
+  nativeCurrency: {
+    name: "MATIC",
+    symbol: "MATIC",
+    decimals: 18,
+  },
+  rpcUrls: ["https://rpc-mainnet.maticvigil.com"], // Polygon Mainnet RPC endpoint
+  blockExplorerUrls: ["https://polygonscan.com"], // Polygon Mainnet Block Explorer URL
+};
+
 //mainnet network
 // const customNetwork = {
 //   chainId: "0x38", // BSC Mainnet Chain ID
@@ -44,17 +57,17 @@ const history = createBrowserHistory();
 // };
 
 // custom network for testnet
-const customNetwork = {
-  chainId: "0x13881", // Mumbai Testnet Chain ID
-  chainName: "Mumbai Testnet",
-  nativeCurrency: {
-    name: "MATIC",
-    symbol: "MATIC",
-    decimals: 18,
-  },
-  rpcUrls: ["https://rpc-mumbai.maticvigil.com"], // Mumbai Testnet RPC endpoint
-  blockExplorerUrls: ["https://explorer-mumbai.maticvigil.com"], // Mumbai Testnet Block Explorer URL
-};
+// const customNetwork = {
+//   chainId: "0x13881", // Mumbai Testnet Chain ID
+//   chainName: "Mumbai Testnet",
+//   nativeCurrency: {
+//     name: "MATIC",
+//     symbol: "MATIC",
+//     decimals: 18,
+//   },
+//   rpcUrls: ["https://rpc-mumbai.maticvigil.com"], // Mumbai Testnet RPC endpoint
+//   blockExplorerUrls: ["https://explorer-mumbai.maticvigil.com"], // Mumbai Testnet Block Explorer URL
+// };
 
 //styles
 const styles = (theme) => ({

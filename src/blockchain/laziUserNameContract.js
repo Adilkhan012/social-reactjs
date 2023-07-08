@@ -1,9 +1,9 @@
 import Web3 from "web3";
 //testnet
-const laziUserNameAddress = '0x775ceD56009D79460e092581Ec2DD1c75631025a';
+// const laziUserNameAddress = '0x775ceD56009D79460e092581Ec2DD1c75631025a';
 
 //mainnet
-// const laziUserNameAddress = "0x427C689E1d2eB7df41a14e0199609DA49e610A75";
+const laziUserNameAddress = "0x427C689E1d2eB7df41a14e0199609DA49e610A75";
 
 //testnet
 // const laziUserNameABI = [

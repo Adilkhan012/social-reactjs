@@ -49,7 +49,10 @@ import initUserNameContract from "src/blockchain/laziUserNameContract";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
-const laziTokenAddress = "0xf472134D28216581F47304c66Fb18922a146e514";
+//testnet
+// const laziTokenAddress = "0xf472134D28216581F47304c66Fb18922a146e514";
+// mainet
+const laziTokenAddress = "0xd7Dd450Bb046C886f4b680813A9e7E4b7f91ba07";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -467,7 +470,6 @@ export function TopBarData() {
                             transition: "all 0.3s ease",
                             cursor: "pointer",
                             backgroundColor: "transparent",
-
                           }}
                           onClick={addTokenToMetaMask}
                         >
@@ -479,7 +481,7 @@ export function TopBarData() {
                               verticalAlign: "middle",
                               width: "20px",
                               backgroundColor: "transparent",
-                              marginRight: '8px',
+                              marginRight: "8px",
                             }}
                           />
                         </Button>

@@ -1,9 +1,9 @@
 import Web3 from "web3";
 
 //testnet
-const lpRewardAddress = "0x27208049A8021C35e9A923e5fc810956312F4949";
+// const lpRewardAddress = "0x27208049A8021C35e9A923e5fc810956312F4949";
 //mainnet
-// const lpRewardAddress = "0x489bA6AE9E6eA991Db6842b09682d15a76194D51";
+const lpRewardAddress = "0x489bA6AE9E6eA991Db6842b09682d15a76194D51";
 
 //testnet
 // const lpRewardABI = [

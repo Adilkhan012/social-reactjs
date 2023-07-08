@@ -1,9 +1,9 @@
 import Web3 from "web3";
 // testnet
-const laziTokenAddress = "0xf472134D28216581F47304c66Fb18922a146e514";
+// const laziTokenAddress = "0xf472134D28216581F47304c66Fb18922a146e514";
 const rewardTokenAddress = "0x37C5f4d14DA07c73c356b1edD15551f7342DD2eF";
 // mainnet
-// const laziTokenAddress = "0xd7Dd450Bb046C886f4b680813A9e7E4b7f91ba07";
+const laziTokenAddress = "0xd7Dd450Bb046C886f4b680813A9e7E4b7f91ba07";
 
 const laziTokenABI = [
   { inputs: [], stateMutability: "nonpayable", type: "constructor" },
