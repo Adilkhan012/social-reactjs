@@ -5,7 +5,8 @@ import StakeReward from "../Rewards/StakeReward";
 import LpReward from "../Rewards/LpReward";
 import Earn from "./Earn";
 import EngagementRewards from "./EngagementRewards";
-import Leaderboard from "./Leaderboard";
+// import Leaderboard from "./Leaderboard";
+import Leaderboard from './CommingSoon'
 
 const useStyles = makeStyles((theme) => ({
   root: {
