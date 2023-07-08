@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Box, Grid, Link, makeStyles, Paper } from "@material-ui/core";
 import { useLocation } from "react-router-dom";
-import StakeReward from "../Rewards/StakeReward";
+// import StakeReward from "../Rewards/StakeReward";
+import StakeReward from "../Rewards/CommingSoon";
 import LpReward from "../Rewards/LpReward";
-import Earn from "./Earn";
-import EngagementRewards from "./EngagementRewards";
+// import Earn from "./Earn";
+import Earn from "./CommingSoon";
+// import EngagementRewards from "./EngagementRewards";
+import EngagementRewards from "./CommingSoon";
 // import Leaderboard from "./Leaderboard";
-import Leaderboard from './CommingSoon'
+import Leaderboard from "./CommingSoon";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,14 +79,14 @@ const Rewards = () => {
 
     if (ids[1] && ids[1] === "stakeReward") {
       setTabView("StakeReward");
-    } else if (ids[1] && ids[1] === "LpReward") {
-      setTabView("LpReward");
+    } else if (ids[1] && ids[1] === "Leaderboard") {
+      setTabView("Leaderboard");
     } else if (ids[1] && ids[1] === "Earn") {
       setTabView("Earn");
     } else if (ids[1] && ids[1] === "EngagementRewards") {
       setTabView("EngagementRewards");
     } else {
-      setTabView("Leaderboard");
+      setTabView("LpReward");
     }
   }, [location]);
 
