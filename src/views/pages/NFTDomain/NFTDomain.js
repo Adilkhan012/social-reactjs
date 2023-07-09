@@ -101,9 +101,9 @@ const web3 = new Web3(window.ethereum);
 
 // Instantiate the contract object with your ABI and contract address
 // mainnet
-// const contractAddress = "0x427C689E1d2eB7df41a14e0199609DA49e610A75"; // Replace with your contract address
+const contractAddress = "0x427C689E1d2eB7df41a14e0199609DA49e610A75"; // Replace with your contract address
 //testnet
-const contractAddress = "0x775ceD56009D79460e092581Ec2DD1c75631025a"; // Replace with your contract address
+// const contractAddress = "0x775ceD56009D79460e092581Ec2DD1c75631025a"; // Replace with your contract address
 // const contractAddress = "0xB4EF36f15F225A0c4244CA5Abd5C5c2c03321092"; // Replace with your contract address
 // const contract = new web3.eth.Contract(contractABI, contractAddress);
 

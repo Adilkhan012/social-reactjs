@@ -39,7 +39,7 @@ const customNetwork = {
     symbol: "MATIC",
     decimals: 18,
   },
-  rpcUrls: ["https://rpc-mainnet.maticvigil.com"], // Polygon Mainnet RPC endpoint
+  rpcUrls: ["https://polygon-rpc.com/"], // Polygon Mainnet RPC endpoint
   blockExplorerUrls: ["https://polygonscan.com"], // Polygon Mainnet Block Explorer URL
 };
 
