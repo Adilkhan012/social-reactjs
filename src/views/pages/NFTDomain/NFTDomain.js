@@ -269,7 +269,9 @@ const NFTDomain = () => {
         try {
           const _qty = 1; // Replace with your desired quantity
 
-          const nftPrice = await contract.methods.getPrice(_qty).call();
+          const nftPrice = await contract.methods
+            .getPrice(_qty)
+            .call({ from: accounts[0] });
           // const nftPrice = 1;
           console.log("Token Price : ", nftPrice);
 
@@ -285,7 +287,7 @@ const NFTDomain = () => {
             .send({
               from: accounts[0],
               gas: gasEstimate,
-              value: web3.utils.toWei("0", "ether"),
+              value: nftPrice,
             });
 
           // Handle the result of the transaction
