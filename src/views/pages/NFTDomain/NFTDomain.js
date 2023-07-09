@@ -267,7 +267,10 @@ const NFTDomain = () => {
 
       try {
         try {
-          const nftPrice = await contract.methods.getPrice().call();
+          const _qty = 1; // Replace with your desired quantity
+
+          const nftPrice = await contract.methods.getPrice(_qty).call();
+          // const nftPrice = 1;
           console.log("Token Price : ", nftPrice);
 
           const gasEstimate = await contract.methods
