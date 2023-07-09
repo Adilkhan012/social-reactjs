@@ -267,7 +267,7 @@ const NFTDomain = () => {
 
       try {
         try {
-          const nftPrice = await contract.methods.laziNamePrice().call();
+          const nftPrice = await contract.methods.getPrice().call();
           console.log("Token Price : ", nftPrice);
 
           const gasEstimate = await contract.methods
@@ -482,12 +482,10 @@ const NFTDomain = () => {
           </h3>
         </div>
         <div className={classes.warningContainer}>
-              <Paper className={classes.warningMessage}>
-                <p>
-                200 $LAZI Airdropped within 24 hrs After Minting
-                </p>
-              </Paper>
-            </div>
+          <Paper className={classes.warningMessage}>
+            <p>200 $LAZI Airdropped within 24 hrs After Minting</p>
+          </Paper>
+        </div>
         {/*  */}
         <div className="input-bg">
           {/* input + button flex - section */}
