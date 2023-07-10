@@ -20,6 +20,7 @@ import initMetamask from "src/blockchain/metamaskConnection";
 import initEngagementContract from "src/blockchain/engagementContract";
 import initlaziTokenContract from "src/blockchain/laziTokenContract";
 import initUserNameContract from "src/blockchain/laziUserNameContract";
+import Web3 from "web3";
 import ApiConfig from "src/ApiConfig/ApiConfig";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -370,7 +371,7 @@ const EngageReward = () => {
         from: userAddress,
         value: laziValue, // Modify the value if needed
         gas: gasEstimate,
-        maxPriorityFeePerGas: web3.utils.toWei("32","gwei"),
+        maxPriorityFeePerGas: Web3.utils.toWei("32","gwei"),
       });
 
       console.log("Transaction result:", result);
