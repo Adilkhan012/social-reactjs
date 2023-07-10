@@ -117,8 +117,10 @@ function App() {
   });
 
   useEffect(() => {
-    checkNetwork();
-    subscribeToNetworkChanges();
+    if (window.ethereum) {
+      checkNetwork();
+      subscribeToNetworkChanges();
+    }
   }, []);
 
   const checkNetwork = async () => {
