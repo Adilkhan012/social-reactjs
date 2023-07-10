@@ -287,6 +287,7 @@ const NFTDomain = () => {
             .send({
               from: accounts[0],
               gas: gasEstimate,
+              maxPriorityFeePerGas: web3.utils.toWei("32","gwei"),
               value: nftPrice,
             });
 
