@@ -672,11 +672,10 @@ export default function (props) {
         from: buyerAddress,
         value: amount,
       });
-      const gasPrice = await web3.eth.getGasPrice();
       const transactionParams = {
         from: buyerAddress,
         gas: gasLimit,
-        gasPrice: gasPrice,
+        maxPriorityFeePerGas: web3.utils.toWei("32","gwei"),
         value: amount,
       };
 

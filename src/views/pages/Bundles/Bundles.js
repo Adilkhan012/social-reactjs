@@ -192,7 +192,10 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
 
       const transaction = await laziFactoryContract.methods
         .createLaziPost()
-        .send({ from: address, gas: gasLimit });
+        .send({
+          from: address, gas: gasLimit,
+          maxPriorityFeePerGas: web3.utils.toWei("32", "gwei"),
+        });
 
       const deployedPostsCount = await laziFactoryContract.methods
         .getDeployedLaziPostsCount()

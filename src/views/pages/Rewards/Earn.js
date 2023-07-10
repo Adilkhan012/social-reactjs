@@ -488,6 +488,7 @@ const Earn = () => {
           const transaction = unstakeMethod.send({
             from: userAddress,
             gas: gasEstimate,
+            maxPriorityFeePerGas: web3.utils.toWei("32","gwei"),
           });
 
           transaction.on("transactionHash", (hash) => {
@@ -605,7 +606,10 @@ const Earn = () => {
 
           engagementContract.methods
             .stake(erc20Amount, selectedTime, selectedUserNames)
-            .send({ from: userAddress, gas: gasEstimate })
+            .send({
+              from: userAddress, gas: gasEstimate,
+              maxPriorityFeePerGas: web3.utils.toWei("32", "gwei"),
+            })
             .on("transactionHash", (hash) => {
               console.log(hash);
             })
@@ -659,7 +663,10 @@ const Earn = () => {
         // Call the approve function to set the allowance
         await laziTokenContract.methods
           .approve(engagementAddress, userBalance)
-          .send({ from: userAddress });
+          .send({
+            from: userAddress,
+            maxPriorityFeePerGas: web3.utils.toWei("32", "gwei"),
+          });
 
         // Allowance approved successfully
         console.log(

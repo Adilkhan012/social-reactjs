@@ -188,6 +188,7 @@ const customNetwork = {
 // };
 
 export const showMessage = () => {
+  console.log(msg_mobile);
   if (window.confirm(msg_mobile)) window.location.href = deepLink;
 };
 

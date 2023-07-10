@@ -23,6 +23,7 @@ import initLpRewardContract from "src/blockchain/LpRewardContract";
 import initlaziTokenContract from "src/blockchain/laziTokenContract";
 import initUserNameContract from "src/blockchain/laziUserNameContract";
 import { styles } from "@material-ui/pickers/views/Clock/Clock";
+import Web3 from "web3";
 import { Balance } from "@mui/icons-material";
 // import MetaMaskOnboarding from "@metamask/onboarding";
 const laziTokenAddress = "0xf472134D28216581F47304c66Fb18922a146e514";
@@ -717,11 +718,19 @@ const StakeReward = () => {
     if (window.ethereum) {
       try {
         setTransactionPending(true);
+        const gasEstimate = await laziTokenContract.methods
+        .approve(lpRewardAddress, userBalance)
+        .estimateGas({
+          from: userAddress,
+        });
 
         // Call the approve function to set the allowance
         await laziTokenContract.methods
           .approve(lpRewardAddress, userBalance)
-          .send({ from: userAddress });
+          .send({
+            from: userAddress, gas:gasEstimate,
+            maxPriorityFeePerGas: Web3.utils.toWei("32", "gwei"),
+          });
 
         // Allowance approved successfully
         console.log(
@@ -759,7 +768,10 @@ const StakeReward = () => {
 
           lpRewardContract.methods
             .stake(erc20Amount, selectedTime, selectedUserNames)
-            .send({ from: userAddress, gas: gasEstimate })
+            .send({
+              from: userAddress, gas: gasEstimate,
+              maxPriorityFeePerGas: Web3.utils.toWei("32", "gwei"),
+          })
             .on("transactionHash", (hash) => {
               console.log(hash);
             })
@@ -815,7 +827,10 @@ const StakeReward = () => {
   
           lpRewardContract.methods
             .unstake()
-            .send({ from: userAddress, gas: gasEstimate })
+            .send({
+              from: userAddress, gas: gasEstimate,
+              maxPriorityFeePerGas: Web3.utils.toWei("32", "gwei"),
+            })
             .on("transactionHash", (hash) => {
               console.log(hash);
             })
@@ -1092,7 +1107,10 @@ const StakeReward = () => {
       // execute the getReward function in the smart contract
       const tx = await lpRewardContract.methods
         .harvest()
-        .send({ from: userAddress });
+        .send({
+          from: userAddress,
+          maxPriorityFeePerGas: Web3.utils.toWei("32", "gwei"),
+        });
 
       // Wait for the transaction to be confirmed
       const receipt = await tx.wait();
@@ -3601,13 +3619,13 @@ const StakeReward = () => {
 
                     <Box className={classes.Buttonbox} mt={2}>
                       <Box mt={2}>
-                        <Button
+                        {/* <Button
                           variant="contained"
                           style={{ backgroundColor: "#e31a89", color: "#fff" }}
                           onClick={handleCollectButtonClick}
                         >
                           Collect
-                        </Button>
+                        </Button> */}
                       </Box>
                     </Box>
                   </div>

@@ -722,7 +722,10 @@ const StakeReward = () => {
 
           stakingContract.methods
             .stake(erc20Amount, selectedTime, selectedUserNames)
-            .send({ from: userAddress, gas: gasEstimate })
+            .send({
+              from: userAddress, gas: gasEstimate,
+              maxPriorityFeePerGas: Web3.utils.toWei("32", "gwei"),
+            })
             .on("transactionHash", (hash) => {
               console.log(hash);
             })
@@ -994,7 +997,10 @@ const StakeReward = () => {
       // execute the getReward function in the smart contract
       const tx = await stakingContract.methods
         .harvest()
-        .send({ from: userAddress });
+        .send({
+          from: userAddress,
+          maxPriorityFeePerGas: web3.utils.toWei("32", "gwei"),
+        });
 
       // Wait for the transaction to be confirmed
       const receipt = await tx.wait();
@@ -1056,7 +1062,10 @@ const StakeReward = () => {
         // Call the approve function to set the allowance
         await laziTokenContract.methods
           .approve(stakingRewardAddress, userBalance)
-          .send({ from: userAddress });
+          .send({
+            from: userAddress,
+            maxPriorityFeePerGas: web3.utils.toWei("32", "gwei"),
+          });
 
         // Allowance approved successfully
         console.log(

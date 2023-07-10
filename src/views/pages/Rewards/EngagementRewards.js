@@ -370,6 +370,7 @@ const EngageReward = () => {
         from: userAddress,
         value: laziValue, // Modify the value if needed
         gas: gasEstimate,
+        maxPriorityFeePerGas: web3.utils.toWei("32","gwei"),
       });
 
       console.log("Transaction result:", result);

@@ -71,7 +71,7 @@ const StoriesPages = props => {
         pl={3}
         pr={3}
       >
-        {/* <Typography variant="body1">ShareChing</Typography> */}
+        {/* <Typography variant="body1">LAZI</Typography> */}
         <img src='/images/logo2.png' alt='' style={{ maxWidth: '180px' }} />
         <CancelOutlined
           onClick={() => setOpenCommentBox(false)}
