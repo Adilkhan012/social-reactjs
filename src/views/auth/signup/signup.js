@@ -78,7 +78,7 @@ import metamaskLogo from "src/metamask/metamask-logo.png";
 import bgImage from "./login-bg.jpg";
 
 const msg_mobile = "Please use MetaMask!";
-const deepLink = "https://metamask.app.link/dapp/social-reactjs.pages.dev/mint";
+const deepLink = "https://metamask.app.link/dapp/app.lazi.app/mint";
 
 const useStyles = makeStyles((theme) => ({
   background: {

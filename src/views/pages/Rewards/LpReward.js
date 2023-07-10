@@ -145,17 +145,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// const msg_desk = "Please install MetaMask Wallet extension";
-// const msg_mobile = "Please use MetaMask!";
-// const deepLink = "https://metamask.app.link/dapp/social-reactjs.pages.dev/mint";
-
-// const showMessage = () => {
-//   if (require("is-mobile")()) {
-//     if (window.confirm(msg_mobile)) window.location.href = deepLink;
-//   } else {
-//     if (window.confirm(msg_desk));
-//   }
-// };
 
 const StakeReward = () => {
   const classes = useStyles();
@@ -623,7 +612,7 @@ const StakeReward = () => {
   };
 
   const calculateTotalMultiplier = () => {
-    let multiplier = 1;
+    let multiplier = 0;
 
     if (selectedTime) {
       if (selectedTime >= 0 && selectedTime < 90) {
@@ -641,7 +630,7 @@ const StakeReward = () => {
       }
     }
 
-    multiplier += 0.25 * selectedUserNames.length;
+    multiplier +=selectedUserNames.length===0?1: 2.5+0.5 * selectedUserNames.length;
     return multiplier;
   };
   const totalMultiplier = calculateTotalMultiplier();

@@ -14,6 +14,7 @@ import Button from "@material-ui/core/Button";
 import { Tooltip } from "@material-ui/core";
 import InfoIcon from "@material-ui/icons/Info";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import Web3 from "web3";
 import { toast } from "react-toastify";
 import BigInt from "big-integer";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -124,18 +125,6 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 12,
   },
 }));
-
-// const msg_desk = "Please install MetaMask Wallet extension";
-// const msg_mobile = "Please use MetaMask!";
-// const deepLink = "https://metamask.app.link/dapp/social-reactjs.pages.dev/mint";
-
-// const showMessage = () => {
-//   if (require("is-mobile")()) {
-//     if (window.confirm(msg_mobile)) window.location.href = deepLink;
-//   } else {
-//     if (window.confirm(msg_desk));
-//   }
-// };
 
 const StakeReward = () => {
   const classes = useStyles();
@@ -611,7 +600,7 @@ const StakeReward = () => {
   };
 
   const calculateTotalMultiplier = () => {
-    let multiplier = 1;
+    let multiplier = 0;
 
     if (selectedTime) {
       if (selectedTime >= 0 && selectedTime < 90) {
@@ -629,7 +618,7 @@ const StakeReward = () => {
       }
     }
 
-    multiplier += 0.25 * selectedUserNames.length;
+    multiplier +=selectedUserNames.length===0?1: 2.5+0.5 * selectedUserNames.length;
     return multiplier;
   };
   const totalMultiplier = calculateTotalMultiplier();
@@ -999,7 +988,7 @@ const StakeReward = () => {
         .harvest()
         .send({
           from: userAddress,
-          maxPriorityFeePerGas: web3.utils.toWei("32", "gwei"),
+          maxPriorityFeePerGas: Web3.utils.toWei("32", "gwei"),
         });
 
       // Wait for the transaction to be confirmed
@@ -1064,7 +1053,7 @@ const StakeReward = () => {
           .approve(stakingRewardAddress, userBalance)
           .send({
             from: userAddress,
-            maxPriorityFeePerGas: web3.utils.toWei("32", "gwei"),
+            maxPriorityFeePerGas: Web3.utils.toWei("32", "gwei"),
           });
 
         // Allowance approved successfully
