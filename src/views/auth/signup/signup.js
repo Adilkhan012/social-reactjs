@@ -76,6 +76,7 @@ import MetamaskSignupForm from "src/component/MetamaskSignupForm";
 import Web3 from "web3";
 import metamaskLogo from "src/metamask/metamask-logo.png";
 import bgImage from "./login-bg.jpg";
+import zIndex from "@material-ui/core/styles/zIndex";
 
 const msg_mobile = "Please use MetaMask!";
 const deepLink = "https://metamask.app.link/dapp/app.lazi.app/mint";
@@ -88,36 +89,55 @@ const useStyles = makeStyles((theme) => ({
     top: 0,
     left: 0,
     right: 0,
-    bottom: 0,
-    // filter: 'blur(5px)',
-    [theme.breakpoints.down('sm')]: {
+    bottom: 5,  
+    zIndex:0,
+     [theme.breakpoints.down('sm')]: {
       backgroundSize: 'auto 100%',
     },
   },
   container: {
-    marginTop: "10rem",
+    marginTop: "5rem",
     margin: "auto",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
     padding: theme.spacing(4),
-    backgroundColor: "none",
+    backgroundColor: "#242526",
+    height: '30rem',
+    width: '45vw',
+    zIndex:1,
+      border: '6px solid #E31A89',
+    [theme.breakpoints.down('sm')]: {
+      width: '80vw',
+      height: 'auto',
+      padding: theme.spacing(2),
+    },
   },
   greeting: {
     marginBottom: theme.spacing(4),
     textAlign: "center",
+    [theme.breakpoints.down('sm')]: {
+      fontSize: "2rem",
+    },
   },
   heading: {
     fontSize: "4rem",
     fontWeight: 700,
     marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(2),
     color: "#E31A89",
+    [theme.breakpoints.down('sm')]: {
+      fontSize: "3rem",
+    },
   },
   subheading: {
     fontSize: "2rem",
     fontWeight: 500,
     color: theme.palette.text.secondary,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: "1.5rem",
+    },
   },
   connectButton: {
     marginTop: theme.spacing(4),
@@ -128,11 +148,17 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: "#FF6EB6",
     },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: "1rem",
+    },
   },
   metamaskLogo: {
     marginRight: theme.spacing(2),
     height: "2rem",
     width: "auto",
+    [theme.breakpoints.down('sm')]: {
+      height: "1.5rem",
+    },
   },
 }));
 

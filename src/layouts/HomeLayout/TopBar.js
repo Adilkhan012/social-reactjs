@@ -48,8 +48,7 @@ import initlaziTokenContract from "src/blockchain/laziTokenContract";
 import initUserNameContract from "src/blockchain/laziUserNameContract";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import laziLogo from './lazi.jpeg';
-
+import laziLogo from "./lazi.jpeg";
 
 //testnet
 // const laziTokenAddress = "0xf472134D28216581F47304c66Fb18922a146e514";
@@ -132,7 +131,8 @@ const useStyles = makeStyles((theme) => ({
         width: "200px",
       },
       [theme.breakpoints.down("xs")]: {
-        width: "150px",
+        width: "100%",
+        justifyContent: "flex-start",
       },
       "& img": {
         [theme.breakpoints.down("xs")]: {
@@ -146,7 +146,7 @@ const useStyles = makeStyles((theme) => ({
         width: "calc(100% - 200px)",
       },
       [theme.breakpoints.down("xs")]: {
-        width: "calc(100% - 150px)",
+        width: "100%",
       },
       "& .menubox": {
         display: "flex",
@@ -155,6 +155,7 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+
   searchBox: {
     marginLeft: "10px",
     "& input": {
@@ -224,9 +225,9 @@ export function TopBarData() {
   });
   const [showAlert, setShowAlert] = useState(false);
   const [isLoadingAlert, setIsLoadingAlert] = useState(true);
-  
+
   // starting changes from  here
-  
+
   const [userNameContract, setUserNameContract] = useState(null);
   const [userAddress, setUserAddress] = useState(null);
   const [mintedUserNames, setMintedUserNames] = useState([]);
@@ -290,7 +291,7 @@ export function TopBarData() {
     }
   }, [isLoadingAlert]);
 
-  const _onInputChange = (e) => {
+  const onInputChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
     const temp = { ...formData, [name]: value };
@@ -438,6 +439,7 @@ export function TopBarData() {
                     paddingTop: "0px",
                     paddingLeft: "15px",
                     cursor: "pointer",
+                    // marginLeft:'-90px',
                   }}
                 />
               </Box>
@@ -470,10 +472,15 @@ export function TopBarData() {
                             boxShadow: "none",
                             transition: "all 0.3s ease",
                             cursor: "pointer",
-                            backgroundColor: "transparent",
+                            backgroundColor: "#e31a89",
+                            paddingInline: 15,
+                            height: 40,
+                            whiteSpace:'nowrap'
                           }}
                           onClick={addTokenToMetaMask}
                         >
+                          Add $ Lazi
+                    
                           <img
                             src="./images/metamask.png"
                             alt="Metamask logo"
@@ -481,8 +488,9 @@ export function TopBarData() {
                               border: "none",
                               verticalAlign: "middle",
                               width: "20px",
+                              marginLeft: 8,
                               backgroundColor: "transparent",
-                              marginRight: "8px",
+                              marginRight: "4px",
                             }}
                           />
                         </Button>

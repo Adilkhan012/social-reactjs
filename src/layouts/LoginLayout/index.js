@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { makeStyles, Grid, Box, Container } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
+ 
 const useStyles = makeStyles((theme) => ({
   content: {
     // height: "100vh",
@@ -25,11 +26,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.default,
   },
 }));
-
 const LoginLayout = ({ children }) => {
   const classes = useStyles();
   const history = useHistory();
-
   return (
     <>
       <Box className={classes.root}>
@@ -40,9 +39,7 @@ const LoginLayout = ({ children }) => {
     </>
   );
 };
-
 LoginLayout.propTypes = {
   children: PropTypes.node,
 };
-
 export default LoginLayout;

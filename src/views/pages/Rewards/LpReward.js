@@ -135,8 +135,10 @@ const useStyles = makeStyles((theme) => ({
   },
   warningMessage: {
     backgroundColor: "E70C9B",
-    padding: 0,
+    padding:2,
+    paddingInline:7,
     margin: 0,
+    marginBottom:4,
     color: "#E70C9B",
     fontSize: "1.2rem",
     fontWeight: 400,
@@ -144,7 +146,6 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "90%",
   },
 }));
-
 
 const StakeReward = () => {
   const classes = useStyles();
@@ -630,7 +631,8 @@ const StakeReward = () => {
       }
     }
 
-    multiplier +=selectedUserNames.length===0?1: 2.5+0.5 * selectedUserNames.length;
+    multiplier +=
+      selectedUserNames.length === 0 ? 1 : 2.5 + 0.5 * selectedUserNames.length;
     return multiplier;
   };
   const totalMultiplier = calculateTotalMultiplier();
@@ -708,16 +710,17 @@ const StakeReward = () => {
       try {
         setTransactionPending(true);
         const gasEstimate = await laziTokenContract.methods
-        .approve(lpRewardAddress, userBalance)
-        .estimateGas({
-          from: userAddress,
-        });
+          .approve(lpRewardAddress, userBalance)
+          .estimateGas({
+            from: userAddress,
+          });
 
         // Call the approve function to set the allowance
         await laziTokenContract.methods
           .approve(lpRewardAddress, userBalance)
           .send({
-            from: userAddress, gas:gasEstimate,
+            from: userAddress,
+            gas: gasEstimate,
             maxPriorityFeePerGas: Web3.utils.toWei("32", "gwei"),
           });
 
@@ -758,9 +761,10 @@ const StakeReward = () => {
           lpRewardContract.methods
             .stake(erc20Amount, selectedTime, selectedUserNames)
             .send({
-              from: userAddress, gas: gasEstimate,
+              from: userAddress,
+              gas: gasEstimate,
               maxPriorityFeePerGas: Web3.utils.toWei("32", "gwei"),
-          })
+            })
             .on("transactionHash", (hash) => {
               console.log(hash);
             })
@@ -813,11 +817,12 @@ const StakeReward = () => {
           const gasEstimate = await lpRewardContract.methods
             .unstake()
             .estimateGas({ from: userAddress });
-  
+
           lpRewardContract.methods
             .unstake()
             .send({
-              from: userAddress, gas: gasEstimate,
+              from: userAddress,
+              gas: gasEstimate,
               maxPriorityFeePerGas: Web3.utils.toWei("32", "gwei"),
             })
             .on("transactionHash", (hash) => {
@@ -849,13 +854,13 @@ const StakeReward = () => {
         } catch (error) {
           console.log(error);
           let errorMessage = "An error occurred during the transaction.";
-  
+
           if (error.message) {
             const startIndex = error.message.indexOf(" reverted: ") + 10;
             const endIndex = error.message.indexOf(",", startIndex);
             errorMessage = error.message.substring(startIndex, endIndex);
           }
-  
+
           toast.error(errorMessage);
           reject(new Error(errorMessage));
         }
@@ -864,7 +869,6 @@ const StakeReward = () => {
       }
     });
   };
-  
 
   const fetchTotalStaked = useCallback(async () => {
     try {
@@ -1094,12 +1098,10 @@ const StakeReward = () => {
       }
 
       // execute the getReward function in the smart contract
-      const tx = await lpRewardContract.methods
-        .harvest()
-        .send({
-          from: userAddress,
-          maxPriorityFeePerGas: Web3.utils.toWei("32", "gwei"),
-        });
+      const tx = await lpRewardContract.methods.harvest().send({
+        from: userAddress,
+        maxPriorityFeePerGas: Web3.utils.toWei("32", "gwei"),
+      });
 
       // Wait for the transaction to be confirmed
       const receipt = await tx.wait();
@@ -1240,7 +1242,7 @@ const StakeReward = () => {
                         <InfoIcon fontSize={"medium"} />
                       </Tooltip>
                     </Box>
-                    <Box>
+                    <Box style={{display:'flex',flexDirection:'column' ,gap:5}}>
                       <Button
                         variant="contained"
                         style={{
@@ -1254,6 +1256,23 @@ const StakeReward = () => {
                         onClick={handleStakeInfoButton}
                       >
                         Stake Info
+                      </Button>
+                      <Button
+                        variant="contained"
+                        style={{
+                          backgroundColor: "#e31a89",
+                          color: "#fff",
+                          height: 40,
+                          paddingInline: 15,
+                          fontSize: 12,
+                          marginTop: 5,
+                        }}
+                        onClick={() =>
+                          (window.location.href =
+                            "https://quickswap.exchange/#/pools/v2?currency0=ETH&currency1=0xd7Dd450Bb046C886f4b680813A9e7E4b7f91ba07")
+                        }
+                      >
+                        QuickSwap
                       </Button>
                     </Box>
                   </Box>
@@ -3170,17 +3189,23 @@ const StakeReward = () => {
                             Max
                           </Button>
                         </Box> */}
-                        <div style={{ display: "flex" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-around",
+                          }}
+                        >
                           <Button
                             variant="contained"
                             style={{
                               backgroundColor: "#e31a89",
                               color: "#fff",
                               height: 40,
-                              paddingInline: 30,
-                              fontSize: 16,
+                              paddingInline: 15,
+                              fontSize: 14,
                               marginTop: 25,
-                              marginLeft: 55,
+                              // marginLeft: 15,
+                              whiteSpace: "nowrap",
                             }}
                             onClick={handleMainMenuButton}
                           >
@@ -3192,10 +3217,10 @@ const StakeReward = () => {
                               backgroundColor: "#e31a89",
                               color: "#fff",
                               height: 40,
-                              paddingInline: 30,
-                              fontSize: 16,
+                              paddingInline: 15,
+                              fontSize: 14,
                               marginTop: 25,
-                              marginLeft: 55,
+                              // marginLeft: 10,
                             }}
                             onClick={handleUnstake}
                           >

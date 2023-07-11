@@ -45,7 +45,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-
 const DashboardLayout = ({ children }) => {
   const classes = useStyles();
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
@@ -71,5 +70,4 @@ const DashboardLayout = ({ children }) => {
 DashboardLayout.propTypes = {
   children: PropTypes.node,
 };
-
 export default DashboardLayout;
