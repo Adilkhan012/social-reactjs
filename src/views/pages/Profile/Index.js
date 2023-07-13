@@ -620,7 +620,6 @@ function Profile() {
                   </Button>
                 </Box>
               </Grid>
-
             )}
 
             <Grid item xs={12} sm={5} md={4}>
@@ -650,9 +649,8 @@ function Profile() {
                   </Typography>
                 )}
 
-
                 <Typography variant="body1">
-                  Your Share Balance : &nbsp;{" "}
+                  Your LAZI Balance : &nbsp;{" "}
                   {userData1?.bnbBalace > 0
                     ? parseInt(userData1?.bnbBalace)
                     : 0}
@@ -670,11 +668,7 @@ function Profile() {
                       className={classes.btnfollow2}
                       onClick={() => setOpenBuy(true)}
                     >
-                      <Typography
-                        color="primary.main"
-                        variant="body1"
-
-                      >
+                      <Typography color="primary.main" variant="body1">
                         <b>{followerListCount}</b> Followers
                       </Typography>
                     </Box>
@@ -682,19 +676,12 @@ function Profile() {
                       className={classes.btnfollow2}
                       onClick={() => setOpenPlaceBid(true)}
                     >
-                      <Typography
-                        color="primary.main"
-                        variant="body1"
-
-                      >
+                      <Typography color="primary.main" variant="body1">
                         <b>{followingListCount}</b> Following
                       </Typography>
                     </Box>
                   </Box>
                 )}
-
-
-
               </Box>
             </Grid>
             {auth?.userData?.userType !== "Admin" && (
@@ -764,14 +751,14 @@ function Profile() {
                           endAdornment: (
                             <InputAdornment position="end">
                               <CopyToClipboard
-                                text={
-                                  `${window.location.origin}/signup?${userData1?.referralCode}`
-
-                                }
+                                text={`${window.location.origin}/signup?${userData1?.referralCode}`}
                               >
                                 <Button
                                   onClick={() => toast.info("Copied")}
-                                  style={{ color: "#E31A89CC", fontSize: "14px" }}
+                                  style={{
+                                    color: "#E31A89CC",
+                                    fontSize: "14px",
+                                  }}
                                 >
                                   COPY
                                 </Button>
@@ -783,22 +770,17 @@ function Profile() {
                     </Box>
 
                     <Box className={classes.btnfollow2}>
-                        <Typography
-                          color="primary.main"
-                          variant="body1"
-
-                        >
-                          Total Refferral :{" "}
-                          {userReferralData?.totalReferralUser
-                            ? userReferralData?.totalReferralUser
-                            : "0"}
-                        </Typography>
-                      </Box>
+                      <Typography color="primary.main" variant="body1">
+                        Total Refferral :{" "}
+                        {userReferralData?.totalReferralUser
+                          ? userReferralData?.totalReferralUser
+                          : "0"}
+                      </Typography>
+                    </Box>
                   </Box>
                 </Grid>
               </>
             )}
-
           </Grid>
         </Box>
 
@@ -1049,7 +1031,7 @@ function Profile() {
                     value={withdrawAmount}
                     error={Boolean(
                       (isSubmit && withdrawAmount === "") ||
-                      (withdrawAmount !== "" && Number(withdrawAmount) === 0)
+                        (withdrawAmount !== "" && Number(withdrawAmount) === 0)
                     )}
                     onChange={(e) => {
                       if (userData1?.bnbBalace > 0) {
@@ -1088,12 +1070,12 @@ function Profile() {
                       (isSubmit && withdrawAmount === "" && (
                         <Box ml={1}>Enter a valid withdraw amount</Box>
                       )) ||
-                      (withdrawAmount !== "" &&
-                        Number(withdrawAmount) <= 101 && (
-                          <Box ml={1}>
-                            Withdraw amount should be greator than 101
-                          </Box>
-                        ))
+                        (withdrawAmount !== "" &&
+                          Number(withdrawAmount) <= 101 && (
+                            <Box ml={1}>
+                              Withdraw amount should be greator than 101
+                            </Box>
+                          ))
                       //   ||
                       // (withdrawAmount !== "" &&
                       //   Number(withdrawAmount)< && (
@@ -1118,7 +1100,7 @@ function Profile() {
                       (walletAddressWallet !== "" && !getTokenDetails)
                     }
 
-                  // onClick={handleClickOpen}
+                    // onClick={handleClickOpen}
                   />
                   <FormHelperText error>
                     {(isSubmit && !walletAddressWallet && (

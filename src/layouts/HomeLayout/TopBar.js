@@ -365,7 +365,8 @@ export function TopBarData() {
             address: laziTokenAddress, // The address that the token is at.
             symbol: "LAZI", // A ticker symbol or shorthand, up to 5 chars.
             decimals: 18, // The number of decimals in the token
-            image: laziLogo, // A string url of the token logo
+            image:
+              "https://res.cloudinary.com/mobiloittetech/image/upload/v1689262624/p6rijfjlpm5u2tsaqbap.jpg", // A string url of the token logo
           },
         },
       });
@@ -475,12 +476,11 @@ export function TopBarData() {
                             backgroundColor: "#e31a89",
                             paddingInline: 15,
                             height: 40,
-                            whiteSpace:'nowrap'
+                            whiteSpace: "nowrap",
                           }}
                           onClick={addTokenToMetaMask}
                         >
                           Add $ Lazi
-                    
                           <img
                             src="./images/metamask.png"
                             alt="Metamask logo"
