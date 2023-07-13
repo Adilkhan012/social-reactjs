@@ -1258,22 +1258,25 @@ const StakeReward = () => {
                         Stake Info
                       </Button>
                       <Button
-                        variant="contained"
-                        style={{
-                          backgroundColor: "#e31a89",
-                          color: "#fff",
-                          height: 40,
-                          paddingInline: 15,
-                          fontSize: 12,
-                          marginTop: 5,
-                        }}
-                        onClick={() =>
-                          (window.location.href =
-                            "https://quickswap.exchange/#/pools/v2?currency0=ETH&currency1=0xd7Dd450Bb046C886f4b680813A9e7E4b7f91ba07")
-                        }
-                      >
-                        QuickSwap
-                      </Button>
+  variant="contained"
+  style={{
+    backgroundColor: "#e31a89",
+    color: "#fff",
+    height: 40,
+    paddingInline: 15,
+    fontSize: 12,
+    marginTop: 5,
+  }}
+  onClick={() =>
+    window.open(
+      "https://quickswap.exchange/#/pools/v2?currency0=ETH&currency1=0xd7Dd450Bb046C886f4b680813A9e7E4b7f91ba07",
+      "_blank"
+    )
+  }
+>
+  QuickSwap
+</Button>
+
                     </Box>
                   </Box>
                 )}
