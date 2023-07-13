@@ -118,7 +118,7 @@ function WalletCard(props) {
             {auth?.userData?.bnbBalace
               ? parseInt(auth?.userData?.bnbBalace)
               : 0}{" "}
-            Share
+            $LAZI
             {/* {auth?.userData?.bnbBalace}  */}
           </Box>
         </Box>

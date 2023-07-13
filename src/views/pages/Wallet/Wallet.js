@@ -310,7 +310,7 @@ function Wallet() {
                       {userData1?.bnbBalace
                         ? parseInt(userData1?.bnbBalace)
                         : 0}{" "}
-                      Share
+                      $LAZI
                     </Typography>
                   </Box>
                 </Grid>

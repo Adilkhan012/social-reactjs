@@ -656,7 +656,7 @@ function Profile() {
                   {userData1?.bnbBalace > 0
                     ? parseInt(userData1?.bnbBalace)
                     : 0}
-                  &nbsp;Share
+                  &nbsp;$LAZI
                 </Typography>
                 {auth?.userData?.userType !== "Admin" && (
                   <Box

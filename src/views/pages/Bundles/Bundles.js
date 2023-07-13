@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from "react";
 import {
   makeStyles,
   Paper,
@@ -16,98 +16,98 @@ import {
   ListItem,
   FormHelperText,
   Container,
-} from '@material-ui/core';
-import moment from 'moment';
-import { MdAddToPhotos } from 'react-icons/md';
-import Page from 'src/component/Page';
-import BundlesCard from 'src/component/BundlesCard';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import ApiConfig from 'src/ApiConfig/ApiConfig';
-import ButtonCircularProgress from 'src/component/ButtonCircularProgress';
-import { AuthContext } from 'src/context/Auth';
-import Web3 from 'web3';
+} from "@material-ui/core";
+import moment from "moment";
+import { MdAddToPhotos } from "react-icons/md";
+import Page from "src/component/Page";
+import BundlesCard from "src/component/BundlesCard";
+import axios from "axios";
+import { toast } from "react-toastify";
+import ApiConfig from "src/ApiConfig/ApiConfig";
+import ButtonCircularProgress from "src/component/ButtonCircularProgress";
+import { AuthContext } from "src/context/Auth";
+import Web3 from "web3";
 import {
   useHistory,
   Link as RouterComponent,
   useLocation,
-} from 'react-router-dom';
-import DataLoading from 'src/component/DataLoading';
-import NoDataFound from 'src/component/NoDataFound';
-import { Pagination } from '@material-ui/lab';
-import { KeyboardDatePicker } from '@material-ui/pickers';
-import initMetamask from 'src/blockchain/metamaskConnection';
-import initPostFactoryContract from 'src/blockchain/laziPostFactory';
-import { laziPostContractABI } from 'src/blockchain/laziPostContract';
+} from "react-router-dom";
+import DataLoading from "src/component/DataLoading";
+import NoDataFound from "src/component/NoDataFound";
+import { Pagination } from "@material-ui/lab";
+import { KeyboardDatePicker } from "@material-ui/pickers";
+import initMetamask from "src/blockchain/metamaskConnection";
+import initPostFactoryContract from "src/blockchain/laziPostFactory";
+import { laziPostContractABI } from "src/blockchain/laziPostContract";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    padding: '25px',
-    [theme.breakpoints.down('xs')]: {
-      padding: '10px',
+    padding: "25px",
+    [theme.breakpoints.down("xs")]: {
+      padding: "10px",
     },
-    '& .heading': {
-      marginBottom: '20px',
-      display: 'flex',
-      justifyContent: 'space-between',
-      '& .buttonbox': {
-        width: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'end',
+    "& .heading": {
+      marginBottom: "20px",
+      display: "flex",
+      justifyContent: "space-between",
+      "& .buttonbox": {
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "end",
       },
     },
   },
   create: {
-    textAlign: 'center',
-    marginBottom: '50px',
+    textAlign: "center",
+    marginBottom: "50px",
   },
   upload: {
-    height: '75px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    height: "75px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   listbutton: {
-    '& ul': {
-      display: 'flex',
-      alignItems: 'center',
-      '& li': {
-        border: '0.25px solid #FFF',
+    "& ul": {
+      display: "flex",
+      alignItems: "center",
+      "& li": {
+        border: "0.25px solid #FFF",
       },
     },
   },
   addphotos: {
-    display: 'flex',
-    alignItems: 'center',
-    textAlign: 'center',
-    justifyContent: 'center',
-    padding: '30px 20px',
-    border: '0.25px solid #525455',
-    borderRadius: '14px',
-    cursor: 'pointer',
-    position: 'relative',
-    '& input': {
-      position: 'absolute',
+    display: "flex",
+    alignItems: "center",
+    textAlign: "center",
+    justifyContent: "center",
+    padding: "30px 20px",
+    border: "0.25px solid #525455",
+    borderRadius: "14px",
+    cursor: "pointer",
+    position: "relative",
+    "& input": {
+      position: "absolute",
       top: 0,
       left: 0,
-      width: '100%',
-      height: '100%',
+      width: "100%",
+      height: "100%",
       opacity: 0,
     },
-    '& svg': {
-      fontSize: '30px',
+    "& svg": {
+      fontSize: "30px",
     },
   },
   donation: {
-    cursor: 'pointer',
-    '& span': {
-      fontSize: '12px',
-      padding: '2px 5px',
-      border: '1px solid #e31a89',
-      cursor: 'pointer',
-      '&.active': {
-        backgroundColor: '#e31a89',
+    cursor: "pointer",
+    "& span": {
+      fontSize: "12px",
+      padding: "2px 5px",
+      border: "1px solid #e31a89",
+      cursor: "pointer",
+      "&.active": {
+        backgroundColor: "#e31a89",
       },
     },
   },
@@ -119,42 +119,42 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
   const location = useLocation();
   const [page, setPage] = useState(1);
 
-  const [name, setname] = useState('');
-  const [date, setdate] = useState('');
+  const [name, setname] = useState("");
+  const [date, setdate] = useState("");
   const auth = useContext(AuthContext);
   const [cover, setcover] = useState();
   const [userId, setUserId] = useState();
-  const [title, settitle] = useState('');
-  const [image, setimage] = useState('');
+  const [title, settitle] = useState("");
+  const [image, setimage] = useState("");
   const [fire, setfire] = useState(false);
   const [open, setOpen] = useState(false);
-  const [message, setmessage] = useState('');
-  const [details, setdetails] = useState('');
-  const [donation, setdonation] = useState('');
-  const [imageurl, setimageurl] = useState('');
+  const [message, setmessage] = useState("");
+  const [details, setdetails] = useState("");
+  const [donation, setdonation] = useState("");
+  const [imageurl, setimageurl] = useState("");
   const [isClear, setIsClear] = useState(false);
   const [noOfPages, setNoOfPages] = useState(1);
   const [process, setprocess] = useState(false);
-  const [duration, setDuration] = useState('7');
+  const [duration, setDuration] = useState("7");
   const [timeFilter, setTimeFilter] = useState();
   const [isSubmit, setIsSubmit] = useState(false);
   const [collectionId, setCollection] = useState();
-  const [typeactivty, setTypeactivty] = useState('');
+  const [typeactivty, setTypeactivty] = useState("");
   const [toTimeFilter, setToTimeFilter] = useState();
   const [isLoadingContent, setIsLoading] = useState(true);
   const [collectionlistAll, setCollectionlist] = useState([]);
   const [collectionlistAlll, setCollectionlistt] = useState([]);
   const [errorMessageresend, setErrorMesageResend] = useState();
   const [particularUserList, setParticularUserList] = useState();
-  const [tokenImage, setTokenImage] = React.useState('/images/tokens/1.png');
-  const [deployedLaziPostAddress, setDeployedLaziPostAddress] = useState('');
+  const [tokenImage, setTokenImage] = React.useState("/images/tokens/1.png");
+  const [deployedLaziPostAddress, setDeployedLaziPostAddress] = useState("");
   const [deployedLaziPosts, setDeployedLaziPosts] = useState([]);
   const [address, setAddress] = useState(null);
-  const [web3, setWeb3] = useState(null);
+  // const [web3, setWeb3] = useState(null);
   const [laziFactoryContract, setLaziFactoryContract] = useState(null);
   const [laziPostContract, setLaziPostContract] = useState(null);
 
-  console.log('in create collection! ');
+  console.log("in create collection! ");
   const getBase64 = (file, cb) => {
     let reader = new FileReader();
     reader.readAsDataURL(file);
@@ -176,11 +176,12 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
     init();
   }, []);
 
-  const post = async event => {
+  const post = async (event) => {
+    const web3 = new Web3(window.ethereum);
     event.preventDefault();
 
     try {
-      console.log('details!', details);
+      console.log("details!", details);
       if (!laziFactoryContract) {
         await initPostFactoryContract();
       }
@@ -188,44 +189,45 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
       const gasLimit = await laziFactoryContract.methods
         .createLaziPost()
         .estimateGas({ from: address });
-      console.log('gasLimit: ', gasLimit);
+      console.log("gasLimit: ", gasLimit);
 
       const transaction = await laziFactoryContract.methods
         .createLaziPost()
         .send({
-          from: address, gas: gasLimit,
+          from: address,
+          gas: gasLimit,
           maxPriorityFeePerGas: web3.utils.toWei("32", "gwei"),
         });
 
       const deployedPostsCount = await laziFactoryContract.methods
         .getDeployedLaziPostsCount()
         .call();
-      console.log('Deployed LaziPosts count:', deployedPostsCount);
+      console.log("Deployed LaziPosts count:", deployedPostsCount);
       const index = deployedPostsCount - 1;
       const deployedLaziPostAddress = await laziFactoryContract.methods
         .deployedLaziPosts(index)
         .call();
 
       setDeployedLaziPostAddress(deployedLaziPostAddress);
-      setDeployedLaziPosts(prevDeployedLaziPosts => [
+      setDeployedLaziPosts((prevDeployedLaziPosts) => [
         ...prevDeployedLaziPosts,
         deployedLaziPostAddress,
       ]);
-      console.log('transaction!: ', transaction);
-      console.log('address!: ', deployedLaziPostAddress);
+      console.log("transaction!: ", transaction);
+      console.log("address!: ", deployedLaziPostAddress);
 
       const initLaziPostContract = async () => {
-        const web3 = new Web3(window.ethereum);
+        // const web3 = new Web3(window.ethereum);
         return new Promise((resolve, reject) => {
           const laziPostContract = new web3.eth.Contract(
             laziPostContractABI,
-            deployedLaziPostAddress,
+            deployedLaziPostAddress
           );
           resolve(laziPostContract);
         });
       };
       const laziPostContract = await initLaziPostContract();
-      console.log(laziPostContract)
+      console.log(laziPostContract);
 
       // const setSaleActive = await laziPostContract.methods
       //   .set_saleActiveTime(0)
@@ -237,18 +239,18 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
       // .call();
 
       if (
-        image !== '' &&
-        title !== '' &&
-        details !== '' &&
+        image !== "" &&
+        title !== "" &&
+        details !== "" &&
         // Number(donation) > 0 &&
         // Number(donation) <= 2000 &&
         details.length <= 200 &&
         title.length <= 60 &&
         // parseFloat(donation) > 0 &&
-        deployedLaziPostAddress !== ''
+        deployedLaziPostAddress !== ""
       ) {
         try {
-          setmessage('Creating Collection...');
+          setmessage("Creating Collection...");
           setprocess(true);
 
           const data = {
@@ -259,44 +261,44 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
           };
 
           const response = await axios.request({
-            method: 'POST',
+            method: "POST",
             url: ApiConfig.addNft,
             data: data,
             headers: {
-              token: window.localStorage.getItem('token'),
+              token: window.localStorage.getItem("token"),
             },
           });
 
           if (response.data.responseCode === 200) {
             collectionList();
             setTimeout(() => {
-              auth.handleUserProfileApi(window.localStorage.getItem('token'));
+              auth.handleUserProfileApi(window.localStorage.getItem("token"));
             }, 10000);
             setIsSubmit(false);
             setOpen(false);
             setprocess(false);
-            toast.success('Collection created');
+            toast.success("Collection created");
             setfire(!fire);
-            setname('');
-            settitle('');
+            setname("");
+            settitle("");
             setimage();
-            setdetails('');
-            setDeployedLaziPostAddress('');
+            setdetails("");
+            setDeployedLaziPostAddress("");
           } else {
             setprocess(false);
-            toast.error('Error creating collection');
+            toast.error("Error creating collection");
           }
         } catch (error) {
           setprocess(false);
           toast.error(
             error?.response?.data?.responseMessage ||
-              'An error occurred while creating collection',
+              "An error occurred while creating collection"
           );
         }
       }
     } catch (error) {
-      console.error('Error creating LaziPost contract:', error);
-      toast.error('An error occurred while creating the LaziPost contract');
+      console.error("Error creating LaziPost contract:", error);
+      toast.error("An error occurred while creating the LaziPost contract");
     }
 
     // } else {
@@ -311,10 +313,10 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
   const collectionList = async () => {
     try {
       const response = await axios({
-        method: 'GET',
+        method: "GET",
         url: ApiConfig.listCollection,
         headers: {
-          token: window.localStorage.getItem('token'),
+          token: window.localStorage.getItem("token"),
         },
         params: {
           page: page,
@@ -345,16 +347,16 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
     collectionList();
     setTimeFilter();
     setToTimeFilter();
-    setTypeactivty('');
+    setTypeactivty("");
     setIsClear(true);
   };
-  const getParticularUserCollectionList = async id => {
+  const getParticularUserCollectionList = async (id) => {
     try {
       const response = await axios({
-        method: 'GET',
+        method: "GET",
         url: ApiConfig.getOtheruserCollection,
         headers: {
-          token: window.localStorage.getItem('token'),
+          token: window.localStorage.getItem("token"),
         },
         params: {
           userId: id,
@@ -374,15 +376,15 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
     // setIsLoading(true);
     try {
       const response = await axios({
-        method: 'GET',
+        method: "GET",
         url: ApiConfig.feeList,
         headers: {
-          token: window.localStorage.getItem('token'),
+          token: window.localStorage.getItem("token"),
         },
       });
       if (response.data.responseCode === 200) {
         setCollection(
-          response.data.result.filter(data => data?.type === 'COLLECTION'),
+          response.data.result.filter((data) => data?.type === "COLLECTION")
         );
         // setIsLoading(false);
       }
@@ -392,7 +394,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
   };
   useEffect(() => {
     feelistHandler();
-    const locationCheck = location.search.split('?');
+    const locationCheck = location.search.split("?");
     if (locationCheck[1]) {
       getParticularUserCollectionList(locationCheck[1]);
       setParticularUserList(locationCheck[1]);
@@ -406,15 +408,15 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
 
   return (
     <>
-      <Page title='Collection'>
+      <Page title="Collection">
         <Paper className={classes.root} elevation={2}>
-          <Box className='heading'>
+          <Box className="heading">
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6} md={6} lg={6}>
-                <Typography variant='h3'>Collection</Typography>
+                <Typography variant="h3">Collection</Typography>
               </Grid>
-              <Grid item xs={12} sm={6} md={6} lg={6} align='center'>
-                <Box className='buttonbox'>
+              <Grid item xs={12} sm={6} md={6} lg={6} align="center">
+                <Box className="buttonbox">
                   {/* <Button
                     variant='contained'
                     color='primary'
@@ -425,14 +427,14 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                     Share
                   </Button> */}
                   <Button
-                    variant='contained'
-                    color='secondary'
-                    size='large'
+                    variant="contained"
+                    color="secondary"
+                    size="large"
                     onClick={() => setOpen(true)}
                   >
                     Add Collection
                   </Button>
-                </Box>{' '}
+                </Box>{" "}
               </Grid>
             </Grid>
           </Box>
@@ -440,28 +442,28 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
             mt={3}
             mb={3}
             style={{
-              background: '#000',
-              padding: '20px',
-              borderRadius: '15px',
+              background: "#000",
+              padding: "20px",
+              borderRadius: "15px",
             }}
           >
-            <Grid container spacing={2} alignItems='center'>
+            <Grid container spacing={2} alignItems="center">
               <Grid item xs={12} sm={6} md={3} lg={3}>
                 <span>From Date:</span>
 
                 <Box mt={1}>
                   <KeyboardDatePicker
                     value={timeFilter}
-                    onChange={date => {
+                    onChange={(date) => {
                       setTimeFilter(new Date(date));
                     }}
-                    format='DD/MM/YYYY'
+                    format="DD/MM/YYYY"
                     // maxDate={toTimeFilter ? toTimeFilter:" "}
                     disableFuture
                     className={classes.textField}
-                    margin='dense'
-                    helperText=''
-                    name='dob'
+                    margin="dense"
+                    helperText=""
+                    name="dob"
                     fullWidth
                   />
                 </Box>
@@ -471,16 +473,16 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                 <Box mt={1}>
                   <KeyboardDatePicker
                     value={toTimeFilter}
-                    onChange={date => {
+                    onChange={(date) => {
                       setToTimeFilter(new Date(date));
                     }}
                     minDate={timeFilter}
-                    format='DD/MM/YYYY'
+                    format="DD/MM/YYYY"
                     disableFuture
                     className={classes.textField}
-                    margin='dense'
-                    helperText=''
-                    name='dob'
+                    margin="dense"
+                    helperText=""
+                    name="dob"
                     fullWidth
                   />
                 </Box>
@@ -488,30 +490,30 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
               <Grid item xs={12} sm={6} md={3} lg={3}>
                 <Box
                   style={{
-                    display: 'flex',
-                    marginTop: '20px',
+                    display: "flex",
+                    marginTop: "20px",
                   }}
                 >
                   <Button
-                    variant='contained'
+                    variant="contained"
                     onClick={() => {
                       setIsLoading(true);
                       collectionList();
                     }}
-                    size='large'
-                    color='secondary'
-                    style={{ marginRight: '10px' }}
+                    size="large"
+                    color="secondary"
+                    style={{ marginRight: "10px" }}
                     className={classes.textField}
                   >
                     Submit
                   </Button>
 
                   <Button
-                    variant='contained'
+                    variant="contained"
                     onClick={clearHandler}
-                    color='secondary'
-                    size='large'
-                    style={{ width: '90px' }}
+                    color="secondary"
+                    size="large"
+                    style={{ width: "90px" }}
                     className={classes.textField}
                   >
                     Clear
@@ -537,7 +539,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                         particularUserList={particularUserList}
                         userId={userId}
                         data={data}
-                        type='card'
+                        type="card"
                         index={i}
                         key={i}
                       />
@@ -548,7 +550,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
           )}
 
           {collectionlistAll && collectionlistAll.length >= pageCheck && (
-            <Box mt={2} display='flex' justifyContent='center'>
+            <Box mt={2} display="flex" justifyContent="center">
               <Pagination
                 count={noOfPages}
                 page={page}
@@ -561,53 +563,53 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
             onClose={() => {
               setOpen(false);
             }}
-            aria-labelledby='alert-dialog-title'
-            aria-describedby='alert-dialog-description'
-            maxWidth='sm'
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+            maxWidth="sm"
             fullWidth
           >
-            <DialogTitle id='alert-dialog-title' align='left'>
+            <DialogTitle id="alert-dialog-title" align="left">
               <Box
                 style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  paddingTop: '15px',
+                  display: "flex",
+                  justifyContent: "space-between",
+                  paddingTop: "15px",
                 }}
               >
                 <Typography
                   style={{
-                    fontSize: '18px',
+                    fontSize: "18px",
                     fontWeight: 500,
                     // backgroundColor: "navy",
                   }}
                 >
-                  {' '}
-                  {'Create a collection'}
+                  {" "}
+                  {"Create a collection"}
                 </Typography>
                 {errorMessageresend ? (
                   <Typography
                     style={{
                       // fontSize: "18px",
                       fontWeight: 500,
-                      color: '#ed4235',
+                      color: "#ed4235",
                       // backgroundColor: "navy",
                     }}
                   >
-                    {' '}
+                    {" "}
                     {errorMessageresend}
                   </Typography>
                 ) : (
-                  ' '
+                  " "
                   // <Typography variant="h6">
                   //   Your balance &nbsp;{auth?.userData?.bnbBalace > 0 ? (parseInt(auth?.userData?.bnbBalace)) : 0}
                   // </Typography>
                 )}
               </Box>
             </DialogTitle>
-            <DialogContent align='center'>
+            <DialogContent align="center">
               <Box p={2}>
-                <form onSubmit={event => post(event)}>
-                  <Grid container direction={'column'} spacing={3}>
+                <form onSubmit={(event) => post(event)}>
+                  <Grid container direction={"column"} spacing={3}>
                     <Grid item xs={12}>
                       <Box>
                         <Grid container spacing={1}>
@@ -616,15 +618,15 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                       </Grid> */}
                           <Grid item xs={12}>
                             <TextField
-                              id='standard-basic'
-                              placeholder='Collection title'
+                              id="standard-basic"
+                              placeholder="Collection title"
                               fullWidth
-                              variant='outlined'
+                              variant="outlined"
                               className={classes.input_fild2}
-                              onChange={e => settitle(e.target.value)}
+                              onChange={(e) => settitle(e.target.value)}
                               error={
-                                (isSubmit && title === '') ||
-                                (title !== '' && title.length > 60)
+                                (isSubmit && title === "") ||
+                                (title !== "" && title.length > 60)
                               }
                               // helperText={
                               //   (isSubmit &&
@@ -636,10 +638,10 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                               // }
                             />
                             <FormHelperText error>
-                              {(isSubmit && title === '' && (
+                              {(isSubmit && title === "" && (
                                 <Box ml={1}>Title is required</Box>
                               )) ||
-                                (title !== '' && title.length > 60 && (
+                                (title !== "" && title.length > 60 && (
                                   <Box ml={1}>
                                     Title should be less than or equal to 60
                                     characters
@@ -693,14 +695,14 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                       </Grid> */}
                           <Grid item xs={12}>
                             <TextField
-                              id='standard-basic'
-                              variant='outlined'
-                              placeholder='Collection description'
-                              onChange={e => setdetails(e.target.value)}
+                              id="standard-basic"
+                              variant="outlined"
+                              placeholder="Collection description"
+                              onChange={(e) => setdetails(e.target.value)}
                               className={classes.input_fild2}
                               error={
-                                (isSubmit && details === '') ||
-                                (details !== '' && details.length > 200)
+                                (isSubmit && details === "") ||
+                                (details !== "" && details.length > 200)
                               }
                               fullWidth
                               // helperText={
@@ -713,12 +715,12 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                               // }
                             />
                             <FormHelperText error>
-                              {(isSubmit && details === '' && (
+                              {(isSubmit && details === "" && (
                                 <Box ml={1}>
                                   Collection description is required
                                 </Box>
                               )) ||
-                                (details !== '' && details.length > 200 && (
+                                (details !== "" && details.length > 200 && (
                                   <Box ml={1}>
                                     Collection description should be less than
                                     or equal to 200 characters
@@ -836,61 +838,62 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                               </span>
                             </Box> */}
                             <Box>
-                              <Grid container direction={'column'} spacing={2}>
+                              <Grid container direction={"column"} spacing={2}>
                                 <Grid item xs={12}>
                                   <Box mt={4} className={classes.addphotos}>
                                     <input
                                       // accept="video/*"
-                                      accept='.jpg,.gif,.png,.svg,.jpeg,.mp4'
+                                      accept=".jpg,.gif,.png,.svg,.jpeg,.mp4"
                                       // accept="image/*"
-                                      type='file'
-                                      error={Boolean(isSubmit && image === '')}
-                                      onChange={e => {
+                                      type="file"
+                                      error={Boolean(isSubmit && image === "")}
+                                      onChange={(e) => {
                                         setimage(e.target.files[0]);
                                         setimageurl(
-                                          URL.createObjectURL(
-                                            e.target.files[0],
-                                          ),
+                                          URL.createObjectURL(e.target.files[0])
                                         );
-                                        getBase64(e.target.files[0], result => {
-                                          setcover(result);
-                                        });
+                                        getBase64(
+                                          e.target.files[0],
+                                          (result) => {
+                                            setcover(result);
+                                          }
+                                        );
                                       }}
                                     />
                                     <Box>
-                                      {image?.type === 'video/mp4' ||
-                                      image?.type == 'image/jpeg' ||
-                                      image?.type == 'image/png' ||
-                                      image?.type == 'image/gif' ||
-                                      image?.type == 'image/jpg' ||
-                                      image?.type == 'image/svg' ? (
+                                      {image?.type === "video/mp4" ||
+                                      image?.type == "image/jpeg" ||
+                                      image?.type == "image/png" ||
+                                      image?.type == "image/gif" ||
+                                      image?.type == "image/jpg" ||
+                                      image?.type == "image/svg" ? (
                                         <>
-                                          {image?.type === 'video/mp4' ? (
+                                          {image?.type === "video/mp4" ? (
                                             <>
                                               <video
                                                 style={{
-                                                  width: '100%',
-                                                  maxHeight: '213px',
+                                                  width: "100%",
+                                                  maxHeight: "213px",
                                                 }}
                                                 controls
                                               >
                                                 <source
                                                   src={cover}
-                                                  type='video/mp4'
+                                                  type="video/mp4"
                                                 />
                                               </video>
                                               <Box mt={2} mb={2}>
                                                 Uploaded Successfully
                                               </Box>
                                               <Button
-                                                variant='contained'
-                                                size='large'
-                                                color='secondary'
-                                                type='submit'
+                                                variant="contained"
+                                                size="large"
+                                                color="secondary"
+                                                type="submit"
                                                 onClick={() => {
-                                                  setimageurl('');
-                                                  setimage('');
-                                                  setcover('');
+                                                  setimageurl("");
+                                                  setimage("");
+                                                  setcover("");
                                                 }}
                                               >
                                                 Remove
@@ -900,21 +903,21 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                                             <>
                                               <img
                                                 src={cover}
-                                                alt=''
-                                                width='200px'
+                                                alt=""
+                                                width="200px"
                                               />
                                               <Box mt={2} mb={2}>
                                                 Uploaded Successfully
                                               </Box>
                                               <Button
-                                                variant='contained'
-                                                size='large'
-                                                color='secondary'
-                                                type='submit'
+                                                variant="contained"
+                                                size="large"
+                                                color="secondary"
+                                                type="submit"
                                                 onClick={() => {
-                                                  setimageurl('');
-                                                  setimage('');
-                                                  setcover('');
+                                                  setimageurl("");
+                                                  setimage("");
+                                                  setcover("");
                                                 }}
                                               >
                                                 Remove
@@ -924,9 +927,9 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                                         </>
                                       ) : (
                                         <>
-                                          {' '}
+                                          {" "}
                                           <MdAddToPhotos />
-                                          <Typography variant='h5'>
+                                          <Typography variant="h5">
                                             Add photos/videos/Gif
                                           </Typography>
                                           {/* <small>or drag and drop</small> */}
@@ -936,7 +939,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                                   </Box>
                                   <Box mt={1}>
                                     <FormHelperText error>
-                                      {isSubmit && image === '' && (
+                                      {isSubmit && image === "" && (
                                         <Box ml={1}>Image is required</Box>
                                       )}
                                     </FormHelperText>
@@ -945,7 +948,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                               </Grid>
                             </Box>
                           </Grid>
-                          <Grid item xs={6} align='left'>
+                          <Grid item xs={6} align="left">
                             {/* <Typography variant="h6">
                               You will get profit only on private Post.
                             </Typography> */}
@@ -959,28 +962,28 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                       </Box>
                     </Grid>
                     <Grid item xs={12}>
-                      <Box align='center' mt={2} mb={2}>
+                      <Box align="center" mt={2} mb={2}>
                         <Button
-                          variant='contained'
-                          color='primary'
-                          size='large'
+                          variant="contained"
+                          color="primary"
+                          size="large"
                           onClick={() => {
                             setOpen(false);
                           }}
-                          style={{ marginRight: '8px' }}
+                          style={{ marginRight: "8px" }}
                         >
                           Cancel
                         </Button>
                         <Button
-                          variant='contained'
-                          color='secondary'
-                          size='large'
-                          type='submit'
+                          variant="contained"
+                          color="secondary"
+                          size="large"
+                          type="submit"
                           // onClick={post}
                           disabled={process}
-                          style={{ marginLeft: '8px' }}
+                          style={{ marginLeft: "8px" }}
                         >
-                          {!process ? 'Create' : message}{' '}
+                          {!process ? "Create" : message}{" "}
                           {process && <ButtonCircularProgress />}
                         </Button>
                       </Box>
