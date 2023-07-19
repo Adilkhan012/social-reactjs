@@ -3,8 +3,8 @@ export const socketURL = "wss://node.bitfuxi.co.uk";
 // export const baseURL = "https://node-social.mobiloitte.org";
 // export const baseURL = "http://localhost:1909";
 //aws link
-export const baseURL = "http://ec2-13-48-148-41.eu-north-1.compute.amazonaws.com:1909";
-// export const baseURL = "https://social-node-production-896c.up.railway.app";
+// export const baseURL = "http://ec2-13-48-148-41.eu-north-1.compute.amazonaws.com:1909";
+export const baseURL = "https://social-node-production-896c.up.railway.app";
 // for opensea https://social-node-production.up.railway.app/api/v1/static/metadata/
 const url = `${baseURL}/api/v1`;
 export const websiteName =
