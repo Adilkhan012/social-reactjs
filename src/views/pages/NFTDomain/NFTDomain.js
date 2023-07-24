@@ -489,6 +489,7 @@ const NFTDomain = () => {
         </div>
         <div className={classes.warningContainer}>
           <Paper className={classes.warningMessage}>
+            <p>UserName Price = 20 MATIC</p>
             <p>200 $LAZI Airdropped within 24 hrs After Minting</p>
           </Paper>
         </div>

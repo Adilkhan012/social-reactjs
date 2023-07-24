@@ -1,5 +1,3 @@
-
-
 import React, { lazy } from "react";
 import { Redirect } from "react-router-dom";
 import DashboardLayout from "src/layouts/DashboardLayout";
@@ -53,7 +51,7 @@ export const routes = [
     path: "/explore",
     guard: true,
     layout: DashboardLayout,
-    component: lazy(() => import("src/views/pages/Dashboard")),
+    component: lazy(() => import("src/views/pages/Dashboard/CommingSoon")),
   },
   {
     exact: true,
@@ -369,6 +367,6 @@ export const routes = [
     component: lazy(() => import("src/views/errors/NotFound")),
   },
   {
-    component: () => <Redirect to='/404' />,
+    component: () => <Redirect to="/404" />,
   },
 ];
