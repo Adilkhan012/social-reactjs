@@ -51,7 +51,7 @@ export const routes = [
     path: "/explore",
     guard: true,
     layout: DashboardLayout,
-    component: lazy(() => import("src/views/pages/Dashboard/CommingSoon")),
+    component: lazy(() => import("src/views/pages/Dashboard/index")),
   },
   {
     exact: true,
