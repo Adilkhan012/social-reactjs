@@ -260,7 +260,7 @@ export const routes = [
     layout: DashboardLayout,
     component: lazy(() => import("src/views/pages/Control/AddSubadmin")),
   },
-
+  
   {
     exact: true,
     path: "/promotion",
