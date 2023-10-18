@@ -27,7 +27,6 @@
     "apexcharts": "^3.39.0",
     "axios": "^0.20.0",
     "big-integer": "^1.6.51",
-    "build": "^0.1.4",
     "canvas": "^2.4.0",
     "clsx": "^1.1.1",
     "connectors": "^1.0.0",
@@ -61,7 +60,7 @@
     "react-perfect-scrollbar": "^1.5.8",
     "react-phone-input-2": "^2.15.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^3.4.3",
+    "react-scripts": "3.4.3",
     "react-share": "^4.4.0",
     "react-slick": "^0.28.1",
     "react-string-replace": "^1.1.0",
@@ -79,7 +78,7 @@
   "scripts": {
     "start": "react-scripts --openssl-legacy-provider start",
     "start1": "react-scripts  start",
-    "build": "npm i --legacy-peer-deps --force && react-scripts --max_old_space_size=4096 build",
+    "build": "react-scripts --max_old_space_size=4096 build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

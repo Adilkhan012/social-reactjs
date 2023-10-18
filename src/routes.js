@@ -51,7 +51,7 @@ export const routes = [
     path: "/explore",
     guard: true,
     layout: DashboardLayout,
-    component: lazy(() => import("src/views/pages/Dashboard/index")),
+    component: lazy(() => import("src/views/pages/Dashboard/CommingSoon")),
   },
   {
     exact: true,
@@ -260,7 +260,7 @@ export const routes = [
     layout: DashboardLayout,
     component: lazy(() => import("src/views/pages/Control/AddSubadmin")),
   },
-  
+
   {
     exact: true,
     path: "/promotion",
