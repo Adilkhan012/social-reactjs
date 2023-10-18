@@ -30,7 +30,6 @@ import PageLoading from "src/component/PageLoading";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 
-
 const useStyles = makeStyles((theme) => ({
   commentfullBox: {
     position: "relative",
@@ -144,7 +143,7 @@ export default function (props) {
     setOpen(false);
     setReciveOpen(false);
   };
-let isLike;
+  let isLike;
   if (auth.userData?._id && dataList) {
     const likeUser = dataList?.reactOnPost?.filter(
       (data) => data.userId === auth.userData?._id
@@ -189,26 +188,26 @@ let isLike;
       try {
         // console.log("isSubscribed! : " + data.isSubscribed);
         // if (data.isSubscribed) {
-          const res = await axios({
-            method: "POST",
-            url: Apiconfigs.commentOnpost,
-            headers: {
-              token: window.localStorage.getItem("token"),
-            },
-            data: {
-              postId: dataList._id,
-              message: message,
-            },
-          });
-          if (res.data.responseCode === 200) {
-            setIsSubmit(false);
-            viewExclusivepostHandler();
-            // if (openCommentBoxId ||Idd) {
+        const res = await axios({
+          method: "POST",
+          url: Apiconfigs.commentOnpost,
+          headers: {
+            token: window.localStorage.getItem("token"),
+          },
+          data: {
+            postId: dataList._id,
+            message: message,
+          },
+        });
+        if (res.data.responseCode === 200) {
+          setIsSubmit(false);
+          viewExclusivepostHandler();
+          // if (openCommentBoxId ||Idd) {
 
-            // }
-            toast.success(res.data.responseMessage);
-            setMessage("");
-          }
+          // }
+          toast.success(res.data.responseMessage);
+          setMessage("");
+        }
         // } else {
         //   // If the user is not subscribed, show a message or disable the comment functionality
         //   toast.error("You must be a subscriber to comment on this post.");
@@ -230,35 +229,34 @@ let isLike;
     if (openCommentBoxId || Idd) {
       viewExclusivepostHandler();
     }
-    viewExclusivepostHandler();
   }, [location.search, openCommentBoxId, Idd]);
   const likesHandler = async (id) => {
     try {
       // console.log("isSubscribed! : " + data.isSubscribed);
       // if (data.isSubscribed) {
-        const res = await axios({
-          method: "GET",
-          url: Apiconfigs.reactOnPost + id,
-          headers: {
-            token: window.localStorage.getItem("token"),
-          },
-          data: {
-            postId: id,
-          },
-          params: {
-            emoji: inputStr,
-          },
-        });
-        if (res.data.responseCode === 200) {
-          // if (dataList.isSubscribed) {
-          listPublicExclusiveHandler();
-          viewExclusivepostHandler();
-          setInputStr(null);
+      const res = await axios({
+        method: "GET",
+        url: Apiconfigs.reactOnPost + id,
+        headers: {
+          token: window.localStorage.getItem("token"),
+        },
+        data: {
+          postId: id,
+        },
+        params: {
+          emoji: inputStr,
+        },
+      });
+      if (res.data.responseCode === 200) {
+        // if (dataList.isSubscribed) {
+        listPublicExclusiveHandler();
+        viewExclusivepostHandler();
+        setInputStr(null);
 
-          toast.success(res.data.responseMessage);
-          setIsLoading(false);
-          // console.log("User is subscribed!!!!!!!");
-        }
+        toast.success(res.data.responseMessage);
+        setIsLoading(false);
+        // console.log("User is subscribed!!!!!!!");
+      }
       // } else {
       //   // If the user is not subscribed, show a message or disable the comment functionality
       //   toast.error("You must be a subscriber to Like on this post.");
@@ -284,9 +282,9 @@ let isLike;
   //   }
   // }, [inputStr]);
 
-  useEffect(() => {
-    viewExclusivepostHandler();
-  });
+  // useEffect(() => {
+  //   viewExclusivepostHandler();
+  // });
 
   return (
     <Page title="Dashboard">
@@ -369,8 +367,8 @@ let isLike;
                         </Box>
                         <Box className={classes.commentBox} mb={3}>
                           <Grid container>
-                          <Grid item xs={4}>
-                            {/* <BsEmojiLaughing
+                            <Grid item xs={4}>
+                              {/* <BsEmojiLaughing
                               position="end"
                               style={{
                                 fontSize: "20px",
@@ -378,26 +376,25 @@ let isLike;
                               }}
                               onClick={() => setShowPicker((val) => !val)}
                             /> */}
-                            <Grid item xs={4} align="right">
-                              <IconButton
-                                className={classes.iconbutton}
-                                onClick={onEmojiClick}
-                              >
-                                {isLike ? (
-                                  <>
-                                    <FavoriteIcon style={{ color: "red" }} />
-                                  </>
-                                ) : (
-                                  <>
-                                    <FavoriteBorderIcon
-                                      style={{ color: "#BFBFBF" }}
-                                    />
-                                  </>
-                                )}
-                                
-                              </IconButton>
+                              <Grid item xs={4} align="right">
+                                <IconButton
+                                  className={classes.iconbutton}
+                                  onClick={onEmojiClick}
+                                >
+                                  {isLike ? (
+                                    <>
+                                      <FavoriteIcon style={{ color: "red" }} />
+                                    </>
+                                  ) : (
+                                    <>
+                                      <FavoriteBorderIcon
+                                        style={{ color: "#BFBFBF" }}
+                                      />
+                                    </>
+                                  )}
+                                </IconButton>
+                              </Grid>
                             </Grid>
-                          </Grid>
                             <Grid item xs={6} align="center">
                               <Button color="primary" size="large">
                                 {" "}

@@ -354,25 +354,24 @@ export default function (props) {
                       </Box>
                       <Accordion square>
                         <Box className={classes.commentBox} mb={3}>
-                        <Grid item xs={4} align="right">
-                              <IconButton
-                                className={classes.iconbutton}
-                                onClick={onEmojiClick}
-                              >
-                                {isLikeEmoji ? (
-                                  <>
-                                    <FavoriteIcon style={{ color: "red" }} />
-                                  </>
-                                ) : (
-                                  <>
-                                    <FavoriteBorderIcon
-                                      style={{ color: "#BFBFBF" }}
-                                    />
-                                  </>
-                                )}
-                                
-                              </IconButton>
-                            </Grid>
+                          <Grid item xs={4} align="right">
+                            <IconButton
+                              className={classes.iconbutton}
+                              onClick={onEmojiClick}
+                            >
+                              {isLikeEmoji ? (
+                                <>
+                                  <FavoriteIcon style={{ color: "red" }} />
+                                </>
+                              ) : (
+                                <>
+                                  <FavoriteBorderIcon
+                                    style={{ color: "#BFBFBF" }}
+                                  />
+                                </>
+                              )}
+                            </IconButton>
+                          </Grid>
                           <Grid container>
                             {/* <Grid item xs={6} align="center">
                               <Box>
