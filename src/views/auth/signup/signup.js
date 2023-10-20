@@ -89,10 +89,10 @@ const useStyles = makeStyles((theme) => ({
     top: 0,
     left: 0,
     right: 0,
-    bottom: 5,  
-    zIndex:0,
-     [theme.breakpoints.down('sm')]: {
-      backgroundSize: 'auto 100%',
+    bottom: 5,
+    zIndex: 0,
+    [theme.breakpoints.down("sm")]: {
+      backgroundSize: "auto 100%",
     },
   },
   container: {
@@ -104,20 +104,20 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     padding: theme.spacing(4),
     backgroundColor: "#242526",
-    height: '30rem',
-    width: '45vw',
-    zIndex:1,
-      border: '6px solid #E31A89',
-    [theme.breakpoints.down('sm')]: {
-      width: '80vw',
-      height: 'auto',
+    height: "30rem",
+    width: "45vw",
+    zIndex: 1,
+    border: "6px solid #E31A89",
+    [theme.breakpoints.down("sm")]: {
+      width: "80vw",
+      height: "auto",
       padding: theme.spacing(2),
     },
   },
   greeting: {
     marginBottom: theme.spacing(4),
     textAlign: "center",
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down("sm")]: {
       fontSize: "2rem",
     },
   },
@@ -127,7 +127,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
     marginTop: theme.spacing(2),
     color: "#E31A89",
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down("sm")]: {
       fontSize: "3rem",
     },
   },
@@ -135,7 +135,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "2rem",
     fontWeight: 500,
     color: theme.palette.text.secondary,
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down("sm")]: {
       fontSize: "1.5rem",
     },
   },
@@ -148,7 +148,7 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: "#FF6EB6",
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down("sm")]: {
       fontSize: "1rem",
     },
   },
@@ -156,7 +156,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
     height: "2rem",
     width: "auto",
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down("sm")]: {
       height: "1.5rem",
     },
   },
@@ -312,7 +312,7 @@ function Signup() {
   //     //   setTimeout(() => {
   //     //     setErrorMesageResend(""); // count is 0 here
   //     //   }, 5000);
-  //     //   setErrorMesageResend(res.data?.responseMessage);
+  //     //   setErrorMesageResend(res.data.responseMessage);
   //     // toast.success(`${res.data.responseMessage} please login`);
   //     history.push("/");
   //     setIsLoadingOtp(false);
@@ -326,7 +326,7 @@ function Signup() {
   //     // setTimeout(() => {
   //     //   setErrorMesage(""); // count is 0 here
   //     // }, 5000);
-  //     // setErrorMesage(error?.response?.data?.responseMessage);
+  //     // setErrorMesage(error.response.data.responseMessage);
   //   }
   // };
   // const resendOTP = async () => {
@@ -346,7 +346,7 @@ function Signup() {
   //       setTimeout(() => {
   //         setErrorMesageResend(""); // count is 0 here
   //       }, 5000);
-  //       setErrorMesageResend(res.data?.responseMessage);
+  //       setErrorMesageResend(res.data.responseMessage);
   //       // toast.success("resend otp succefully");
   //     }
   //   } catch (error) {
@@ -356,8 +356,8 @@ function Signup() {
   //     setTimeout(() => {
   //       setErrorMesage(""); // count is 0 here
   //     }, 5000);
-  //     setErrorMesage(error?.response?.data?.responseMessage);
-  //     // setErrorMesage(error?.response?.data?.responseMessage);
+  //     setErrorMesage(error.response.data.responseMessage);
+  //     // setErrorMesage(error.response.data.responseMessage);
   //   }
   // };
   // const isValidEmail = (value) => {
@@ -400,7 +400,7 @@ function Signup() {
   //       method: "GET",
   //       url: ApiConfig.searchUserNameForsignUpTime,
   //       params: {
-  //         search: formValue?.userName,
+  //         search: formValue.userName,
   //       },
   //     });
 
@@ -422,7 +422,7 @@ function Signup() {
   //     }
   //     // setIsLoading(false);
   //   } catch (error) {
-  //     if (error?.response?.data?.responseCode === 404) {
+  //     if (error.response.data.responseCode === 404) {
   //       setTimeout(() => {
   //         setErrorMesageerror(""); // count is 0 here
   //       }, 10000);
@@ -433,10 +433,10 @@ function Signup() {
   //   }
   // };
   // useEffect(() => {
-  //   if (formValue?.userName.length > 3) {
+  //   if (formValue.userName.length > 3) {
   //     creatorHandler();
   //   }
-  // }, [formValue?.userName]);
+  // }, [formValue.userName]);
 
   // const gethandleSubmitApi = async (event) => {
   //   event.preventDefault();
@@ -474,7 +474,7 @@ function Signup() {
   //     password: formValue.password,
   //     dob: fieldValue,
   //     gender: formValue.gender,
-  //     countryCode: `+${mobileNumber?.slice(0, 2)}`,
+  //     countryCode: `+${mobileNumber.slice(0, 2)}`,
   //     refereeCode: codeReferalPath ? codeReferalPath : "",
   //     socialId: address,
   //   };
@@ -515,7 +515,7 @@ function Signup() {
   //           // if (!res.data.result.name) {
   //           //   history.push({
   //           //     pathname: "/settings",
-  //           //     // search: res.data.result?._id,
+  //           //     // search: res.data.result._id,
   //           //     hash: "editProfile",
   //           //   });
   //           // } else {
@@ -550,7 +550,7 @@ function Signup() {
   //         setTimeout(() => {
   //           setErrorMesagesignin(""); // count is 0 here
   //         }, 5000);
-  //         setErrorMesagesignin(error?.response?.data?.responseMessage);
+  //         setErrorMesagesignin(error.response.data.responseMessage);
   //         // }
   //         // setIsLoading(false);
   //         // toast.error(err.message);
@@ -560,10 +560,10 @@ function Signup() {
   // const responseGoogle = async (response) => {
   //   try {
   //     const creadentails = {
-  //       socialId: response.profileObj?.googleId,
+  //       socialId: response.profileObj.googleId,
   //       socialType: response.tokenObj.idpId,
-  //       email: response.profileObj?.email.toLowerCase(),
-  //       name: response.profileObj?.name,
+  //       email: response.profileObj.email.toLowerCase(),
+  //       name: response.profileObj.name,
   //     };
   //     const res = await axios({
   //       method: "POST",
@@ -580,7 +580,7 @@ function Signup() {
   //       // if (!res.data.result.name) {
   //       //   history.push({
   //       //     pathname: "/settings",
-  //       //     // search: res.data.result?._id,
+  //       //     // search: res.data.result._id,
   //       //     hash: "editProfile",
   //       //   });
   //       // } else {
@@ -601,10 +601,10 @@ function Signup() {
   const auth = useContext(AuthContext);
 
   useEffect(() => {
-    if (auth?.userLoggedIn) {
+    if (auth.userLoggedIn) {
       history.push("/mint");
     }
-  }, [auth?.userLoggedIn]);
+  }, [auth.userLoggedIn]);
 
   const handleMetaMaskConnect = async () => {
     try {
@@ -742,8 +742,8 @@ function Signup() {
   //   try {
   //     const creadentails = {
   //       socialId: response.id,
-  //       socialType: response?.graphDomain,
-  //       email: response.profileObj?.email.toLowerCase(),
+  //       socialType: response.graphDomain,
+  //       email: response.profileObj.email.toLowerCase(),
   //       name: response.name,
   //     };
   //     const res = await axios({
@@ -766,7 +766,7 @@ function Signup() {
   //       // } else {
   //       //   history.push({
   //       //     pathname: "/settings",
-  //       //     search: res.data.result?._id,
+  //       //     search: res.data.result._id,
   //       //     hash: "editProfile",
   //       //   });
   //       // }

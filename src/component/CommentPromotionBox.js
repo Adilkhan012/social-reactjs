@@ -171,7 +171,6 @@ export default function ({ data, dataList, listPublicExclusiveHandler }) {
   const [isHidePostdata, setIsHidePostData] = React.useState();
   const [isHidePostdataComment, setIsHidePostDataCommewnt] = React.useState();
 
-
   const handleDeleteCommentFunction = (data) => {
     setIsHidePost(true);
     setIsHidePostData(data);
@@ -196,7 +195,7 @@ export default function ({ data, dataList, listPublicExclusiveHandler }) {
           data: {
             postPromotionId: dataList._id,
             message: replyMessage,
-            commentId: data?._id,
+            commentId: data._id,
           },
         });
         if (res.data.responseCode === 200) {
@@ -225,7 +224,7 @@ export default function ({ data, dataList, listPublicExclusiveHandler }) {
         },
         params: {
           postPromotionId: dataList._id,
-          commentId: data?._id,
+          commentId: data._id,
         },
       });
       if (res.data.responseCode === 200) {
@@ -238,11 +237,11 @@ export default function ({ data, dataList, listPublicExclusiveHandler }) {
     setExpanded(newExpanded ? panel : false);
   };
   let isLike = false;
-  if (auth.userData?._id && data) {
-    const likeUser = data?.likesUsers?.filter(
-      (data) => data === auth.userData?._id
+  if (auth.userData._id && data) {
+    const likeUser = data.likesUsers.filter(
+      (data) => data === auth.userData._id
     );
-    isLike = likeUser?.length > 0;
+    isLike = likeUser.length > 0;
   }
   const deleteComment = async (id) => {
     // console.log("id<<<<<", id);
@@ -255,8 +254,8 @@ export default function ({ data, dataList, listPublicExclusiveHandler }) {
         },
         data: {
           postPromotionId: dataList._id,
-          commentId: isHidePostdata?._id,
-          // commentReplyId: isHidePostdata?._id,
+          commentId: isHidePostdata._id,
+          // commentReplyId: isHidePostdata._id,
         },
       });
       if (res.data.responseCode === 200) {
@@ -281,8 +280,8 @@ export default function ({ data, dataList, listPublicExclusiveHandler }) {
         },
         data: {
           postPromotionId: dataList._id,
-          commentId: isHidePostdata?.commentId,
-          commentReplyId: isHidePostdata?._id,
+          commentId: isHidePostdata.commentId,
+          commentReplyId: isHidePostdata._id,
         },
       });
       if (res.data.responseCode === 200) {
@@ -303,8 +302,8 @@ export default function ({ data, dataList, listPublicExclusiveHandler }) {
           <figure>
             <img
               src={
-                data?.userId?.profilePic
-                  ? data?.userId?.profilePic
+                data.userId.profilePic
+                  ? data.userId.profilePic
                   : "images/user.png"
               }
             />
@@ -312,18 +311,18 @@ export default function ({ data, dataList, listPublicExclusiveHandler }) {
 
           <Box>
             <Typography variant="h6">
-              {data?.userId?.userName
-                ? data?.userId.userName
-                : data?.userId.name
-                ? data?.userId.name
+              {data.userId.userName
+                ? data.userId.userName
+                : data.userId.name
+                ? data.userId.name
                 : ""}
             </Typography>
             <Typography variant="body2" component="small">
-              {moment(data?.time).local().fromNow()}
-              {data?.postType}
+              {moment(data.time).local().fromNow()}
+              {data.postType}
             </Typography>{" "}
             <br />
-            <Typography variant="body2">{data?.message}</Typography>
+            <Typography variant="body2">{data.message}</Typography>
             <Accordion square onChange={handleChange("panel1")}>
               <Box mt={1}>
                 <Button color="primary" size="large" onClick={likesHandler}>
@@ -342,7 +341,7 @@ export default function ({ data, dataList, listPublicExclusiveHandler }) {
                   </Button>
                 </AccordionSummary>
                 <>
-                  {data?.userId?._id === auth.userData?._id && (
+                  {data.userId._id === auth.userData._id && (
                     <Button
                       color="primary"
                       size="large"
@@ -356,36 +355,36 @@ export default function ({ data, dataList, listPublicExclusiveHandler }) {
               </Box>
               <AccordionDetails>
                 <Box>
-                  {data?.reply?.map((data, i) => {
+                  {data.reply.map((data, i) => {
                     return (
                       <Box className={classes.UserBox} key={i}>
                         <figure>
                           <img
                             src={
-                              data?.userId?.profilePic
-                                ? data?.userId?.profilePic
+                              data.userId.profilePic
+                                ? data.userId.profilePic
                                 : "images/user.png"
                             }
                           />
                         </figure>
                         <Box>
                           <Typography variant="h6">
-                            {data?.userId?.userName
-                              ? data?.userId.userName
-                              : data?.userId.name
-                              ? data?.userId.name
+                            {data.userId.userName
+                              ? data.userId.userName
+                              : data.userId.name
+                              ? data.userId.name
                               : ""}
-                            {/* {data?.userId.userName} */}
+                            {/* {data.userId.userName} */}
                           </Typography>
                           <Typography variant="body2" component="small">
-                            {moment(data?.time).local().fromNow()}
-                            {data?.postType}
+                            {moment(data.time).local().fromNow()}
+                            {data.postType}
                           </Typography>{" "}
                           <br />
                           <Typography variant="body2">
-                            {data?.message}
+                            {data.message}
                           </Typography>
-                          {data?.userId?._id === auth.userData?._id && (
+                          {data.userId._id === auth.userData._id && (
                             <Button
                               color="primary"
                               size="large"
@@ -411,8 +410,8 @@ export default function ({ data, dataList, listPublicExclusiveHandler }) {
                           <Box className="profileimage">
                             <img
                               src={
-                                auth.userData?.profilePic
-                                  ? auth.userData?.profilePic
+                                auth.userData.profilePic
+                                  ? auth.userData.profilePic
                                   : "images/user.png"
                               }
                               alt="user data"

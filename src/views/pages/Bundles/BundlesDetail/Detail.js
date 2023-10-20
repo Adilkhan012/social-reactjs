@@ -182,18 +182,18 @@ export default function (props) {
   let isLike = false;
   let isLikeEmoji = false;
 
-  if (auth.userData?._id && dataList) {
-    const likeUser = dataList?.likesUsers?.filter(
-      (data) => data === auth.userData?._id
+  if (auth.userData._id && dataList) {
+    const likeUser = dataList.likesUsers.filter(
+      (data) => data === auth.userData._id
     );
-    isLike = likeUser?.length > 0;
+    isLike = likeUser.length > 0;
   }
 
-  if (auth.userData?._id && dataList) {
-    const likeUser = dataList?.likesUsers?.filter(
-      (data) => data === auth.userData?._id
+  if (auth.userData._id && dataList) {
+    const likeUser = dataList.likesUsers.filter(
+      (data) => data === auth.userData._id
     );
-    isLikeEmoji = likeUser?.length > 0;
+    isLikeEmoji = likeUser.length > 0;
   }
   // console.log("dataList from details.js ", data);
   const commentPostHandler = async () => {
@@ -275,7 +275,7 @@ export default function (props) {
     }
   }, [location.search, idd]);
 
-  const isvideo = dataList?.mediaUrl?.includes(".mp4");
+  const isvideo = dataList.mediaUrl.includes(".mp4");
   const [showPicker, setShowPicker] = useState(false);
   const [inputStr, setInputStr] = useState("");
 
@@ -297,10 +297,10 @@ export default function (props) {
           ) : (
             <Grid container spacing={2}>
               <Grid item sm={12} md={12} lg={8}>
-                {dataList?.postType === "PUBLIC" ||
-                dataList?.isSubscribed ||
-                auth?.userData?.userType === "Admin" ||
-                auth?.userData?.userType === "Subadmin" ? (
+                {dataList.postType === "PUBLIC" ||
+                dataList.isSubscribed ||
+                auth.userData.userType === "Admin" ||
+                auth.userData.userType === "Subadmin" ? (
                   <Box className={classes.rightBox}>
                     {isvideo ? (
                       <video
@@ -316,7 +316,7 @@ export default function (props) {
                     ) : (
                       <img
                         style={{ maxHeight: "20vh" }}
-                        src={dataList?.mediaUrl}
+                        src={dataList.mediaUrl}
                       />
                     )}
                   </Box>
@@ -339,7 +339,7 @@ export default function (props) {
                     ) : (
                       <img
                         style={{ maxHeight: "20vh" }}
-                        src={dataList?.mediaUrl}
+                        src={dataList.mediaUrl}
                       />
                     )}
                   </Box>
@@ -420,7 +420,7 @@ export default function (props) {
                         </Box>
                         <Box className="CommentscrollDiv">
                           {dataList &&
-                            dataList?.comment?.map((dataChild, i) => {
+                            dataList.comment.map((dataChild, i) => {
                               return (
                                 <AccordionDetails>
                                   <CommentBox

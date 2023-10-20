@@ -26,9 +26,9 @@ const useStyles = makeStyles((theme) => ({
       justifyContent: "space-between",
       paddingBottom: "15px",
       borderBottom: "0.5px solid #737373",
-      "& h6":{
-        fontSize:"16px"
-      }
+      "& h6": {
+        fontSize: "16px",
+      },
     },
   },
   Users: {
@@ -144,11 +144,13 @@ function Subscriber({ serchTrending, datalistFollower }) {
     <>
       <Paper className={classes.root} elevation={2}>
         <Box className="heading" mb={2}>
-          <Typography variant="h6" >
-            Subscriber
-          </Typography>
+          <Typography variant="h6">Subscriber</Typography>
           {datalistFollower && datalistFollower.length > 1 && (
-            <Link component={RouterComponent} to="/subscriber-list"  style={{ color: "#E31A89" }}>
+            <Link
+              component={RouterComponent}
+              to="/subscriber-list"
+              style={{ color: "#E31A89" }}
+            >
               See All
             </Link>
           )}
@@ -175,7 +177,7 @@ export default Subscriber;
 const Users = (props) => {
   const { data, isLoading } = props;
   const history = useHistory();
-console.log("data>>>>>",data[0])
+  console.log("data>>>>>", data[0]);
   const classes = useStyles();
   return (
     <>
@@ -186,9 +188,7 @@ console.log("data>>>>>",data[0])
               <Box className="profileimage">
                 <img
                   src={
-                    data[0]?.profilePic
-                      ? data[0]?.profilePic
-                      : "images/user.png"
+                    data[0].profilePic ? data[0].profilePic : "images/user.png"
                   }
                 />
               </Box>
@@ -202,19 +202,23 @@ console.log("data>>>>>",data[0])
                 onClick={() => {
                   history.push({
                     pathname: "/about-creators",
-                    search: data[0]?._id,
+                    search: data[0]._id,
                   });
                 }}
               >
                 <Typography variant="h6">
-                  {data[0]?.userName ? data[0]?.userName : data[0]?.name ? data[0]?.name:sortAddress(data[0]?.bnbAccount?.address)}
+                  {data[0].userName
+                    ? data[0].userName
+                    : data[0].name
+                    ? data[0].name
+                    : sortAddress(data[0].bnbAccount.address)}
                 </Typography>
               </Link>
             </Box>
           </Box>
           <Box className="timeline1" textAlign="end">
             <Typography variant="h6">
-              {data[0]?.collectionId?.duration}
+              {data[0].collectionId.duration}
             </Typography>
           </Box>
         </Box>

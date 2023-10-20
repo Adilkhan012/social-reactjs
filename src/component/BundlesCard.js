@@ -218,21 +218,21 @@ function BundlesCard(props) {
   const [subscribedUser, setSubscribedUser] = useState(false);
 
   const sortUserName = (user) => {
-    const sortAdd = `${user?.slice(0, 5)}...${user?.slice(user.length - 5)}`;
+    const sortAdd = `${user.slice(0, 5)}...${user.slice(user.length - 5)}`;
     return sortAdd;
   };
 
   const updateDimensions = () => {
     var offsetWidth = document.getElementById(
-      "imagecard" + data?._id
+      "imagecard" + data._id
     ).offsetWidth;
     var newoofsetWidth = offsetWidth - 80;
-    document.getElementById("imagecard" + data?._id).style.height =
+    document.getElementById("imagecard" + data._id).style.height =
       newoofsetWidth + "px";
   };
   useEffect(() => {
     updateDimensions();
-  }, [data, data?._id]);
+  }, [data, data._id]);
 
   useEffect(() => {
     window.addEventListener("resize", updateDimensions);
@@ -240,11 +240,11 @@ function BundlesCard(props) {
   }, []);
 
   let isLike = false;
-  if (auth.userData?._id && data) {
-    const likeUser = data?.likesUsers?.filter(
-      (data) => data === auth.userData?._id
+  if (auth.userData._id && data) {
+    const likeUser = data.likesUsers.filter(
+      (data) => data === auth.userData._id
     );
-    isLike = likeUser?.length > 0;
+    isLike = likeUser.length > 0;
   }
 
   const likesHandler = async () => {
@@ -270,7 +270,7 @@ function BundlesCard(props) {
 
         toast.success(res.data.responseMessage);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
   const subscribeNowHandler = async (isCheck) => {
     setIsloading(true);
@@ -307,7 +307,7 @@ function BundlesCard(props) {
           calBackFunc();
         }
 
-        toast.error(err?.response?.data?.responseMessage);
+        toast.error(err.response.data.responseMessage);
 
         // toast.error("Something went wrong");
       });
@@ -316,12 +316,12 @@ function BundlesCard(props) {
     //   setIsloading(false);
     // }
   };
-  // const userSubscriberd = data?.subscriptionUser.filter((data) => {
+  // const userSubscriberd = data.subscriptionUser.filter((data) => {
   //   return data;
   // });
   useEffect(() => {
-    const userSubscriberd = data?.subscriptionUsers?.filter((value) => {
-      return value === auth.userData?._id;
+    const userSubscriberd = data.subscriptionUsers.filter((value) => {
+      return value === auth.userData._id;
     });
     if (userSubscriberd[0]) {
       setSubscribedUser(true);
@@ -329,10 +329,10 @@ function BundlesCard(props) {
       setSubscribedUser(false);
     }
   }, [
-    data?.subscriptionUser,
+    data.subscriptionUser,
     subscribedUser,
-    data?.subscriptionUsers,
-    auth.userData?._id,
+    data.subscriptionUsers,
+    auth.userData._id,
   ]);
 
   const fileExtention = data.image.split(".").pop();
@@ -341,15 +341,15 @@ function BundlesCard(props) {
     fileExtention == "mp4" || fileExtention == "webp"
       ? "video"
       : fileExtention == "mp3"
-        ? "audio"
-        : "image";
-  // console.log("data?._id--", data?._id);
+      ? "audio"
+      : "image";
+  // console.log("data._id--", data._id);
   return (
     <>
       <Paper elevation={2} className={classes.root}>
         {fileType == "image" && (
           <Box
-            id={`imagecard${data?._id}`}
+            id={`imagecard${data._id}`}
             className={classes.mainimg}
             // style={{ background: "url(" + data.image + ")" }}
             style={{ background: "url(" + data.image + ")" }}
@@ -357,7 +357,7 @@ function BundlesCard(props) {
         )}
         {(fileType == "video" || fileType == "audio") && (
           <Box
-            id={`imagecard${data?._id}`}
+            id={`imagecard${data._id}`}
             className={classes.mainimg}
             style={{ background: "url(" + data.image + ")" }}
           >
@@ -375,7 +375,7 @@ function BundlesCard(props) {
           </Box>
         )}
         {/* <figure className="postImg">
-          <img src={data?.image} ali="Auction Image" />
+          <img src={data.image} ali="Auction Image" />
         </figure> */}
         <Grid container spacing={1} alignItems="center">
           <Grid item xs={8}>
@@ -384,8 +384,8 @@ function BundlesCard(props) {
                 <Box className="profileimage">
                   <img
                     src={
-                      data?.userId?.profilePic
-                        ? data?.userId?.profilePic
+                      data.userId.profilePic
+                        ? data.userId.profilePic
                         : "/images/user.png"
                     }
                     alt="user data"
@@ -395,18 +395,20 @@ function BundlesCard(props) {
               </Box>
               <Box className="timeline">
                 <Typography variant="h6">
-                  {data?.userId?.userName
-                    ? `${data?.userId?.userName?.length > 15
-                      ? sortUserName(data?.userId?.userName)
-                      : data?.userId?.userName
-                    }`
-                    : ` ${data?.userId?.name?.length > 15
-                      ? sortUserName(data?.userId?.name)
-                      : data?.userId?.name
-                    }`}
+                  {data.userId.userName
+                    ? `${
+                        data.userId.userName.length > 15
+                          ? sortUserName(data.userId.userName)
+                          : data.userId.userName
+                      }`
+                    : ` ${
+                        data.userId.name.length > 15
+                          ? sortUserName(data.userId.name)
+                          : data.userId.name
+                      }`}
 
-                  {/* sortUserName(data?.userId?.name)} */}
-                  {/* {data?.name} */}
+                  {/* sortUserName(data.userId.name)} */}
+                  {/* {data.name} */}
                 </Typography>
               </Box>
             </Box>
@@ -435,16 +437,14 @@ function BundlesCard(props) {
             <Typography variant="body1">Collection Title</Typography>
           </Grid>
           <Grid item xs={6} align="right">
-            <Typography variant="body1">{sortAddress(data?.title)}</Typography>
+            <Typography variant="body1">{sortAddress(data.title)}</Typography>
           </Grid>
           <Grid item xs={6}>
             <Typography variant="body1">Collection Price</Typography>
           </Grid>
           <Grid item xs={6} align="right">
             <Typography variant="body1">
-              {data?.amount > 1
-                ? data?.amount
-                : Number(data?.amount)?.toFixed(4)}
+              {data.amount > 1 ? data.amount : Number(data.amount).toFixed(4)}
               &nbsp; {tokenName}
             </Typography>
           </Grid>
@@ -454,16 +454,14 @@ function BundlesCard(props) {
             <Typography variant="body1">Duration:</Typography>
           </Grid>
           <Grid item xs={6} align="right">
-            <Typography variant="body1">
-              {data?.duration} &nbsp; Days
-            </Typography>
+            <Typography variant="body1">{data.duration} &nbsp; Days</Typography>
           </Grid>
         </Grid>
         <Grid container spacing={1}>
           <Grid item xs={12} align="left">
             <Box style={{ display: "flex", justifyContent: "center" }}>
               <Box>
-                {!subscribedUser && data?.userId?._id !== auth?.userData?._id && (
+                {!subscribedUser && data.userId._id !== auth.userData._id && (
                   <Box>
                     <Box
                       onClick={() => setOpen3(true)}
@@ -480,7 +478,7 @@ function BundlesCard(props) {
                   </Box>
                 )}
 
-                {subscribedUser && data?.userId?._id !== auth?.userData?._id && (
+                {subscribedUser && data.userId._id !== auth.userData._id && (
                   <Box>
                     <Box
                       // onClick={() => setOpen3(true)}
@@ -497,7 +495,7 @@ function BundlesCard(props) {
                   </Box>
                 )}
 
-                {data?.userId?._id === auth?.userData?._id && (
+                {data.userId._id === auth.userData._id && (
                   <Box>
                     <Box
                       onClick={() => setOpen3(true)}
@@ -513,13 +511,13 @@ function BundlesCard(props) {
                     </Box>
                   </Box>
                 )}
-              </Box>&nbsp;&nbsp;
-
+              </Box>
+              &nbsp;&nbsp;
               <Box
                 onClick={() => {
                   history.push({
                     pathname: "/bundles-details",
-                    search: data?._id,
+                    search: data._id,
                     state: data,
                   });
                 }}
@@ -534,11 +532,8 @@ function BundlesCard(props) {
                 </Button>
               </Box>
             </Box>
-
           </Grid>
-
         </Grid>
-
       </Paper>
       {open3 && (
         <Dialog
@@ -552,22 +547,22 @@ function BundlesCard(props) {
         >
           <DialogContent>
             {fileType == "image" && (
-              <Box id={`imagecard${data?._id}`} className={classes.PhotoBox}>
+              <Box id={`imagecard${data._id}`} className={classes.PhotoBox}>
                 <img
-                  src={data?.image}
+                  src={data.image}
                   alt=""
                   style={{ height: "368px", width: "553px" }}
                 />
               </Box>
               // <Box
-              //   id={`imagecard${data?._id}`}
+              //   id={`imagecard${data._id}`}
               //   className={classes.Dialogmainimg}
               //   style={{ background: "url(" + data.image + ")" }}
               // ></Box>
             )}
             {(fileType == "video" || fileType == "audio") && (
               <Box
-                id={`imagecard${data?._id}`}
+                id={`imagecard${data._id}`}
                 className={classes.Dialogmainimg}
               >
                 <video
@@ -586,12 +581,12 @@ function BundlesCard(props) {
               {/* {isVideo ? (
                 <div>
                   <video width="100%" controls>
-                    <source src={data?.nftId[0]?.mediaUrl} type="video/mp4" />
+                    <source src={data.nftId[0].mediaUrl} type="video/mp4" />
                   </video>
                 </div>
               ) : ( */}
               {/* <img
-                src={data?.image}
+                src={data.image}
                 alt=""
                 style={{ height: "368px", width: "553px" }}
               /> */}
@@ -600,7 +595,7 @@ function BundlesCard(props) {
             </Box>
             {/* <Box mt={2} className={classes.bundleText} textAlign="center">
               <Typography variant="h4" className="red">
-                {data?.name}
+                {data.name}
               </Typography>
             </Box> */}
             <Box mt={2}>
@@ -610,8 +605,8 @@ function BundlesCard(props) {
                     <Box className={classes.dialogProfileImage}>
                       <img
                         src={
-                          data?.userId?.profilePic
-                            ? data?.userId?.profilePic
+                          data.userId.profilePic
+                            ? data.userId.profilePic
                             : "/images/user.png"
                         }
                         alt="user data"
@@ -626,9 +621,9 @@ function BundlesCard(props) {
                           fontWeight: "500",
                         }}
                       >
-                        {data?.userId?.userName
-                          ? data?.userId?.userName
-                          : data?.userId?.name}
+                        {data.userId.userName
+                          ? data.userId.userName
+                          : data.userId.name}
                       </Typography>
                     </Box>
                   </Box>
@@ -643,9 +638,9 @@ function BundlesCard(props) {
                         fontWeight: "500",
                       }}
                     >
-                      {data?.amount > 1
-                        ? data?.amount
-                        : Number(data?.amount)?.toFixed(4)}
+                      {data.amount > 1
+                        ? data.amount
+                        : Number(data.amount).toFixed(4)}
                       &nbsp;
                       {tokenName}
                     </span>
@@ -672,7 +667,7 @@ function BundlesCard(props) {
                         color: "#FFFFFF",
                       }}
                     >
-                      {data?.duration} &nbsp; Days
+                      {data.duration} &nbsp; Days
                     </span>
                   </Typography>
                 </Grid>
@@ -681,13 +676,13 @@ function BundlesCard(props) {
                   <Typography variant="h4">Details:</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography variant="body1">{data?.description}</Typography>
+                  <Typography variant="body1">{data.description}</Typography>
                 </Grid>
               </Grid>
             </Box>
             {auth.userData &&
               auth.userLoggedIn &&
-              auth?.userData?._id !== data?.userId && (
+              auth.userData._id !== data.userId && (
                 <Box mt={3} mb={3} textAlign="center">
                   <Button
                     className={classes.btnbox}
@@ -702,7 +697,7 @@ function BundlesCard(props) {
                     Cancel
                   </Button>
                   &nbsp;&nbsp;&nbsp;
-                  {data?.userId?._id !== auth?.userData?._id && (
+                  {data.userId._id !== auth.userData._id && (
                     // auth.userData._id !== userId &&
                     <Button
                       className={classes.btnbox}
@@ -710,14 +705,14 @@ function BundlesCard(props) {
                       color="secondary"
                       size="large"
                       onClick={subscribeNowHandler}
-                    // onClick={() => {
-                    //   if (auth?.userData.userType === "User") {
-                    //     subscribeNowBlockchainHandler(data);
-                    //   } else {
-                    //     subscribeNowHandler(true);
-                    //   }
-                    // }}
-                    // disabled={isLoading}
+                      // onClick={() => {
+                      //   if (auth.userData.userType === "User") {
+                      //     subscribeNowBlockchainHandler(data);
+                      //   } else {
+                      //     subscribeNowHandler(true);
+                      //   }
+                      // }}
+                      // disabled={isLoading}
                     >
                       Subscribe Now
                       {/* {isLoading ? "pending..." : "Subscribe now"}{" "}

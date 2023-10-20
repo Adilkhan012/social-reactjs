@@ -6,7 +6,7 @@ import {
   Grid,
   Select,
   MenuItem,
-  Button
+  Button,
 } from "@material-ui/core";
 import BundlesCard from "src/component/BundlesCard";
 import Auction from "../Auction/Auction";
@@ -22,7 +22,6 @@ import DataLoading from "src/component/DataLoading";
 import MyPostPromotion from "../Promotion/MyPostPromotion";
 import SuscriberProfile from "../Dashboard/Subscriber/SubscriberProfile";
 import SubscriptionProfile from "../Dashboard/Subscriber/SubscriptionProfile";
-
 
 import MyAuctionCard from "src/component/MyAuctionCard";
 import { useHistory } from "react-router-dom";
@@ -68,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Bundles() {
   const classes = useStyles();
-  const history = useHistory()
+  const history = useHistory();
   const [mycollectionList, setMycollectionList] = useState();
   const [myAuctionList, setMyAuctionList] = useState();
   const [dataList, setDataList] = useState([]);
@@ -134,9 +133,9 @@ function Bundles() {
       setMySubscribers([]);
       if (error.response) {
       } else {
-        toast.error(error?.response?.data?.responseMessage);
+        toast.error(error.response.data.responseMessage);
       }
-      toast.error(error?.res?.data?.responseMessage);
+      toast.error(error.res.data.responseMessage);
       setIsLoading(false);
     }
   };
@@ -209,7 +208,6 @@ function Bundles() {
     }
   };
 
-
   const MyPostPromotionList = async () => {
     try {
       const res = await axios({
@@ -246,22 +244,25 @@ function Bundles() {
     <>
       <Box className={classes.root}>
         <Box style={{ display: "flex", justifyContent: "end" }}>
-
           <Button
             variant="outlined"
             color="secandary"
-
             onClick={() => history.push("/transaction-history")}
-            style={{ marginBottom: "8px", background: "#373636", borderRadius: "10px", padding: "10px 10px" }}
+            style={{
+              marginBottom: "8px",
+              background: "#373636",
+              borderRadius: "10px",
+              padding: "10px 10px",
+            }}
           >
             <BsClockHistory />
             &nbsp;Transaction History
           </Button>
         </Box>
-        <Box className='topcontent'>
+        <Box className="topcontent">
           <Grid container spacing={4}>
             <Grid item xs={12} sm={6} md={8} lg={8}>
-              <Typography variant='h5' color='primary.main'>
+              <Typography variant="h5" color="primary.main">
                 {tabview === "collection" ? "My Collections" : ""}
                 {tabview === "subscription" ? "My Subscription" : ""}
                 {tabview === "Feed" ? " My Post" : ""}
@@ -285,54 +286,54 @@ function Bundles() {
                 {/* {tabview === "MyBoughtAuction" ? "  My Bought" : ""} */}
               </Typography>
             </Grid>
-            <Grid item xs={12} sm={6} md={4} lg={4} align='right'>
+            <Grid item xs={12} sm={6} md={4} lg={4} align="right">
               <Box className={classes.rightselector}>
                 <Select
-                  name='addressAttachmentType'
-                  labelId='label'
-                  id='select'
+                  name="addressAttachmentType"
+                  labelId="label"
+                  id="select"
                   fullWidth
                   value={tabview}
                   onChange={(e) => setTabView(e.target.value)}
                 >
                   <MenuItem
-                    value='collection'
+                    value="collection"
                     className={tabview === "collection" ? "active" : ""}
                   >
                     My Collections
                   </MenuItem>
                   <MenuItem
-                    value='subscription'
+                    value="subscription"
                     className={tabview === "subscription" ? "active" : ""}
                   >
                     My Subscription
                   </MenuItem>
                   <MenuItem
-                    value='tagPostlist'
+                    value="tagPostlist"
                     className={tabview === "tagPostlist" ? "active" : ""}
                   >
                     Tag Post List
                   </MenuItem>
                   <MenuItem
-                    value='Feed'
+                    value="Feed"
                     className={tabview === "Feed" ? "active" : ""}
                   >
                     My Post
                   </MenuItem>
                   <MenuItem
-                    value='boughtPostList'
+                    value="boughtPostList"
                     className={tabview === "boughtPostList" ? "active" : ""}
                   >
                     Own Bought Post
                   </MenuItem>
                   <MenuItem
-                    value='boughtAuctionList'
+                    value="boughtAuctionList"
                     className={tabview === "boughtAuctionList" ? "active" : ""}
                   >
                     Own Bought Auction
                   </MenuItem>
                   <MenuItem
-                    value='Auction'
+                    value="Auction"
                     className={tabview === "Auction" ? "active" : ""}
                   >
                     My Auctions
@@ -376,13 +377,13 @@ function Bundles() {
                     Bought Auctions NFT
                   </MenuItem> */}
                   <MenuItem
-                    value='TransactionHistory'
+                    value="TransactionHistory"
                     className={tabview === "TransactionHistory" ? "active" : ""}
                   >
                     Wallet Transaction
                   </MenuItem>
                   <MenuItem
-                    value='MyPromotionPost'
+                    value="MyPromotionPost"
                     className={tabview === "MyPromotionPost" ? "active" : ""}
                   >
                     My Post Promotion
@@ -402,7 +403,7 @@ function Bundles() {
           </Grid>
         </Box>
 
-        <Box className='basebox'>
+        <Box className="basebox">
           <Grid container spacing={2}>
             {isLoading && <DataLoading />}
 
@@ -414,7 +415,7 @@ function Bundles() {
                       <Grid item xs={12} sm={6} md={4} lg={3}>
                         <MyPost
                           data={data}
-                          type='card'
+                          type="card"
                           key={index}
                           index={index}
                           listPublicExclusiveHandler={listTagPostHandler}
@@ -434,7 +435,7 @@ function Bundles() {
                       <Grid item xs={12} sm={6} md={4} lg={3}>
                         <BundlesCard
                           data={data}
-                          type='card'
+                          type="card"
                           key={i}
                           calBackFunc={fetchAllData}
                         />
@@ -460,7 +461,7 @@ function Bundles() {
                       <Grid item xs={12} sm={6} md={4} lg={3}>
                         <MyAuctionCard
                           data={data}
-                          type='card'
+                          type="card"
                           key={i}
                           myAuction={myAuction}
                           calBackFunc={fetchAllData}
@@ -487,7 +488,7 @@ function Bundles() {
                         <MyBoughtPost
                           buyPostList={myBoughtAuction}
                           data={data}
-                          type='card'
+                          type="card"
                           key={i}
                           isAuction={true}
                         />
@@ -502,16 +503,19 @@ function Bundles() {
             {tabview === "subscription" && (
               <Grid container spacing={2}>
                 {mySubscribers &&
-                  mySubscribers?.map((data, i) => {
+                  mySubscribers.map((data, i) => {
                     return (
                       <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <SubscriptionProfile calBackFunc={myCollectionSubscription} data={data} type='card' key={i} />
+                        <SubscriptionProfile
+                          calBackFunc={myCollectionSubscription}
+                          data={data}
+                          type="card"
+                          key={i}
+                        />
                       </Grid>
                     );
                   })}
-                {mySubscribers && mySubscribers?.length === 0 && (
-                  <NoDataFound />
-                )}
+                {mySubscribers && mySubscribers.length === 0 && <NoDataFound />}
               </Grid>
             )}
             {tabview === "Feed" && (
@@ -525,7 +529,7 @@ function Bundles() {
                             listPublicExclusiveHandler
                           }
                           data={data}
-                          type='card'
+                          type="card"
                           key={i}
                         />
                       </Grid>
@@ -542,7 +546,7 @@ function Bundles() {
                       <Grid item xs={12} sm={6} md={4} lg={3}>
                         <MyPostPromotion
                           data={data}
-                          type='card'
+                          type="card"
                           key={i}
                           MyPostPromotionList={MyPostPromotionList}
                         />
@@ -557,24 +561,24 @@ function Bundles() {
             {tabview === "boughtPostList" && (
               <Grid container spacing={2}>
                 {boughtList &&
-                  boughtList?.map((data, i) => {
+                  boughtList.map((data, i) => {
                     return (
                       <Grid item xs={12} sm={6} md={4} lg={3}>
                         <MyBoughtPost
                           buyPostList={buyPostList}
                           data={data}
-                          type='card'
+                          type="card"
                           key={i}
                         />
                       </Grid>
                     );
                   })}
-                {boughtList && boughtList?.length === 0 && <NoDataFound />}
+                {boughtList && boughtList.length === 0 && <NoDataFound />}
               </Grid>
             )}
             {tabview === "TransactionHistory" && (
               <Box style={{ width: "100%" }}>
-                <TransactionData type='card' />
+                <TransactionData type="card" />
               </Box>
             )}
           </Grid>

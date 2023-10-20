@@ -291,7 +291,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
         } catch (error) {
           setprocess(false);
           toast.error(
-            error?.response?.data?.responseMessage ||
+            error.response.data.responseMessage ||
               "An error occurred while creating collection"
           );
         }
@@ -384,7 +384,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
       });
       if (response.data.responseCode === 200) {
         setCollection(
-          response.data.result.filter((data) => data?.type === "COLLECTION")
+          response.data.result.filter((data) => data.type === "COLLECTION")
         );
         // setIsLoading(false);
       }
@@ -530,7 +530,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                 <NoDataFound />
               )}
               {collectionlistAll &&
-                collectionlistAll?.map((data, i) => {
+                collectionlistAll.map((data, i) => {
                   return (
                     <Grid item lg={3} md={4} sm={6} xs={6}>
                       <BundlesCard
@@ -601,7 +601,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                 ) : (
                   " "
                   // <Typography variant="h6">
-                  //   Your balance &nbsp;{auth?.userData?.bnbBalace > 0 ? (parseInt(auth?.userData?.bnbBalace)) : 0}
+                  //   Your balance &nbsp;{auth.userData.bnbBalace > 0 ? (parseInt(auth.userData.bnbBalace)) : 0}
                   // </Typography>
                 )}
               </Box>
@@ -753,7 +753,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                               }
                               onChange={(e) => setdonation(e.target.value)}
                               onKeyPress={(event) => {
-                                if (event?.key === "-" || event?.key === "+") {
+                                if (event.key === "-" || event.key === "+") {
                                   event.preventDefault();
                                 }
                               }}
@@ -861,14 +861,14 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                                       }}
                                     />
                                     <Box>
-                                      {image?.type === "video/mp4" ||
-                                      image?.type == "image/jpeg" ||
-                                      image?.type == "image/png" ||
-                                      image?.type == "image/gif" ||
-                                      image?.type == "image/jpg" ||
-                                      image?.type == "image/svg" ? (
+                                      {image.type === "video/mp4" ||
+                                      image.type == "image/jpeg" ||
+                                      image.type == "image/png" ||
+                                      image.type == "image/gif" ||
+                                      image.type == "image/jpg" ||
+                                      image.type == "image/svg" ? (
                                         <>
-                                          {image?.type === "video/mp4" ? (
+                                          {image.type === "video/mp4" ? (
                                             <>
                                               <video
                                                 style={{
@@ -954,7 +954,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                             </Typography> */}
                             {/* <Typography variant="h6">
                               Collection fee&nbsp;
-                              {collectionId && collectionId[0]?.amount}{" "}
+                              {collectionId && collectionId[0].amount}{" "}
                               &nbsp;Share
                             </Typography> */}
                           </Grid>

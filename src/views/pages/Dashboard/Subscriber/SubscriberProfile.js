@@ -154,7 +154,7 @@ export default Subscriber;
 
 const Users = (props) => {
   const { data, isLoading } = props;
-  console.log("data",data)
+  console.log("data", data);
   const history = useHistory();
 
   const classes = useStyles();
@@ -171,8 +171,8 @@ const Users = (props) => {
                   <Box className="profileimage">
                     <img
                       src={
-                        data[0]?.profilePic
-                          ? data[0]?.profilePic
+                        data[0].profilePic
+                          ? data[0].profilePic
                           : "images/User.png"
                       }
                     />
@@ -184,17 +184,17 @@ const Users = (props) => {
                     onClick={() => {
                       history.push({
                         pathname: "/about-creators",
-                        search: data[0]?._id,
+                        search: data[0]._id,
                       });
                     }}
                   >
-                    <Typography variant="h6">{data[0]?.userName}</Typography>
+                    <Typography variant="h6">{data[0].userName}</Typography>
                   </Link>
                 </Box>
               </Box> */}
               <Box className="timeline1" textAlign="end">
                 <Typography variant="h6">
-                  {data[0]?.collectionId?.duration}
+                  {data[0].collectionId.duration}
                 </Typography>
               </Box>
             </Box>

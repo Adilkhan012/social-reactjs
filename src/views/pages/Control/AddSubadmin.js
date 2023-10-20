@@ -166,7 +166,7 @@ export default function Controls() {
   const [bannerImage, setBannerImage] = useState("");
   const [countryCode, setCountryCode] = useState("");
   const [fieldvalue1, setFieldValue] = useState("");
-  console.log("fieldvalue1",fieldvalue1)
+  console.log("fieldvalue1", fieldvalue1);
   const [state, setState] = React.useState({
     collectionManagement: false,
     postManagement: false,
@@ -192,10 +192,10 @@ export default function Controls() {
       });
       if (response.data.responseCode === 200) {
         setCollection(
-          response.data.result.filter((data) => data?.type === "COLLECTION")
+          response.data.result.filter((data) => data.type === "COLLECTION")
         );
         setAuction(
-          response.data.result.filter((data) => data?.type === "AUCTION")
+          response.data.result.filter((data) => data.type === "AUCTION")
         );
         // setIsLoading(false);
       }
@@ -244,7 +244,7 @@ export default function Controls() {
       formValue.password !== "" &&
       validPassword(formValue.password) &&
       formValue.gender !== "" &&
-      formValue?.name !== "" &&
+      formValue.name !== "" &&
       fieldvalue1 !== "" &&
       bannerImage !== "" &&
       myAge(fieldValue)
@@ -259,13 +259,13 @@ export default function Controls() {
             token: window.localStorage.getItem("token"),
           },
           data: {
-            userName: formValue?.userName,
-            email: formValue?.email,
-            password: formValue?.password,
+            userName: formValue.userName,
+            email: formValue.email,
+            password: formValue.password,
             mobileNumber: fieldvalue1,
             dob: fieldValue,
-            gender: formValue?.gender,
-            name: formValue?.name,
+            gender: formValue.gender,
+            name: formValue.name,
             profilePic: bannerImage,
             countryCode: `+${countryCode}`,
             permissions: {
@@ -460,7 +460,7 @@ export default function Controls() {
                       //   disabled={isEdit}
                       name="mobileNumber"
                       //  onChange={_onInputChange}
-                      error={Boolean(fieldvalue1 === undefined )}
+                      error={Boolean(fieldvalue1 === undefined)}
                       placeholder="Enter Mobile No."
                       onChange={(phone, e) => {
                         setCountryCode(e.dialCode);
@@ -470,16 +470,15 @@ export default function Controls() {
                       inputStyle={{
                         borderRadius: "14px",
                         width: "100%",
-                       height:'2.1876em',
+                        height: "2.1876em",
                         backgroundColor: "rgb(36 37 38)",
-                     
-
                       }}
                     />
                     <FormHelperText error>
-                      {isSubmit && fieldvalue1 === undefined || isSubmit && fieldvalue1 === ""&& (
-                        <Box ml={1}>Mobile number is a required </Box>
-                      )}
+                      {(isSubmit && fieldvalue1 === undefined) ||
+                        (isSubmit && fieldvalue1 === "" && (
+                          <Box ml={1}>Mobile number is a required </Box>
+                        ))}
                     </FormHelperText>
                   </FormControl>
                 </Box>
@@ -569,13 +568,12 @@ export default function Controls() {
                     <label for="raised-button-file-img">
                       <div className="MuiBox-root jss74"></div>
                     </label>
-                    
                   </FormControl>
                   <FormHelperText error>
-                      {isSubmit && bannerImage==="" && (
-                        <Box ml={1}>Profile image is required</Box>
-                      )}
-                    </FormHelperText>
+                    {isSubmit && bannerImage === "" && (
+                      <Box ml={1}>Profile image is required</Box>
+                    )}
+                  </FormHelperText>
                 </Box>
               </Grid>
 

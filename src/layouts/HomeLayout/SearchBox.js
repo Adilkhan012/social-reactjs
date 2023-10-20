@@ -135,12 +135,12 @@ export function SearchResults({
 
   return (
     <>
-      {searchResult?.collection?.length > 0 ||
-        searchResult?.user.length > 0 ||
-        searchResult?.post?.length > 0 ||
-        searchResult?.auctions?.length > 0 ? (
+      {searchResult.collection.length > 0 ||
+      searchResult.user.length > 0 ||
+      searchResult.post.length > 0 ||
+      searchResult.auctions.length > 0 ? (
         <ul className="list-group text-dark" id="search-list">
-          {searchResult?.collection?.length > 0 && (
+          {searchResult.collection.length > 0 && (
             <>
               <Box
                 className="list-group-item"
@@ -152,7 +152,7 @@ export function SearchResults({
                   </Box>
                 </Box>
               </Box>
-              {searchResult?.collection?.map((data, i) => {
+              {searchResult.collection.map((data, i) => {
                 return (
                   <li
                     // className={classes.collectionCss}
@@ -181,7 +181,7 @@ export function SearchResults({
             </>
           )}
 
-          {searchResult?.user.length > 0 && (
+          {searchResult.user.length > 0 && (
             <>
               <Box
                 className="list-group-item"
@@ -189,11 +189,13 @@ export function SearchResults({
               >
                 <Box display={"flex"} justifyContent="space-between">
                   <Box display={"flex"}>
-                    <Typography variant="h6" style={{ color: "#FFFFFF" }}>User's</Typography>
+                    <Typography variant="h6" style={{ color: "#FFFFFF" }}>
+                      User's
+                    </Typography>
                   </Box>
                 </Box>
               </Box>
-              {searchResult?.user.map((data, i) => {
+              {searchResult.user.map((data, i) => {
                 return (
                   <li
                     key={i}
@@ -220,11 +222,11 @@ export function SearchResults({
                         />
                         <Typography>
                           {" "}
-                          {data?.userName
-                            ? data?.userName
-                            : data?.name
-                              ? data?.name
-                              : sortAddress(data?.walletAddress)}
+                          {data.userName
+                            ? data.userName
+                            : data.name
+                            ? data.name
+                            : sortAddress(data.walletAddress)}
                         </Typography>
                       </Box>
                     </Box>
@@ -233,7 +235,7 @@ export function SearchResults({
               })}
             </>
           )}
-          {searchResult?.post?.length > 0 && (
+          {searchResult.post.length > 0 && (
             <>
               <Box
                 className="list-group-item"
@@ -245,7 +247,7 @@ export function SearchResults({
                   </Box>
                 </Box>
               </Box>
-              {searchResult?.post.map((data, i) => {
+              {searchResult.post.map((data, i) => {
                 return (
                   <li
                     key={i}
@@ -269,7 +271,7 @@ export function SearchResults({
               })}
             </>
           )}
-          {searchResult?.auctions?.length > 0 && (
+          {searchResult.auctions.length > 0 && (
             <>
               <Box
                 className="list-group-item"
@@ -281,7 +283,7 @@ export function SearchResults({
                   </Box>
                 </Box>
               </Box>
-              {searchResult?.auctions.map((data, i) => {
+              {searchResult.auctions.map((data, i) => {
                 return (
                   <li
                     key={i}

@@ -77,8 +77,8 @@ export default function StaticContentDetail() {
           method: "PUT",
           url: ApiConfig.editStatics,
           data: {
-            _id: staticData?._id,
-            title: formValue?.title,
+            _id: staticData._id,
+            title: formValue.title,
             description: descritionValue,
           },
         });
@@ -145,7 +145,7 @@ export default function StaticContentDetail() {
                   <Typography variant="h5">Title &nbsp; :</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="h6">{staticData?.title}</Typography>
+                  <Typography variant="h6">{staticData.title}</Typography>
                 </Grid>
               </Grid>
             </Box>
@@ -160,7 +160,7 @@ export default function StaticContentDetail() {
                       wordBreak: "break-all",
                     }}
                     dangerouslySetInnerHTML={{
-                      __html: staticData?.description,
+                      __html: staticData.description,
                     }}
                   ></label>
                 </Typography>

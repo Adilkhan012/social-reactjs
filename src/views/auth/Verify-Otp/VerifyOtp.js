@@ -79,7 +79,7 @@ export default function (props) {
       }
     } catch (error) {
       setIsLoading(false);
-      setErrorMesage(error?.response?.data?.responseMessage);
+      setErrorMesage(error.response.data.responseMessage);
     }
   };
   const resendOTP = async () => {
@@ -98,7 +98,7 @@ export default function (props) {
       }
     } catch (error) {
       setIsLoading(false);
-      setErrorMesage(error?.response?.data?.responseMessage);
+      setErrorMesage(error.response.data.responseMessage);
     }
   };
   return (
@@ -109,8 +109,8 @@ export default function (props) {
             <Typography variant="h2">Verify OTP</Typography>
             <Box mt={2}>
               <Typography variant="h6">
-              Please Enter The Verification Code Send To Your Email
-                        Address Or Mobile Number
+                Please Enter The Verification Code Send To Your Email Address Or
+                Mobile Number
               </Typography>
             </Box>
           </Box>

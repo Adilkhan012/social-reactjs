@@ -245,8 +245,8 @@ function StoryCard(props) {
         // setIsUpdatingData(false);
       });
   };
-  // const fileExtention = data?.story[0]?.includes(".").pop();
-  // const isvideo = data?..includes(".mp4");
+  // const fileExtention = data.story[0].includes(".").pop();
+  // const isvideo = data..includes(".mp4");
 
   // const fileType =
   //   fileExtention == "mp4" || fileExtention == "webp"
@@ -261,11 +261,11 @@ function StoryCard(props) {
       <Paper className={classes.root} elevation={0} style={{}}>
         <Link
           style={{ textDecoration: "none", color: "#fff", cursor: "pointer" }}
-          onClick={() => HandleCommentBox(data?._id)}
+          onClick={() => HandleCommentBox(data._id)}
           // onClick={() =>
           //   history.push({
           //     pathname: "/stories",
-          //     search: data?._id,
+          //     search: data._id,
           //     state: { storyLists: storyLists, i },
           //   })
           // }
@@ -273,7 +273,7 @@ function StoryCard(props) {
           <figure>
             {" "}
             <img
-              src={data?.profilePic ? data?.profilePic : "images/add.png"}
+              src={data.profilePic ? data.profilePic : "images/add.png"}
               alt=""
             />
             {/* {data.addstory ? (
@@ -287,8 +287,10 @@ function StoryCard(props) {
             ""
           )} */}
           </figure>
-          {/* {data?.userName ? ( */}
-            <Typography variant="h6">{data?.userName?data?.userName:data?.name}</Typography>
+          {/* {data.userName ? ( */}
+          <Typography variant="h6">
+            {data.userName ? data.userName : data.name}
+          </Typography>
           {/* // ) : (
           //   ""
           // )} */}

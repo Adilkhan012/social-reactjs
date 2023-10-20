@@ -191,11 +191,11 @@ function TransactionHistory({ data, index }) {
           res.data.result.docs.map((data, i) => {
             return {
               Sno: i + 1,
-              Paymentdate: data?.createdAt,
+              Paymentdate: data.createdAt,
               Coinname: "ETH",
-              Amount: data?.amount,
-              Transactiontype: data?.transactionType,
-              Transactionstatus: data?.transactionStatus,
+              Amount: data.amount,
+              Transactiontype: data.transactionType,
+              Transactionstatus: data.transactionStatus,
             };
           })
         );
@@ -239,7 +239,7 @@ function TransactionHistory({ data, index }) {
       <Box className={classes.main}>
         <Box align="right">
           {transactionListDataDownload &&
-            transactionListDataDownload?.length > 0 && (
+            transactionListDataDownload.length > 0 && (
               <AiOutlineDownload
                 onClick={downloadExcel}
                 style={{
@@ -258,7 +258,7 @@ function TransactionHistory({ data, index }) {
                 <Typography
                   variant="boay2"
                   style={{ color: "#cfc8c8" }}
-                // color="primary.main"
+                  // color="primary.main"
                 >
                   From Date:
                 </Typography>
@@ -284,7 +284,7 @@ function TransactionHistory({ data, index }) {
                 <Typography
                   variant="boay2"
                   style={{ color: "#cfc8c8" }}
-                // color="primary.main"
+                  // color="primary.main"
                 >
                   To Date:
                 </Typography>
@@ -311,7 +311,7 @@ function TransactionHistory({ data, index }) {
                 <Typography
                   variant="boay2"
                   style={{ color: "#cfc8c8", marginTop: "-2px" }}
-                // color="primary.main"
+                  // color="primary.main"
                 >
                   By Type:
                 </Typography>
@@ -371,7 +371,7 @@ function TransactionHistory({ data, index }) {
             <DataLoading />
           ) : (
             <TableContainer>
-              <Table style={{width:"100% !important"}}>
+              <Table style={{ width: "100% !important" }}>
                 <TableHead component={Paper} className="headingcell">
                   <TableRow>
                     <TableCell align="Center" className={classes.cell}>
@@ -404,7 +404,7 @@ function TransactionHistory({ data, index }) {
                     </TableCell>
                   </TableRow>
                 </TableHead>
-                {transactionListData?.map((data, i) => {
+                {transactionListData.map((data, i) => {
                   return (
                     <TableBody key={i}>
                       <TableRow className={classes.tbody}>
@@ -412,26 +412,23 @@ function TransactionHistory({ data, index }) {
                           {i + 1}
                         </TableCell>
                         <TableCell align="Center">
-                          {sortAddress(data?.toAddress)}
+                          {sortAddress(data.toAddress)}
                         </TableCell>
                         <TableCell align="Center">
-                          {sortAddress(data?.fromAddress)}
+                          {sortAddress(data.fromAddress)}
                         </TableCell>
 
                         <TableCell align="Center">
-                          {data?.amount}&nbsp;
+                          {data.amount}&nbsp;
                           {tokenName}
                         </TableCell>
+                        <TableCell align="Center">{data.commission}</TableCell>
                         <TableCell align="Center">
-                          {data?.commission}
+                          {moment(data.createdAt).format("DD:MM:YYYY hh:mm A")}
                         </TableCell>
                         <TableCell align="Center">
-                          {moment(data?.createdAt).format("DD:MM:YYYY hh:mm A")}
+                          {data.transactionStatus}
                         </TableCell>
-                        <TableCell align="Center">
-                          {data?.transactionStatus}
-                        </TableCell>
-
                       </TableRow>
                     </TableBody>
                   );

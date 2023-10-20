@@ -44,13 +44,13 @@ export default function AuthProvider(props) {
   const setLoggedinUser = () => {
     try {
       createSignalProtocolManager(
-        userData?._id,
-        userData?.userName,
+        userData._id,
+        userData.userName,
         dummySignalServer
       ).then((signalProtocolManagerUser) => {
         setSignalProtocolManagerUser(signalProtocolManagerUser);
       });
-    } catch (error) { }
+    } catch (error) {}
   };
   useEffect(() => {
     if (userData) {
@@ -69,9 +69,8 @@ export default function AuthProvider(props) {
         },
       });
       if (res.data.responseCode === 200) {
-
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -102,10 +101,10 @@ export default function AuthProvider(props) {
         }
       })
       .catch((error) => {
-        console.log("erooor", error?.response?.data?.responseCode);
-        if (error?.response?.data?.responseCode === 403) {
+        console.log("erooor", error.response.data.responseCode);
+        if (error.response.data.responseCode === 403) {
           setIsLogin(true);
-        } else if (error?.response?.data?.responseCode === 500) {
+        } else if (error.response.data.responseCode === 500) {
           getoffLineUserApi();
           setIsLogin(false);
         } else {
@@ -129,7 +128,7 @@ export default function AuthProvider(props) {
         // setDataList(res.data.result);
       }
     } catch (error) {
-      // toast.success(error?.response?.data?.responseMessage);
+      // toast.success(error.response.data.responseMessage);
     }
   };
 
@@ -152,7 +151,7 @@ export default function AuthProvider(props) {
       })
       .catch((response) => {
         // setIsLogin(false);
-        // if (response?.response?.data?.responseCode === 401) {
+        // if (response.response.data.responseCode === 401) {
         //   setIsLogin(false)
         //   // history.push("/")
         //   // sessionStorage.removeItem("token");
@@ -163,11 +162,11 @@ export default function AuthProvider(props) {
   };
   useEffect(() => {
     handleUserProfileApi();
-    if (userData?._id && userData?.userType === "User") {
+    if (userData._id && userData.userType === "User") {
       handleUserBalanceApi();
       // getDepositApi();
     }
-  }, [userData?._id, userData?.userType === "User"]);
+  }, [userData._id, userData.userType === "User"]);
 
   //CHAT COUNT
   useEffect(() => {
@@ -211,7 +210,7 @@ export default function AuthProvider(props) {
         web.onopen = () => {
           const dataToSend = {
             type: "ChatHistory",
-            senderId: userData._id
+            senderId: userData._id,
           };
 
           // let encryptedMessage = signalProtocolManagerUser.encryptMessageAsync(
@@ -230,7 +229,6 @@ export default function AuthProvider(props) {
               //   );
               // obj.message = decrytedMessage;
               setChatMessageData(obj.result);
-
             }
           };
         };
@@ -249,7 +247,7 @@ export default function AuthProvider(props) {
 
   useEffect(() => {
     const web = new WebSocket(socketURL);
-    if (userData?._id && accessToken) {
+    if (userData._id && accessToken) {
       try {
         web.onopen = () => {
           const dataToSend = {

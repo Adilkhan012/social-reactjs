@@ -82,11 +82,10 @@ function Static({ data, index }) {
   const [pagePost, setPagePost] = useState(1);
   const [noOfPagesPost, setNoOfPagesPostList] = useState(1);
   useEffect(() => {
-    if (auth?.userData?.userType !== "Admin") {
-      history.push("/explore")
-
+    if (auth.userData.userType !== "Admin") {
+      history.push("/explore");
     }
-  }, [auth?.userData?.userType])
+  }, [auth.userData.userType]);
   const staticContentListHandler = async () => {
     // setIsLoading(true);
     try {
@@ -289,13 +288,21 @@ function Static({ data, index }) {
                       <TableCell align="Center" className={classes.cell}>
                         Sr.No.
                       </TableCell>
-                      <TableCell align="Center" style={{ minWidth: '150px' }} className={classes.cell} >
+                      <TableCell
+                        align="Center"
+                        style={{ minWidth: "150px" }}
+                        className={classes.cell}
+                      >
                         Title
                       </TableCell>
-                      <TableCell align="center" style={{ maxWidth: '350px' }} >
+                      <TableCell align="center" style={{ maxWidth: "350px" }}>
                         Description
                       </TableCell>
-                      <TableCell align="Center" style={{ minWidth: '150px' }} className={classes.cell}>
+                      <TableCell
+                        align="Center"
+                        style={{ minWidth: "150px" }}
+                        className={classes.cell}
+                      >
                         Registration Date
                       </TableCell>
                       <TableCell align="Center" className={classes.cell}>
@@ -303,28 +310,28 @@ function Static({ data, index }) {
                       </TableCell>
                     </TableRow>
                   </TableHead>
-                  {staticContentListData?.map((data, i) => {
+                  {staticContentListData.map((data, i) => {
                     return (
                       <TableBody key={i}>
                         <TableRow className={classes.tbody}>
                           <TableCell align="Center" component="th" scope="row">
                             {i + 1}
                           </TableCell>
-                          <TableCell align="Center">{data?.title}</TableCell>
+                          <TableCell align="Center">{data.title}</TableCell>
                           <TableCell align="Center">
-                            {data?.description?.length <= 50 ? (
+                            {data.description.length <= 50 ? (
                               <label
                                 dangerouslySetInnerHTML={{
-                                  __html: data?.description,
+                                  __html: data.description,
                                 }}
                               ></label>
-                            ) : data?.description.length > 50 ? (
+                            ) : data.description.length > 50 ? (
                               <label
                                 // style={{
                                 //   wordBreak: "break-all",
                                 // }}
                                 dangerouslySetInnerHTML={{
-                                  __html: data?.description,
+                                  __html: data.description,
                                 }}
                               ></label>
                             ) : (
@@ -332,7 +339,7 @@ function Static({ data, index }) {
                             )}
                           </TableCell>
                           <TableCell align="Center">
-                            {moment(data?.createdAt).format("DD-MM-YYYY")}
+                            {moment(data.createdAt).format("DD-MM-YYYY")}
                           </TableCell>
                           <TableCell align="Center">
                             <Box
@@ -359,7 +366,7 @@ function Static({ data, index }) {
                                 onClick={() =>
                                   history.push({
                                     pathname: "/edit-static-content",
-                                    search: data?.type,
+                                    search: data.type,
                                   })
                                 }
                                 color="primary"
@@ -374,7 +381,7 @@ function Static({ data, index }) {
                                 onClick={() =>
                                   history.push({
                                     pathname: "/static-content-details",
-                                    search: data?.type,
+                                    search: data.type,
                                   })
                                 }
                               >
@@ -403,8 +410,9 @@ function Static({ data, index }) {
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
               {/* {row.status} */}
-              {`Are you sure  to ${idds.status === "BLOCK" ? "ACTIVE" : "DELETE"
-                } this user?`}
+              {`Are you sure  to ${
+                idds.status === "BLOCK" ? "ACTIVE" : "DELETE"
+              } this user?`}
             </DialogContentText>
           </DialogContent>
           <DialogActions>

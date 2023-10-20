@@ -302,11 +302,11 @@ export default function (props) {
     setAnchorEl(event.currentTarget);
   };
   let isLike = false;
-  if (auth.userData?._id && data) {
-    const likeUser = data?.likesUsers?.filter(
-      (data) => data === auth.userData?._id
+  if (auth.userData._id && data) {
+    const likeUser = data.likesUsers.filter(
+      (data) => data === auth.userData._id
     );
-    isLike = likeUser?.length > 0;
+    isLike = likeUser.length > 0;
   }
   const handleClose = () => {
     setAnchorEl(null);
@@ -364,7 +364,7 @@ export default function (props) {
     try {
       const res = await Axios({
         method: "DELETE",
-        url: Apiconfigs.postPromotionDelete + data?._id,
+        url: Apiconfigs.postPromotionDelete + data._id,
         headers: {
           token: window.localStorage.getItem("token"),
         },
@@ -377,9 +377,9 @@ export default function (props) {
     } catch (error) {}
   };
 
-  const isVideo = data?.mediaUrl
-    ? data?.mediaUrl?.includes(".mp4")
-    : data?.postId?.mediaUrl?.includes(".mp4");
+  const isVideo = data.mediaUrl
+    ? data.mediaUrl.includes(".mp4")
+    : data.postId.mediaUrl.includes(".mp4");
 
   return (
     <Paper>
@@ -410,8 +410,8 @@ export default function (props) {
             ) : (
               <img
                 src={
-                  data?.userId?.profilePic
-                    ? data?.userId?.profilePic
+                  data.userId.profilePic
+                    ? data.userId.profilePic
                     : "/images/user.png"
                 }
               />
@@ -421,28 +421,26 @@ export default function (props) {
             <Link to="#">
               {" "}
               <Typography variant="h6">
-                {data?.userId?.userName
-                  ? data?.userId?.userName
-                  : data?.userId?.name}
+                {data.userId.userName ? data.userId.userName : data.userId.name}
               </Typography>
             </Link>
             <Typography variant="body2" component="small">
-              {data?.time}
+              {data.time}
             </Typography>
           </Box>
         </Box>
-        <Typography variant="body2">{data?.text}</Typography>
+        <Typography variant="body2">{data.text}</Typography>
         <Box mt={1} mb={1} className="price">
           <Box className="text">
             <Typography variant="h6">Price :</Typography>
             &nbsp;&nbsp;
             <Typography variant="h6">
-              {data?.amount}&nbsp;
+              {data.amount}&nbsp;
               {tokenName}
             </Typography>
           </Box>
-          {data?.postType !== "PUBLIC" &&
-            data?.userId?._id !== auth?.userData?._id && (
+          {data.postType !== "PUBLIC" &&
+            data.userId._id !== auth.userData._id && (
               <Button variant="contained" color="secondary">
                 Buy
               </Button>
@@ -452,7 +450,7 @@ export default function (props) {
           <Box className="text">
             <Typography variant="h6">Expiry in :</Typography>
             &nbsp;&nbsp;
-            <Typography variant="h6">{data?.dateTime}&nbsp; Days</Typography>
+            <Typography variant="h6">{data.dateTime}&nbsp; Days</Typography>
           </Box>
         </Box>
         <Box>
@@ -460,7 +458,7 @@ export default function (props) {
             <figure className="postImg">
               <video width="100%" height="450" controls>
                 <source
-                  src={data.mediaUrl ? data.mediaUrl : data?.postId?.mediaUrl}
+                  src={data.mediaUrl ? data.mediaUrl : data.postId.mediaUrl}
                   type="video/mp4"
                 />
               </video>
@@ -471,7 +469,7 @@ export default function (props) {
                 <LoadingSkeleton data={8} />
               ) : (
                 <img
-                  src={data.mediaUrl ? data.mediaUrl : data?.postId?.mediaUrl}
+                  src={data.mediaUrl ? data.mediaUrl : data.postId.mediaUrl}
                 />
               )}
             </figure>
@@ -485,7 +483,7 @@ export default function (props) {
         >
           <Box className="commentBox"></Box>
           {data &&
-            data?.comment?.map((dataChild, i) => {
+            data.comment.map((dataChild, i) => {
               return (
                 <AccordionDetails>
                   <CommentBox dataParent={data} data={dataChild} key={i} />

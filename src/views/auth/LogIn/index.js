@@ -209,10 +209,10 @@ function Login(props) {
     }
   });
   useEffect(() => {
-    if (auth?.userLoggedIn) {
+    if (auth.userLoggedIn) {
       history.push("/explore");
     }
-  }, [auth?.userLoggedIn]);
+  }, [auth.userLoggedIn]);
   const isValidEmail = (value) => {
     const re =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; // eslint-disable-line no-useless-escape
@@ -266,7 +266,7 @@ function Login(props) {
         setIsLoading(true);
         const res = await axios.post(ApiConfig.userlogin, {
           email: checked2
-            ? mobileNumber?.slice(countryCode?.length)
+            ? mobileNumber.slice(countryCode.length)
             : formValue.email,
           // socialId: address,
           password: formValue.password,
@@ -299,7 +299,7 @@ function Login(props) {
             setTimeout(() => {
               auth.handleUserProfileApi(res.data.result.token);
             }, 500);
-            // user?.getProfileHandler(res.data.result.token);
+            // user.getProfileHandler(res.data.result.token);
             toast.success(res.data.responseMessage);
             setEmailLogin(res.data.result.email);
             setIsLoading(false);
@@ -318,18 +318,18 @@ function Login(props) {
           toast.error(res.data.responseMessage);
         }
       } catch (error) {
-        if (error?.response) {
-          setErrorMesage(error?.response?.data?.responseMessage);
+        if (error.response) {
+          setErrorMesage(error.response.data.responseMessage);
         } else {
           setErrorMesage(error.message);
         }
         auth.setIsLogin(false);
         setEmail(
           mobileNumber
-            ? mobileNumber?.slice(countryCode?.length)
+            ? mobileNumber.slice(countryCode.length)
             : formValue.email
         );
-        if (error?.response?.data?.responseCode === 400) {
+        if (error.response.data.responseCode === 400) {
           setIsLoading(false);
           // setVerifyOTPOpen(true);
           // resendOTP();
@@ -351,10 +351,10 @@ function Login(props) {
 
     try {
       const creadentails = {
-        socialId: response.profileObj?.googleId,
+        socialId: response.profileObj.googleId,
         socialType: response.tokenObj.idpId,
-        email: response.profileObj?.email.toLowerCase(),
-        name: response.profileObj?.name,
+        email: response.profileObj.email.toLowerCase(),
+        name: response.profileObj.name,
       };
       const res = await axios({
         method: "POST",
@@ -389,7 +389,7 @@ function Login(props) {
         // } else {
         //   history.push({
         //     pathname: "/settings",
-        //     search: res.data.result?._id,
+        //     search: res.data.result._id,
         //     hash: "editProfile",
         //   });
         // }
@@ -397,7 +397,7 @@ function Login(props) {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      toast.error(error?.response?.data?.responseMessage);
+      toast.error(error.response.data.responseMessage);
     }
   };
 
@@ -408,8 +408,8 @@ function Login(props) {
     try {
       const creadentails = {
         socialId: response.id,
-        socialType: response?.graphDomain,
-        email: response.profileObj?.email.toLowerCase(),
+        socialType: response.graphDomain,
+        email: response.profileObj.email.toLowerCase(),
         name: response.name,
       };
       const res = await axios({
@@ -450,7 +450,7 @@ function Login(props) {
       }
       setIsLoading(false);
     } catch (error) {
-      toast.error(error?.response?.data?.responseMessage);
+      toast.error(error.response.data.responseMessage);
       setIsLoading(false);
     }
   };
@@ -476,7 +476,7 @@ function Login(props) {
         setTimeout(() => {
           setErrorMesageOtp(""); // count is 0 here
         }, 5000);
-        setErrorMesageOtp(res.data?.responseMessage);
+        setErrorMesageOtp(res.data.responseMessage);
         toast.success(`${res.data.responseMessage} please login`);
         history.push("/");
       }
@@ -486,8 +486,8 @@ function Login(props) {
       setTimeout(() => {
         setErrorMesageOtpVerify("");
       }, 5000);
-      if (error?.response) {
-        setErrorMesageOtpVerify(error?.response?.data?.responseMessage);
+      if (error.response) {
+        setErrorMesageOtpVerify(error.response.data.responseMessage);
       } else {
         setErrorMesageOtpVerify(error.message);
       }
@@ -509,7 +509,7 @@ function Login(props) {
         setTimeout(() => {
           setErrorMesageOtp(""); // count is 0 here
         }, 5000);
-        setErrorMesageOtp(res.data?.responseMessage);
+        setErrorMesageOtp(res.data.responseMessage);
         toast.success("resend otp succefully");
       }
     } catch (error) {
@@ -519,8 +519,8 @@ function Login(props) {
         setErrorMesageOtpVerify(""); // count is 0 here
       }, 5000);
 
-      if (error?.response) {
-        setErrorMesageOtpVerify(error?.response?.data?.responseMessage);
+      if (error.response) {
+        setErrorMesageOtpVerify(error.response.data.responseMessage);
       } else {
         setErrorMesageOtpVerify(error.message);
       }
@@ -581,8 +581,8 @@ function Login(props) {
     try {
       const creadentails = {
         socialId: response.id,
-        socialType: response?.graphDomain,
-        email: response.profileObj?.email.toLowerCase(),
+        socialType: response.graphDomain,
+        email: response.profileObj.email.toLowerCase(),
         name: response.name,
       };
       const res = await axios({
@@ -623,7 +623,7 @@ function Login(props) {
       }
       setIsLoading(false);
     } catch (error) {
-      toast.error(error?.response?.data?.responseMessage);
+      toast.error(error.response.data.responseMessage);
       setIsLoading(false);
     }
   };
@@ -689,7 +689,7 @@ function Login(props) {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      toast.error(error?.response?.data?.responseMessage);
+      toast.error(error.response.data.responseMessage);
     }
   };
 
@@ -729,7 +729,7 @@ function Login(props) {
   //       }
   //     }
   //   } catch (error) {
-  //     toast.error(error?.response?.data?.responseMessage);
+  //     toast.error(error.response.data.responseMessage);
   //   }
   // };
 
@@ -1124,7 +1124,8 @@ function Login(props) {
                     onClick={handleFormSubmit}
                     disabled={isLoading}
                   >
-                    Sign In using MetaMask {isLoading && <ButtonCircularProgress />}
+                    Sign In using MetaMask{" "}
+                    {isLoading && <ButtonCircularProgress />}
                   </Button>
                 </Box>
               </Grid>
@@ -1197,12 +1198,12 @@ function Login(props) {
                               onBlur={handleBlur}
                               onChange={handleChange}
                               onKeyPress={(event) => {
-                                if (event?.key === "-" || event?.key === "+") {
+                                if (event.key === "-" || event.key === "+") {
                                   event.preventDefault();
                                 }
                               }}
                               // onKeyPress={(event) => {
-                              //   if (event?.key === '-' || event?.key === '+') {
+                              //   if (event.key === '-' || event.key === '+') {
                               //     event.handleChange(event)
                               //   }
                               // }}
@@ -1271,8 +1272,8 @@ function Login(props) {
                         // onClick={sendOTP}
                         // disabled={timeLeft && timeLeft.seconds > 0}
                       >
-                        Your OTP will expire in {timeLeft?.minutes} m :{" "}
-                        {timeLeft?.seconds} s
+                        Your OTP will expire in {timeLeft.minutes} m :{" "}
+                        {timeLeft.seconds} s
                       </Typography>{" "}
                     </>
                   ) : (

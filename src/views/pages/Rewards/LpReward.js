@@ -135,10 +135,10 @@ const useStyles = makeStyles((theme) => ({
   },
   warningMessage: {
     backgroundColor: "E70C9B",
-    padding:2,
-    paddingInline:7,
+    padding: 2,
+    paddingInline: 7,
     margin: 0,
-    marginBottom:4,
+    marginBottom: 4,
     color: "#E70C9B",
     fontSize: "1.2rem",
     fontWeight: 400,
@@ -1242,7 +1242,13 @@ const StakeReward = () => {
                         <InfoIcon fontSize={"medium"} />
                       </Tooltip>
                     </Box>
-                    <Box style={{display:'flex',flexDirection:'column' ,gap:5}}>
+                    <Box
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 5,
+                      }}
+                    >
                       <Button
                         variant="contained"
                         style={{
@@ -1258,25 +1264,24 @@ const StakeReward = () => {
                         Stake Info
                       </Button>
                       <Button
-  variant="contained"
-  style={{
-    backgroundColor: "#e31a89",
-    color: "#fff",
-    height: 40,
-    paddingInline: 15,
-    fontSize: 12,
-    marginTop: 5,
-  }}
-  onClick={() =>
-    window.open(
-      "https://quickswap.exchange/#/pools/v2?currency0=ETH&currency1=0xd7Dd450Bb046C886f4b680813A9e7E4b7f91ba07",
-      "_blank"
-    )
-  }
->
-  QuickSwap
-</Button>
-
+                        variant="contained"
+                        style={{
+                          backgroundColor: "#e31a89",
+                          color: "#fff",
+                          height: 40,
+                          paddingInline: 15,
+                          fontSize: 12,
+                          marginTop: 5,
+                        }}
+                        onClick={() =>
+                          window.open(
+                            "https://quickswap.exchange/#/pools/v2?currency0=ETH&currency1=0xd7Dd450Bb046C886f4b680813A9e7E4b7f91ba07",
+                            "_blank"
+                          )
+                        }
+                      >
+                        QuickSwap
+                      </Button>
                     </Box>
                   </Box>
                 )}
@@ -1310,7 +1315,7 @@ const StakeReward = () => {
                     }
                     getOptionLabel={(option) => option.label}
                     onChange={(event, newValue) =>
-                      setSelectedTime(newValue?.value || null)
+                      setSelectedTime(newValue.value || null)
                     }
                     renderInput={(params) => (
                       <TextField

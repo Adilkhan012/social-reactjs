@@ -141,7 +141,7 @@ export default function AuthProvider(props) {
     try {
       const connector = data.connector;
 
-      if (connector && connector.walletConnectProvider?.wc?.uri) {
+      if (connector && connector.walletConnectProvider.wc.uri) {
         connector.walletConnectProvider = undefined;
       }
 

@@ -170,11 +170,10 @@ export default function Controls() {
   console.log("deposittokenId----", deposittokenId);
 
   useEffect(() => {
-    if (auth?.userData?.userType === "User") {
-      history.push("/explore")
-
+    if (auth.userData.userType === "User") {
+      history.push("/explore");
     }
-  }, [auth?.userData?.userType])
+  }, [auth.userData.userType]);
 
   const feelistHandler = async () => {
     // setIsLoading(true);
@@ -188,19 +187,27 @@ export default function Controls() {
       });
       if (response.data.responseCode === 200) {
         setCollection(
-          response.data.result.filter((data) => data?.type === "COLLECTION")
+          response.data.result.filter((data) => data.type === "COLLECTION")
         );
         setAuction(
-          response.data.result.filter((data) => data?.type === "AUCTION")
+          response.data.result.filter((data) => data.type === "AUCTION")
         );
         setSubscription(
-          response.data.result.filter((data) => data?.type === "SUBCRIPTION")
+          response.data.result.filter((data) => data.type === "SUBCRIPTION")
         );
-        setPostId(response.data.result.filter((data) => data?.type === "POST"));
-        setSignupId(response.data.result.filter((data) => data?.type === "SIGNUP"));
-        setReferralId(response.data.result.filter((data) => data?.type === "REFERREL"));
-        setWithdrawtokenId(response.data.result.filter((data) => data?.type === "WITHDRAW_TOKEN"));
-        setDeposittokenId(response.data.result.filter((data) => data?.type === "DEPOSIT_TOKEN"));
+        setPostId(response.data.result.filter((data) => data.type === "POST"));
+        setSignupId(
+          response.data.result.filter((data) => data.type === "SIGNUP")
+        );
+        setReferralId(
+          response.data.result.filter((data) => data.type === "REFERREL")
+        );
+        setWithdrawtokenId(
+          response.data.result.filter((data) => data.type === "WITHDRAW_TOKEN")
+        );
+        setDeposittokenId(
+          response.data.result.filter((data) => data.type === "DEPOSIT_TOKEN")
+        );
         // setIsLoading(false);
       }
     } catch (error) {
@@ -210,41 +217,43 @@ export default function Controls() {
 
   useEffect(() => {
     if (collectionId) {
-      setCollectionFee(collectionId[0]?.amount ? collectionId[0]?.amount : "");
+      setCollectionFee(collectionId[0].amount ? collectionId[0].amount : "");
     }
     if (auctionId) {
-      setAuctionFee(auctionId[0]?.amount ? auctionId[0]?.amount : "");
+      setAuctionFee(auctionId[0].amount ? auctionId[0].amount : "");
     }
     if (postId) {
-      setPostFee(postId[0]?.amount ? postId[0]?.amount : "");
+      setPostFee(postId[0].amount ? postId[0].amount : "");
     }
     if (subscriptionId) {
       setSubscriptionFee(
-        subscriptionId[0]?.amount ? subscriptionId[0]?.amount : ""
+        subscriptionId[0].amount ? subscriptionId[0].amount : ""
       );
     }
     if (signupId) {
-      setSignupFee(
-        signupId[0]?.amount ? signupId[0]?.amount : ""
-      );
+      setSignupFee(signupId[0].amount ? signupId[0].amount : "");
     }
     if (referralId) {
-      setReferralFee(
-        referralId[0]?.amount ? referralId[0]?.amount : ""
-      );
+      setReferralFee(referralId[0].amount ? referralId[0].amount : "");
     }
     if (withdrawtokenId) {
       setWithdrawtoken(
-        withdrawtokenId[0]?.amount ? withdrawtokenId[0]?.amount : ""
+        withdrawtokenId[0].amount ? withdrawtokenId[0].amount : ""
       );
     }
     if (deposittokenId) {
-      setDeposittoken(
-        deposittokenId[0]?.amount ? deposittokenId[0]?.amount : ""
-      );
+      setDeposittoken(deposittokenId[0].amount ? deposittokenId[0].amount : "");
     }
-  }, [collectionId, auctionId, postId, subscriptionId, signupId, referralId, withdrawtokenId, deposittokenId]);
-
+  }, [
+    collectionId,
+    auctionId,
+    postId,
+    subscriptionId,
+    signupId,
+    referralId,
+    withdrawtokenId,
+    deposittokenId,
+  ]);
 
   const subAdminHandler = async () => {
     setIsSubAdminLoading(true);
@@ -280,8 +289,6 @@ export default function Controls() {
     subAdminHandler();
   }, [page]);
 
-
-
   const collectionUpdate = async () => {
     setIsSubmit(true);
     if (Number(collectionFee) > 0) {
@@ -293,7 +300,7 @@ export default function Controls() {
             token: window.localStorage.getItem("token"),
           },
           params: {
-            feeId: collectionId[0]?._id,
+            feeId: collectionId[0]._id,
             amount: collectionFee,
           },
         });
@@ -320,7 +327,7 @@ export default function Controls() {
             token: window.localStorage.getItem("token"),
           },
           params: {
-            feeId: auctionId[0]?._id,
+            feeId: auctionId[0]._id,
             amount: auctionFee,
           },
         });
@@ -347,7 +354,7 @@ export default function Controls() {
             token: window.localStorage.getItem("token"),
           },
           params: {
-            feeId: subscriptionId[0]?._id,
+            feeId: subscriptionId[0]._id,
             amount: subscriptionFee,
           },
         });
@@ -374,7 +381,7 @@ export default function Controls() {
             token: window.localStorage.getItem("token"),
           },
           params: {
-            feeId: postId[0]?._id,
+            feeId: postId[0]._id,
             amount: postFee,
           },
         });
@@ -407,7 +414,7 @@ export default function Controls() {
         setOpen(false);
         toast.success(res.data.responseMessage);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   const handlePopDelete = (data) => {
@@ -426,7 +433,7 @@ export default function Controls() {
         method: "POST",
         url: ApiConfig.subAdminBlockUnblock,
         data: {
-          _id: userData1?._id,
+          _id: userData1._id,
         },
         headers: {
           token: localStorage.getItem("token"),
@@ -437,7 +444,7 @@ export default function Controls() {
         subAdminHandler();
         toast.success(res.data.responseMessage);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   const handlePopBlock = (data) => {
@@ -501,7 +508,7 @@ export default function Controls() {
           toast.success(res.data.responseMessage);
         }
       } catch (error) {
-        toast.error(error?.response?.data.responseMessage);
+        toast.error(error.response.data.responseMessage);
 
         setIsSubmit(false);
       }
@@ -531,7 +538,7 @@ export default function Controls() {
         toast.success(res.data.responseMessage);
       }
     } catch (error) {
-      if (error?.response?.data?.responseCode === 409) {
+      if (error.response.data.responseCode === 409) {
         listDurationHandler();
       }
     }
@@ -566,7 +573,7 @@ export default function Controls() {
     setIsSubmitInterest(true);
     if (
       interestName !== "" &&
-      interestName?.length < 50 &&
+      interestName.length < 50 &&
       isValidInterest(interestName)
     ) {
       try {
@@ -590,7 +597,7 @@ export default function Controls() {
           toast.success(res.data.responseMessage);
         }
       } catch (error) {
-        toast.error(error?.response?.data?.responseMessage);
+        toast.error(error.response.data.responseMessage);
         setIsSubmitInterest(false);
       }
     }
@@ -620,7 +627,7 @@ export default function Controls() {
         toast.success(res.data.responseMessage);
       }
     } catch (error) {
-      if (error?.response?.data?.responseCode === 409) {
+      if (error.response.data.responseCode === 409) {
         listInterestHandler();
       }
     }
@@ -642,7 +649,7 @@ export default function Controls() {
             token: window.localStorage.getItem("token"),
           },
           params: {
-            feeId: signupId[0]?._id,
+            feeId: signupId[0]._id,
             amount: signupFee,
           },
         });
@@ -658,7 +665,6 @@ export default function Controls() {
     }
   };
 
-
   const referralFeeUpdate = async () => {
     setIsSubmitPost(true);
     if (Number(referralFee) > 0) {
@@ -670,7 +676,7 @@ export default function Controls() {
             token: window.localStorage.getItem("token"),
           },
           params: {
-            feeId: referralId[0]?._id,
+            feeId: referralId[0]._id,
             amount: referralFee,
           },
         });
@@ -696,7 +702,7 @@ export default function Controls() {
             token: window.localStorage.getItem("token"),
           },
           params: {
-            feeId: withdrawtokenId[0]?._id,
+            feeId: withdrawtokenId[0]._id,
             amount: withdrawtoken,
           },
         });
@@ -722,7 +728,7 @@ export default function Controls() {
             token: window.localStorage.getItem("token"),
           },
           params: {
-            feeId: deposittokenId[0]?._id,
+            feeId: deposittokenId[0]._id,
             amount: deposittoken,
           },
         });
@@ -738,12 +744,10 @@ export default function Controls() {
     }
   };
 
-
-
   return (
     <Box className={classes.root}>
       <Container>
-        {auth?.userData?.userType === "Admin" && (
+        {auth.userData.userType === "Admin" && (
           <Box className={classes.main}>
             <Grid container spacing={2}>
               <Grid item lg={6} sm={6} xs={6} md={6} align="left">
@@ -795,7 +799,7 @@ export default function Controls() {
                     </TableRow>
                   </TableHead>
                   {subAdminList &&
-                    subAdminList?.map((data, i) => {
+                    subAdminList.map((data, i) => {
                       return (
                         <TableBody key={i}>
                           <TableRow className={classes.tbody}>
@@ -807,18 +811,18 @@ export default function Controls() {
                               {i + 1}
                             </TableCell>
                             <TableCell align="Center">
-                              {data?.userName ? data?.userName : data?.name}
+                              {data.userName ? data.userName : data.name}
                             </TableCell>
-                            <TableCell align="Center">{data?.email}</TableCell>
+                            <TableCell align="Center">{data.email}</TableCell>
                             <TableCell align="Center">
-                              {data?.mobileNumber}
+                              {data.mobileNumber}
                             </TableCell>
 
-                            <TableCell align="Center">{data?.gender}</TableCell>
+                            <TableCell align="Center">{data.gender}</TableCell>
                             <TableCell align="Center">
-                              {moment(data?.createdAt).format("DD-MM-YYYY")}
+                              {moment(data.createdAt).format("DD-MM-YYYY")}
 
-                              {/* {data?.status} */}
+                              {/* {data.status} */}
                             </TableCell>
                             <TableCell align="Center">
                               <Box
@@ -833,11 +837,11 @@ export default function Controls() {
                                   color="secondary"
                                   size="small"
                                   onClick={() => handlePopBlock(data)}
-                                // onClick={() => {
-                                //   handlePopBlock(data);
-                                // }}
+                                  // onClick={() => {
+                                  //   handlePopBlock(data);
+                                  // }}
                                 >
-                                  {data?.status === "BLOCK"
+                                  {data.status === "BLOCK"
                                     ? "Unblock"
                                     : "Block"}
                                 </Button>
@@ -866,7 +870,7 @@ export default function Controls() {
                 <DataLoading />
               ) : (
                 <>
-                  {subAdminList && subAdminList?.length > 0 ? (
+                  {subAdminList && subAdminList.length > 0 ? (
                     <></>
                   ) : (
                     <NoDataFound />
@@ -901,7 +905,7 @@ export default function Controls() {
               <DialogActions>
                 <Button
                   onClick={() => {
-                    SubAdminDelete(userData?._id);
+                    SubAdminDelete(userData._id);
                     setIsopenInterest(false);
                   }}
                   color="primary"
@@ -935,8 +939,9 @@ export default function Controls() {
             >
               <DialogContent>
                 <DialogContentText id="alert-dialog-description" align="center">
-                  {`Are you sure you want to ${userData1?.status === "BLOCK" ? "ACTIVE" : "BLOCK"
-                    }`}
+                  {`Are you sure you want to ${
+                    userData1.status === "BLOCK" ? "ACTIVE" : "BLOCK"
+                  }`}
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
@@ -962,7 +967,7 @@ export default function Controls() {
           </Box>
         )}
         &nbsp;
-        {/* {auth?.userData?.userType === "Admin" && ( */}
+        {/* {auth.userData.userType === "Admin" && ( */}
         <Box className={classes.main}>
           <Grid container spacing={2}>
             <Grid item lg={6} sm={6} xs={6} md={6} align="left">
@@ -1007,20 +1012,20 @@ export default function Controls() {
                   </TableRow>
                 </TableHead>
 
-                {durationList?.map((data, i) => {
+                {durationList.map((data, i) => {
                   return (
                     <TableBody key={i}>
                       <TableRow className={classes.tbody}>
                         <TableCell align="Center" component="th" scope="row">
                           {i + 1}
                         </TableCell>
-                        <TableCell align="Center">{data?.duration}</TableCell>
+                        <TableCell align="Center">{data.duration}</TableCell>
                         <TableCell align="Center">
-                          {data?.amount} &nbsp;{tokenName}
+                          {data.amount} &nbsp;{tokenName}
                         </TableCell>
 
                         <TableCell align="Center">
-                          {moment(data?.createdAt).format("DD-MM-YYYY")}
+                          {moment(data.createdAt).format("DD-MM-YYYY")}
                         </TableCell>
                         <TableCell align="Center">
                           <Box
@@ -1053,7 +1058,7 @@ export default function Controls() {
                 <DataLoading />
               ) : (
                 <>
-                  {durationList && durationList?.length > 0 ? (
+                  {durationList && durationList.length > 0 ? (
                     <></>
                   ) : (
                     <NoDataFound />
@@ -1090,7 +1095,7 @@ export default function Controls() {
               <Button
                 variant="contained"
                 onClick={() => {
-                  durationDeleteHandler(userDuration?._id);
+                  durationDeleteHandler(userDuration._id);
                   setOpenDuration(false);
                 }}
                 color="secondary"
@@ -1130,7 +1135,7 @@ export default function Controls() {
                     type="number"
                     fullWidth
                     onKeyPress={(event) => {
-                      if (event?.key === "-" || event?.key === "+") {
+                      if (event.key === "-" || event.key === "+") {
                         event.preventDefault();
                       }
                     }}
@@ -1167,7 +1172,7 @@ export default function Controls() {
                     type="number"
                     fullWidth
                     onKeyPress={(event) => {
-                      if (event?.key === "-" || event?.key === "+") {
+                      if (event.key === "-" || event.key === "+") {
                         event.preventDefault();
                       }
                     }}
@@ -1220,8 +1225,9 @@ export default function Controls() {
           >
             <DialogContent>
               <DialogContentText id="alert-dialog-description" align="center">
-                {`Are you sure you want to ${userData1?.status === "BLOCK" ? "ACTIVE" : "BLOCK"
-                  }`}
+                {`Are you sure you want to ${
+                  userData1.status === "BLOCK" ? "ACTIVE" : "BLOCK"
+                }`}
               </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -1259,7 +1265,7 @@ export default function Controls() {
               <Button
                 variant="contained"
                 onClick={() => {
-                  SubAdminDelete(userData?._id);
+                  SubAdminDelete(userData._id);
                   setIsopenInterest(false);
                 }}
                 color="secondary"
@@ -1326,20 +1332,20 @@ export default function Controls() {
                   </TableRow>
                 </TableHead>
 
-                {interestList?.map((data, i) => {
+                {interestList.map((data, i) => {
                   return (
                     <TableBody key={i}>
                       <TableRow className={classes.tbody}>
                         <TableCell align="Center" component="th" scope="row">
                           {i + 1}
                         </TableCell>
-                        <TableCell align="Center">{data?.name}</TableCell>
+                        <TableCell align="Center">{data.name}</TableCell>
                         {/* <TableCell align="Center">
-                                  {data?.amount} &nbsp;{tokenName}
+                                  {data.amount} &nbsp;{tokenName}
                                 </TableCell> */}
 
                         <TableCell align="Center">
-                          {moment(data?.createdAt).format("DD-MM-YYYY")}
+                          {moment(data.createdAt).format("DD-MM-YYYY")}
                         </TableCell>
                         <TableCell align="Center">
                           <Box
@@ -1372,7 +1378,7 @@ export default function Controls() {
                 <DataLoading />
               ) : (
                 <>
-                  {interestList && interestList?.length > 0 ? (
+                  {interestList && interestList.length > 0 ? (
                     <></>
                   ) : (
                     <NoDataFound />
@@ -1412,13 +1418,13 @@ export default function Controls() {
                     type="text"
                     fullWidth
                     //   onKeyPress={(event) => {
-                    //     if (event?.key === "-" || event?.key === "+") {
+                    //     if (event.key === "-" || event.key === "+") {
                     //       event.preventDefault();
                     //     }
                     //   }}
                     error={
                       Boolean(isSubmitInterest && interestName === "") ||
-                      (interestName !== "" && interestName?.length > 50) ||
+                      (interestName !== "" && interestName.length > 50) ||
                       (interestName !== "" && !isValidInterest(interestName))
                     }
                     onChange={(e) => setIsinterseName(e.target.value)}
@@ -1427,7 +1433,7 @@ export default function Controls() {
                     {(isSubmitInterest && interestName === "" && (
                       <Box ml={1}>Interest is required</Box>
                     )) ||
-                      (interestName !== "" && interestName?.length > 50 && (
+                      (interestName !== "" && interestName.length > 50 && (
                         <Box ml={1}>Interest must be less than 50</Box>
                       )) ||
                       (interestName !== "" &&
@@ -1480,7 +1486,7 @@ export default function Controls() {
               <Button
                 variant="contained"
                 onClick={() => {
-                  InterestDeleteHandler(userInterest?._id);
+                  InterestDeleteHandler(userInterest._id);
                   setIsopenInterestDelete(false);
                 }}
                 color="secondary"
@@ -1500,15 +1506,8 @@ export default function Controls() {
             </DialogActions>
           </Dialog>
         </Box>
-
-
-
-
-
-
-
         &nbsp;
-        {auth?.userData?.permissions?.feeManagement && (
+        {auth.userData.permissions.feeManagement && (
           <Box className={classes.adminBox} mt={4}>
             <Box className={classes.heading}>
               <Typography variant="h3"> Fee Management</Typography>
@@ -1534,10 +1533,10 @@ export default function Controls() {
                       value={auctionFee}
                       error={Boolean(
                         isSubmitAuction &&
-                        (auctionFee === "" || Number(auctionFee) <= 0)
+                          (auctionFee === "" || Number(auctionFee) <= 0)
                       )}
                       onKeyPress={(event) => {
-                        if (event?.key === "-" || event?.key === "+") {
+                        if (event.key === "-" || event.key === "+") {
                           event.preventDefault();
                         }
                       }}
@@ -1584,11 +1583,11 @@ export default function Controls() {
                       value={subscriptionFee}
                       error={Boolean(
                         isSubmitSubscription &&
-                        (subscriptionFee === "" ||
-                          Number(subscriptionFee) <= 0)
+                          (subscriptionFee === "" ||
+                            Number(subscriptionFee) <= 0)
                       )}
                       onKeyPress={(event) => {
-                        if (event?.key === "-" || event?.key === "+") {
+                        if (event.key === "-" || event.key === "+") {
                           event.preventDefault();
                         }
                       }}
@@ -1634,10 +1633,10 @@ export default function Controls() {
                       placeholder="Enter fee"
                       error={Boolean(
                         isSubmit &&
-                        (collectionFee === "" || Number(collectionFee) <= 0)
+                          (collectionFee === "" || Number(collectionFee) <= 0)
                       )}
                       onKeyPress={(event) => {
-                        if (event?.key === "-" || event?.key === "+") {
+                        if (event.key === "-" || event.key === "+") {
                           event.preventDefault();
                         }
                       }}
@@ -1689,7 +1688,7 @@ export default function Controls() {
                         isSubmitPost && (postFee === "" || Number(postFee) <= 0)
                       )}
                       onKeyPress={(event) => {
-                        if (event?.key === "-" || event?.key === "+") {
+                        if (event.key === "-" || event.key === "+") {
                           event.preventDefault();
                         }
                       }}
@@ -1735,10 +1734,11 @@ export default function Controls() {
                       onChange={(e) => setSignupFee(e.target.value)}
                       value={signupFee}
                       error={Boolean(
-                        isSubmitPost && (signupFee === "" || Number(signupFee) <= 0)
+                        isSubmitPost &&
+                          (signupFee === "" || Number(signupFee) <= 0)
                       )}
                       onKeyPress={(event) => {
-                        if (event?.key === "-" || event?.key === "+") {
+                        if (event.key === "-" || event.key === "+") {
                           event.preventDefault();
                         }
                       }}
@@ -1784,10 +1784,11 @@ export default function Controls() {
                       onChange={(e) => setReferralFee(e.target.value)}
                       value={referralFee}
                       error={Boolean(
-                        isSubmitPost && (referralFee === "" || Number(referralFee) <= 0)
+                        isSubmitPost &&
+                          (referralFee === "" || Number(referralFee) <= 0)
                       )}
                       onKeyPress={(event) => {
-                        if (event?.key === "-" || event?.key === "+") {
+                        if (event.key === "-" || event.key === "+") {
                           event.preventDefault();
                         }
                       }}
@@ -1833,17 +1834,19 @@ export default function Controls() {
                       onChange={(e) => setWithdrawtoken(e.target.value)}
                       value={withdrawtoken}
                       error={Boolean(
-                        isSubmitPost && (withdrawtoken === "" || Number(withdrawtoken) <= 0)
+                        isSubmitPost &&
+                          (withdrawtoken === "" || Number(withdrawtoken) <= 0)
                       )}
                       onKeyPress={(event) => {
-                        if (event?.key === "-" || event?.key === "+") {
+                        if (event.key === "-" || event.key === "+") {
                           event.preventDefault();
                         }
                       }}
                     />
                     <FormHelperText error>
                       {isSubmitPost &&
-                        (withdrawtoken === "" || Number(withdrawtoken) <= 0) && (
+                        (withdrawtoken === "" ||
+                          Number(withdrawtoken) <= 0) && (
                           <Box ml={1}>Enter valid withdraw token price</Box>
                         )}
                     </FormHelperText>
@@ -1882,10 +1885,11 @@ export default function Controls() {
                       onChange={(e) => setDeposittoken(e.target.value)}
                       value={deposittoken}
                       error={Boolean(
-                        isSubmitPost && (deposittoken === "" || Number(deposittoken) <= 0)
+                        isSubmitPost &&
+                          (deposittoken === "" || Number(deposittoken) <= 0)
                       )}
                       onKeyPress={(event) => {
-                        if (event?.key === "-" || event?.key === "+") {
+                        if (event.key === "-" || event.key === "+") {
                           event.preventDefault();
                         }
                       }}

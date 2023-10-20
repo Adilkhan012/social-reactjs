@@ -78,7 +78,7 @@ function SubscriberList() {
             res.data.result.docs
               .filter(
                 (data) =>
-                  data.userType === "User" && data._id !== auth.userData?._id
+                  data.userType === "User" && data._id !== auth.userData._id
               )
               .slice(0, 3)
           );
@@ -106,31 +106,30 @@ function SubscriberList() {
           {loading ? (
             <DataLoading />
           ) : (
-
             <>
               {searchUserList && searchUserList.length === 0 ? (
                 <NoDataFound />
               ) : (
-
                 <Grid container direction={"cloumn"} spacing={1}>
                   {searchUserList && searchUserList.length > 0 && (
                     <>
                       {searchUserList &&
-                        searchUserList?.map((data, i) => {
+                        searchUserList.map((data, i) => {
                           return (
                             <Grid item xs={12} key={i}>
                               <Box pt={1} pb={2} className={classes.root1}>
                                 <Box className={classes.mainContent}>
                                   <Box>
-                                    <Avatar onClick={() => {
-                                      history.push({
-                                        pathname: "/about-creators",
-                                        search: data._id,
-                                      });
-                                    }}
+                                    <Avatar
+                                      onClick={() => {
+                                        history.push({
+                                          pathname: "/about-creators",
+                                          search: data._id,
+                                        });
+                                      }}
                                       src={
-                                        data?.profilePic
-                                          ? data?.profilePic
+                                        data.profilePic
+                                          ? data.profilePic
                                           : "images/user.png"
                                       }
                                       style={{ cursor: "pointer" }}
@@ -147,14 +146,15 @@ function SubscriberList() {
                                         });
                                       }}
                                     >
-                                      {data?.userName ? data?.userName : data?.name}
+                                      {data.userName
+                                        ? data.userName
+                                        : data.name}
                                     </Typography>
                                     <Typography className={classes.type}>
-                                      {moment(data?.createdAt).local().fromNow()}
+                                      {moment(data.createdAt).local().fromNow()}
                                     </Typography>
                                   </Box>
                                 </Box>
-
                               </Box>
                             </Grid>
                           );
@@ -162,13 +162,9 @@ function SubscriberList() {
                     </>
                   )}
                 </Grid>
-
               )}
-
             </>
-
           )}
-
         </Box>
       </Paper>
     </>

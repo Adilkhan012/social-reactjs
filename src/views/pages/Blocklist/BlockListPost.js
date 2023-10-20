@@ -269,18 +269,14 @@ export default function (props) {
     setBlock(false);
   };
   const handleBlock = (id) => {
-    setIdd(id?.postId?._id);
+    setIdd(id.postId._id);
     setBlock(true);
     setAnchorEl(false);
-
-
   };
   const handlePost = (id) => {
-    setIdd(id?.postId?._id);
+    setIdd(id.postId._id);
     setPost(true);
     setAnchorEl(false);
-
-
   };
   const handleClickOpenReport = () => {
     setOpenReport(true);
@@ -332,9 +328,6 @@ export default function (props) {
     }
   };
 
-
-
-
   const reportPostHandler = async () => {
     setIsSubmit(true);
     if (reportMessage != "" && reportMessage.length > 10) {
@@ -377,7 +370,7 @@ export default function (props) {
     try {
       const res = await Axios({
         method: "GET",
-        url: Apiconfigs.viewCollection + data?.collectionId,
+        url: Apiconfigs.viewCollection + data.collectionId,
         headers: {
           token: window.localStorage.getItem("token"),
         },
@@ -424,14 +417,14 @@ export default function (props) {
       });
   };
 
-  const fileExtention = data?.postId?.mediaUrl?.split(".").pop();
+  const fileExtention = data.postId.mediaUrl.split(".").pop();
 
   const fileType =
     fileExtention == "mp4" || fileExtention == "webp"
       ? "video"
       : fileExtention == "mp3"
-        ? "audio"
-        : "image";
+      ? "audio"
+      : "image";
 
   return (
     <Paper>
@@ -462,8 +455,8 @@ export default function (props) {
             <figure>
               <img
                 src={
-                  data?.postId?.userId?.profilePic
-                    ? data?.postId?.userId?.profilePic
+                  data.postId.userId.profilePic
+                    ? data.postId.userId.profilePic
                     : "images/user.png"
                 }
               />
@@ -472,27 +465,27 @@ export default function (props) {
               <Link to="/profile">
                 {" "}
                 <Typography variant="h6">
-                  {data?.postId?.userId?.userName
-                    ? sortAddress(data?.postId?.userId?.userName)
-                    : sortAddress(data?.postId?.userId?.name)}
+                  {data.postId.userId.userName
+                    ? sortAddress(data.postId.userId.userName)
+                    : sortAddress(data.postId.userId.name)}
                 </Typography>
               </Link>
 
               <Typography variant="body1" component="small">
-                {moment(data?.postId?.createdAt).local().fromNow()}
-                {data?.postId?.postType}
+                {moment(data.postId.createdAt).local().fromNow()}
+                {data.postId.postType}
               </Typography>
             </Box>
           </Box>
           <Typography variant="body2">
-            {sortDescription(data?.postId?.postTitle)}
+            {sortDescription(data.postId.postTitle)}
           </Typography>
           <Typography variant="body2">
-            {sortAddress(data?.postId?.details)}
+            {sortAddress(data.postId.details)}
           </Typography>
 
           <figure className="postImg">
-            {fileType == "image" && <img src={data?.postId?.mediaUrl} />}
+            {fileType == "image" && <img src={data.postId.mediaUrl} />}
             {(fileType == "video" || fileType == "audio") && (
               <video
                 width="100%"
@@ -501,7 +494,7 @@ export default function (props) {
                 muted={true}
                 controls
               >
-                <source src={data?.postId?.mediaUrl} type="video/mp4" />
+                <source src={data.postId.mediaUrl} type="video/mp4" />
               </video>
             )}
           </figure>
@@ -509,25 +502,26 @@ export default function (props) {
             <Button
               color="secondary"
               variant="contained"
-              // disabled={!data?.isSubscribed && data?.postType === "PRIVATE"}
+              // disabled={!data.isSubscribed && data.postType === "PRIVATE"}
               // onClick={() => {
               //   history.push({
               //     pathname: "/details",
-              //     search: data?.postId?._id,
+              //     search: data.postId._id,
               //   });
               // }}
               onClick={() => setOpen3(true)}
             >
               Detail
-            </Button>&nbsp;
-
+            </Button>
+            &nbsp;
             <Button
               color="secondary"
               variant="contained"
               onClick={() => handlePost(data)}
             >
               Post Ignore
-            </Button>&nbsp;
+            </Button>
+            &nbsp;
             <Button
               color="secondary"
               variant="contained"
@@ -551,7 +545,7 @@ export default function (props) {
           <IconButton className={classes.cancelBtn} onClick={handleCloseShare}>
             <MdCancel />
           </IconButton>
-          <SocialShareBox url={websiteName + "/about-auction?" + data?._id} />
+          <SocialShareBox url={websiteName + "/about-auction?" + data._id} />
         </DialogContent>
       </Dialog>
 
@@ -576,7 +570,12 @@ export default function (props) {
           >
             Yes {loader2 && <ButtonCircularProgress />}
           </Button>
-          <Button onClick={closeBlock} variant="contained" color="primary" autoFocus>
+          <Button
+            onClick={closeBlock}
+            variant="contained"
+            color="primary"
+            autoFocus
+          >
             No
           </Button>
         </DialogActions>
@@ -603,14 +602,17 @@ export default function (props) {
             >
               Yes {loader2 && <ButtonCircularProgress />}
             </Button>
-            <Button onClick={closeBlock} variant="contained" color="primary" autoFocus>
+            <Button
+              onClick={closeBlock}
+              variant="contained"
+              color="primary"
+              autoFocus
+            >
               No
             </Button>
           </DialogActions>
         </Dialog>
-
       )}
-
 
       {open3 && (
         <Dialog
@@ -619,24 +621,24 @@ export default function (props) {
           open={open3}
           onClose={() => setOpen3(false)}
           aria-labelledby="max-width-dialog-title"
-        // disableBackdropClick={isLoading}
-        // disableEscapeKeyDown={isLoading}
+          // disableBackdropClick={isLoading}
+          // disableEscapeKeyDown={isLoading}
         >
           <DialogContent>
             {fileType == "image" && (
               <Box
                 // id={`imagecard${index}`}
                 className={classes.PhotoBox}
-              // style={{
-              //   background: "url(" + viewCollectionDetails?.image + ")",
-              // }}
-              // onClick={() => {
-              //   history.push("/about-auction");
-              // }}
+                // style={{
+                //   background: "url(" + viewCollectionDetails.image + ")",
+                // }}
+                // onClick={() => {
+                //   history.push("/about-auction");
+                // }}
               >
                 <figure className={classes.modalBox}>
                   <img
-                    src={data?.postId?.mediaUrl}
+                    src={data.postId.mediaUrl}
                     alt=""
                     style={{
                       height: "368px",
@@ -651,9 +653,9 @@ export default function (props) {
               <Box
                 id={`imagecard${index}`}
                 className={classes.PhotoBox}
-              // onClick={() => {
-              //   history.push("/about-auction");
-              // }}
+                // onClick={() => {
+                //   history.push("/about-auction");
+                // }}
               >
                 <video
                   width="100%"
@@ -662,50 +664,70 @@ export default function (props) {
                   muted={true}
                   controls
                 >
-                  <source src={data?.postId?.mediaUrl} type="video/mp4" />
+                  <source src={data.postId.mediaUrl} type="video/mp4" />
                 </video>
               </Box>
             )}
             <Box mt={2} className={classes.bundleText} textAlign="center">
               <Typography variant="h4" className="red">
-                {data?.postId?.userName}
+                {data.postId.userName}
               </Typography>
             </Box>
 
             <Box mt={1} className={classes.deskiText} align="left">
               <Grid container spacing={1}>
                 <Grid item xs={6}>
-                  <Typography variant="h6" style={{ color: "#fff", fontWeight: "500" }}>Post amount: </Typography>
+                  <Typography
+                    variant="h6"
+                    style={{ color: "#fff", fontWeight: "500" }}
+                  >
+                    Post amount:{" "}
+                  </Typography>
                 </Grid>
                 <Grid item xs={6} align="right">
                   <Typography variant="body1">
-                    {data?.postId?.amount} &nbsp;
+                    {data.postId.amount} &nbsp;
                     {tokenName}
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography variant="h6" style={{ color: "#fff", fontWeight: "500" }}>Reported by: </Typography>
+                  <Typography
+                    variant="h6"
+                    style={{ color: "#fff", fontWeight: "500" }}
+                  >
+                    Reported by:{" "}
+                  </Typography>
                 </Grid>
                 <Grid item xs={6} align="right">
                   <Typography variant="body1">
-                    {data?.userId?.userName
-                      ? data?.userId?.userName
-                      : data?.userId?.name}
+                    {data.userId.userName
+                      ? data.userId.userName
+                      : data.userId.name}
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography variant="h6" style={{ color: "#fff", fontWeight: "500" }}>Reported Time: </Typography>
+                  <Typography
+                    variant="h6"
+                    style={{ color: "#fff", fontWeight: "500" }}
+                  >
+                    Reported Time:{" "}
+                  </Typography>
                 </Grid>
                 <Grid item xs={6} align="right">
                   <Typography variant="body1">
-                    {moment(data?.createdAt).local().fromNow()}
+                    {moment(data.createdAt).local().fromNow()}
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography variant="h6" style={{ color: "#fff", fontWeight: "500" }}>Message:</Typography>
+                  <Typography
+                    variant="h6"
+                    style={{ color: "#fff", fontWeight: "500" }}
+                  >
+                    Message:
+                  </Typography>
                 </Grid>
                 <Grid item xs={12} align="left">
-                  <Typography variant="body1">{data?.message}</Typography>
+                  <Typography variant="body1">{data.message}</Typography>
                 </Grid>
               </Grid>
             </Box>
@@ -717,7 +739,7 @@ export default function (props) {
                 onClick={() => {
                   setOpen3(false);
                 }}
-              // disabled={isLoading}
+                // disabled={isLoading}
               >
                 Cancel
               </Button>

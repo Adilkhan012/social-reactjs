@@ -60,12 +60,12 @@ export default function AddStatic() {
   const [uploadImageLoading, setUploadImageLoading] = useState(false);
   const [imgLoader, setImgLoader] = useState(false);
   const auth = useContext(AuthContext);
-  const userIdd = auth?.userData?.userId;
+  const userIdd = auth.userData.userId;
   const [imageFront, setImageFront] = useState("");
   const userName =
-    `${auth.userData?.firstName}` + " " + `${auth.userData?.lastName}`;
-  const userEmail = auth.userData?.email;
-  const userImage = auth.userData?.imageUrl;
+    `${auth.userData.firstName}` + " " + `${auth.userData.lastName}`;
+  const userEmail = auth.userData.email;
+  const userImage = auth.userData.imageUrl;
 
   const formInitialValue = {
     supportType: "",

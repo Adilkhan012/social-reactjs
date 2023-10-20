@@ -8,7 +8,7 @@ import {
   Grid,
   IconButton,
 } from "@material-ui/core";
-import { useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { MdFavorite } from "react-icons/md";
 import { Dialog } from "@material-ui/core";
 
@@ -149,7 +149,7 @@ function CreatorsBundles(props) {
       <Paper elevation={2} className={classes.root}>
         <Box className="top">
           <Typography variant="h6" color="primary.main">
-            {data?.name}
+            {data.name}
           </Typography>
           <Box className="icons">
             <IconButton
@@ -163,7 +163,7 @@ function CreatorsBundles(props) {
         <Box
           id={`imagecard${index}`}
           className={classes.mainimg}
-          style={{ background: "url(" + data?.image + ")" }}
+          style={{ background: "url(" + data.image + ")" }}
           // onClick={() => {
           //   history.push("/author");
           // }}
@@ -176,7 +176,7 @@ function CreatorsBundles(props) {
               </Typography>
             </Grid>
             <Grid item xs={6} align="right">
-              <Typography variant="body2">{data?.text1}</Typography>
+              <Typography variant="body2">{data.text1}</Typography>
             </Grid>
           </Grid>
           <Grid container spacing={1}>
@@ -186,7 +186,7 @@ function CreatorsBundles(props) {
               </Typography>
             </Grid>
             <Grid item xs={6} align="right">
-              <Typography variant="body2">{data?.text2}</Typography>
+              <Typography variant="body2">{data.text2}</Typography>
             </Grid>
           </Grid>
           <Grid container spacing={1}>
@@ -196,7 +196,7 @@ function CreatorsBundles(props) {
               </Typography>
             </Grid>
             <Grid item xs={6} align="right">
-              <Typography variant="body2">{data?.text3}</Typography>
+              <Typography variant="body2">{data.text3}</Typography>
             </Grid>
           </Grid>
           <Grid container spacing={1}>
@@ -206,7 +206,7 @@ function CreatorsBundles(props) {
               </Typography>
             </Grid>
             <Grid item xs={6} align="right">
-              <Typography variant="body2">{data?.text4}</Typography>
+              <Typography variant="body2">{data.text4}</Typography>
             </Grid>
           </Grid>
         </Box>

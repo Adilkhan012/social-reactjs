@@ -270,11 +270,11 @@ export default function (props) {
   const [openSubscribeModal, setOpenSubscribeModal] = React.useState(false);
 
   const sortAddress = (add) => {
-    const sortAdd = `${add?.slice(0, 15)}...${add?.slice(add.length - 15)}`;
+    const sortAdd = `${add.slice(0, 15)}...${add.slice(add.length - 15)}`;
     return sortAdd;
   };
   const sortUserName = (user) => {
-    const sortAdd = `${user?.slice(0, 5)}...${user?.slice(user.length - 5)}`;
+    const sortAdd = `${user.slice(0, 5)}...${user.slice(user.length - 5)}`;
     return sortAdd;
   };
 
@@ -312,7 +312,7 @@ export default function (props) {
           token: window.localStorage.getItem("token"),
         },
         data: {
-          postId: data?._id,
+          postId: data._id,
         },
       });
       if (res.data.responseCode === 200) {
@@ -323,7 +323,7 @@ export default function (props) {
         toast.success(res.data.responseMessage);
       }
     } catch (error) {
-      toast.error(error?.response?.data?.responseMessage);
+      toast.error(error.response.data.responseMessage);
       setAnchorEl(false);
       setIsHidePost(false);
     }
@@ -372,7 +372,7 @@ export default function (props) {
     try {
       const res = await Axios({
         method: "GET",
-        url: Apiconfigs.viewCollection + data?.collectionId,
+        url: Apiconfigs.viewCollection + data.collectionId,
         headers: {
           token: window.localStorage.getItem("token"),
         },
@@ -414,7 +414,7 @@ export default function (props) {
         setIsLoading(false);
       })
       .catch((err) => {
-        toast.error(err?.response?.data?.responseMessage);
+        toast.error(err.response.data.responseMessage);
         setOpenSubscribeModal(false);
 
         // toast.error(err.response.data.responseMessage);
@@ -431,8 +431,8 @@ export default function (props) {
     fileExtention == "mp4" || fileExtention == "webp"
       ? "video"
       : fileExtention == "mp3"
-        ? "audio"
-        : "image";
+      ? "audio"
+      : "image";
   const updateDimensions = () => {
     var offsetWidth = document.getElementById("imagecard" + index).offsetWidth;
     var newoofsetWidth = offsetWidth - 80;
@@ -447,16 +447,16 @@ export default function (props) {
     window.addEventListener("resize", updateDimensions);
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
-  console.log("data.mediaUrl--", data?.userId?.name);
+  console.log("data.mediaUrl--", data.userId.name);
   return (
     <Paper className={classes.root}>
       <Box style={{ position: "relative" }}>
         <Box
           className={classes.PostBox}
           style={
-            !data?.isSubscribed &&
-              data?.postType === "PRIVATE" &&
-              auth?.userData?.userType === "User"
+            !data.isSubscribed &&
+            data.postType === "PRIVATE" &&
+            auth.userData.userType === "User"
               ? { filter: "blur(15px)" }
               : {}
           }
@@ -487,19 +487,18 @@ export default function (props) {
                 primary="Hide"
               />
             </StyledMenuItem>
-            {auth?.userData?._id !== data?.userId?._id && (
+            {auth.userData._id !== data.userId._id && (
               <StyledMenuItem onClick={handleClickOpenReport}>
                 <ListItemText primary="Report" />
               </StyledMenuItem>
             )}
-
           </StyledMenu>
           <Box className="UserBox">
             <figure>
               <img
                 src={
-                  data?.userId?.profilePic
-                    ? data?.userId?.profilePic
+                  data.userId.profilePic
+                    ? data.userId.profilePic
                     : "images/user.png"
                 }
               />
@@ -510,7 +509,7 @@ export default function (props) {
                 onClick={() => {
                   history.push({
                     pathname: "/about-creators",
-                    search: data?.userId?._id,
+                    search: data.userId._id,
                   });
                 }}
                 variant="h6"
@@ -519,29 +518,30 @@ export default function (props) {
                   fontWeight: "500",
                 }}
               >
-                {data?.userId?.userName
-                  ? `${data?.userId?.userName?.length > 25
-                    ? sortUserName(data?.userId?.userName)
-                    : data?.userId?.userName
-                  }`
-                  : `${data?.userId?.name?.length > 25
-                    ? sortUserName(data?.userId?.name)
-                    : data?.userId?.name
-                  }`}
-                {/* {sortAddress(data?.postTitle)} */}
+                {data.userId.userName
+                  ? `${
+                      data.userId.userName.length > 25
+                        ? sortUserName(data.userId.userName)
+                        : data.userId.userName
+                    }`
+                  : `${
+                      data.userId.name.length > 25
+                        ? sortUserName(data.userId.name)
+                        : data.userId.name
+                    }`}
+                {/* {sortAddress(data.postTitle)} */}
               </Typography>
               {/* </Link> */}
               <Typography variant="body1">
-                {moment(data?.createdAt).local().fromNow()}&nbsp;{" "}
-                {data?.postType}
+                {moment(data.createdAt).local().fromNow()}&nbsp; {data.postType}
               </Typography>
             </Box>
           </Box>
           <Typography variant="body2" style={{ marginBottom: "10px" }}>
-            {data?.details?.length < 40
-              ? data?.details
-              : sortAddress(data?.details)}
-            {/* {sortAddress(data?.details)} */}
+            {data.details.length < 40
+              ? data.details
+              : sortAddress(data.details)}
+            {/* {sortAddress(data.details)} */}
           </Typography>
           {/* <img src={data.mediaUrl} /> */}
           {/* <figure className="postImg"> */}
@@ -552,18 +552,18 @@ export default function (props) {
               style={{
                 background: "url(" + data.mediaUrl + ")",
               }}
-            // onClick={() => {
-            //   history.push("/about-auction");
-            // }}
+              // onClick={() => {
+              //   history.push("/about-auction");
+              // }}
             ></Box>
           )}
           {(fileType == "video" || fileType == "audio") && (
             <Box
               id={`imagecard${index}`}
               className={classes.mainimg}
-            // onClick={() => {
-            //   history.push("/about-auction");
-            // }}
+              // onClick={() => {
+              //   history.push("/about-auction");
+              // }}
             >
               <video
                 width="100%"
@@ -582,26 +582,25 @@ export default function (props) {
               color="secondary"
               variant="contained"
               disabled={
-                !data?.isSubscribed &&
-                data?.postType === "PRIVATE" &&
-                auth?.userData?.userType === "User"
+                !data.isSubscribed &&
+                data.postType === "PRIVATE" &&
+                auth.userData.userType === "User"
               }
-              onClick={() => HandleCommentBox(data?._id)}
-            // onClick={() => {
-            //   history.push({
-            //     pathname: "/details",
-            //     search: data?._id,
-            //   });
-            // }}
+              onClick={() => HandleCommentBox(data._id)}
+              // onClick={() => {
+              //   history.push({
+              //     pathname: "/details",
+              //     search: data._id,
+              //   });
+              // }}
             >
               Detail
             </Button>
-
           </Box>
         </Box>
-        {!data?.isSubscribed &&
-          data?.postType === "PRIVATE" &&
-          auth?.userData?.userType === "User" && (
+        {!data.isSubscribed &&
+          data.postType === "PRIVATE" &&
+          auth.userData.userType === "User" && (
             <Box
               style={{
                 position: "absolute",
@@ -616,7 +615,7 @@ export default function (props) {
               <Box onClick={handleCollection} className={classes.subBox}>
                 <Typography variant="h6"> Subscribe Collection</Typography>
                 <Typography variant="body2">
-                  Price : {data?.amount}&nbsp;
+                  Price : {data.amount}&nbsp;
                   {tokenName}
                 </Typography>
               </Box>
@@ -636,7 +635,7 @@ export default function (props) {
           <IconButton className={classes.cancelBtn} onClick={handleCloseShare}>
             <MdCancel />
           </IconButton>
-          <SocialShareBox url={websiteName + "/about-auction?" + data?._id} />
+          <SocialShareBox url={websiteName + "/about-auction?" + data._id} />
         </DialogContent>
       </Dialog>
       <Dialog
@@ -651,7 +650,7 @@ export default function (props) {
           listPublicExclusiveHandler={listPublicExclusiveHandler}
           setOpenCommentBox={setOpenCommentBox}
           openCommentBoxId={openCommentBoxId}
-          data ={data}
+          data={data}
         />
       </Dialog>
 
@@ -764,14 +763,14 @@ export default function (props) {
               <>
                 <Box className={classes.PhotoBox}>
                   <img
-                    src={collectionDetails?.image}
+                    src={collectionDetails.image}
                     alt=""
                     style={{ height: "368px", width: "553px" }}
                   />
                 </Box>
                 {/* <Box mt={3} className={classes.bundleText} textAlign="center">
                   <Typography variant="h4" className="red">
-                    {collectionDetails?.name}
+                    {collectionDetails.name}
                   </Typography>
                 </Box> */}
                 <Box mt={2}>
@@ -781,8 +780,8 @@ export default function (props) {
                         <Box className={classes.dialogProfileImage}>
                           <img
                             src={
-                              data?.userId?.profilePic
-                                ? data?.userId?.profilePic
+                              data.userId.profilePic
+                                ? data.userId.profilePic
                                 : "/images/user.png"
                             }
                             alt="user data"
@@ -797,7 +796,7 @@ export default function (props) {
                               fontWeight: "500",
                             }}
                           >
-                            {data?.userId?.name}
+                            {data.userId.name}
                           </Typography>
                         </Box>
                       </Box>
@@ -812,7 +811,7 @@ export default function (props) {
                             fontWeight: "500",
                           }}
                         >
-                          {collectionDetails?.amount}&nbsp;
+                          {collectionDetails.amount}&nbsp;
                           {tokenName}
                         </span>
                       </Typography>
@@ -825,7 +824,7 @@ export default function (props) {
                       <Typography
                         variant="h6"
                         align="left"
-                      // color="textSecondary"
+                        // color="textSecondary"
                       >
                         Duration:{" "}
                         <span
@@ -836,7 +835,7 @@ export default function (props) {
                           }}
                         >
                           {" "}
-                          {collectionDetails?.duration}&nbsp; Days
+                          {collectionDetails.duration}&nbsp; Days
                         </span>
                       </Typography>
                     </Grid>
@@ -849,9 +848,9 @@ export default function (props) {
                       <Typography
                         variant="body1"
                         align="left"
-                      // style={{color:"#BFBFBF"}}
+                        // style={{color:"#BFBFBF"}}
                       >
-                        {collectionDetails?.title}
+                        {collectionDetails.title}
                       </Typography>
                     </Grid>
                   </Grid>

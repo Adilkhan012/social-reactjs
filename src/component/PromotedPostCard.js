@@ -326,19 +326,19 @@ export default function (props) {
     setAnchorEl(event.currentTarget);
   };
   let isLike = false;
-  if (auth.userData?._id && data) {
-    const likeUser = data?.likesUsers?.filter(
-      (data) => data === auth.userData?._id
+  if (auth.userData._id && data) {
+    const likeUser = data.likesUsers.filter(
+      (data) => data === auth.userData._id
     );
-    isLike = likeUser?.length > 0;
+    isLike = likeUser.length > 0;
   }
   let isLikeEmoji = false;
-  if (auth.userData?._id && data) {
-    const likeUser = data?.reactOnPostPromoted?.filter(
-      (data) => data.userId === auth.userData?._id
+  if (auth.userData._id && data) {
+    const likeUser = data.reactOnPostPromoted.filter(
+      (data) => data.userId === auth.userData._id
     );
     // console.log("likeUser", likeUser);
-    isLikeEmoji = likeUser?.length > 0;
+    isLikeEmoji = likeUser.length > 0;
   }
   const handleClose = () => {
     setAnchorEl(null);
@@ -407,7 +407,7 @@ export default function (props) {
     try {
       const res = await Axios({
         method: "GET",
-        url: Apiconfigs.reactOnPostPromoted + data?._id,
+        url: Apiconfigs.reactOnPostPromoted + data._id,
         headers: {
           token: window.localStorage.getItem("token"),
         },
@@ -420,7 +420,7 @@ export default function (props) {
         toast.success(res.data.responseMessage);
       }
     } catch (error) {
-      toast.error(error?.response?.data?.responseMessage);
+      toast.error(error.response.data.responseMessage);
     }
   };
   const hidePostHandler = async () => {
@@ -432,7 +432,7 @@ export default function (props) {
           token: window.localStorage.getItem("token"),
         },
         data: {
-          postId: data?._id,
+          postId: data._id,
         },
       });
       if (res.data.responseCode === 200) {
@@ -480,7 +480,7 @@ export default function (props) {
       }
     }
   };
-  const isVideo = data?.mediaUrl?.includes(".mp4");
+  const isVideo = data.mediaUrl.includes(".mp4");
 
   const buyPostHandler = async (postId) => {
     try {
@@ -564,21 +564,21 @@ export default function (props) {
   };
   const [viewCollectionDetails, setVieCollectionDetails] = useState();
 
-  const fileExtention = viewCollectionDetails?.image.split(".").pop();
+  const fileExtention = viewCollectionDetails.image.split(".").pop();
 
   const fileType =
     fileExtention == "mp4" || fileExtention == "webp"
       ? "video"
       : fileExtention == "mp3"
-        ? "audio"
-        : "image";
+      ? "audio"
+      : "image";
 
   const colletionDetails = async () => {
     setIsLoading(true);
     try {
       const res = await Axios({
         method: "GET",
-        url: Apiconfigs.viewCollection + data?.collectionId,
+        url: Apiconfigs.viewCollection + data.collectionId,
         headers: {
           token: window.localStorage.getItem("token"),
         },
@@ -608,17 +608,17 @@ export default function (props) {
     }
   }, [inputStr]);
 
-  console.log("data?.postId?.mediaUrl---", data?.postId?.mediaUrl);
+  console.log("data.postId.mediaUrl---", data.postId.mediaUrl);
   return (
     <Paper>
       {data && (
         <>
-          {data?.postType === "PRIVATE" && !data?.isSubscribed ? (
+          {data.postType === "PRIVATE" && !data.isSubscribed ? (
             <Box style={{ position: "relative" }}>
               <Box
                 className={classes.PostBox}
                 style={
-                  data?.isSubscribed && data?.postType !== "PRIVATE"
+                  data.isSubscribed && data.postType !== "PRIVATE"
                     ? {}
                     : { filter: "blur(15px)" }
                 }
@@ -639,9 +639,7 @@ export default function (props) {
                     ) : (
                       <img
                         src={
-                          data?.profilePic
-                            ? data?.profilePic
-                            : "images/user.png"
+                          data.profilePic ? data.profilePic : "images/user.png"
                         }
                       />
                     )}
@@ -650,47 +648,47 @@ export default function (props) {
                     <Link to="#">
                       {" "}
                       <Typography variant="h6">
-                        {data?.userId?.userName
-                          ? data?.userId?.userName
-                          : data?.userId?.name}
+                        {data.userId.userName
+                          ? data.userId.userName
+                          : data.userId.name}
                       </Typography>
                       <Typography variant="h6">
-                        {data?.userId?.postTitle}
+                        {data.userId.postTitle}
                       </Typography>
                     </Link>
                     <Typography variant="body2" component="small">
-                      {data?.time}
+                      {data.time}
                     </Typography>
                   </Box>
                 </Box>
-                <Typography variant="body2">{data?.details}</Typography>
+                <Typography variant="body2">{data.details}</Typography>
                 <Box>
                   {/* ?????????//// */}
                   <Box mt={1} mb={1} className="price">
                     {/* <Box className="text">
                       <Typography variant="h6" color="secondary.main">
-                        {data?.postType !== "PUBLIC" && <> Price :</>}
+                        {data.postType !== "PUBLIC" && <> Price :</>}
                       </Typography>
                       <Typography variant="h6" color="secondary.main">
-                        {data?.postTitle}
+                        {data.postTitle}
                       </Typography>
                       &nbsp;&nbsp;
                       <Typography variant="h6" color="secondary.main">
-                        {data?.postType !== "PUBLIC" && (
+                        {data.postType !== "PUBLIC" && (
                           <>
-                            {data?.amount}
+                            {data.amount}
                             {tokenName}
                           </>
                         )}
                       </Typography>
                     </Box> */}
-                    {data?.postType !== "PUBLIC" &&
-                      data?.userId?._id !== auth?.userData?._id && (
+                    {data.postType !== "PUBLIC" &&
+                      data.userId._id !== auth.userData._id && (
                         <Button
                           variant="contained"
                           color="secondary"
                           // onClick={() => buyPostHandler(data._id)}
-                          disabled={isBuyLoading || !data?.isSubscribed}
+                          disabled={isBuyLoading || !data.isSubscribed}
                         >
                           Buy {isBuyLoading && <ButtonCircularProgress />}
                         </Button>
@@ -705,20 +703,20 @@ export default function (props) {
                             height="450"
                             // style={{ cursor: "pointer" }}
                             controls
-                          // onClick={handleClickOpen2}
+                            // onClick={handleClickOpen2}
                           >
                             <source src={data.mediaUrl} type="video/mp4" />
                           </video>
                         ) : (
                           <img
-                            src={data?.mediaUrl}
+                            src={data.mediaUrl}
                             style={{ cursor: "pointer" }}
                           />
                         )}
                         {/* {isLoadingContent ? (
               <LoadingSkeleton data={8} />
             ) : (
-              <img src={data?.mediaUrl} />
+              <img src={data.mediaUrl} />
             )} */}
                       </figure>
                     </a>
@@ -727,17 +725,17 @@ export default function (props) {
                     <Grid container alignItems="center">
                       <Grid item xs={5}>
                         {" "}
-                        {data?.reactOnPostPromotedCount > 0 ? (
+                        {data.reactOnPostPromotedCount > 0 ? (
                           <Box>
-                            +{data?.reactOnPostPromotedCount}&nbsp; Likes
+                            +{data.reactOnPostPromotedCount}&nbsp; Likes
                           </Box>
                         ) : (
-                          <Box>{data?.reactOnPostPromotedCount}&nbsp;Likes</Box>
+                          <Box>{data.reactOnPostPromotedCount}&nbsp;Likes</Box>
                         )}
-                        {/* <MultyUser data={data?.likesCount} /> */}
+                        {/* <MultyUser data={data.likesCount} /> */}
                       </Grid>
                       <Grid item xs={7} align="right">
-                        <label>{data?.totalComment} Comments</label> &nbsp;
+                        <label>{data.totalComment} Comments</label> &nbsp;
                         &nbsp; &nbsp; &nbsp;
                         <label>0 Share</label>
                       </Grid>
@@ -745,7 +743,7 @@ export default function (props) {
                   </Box>
                   <Accordion
                     square
-                  // expanded={expanded === "panel1"}
+                    // expanded={expanded === "panel1"}
                   >
                     <Box className="commentBox">
                       {showPicker && (
@@ -759,13 +757,12 @@ export default function (props) {
                             {isLikeEmoji ? (
                               <>
                                 {" "}
-                                {data?.reactOnPostPromoted
-                                  ?.filter(
-                                    (data) =>
-                                      data.userId === auth?.userData?._id
+                                {data.reactOnPostPromoted
+                                  .filter(
+                                    (data) => data.userId === auth.userData._id
                                     // console.log(
                                     //   "dat>>>>>a",
-                                    //   data.userId === auth?.userData?._id
+                                    //   data.userId === auth.userData._id
                                     // )
                                   )
                                   .map((data, i) => {
@@ -782,7 +779,7 @@ export default function (props) {
                                           }
                                           className={classes.socialbox}
                                         >
-                                          {data?.emoji}
+                                          {data.emoji}
                                         </Button>
                                       </>
                                     );
@@ -872,8 +869,8 @@ export default function (props) {
                           <Box className="profileimage">
                             <img
                               src={
-                                auth?.userData?.profilePic
-                                  ? auth?.userData?.profilePic
+                                auth.userData.profilePic
+                                  ? auth.userData.profilePic
                                   : "images/user.png"
                               }
                               alt="user data"
@@ -886,7 +883,7 @@ export default function (props) {
                           id="outlined-basic"
                           variant="outlined"
                           name="Text Field"
-                          placeholder="Write here??..."
+                          placeholder="Write here..."
                           type="text"
                           value={message}
                           // onChange={(e) => setMessage(e.target.value)}
@@ -923,7 +920,7 @@ export default function (props) {
                 <Box onClick={handleCollection} className={classes.subBox}>
                   <Typography variant="h6"> Subscribe Collection</Typography>
                   <Typography variant="body2">
-                    Price : {data?.amount} &nbsp;{tokenName}
+                    Price : {data.amount} &nbsp;{tokenName}
                   </Typography>
                 </Box>
                 {/* <Button
@@ -933,7 +930,7 @@ export default function (props) {
               >
                 Subscribe Collection
                 <br /> &nbsp;
-                <Typography>{data?.amount}</Typography>
+                <Typography>{data.amount}</Typography>
               </Button> */}
               </Box>
               {open3 && (
@@ -951,15 +948,15 @@ export default function (props) {
                       <Box
                         // id={`imagecard${index}`}
                         className={classes.PhotoBox}
-                      // style={{
-                      //   background: "url(" + viewCollectionDetails?.image + ")",
-                      // }}
-                      // onClick={() => {
-                      //   history.push("/about-auction");
-                      // }}
+                        // style={{
+                        //   background: "url(" + viewCollectionDetails.image + ")",
+                        // }}
+                        // onClick={() => {
+                        //   history.push("/about-auction");
+                        // }}
                       >
                         <img
-                          src={viewCollectionDetails?.image}
+                          src={viewCollectionDetails.image}
                           alt=""
                           style={{ height: "368px", width: "553px" }}
                         />
@@ -969,9 +966,9 @@ export default function (props) {
                       <Box
                         id={`imagecard${index}`}
                         className={classes.PhotoBox}
-                      // onClick={() => {
-                      //   history.push("/about-auction");
-                      // }}
+                        // onClick={() => {
+                        //   history.push("/about-auction");
+                        // }}
                       >
                         <video
                           width="100%"
@@ -981,7 +978,7 @@ export default function (props) {
                           controls
                         >
                           <source
-                            src={viewCollectionDetails?.image}
+                            src={viewCollectionDetails.image}
                             type="video/mp4"
                           />
                         </video>
@@ -991,13 +988,13 @@ export default function (props) {
                     {/* {isVideo ? (
                   <div>
                     <video width="100%" controls>
-                      <source src={data?.nftId[0]?.mediaUrl} type="video/mp4" />
+                      <source src={data.nftId[0].mediaUrl} type="video/mp4" />
                     </video>
                   </div>
                 ) : ( */}
 
                     {/* <img
-                      src={viewCollectionDetails?.image}
+                      src={viewCollectionDetails.image}
                       alt=""
                       style={{ height: "368px", width: "553px" }}
                     /> */}
@@ -1010,7 +1007,7 @@ export default function (props) {
                       textAlign="center"
                     >
                       <Typography variant="h4" className="red">
-                        {viewCollectionDetails?.name}
+                        {viewCollectionDetails.name}
                       </Typography>
                     </Box>
 
@@ -1022,7 +1019,7 @@ export default function (props) {
                       >
                         Collection amount:{" "}
                         <span>
-                          {viewCollectionDetails?.amount}&nbsp;{tokenName}
+                          {viewCollectionDetails.amount}&nbsp;{tokenName}
                         </span>
                       </Typography>
                       {/* <Typography
@@ -1033,7 +1030,7 @@ export default function (props) {
                         Duration:{" "}
                         <span>
                           {" "}
-                          {viewCollectionDetails?.duration} &nbsp; Days
+                          {viewCollectionDetails.duration} &nbsp; Days
                         </span>
                       </Typography> */}
 
@@ -1043,12 +1040,12 @@ export default function (props) {
                         color="textSecondary"
                       >
                         Details:{" "}
-                        <span> {viewCollectionDetails?.description}</span>
+                        <span> {viewCollectionDetails.description}</span>
                       </Typography>
                     </Box>
                     {auth.userData &&
                       auth.userLoggedIn &&
-                      auth?.userData?._id !== data?.userId && (
+                      auth.userData._id !== data.userId && (
                         <Box mt={3} mb={3} textAlign="center">
                           <Button
                             variant="contained"
@@ -1062,21 +1059,21 @@ export default function (props) {
                             Cancel
                           </Button>
                           &nbsp;&nbsp;&nbsp;
-                          {data?.userId?._id !== auth?.userData?._id && (
+                          {data.userId._id !== auth.userData._id && (
                             // auth.userData._id !== userId &&
                             <Button
                               variant="contained"
                               color="secondary"
                               size="large"
                               onClick={subscribeNowHandler}
-                            // onClick={() => {
-                            //   if (auth?.userData.userType === "User") {
-                            //     subscribeNowBlockchainHandler(data);
-                            //   } else {
-                            //     subscribeNowHandler(true);
-                            //   }
-                            // }}
-                            // disabled={isLoading}
+                              // onClick={() => {
+                              //   if (auth.userData.userType === "User") {
+                              //     subscribeNowBlockchainHandler(data);
+                              //   } else {
+                              //     subscribeNowHandler(true);
+                              //   }
+                              // }}
+                              // disabled={isLoading}
                             >
                               Subscribe Now
                               {/* {isLoading ? "pending..." : "Subscribe now"}{" "}
@@ -1117,8 +1114,8 @@ export default function (props) {
                   ) : (
                     <img
                       src={
-                        data?.userId?.profilePic
-                          ? data?.userId?.profilePic
+                        data.userId.profilePic
+                          ? data.userId.profilePic
                           : "images/user.png"
                       }
                     />
@@ -1135,43 +1132,43 @@ export default function (props) {
                         fontWeight: "500",
                       }}
                     >
-                      {data?.userId?.userName
-                        ? data?.userId?.userName
-                        : data?.userId?.name}
+                      {data.userId.userName
+                        ? data.userId.userName
+                        : data.userId.name}
                     </Typography>
                     <Typography variant="h6">
-                      {moment(data?.createdAt).local().fromNow()}
+                      {moment(data.createdAt).local().fromNow()}
                     </Typography>
                   </Link>
                   <Typography variant="body2" component="small">
-                    {data?.time}
+                    {data.time}
                   </Typography>
                 </Box>
               </Box>
-              <Typography variant="body2">{data?.postTitle}</Typography>
-              {data?.details && (
-                <div dangerouslySetInnerHTML={{ __html: data?.details }}></div>
+              <Typography variant="body2">{data.postTitle}</Typography>
+              {data.details && (
+                <div dangerouslySetInnerHTML={{ __html: data.details }}></div>
               )}
-              {/* <Typography variant="h6">{data?.details}</Typography> */}
+              {/* <Typography variant="h6">{data.details}</Typography> */}
               <Box>
                 {/* ?????????//// */}
                 <Box mt={1} mb={1} className="price">
                   {/* <Box className="text">
                     <Typography variant="h6" color="secondary.main">
-                      {data?.postType !== "PUBLIC" && <> Price :</>}
+                      {data.postType !== "PUBLIC" && <> Price :</>}
                     </Typography>
                     &nbsp;&nbsp;
                     <Typography variant="h6" color="secondary.main">
-                      {data?.postType !== "PUBLIC" && (
+                      {data.postType !== "PUBLIC" && (
                         <>
-                          {data?.amount}
+                          {data.amount}
                           {tokenName}
                         </>
                       )}
                     </Typography>
                   </Box> */}
-                  {/* {data?.postType !== "PUBLIC" &&
-                    data?.userId?._id !== auth?.userData?._id && (
+                  {/* {data.postType !== "PUBLIC" &&
+                    data.userId._id !== auth.userData._id && (
                       <Button
                         variant="contained"
                         color="secondary"
@@ -1186,12 +1183,12 @@ export default function (props) {
                 // onClick={() =>
                 //   history.push({
                 //     pathname: "/comment",
-                //     search: data?._id,
+                //     search: data._id,
                 //   })
                 // }
                 >
-                  {data?.postId ? (
-                    <a href={data?.url} target="_blank">
+                  {data.postId ? (
+                    <a href={data.url} target="_blank">
                       <figure className="postImg">
                         {isVideo ? (
                           <video
@@ -1199,28 +1196,28 @@ export default function (props) {
                             height="450"
                             // style={{ cursor: "pointer" }}
                             controls
-                          // onClick={handleClickOpen2}
+                            // onClick={handleClickOpen2}
                           >
                             <source
-                              src={data?.postId?.mediaUrl}
+                              src={data.postId.mediaUrl}
                               type="video/mp4"
                             />
                           </video>
                         ) : (
                           <img
-                            src={data?.postId?.mediaUrl}
+                            src={data.postId.mediaUrl}
                             style={{ cursor: "pointer" }}
                           />
                         )}
                         {/* {isLoadingContent ? (
        <LoadingSkeleton data={8} />
      ) : (
-       <img src={data?.mediaUrl} />
+       <img src={data.mediaUrl} />
      )} */}
                       </figure>
                     </a>
                   ) : (
-                    <a href={data?.url} target="_blank">
+                    <a href={data.url} target="_blank">
                       <figure className="postImg">
                         {isVideo ? (
                           <video
@@ -1228,20 +1225,20 @@ export default function (props) {
                             height="450"
                             // style={{ cursor: "pointer" }}
                             controls
-                          // onClick={handleClickOpen2}
+                            // onClick={handleClickOpen2}
                           >
-                            <source src={data?.mediaUrl} type="video/mp4" />
+                            <source src={data.mediaUrl} type="video/mp4" />
                           </video>
                         ) : (
                           <img
-                            src={data?.mediaUrl}
+                            src={data.mediaUrl}
                             style={{ cursor: "pointer" }}
                           />
                         )}
                         {/* {isLoadingContent ? (
          <LoadingSkeleton data={8} />
        ) : (
-         <img src={data?.mediaUrl} />
+         <img src={data.mediaUrl} />
        )} */}
                       </figure>
                     </a>
@@ -1254,15 +1251,15 @@ export default function (props) {
                   <Grid container alignItems="center">
                     <Grid item xs={5}>
                       {" "}
-                      {data?.reactOnPostPromotedCount > 0 ? (
-                        <Box>+{data?.reactOnPostPromotedCount}&nbsp; Likes</Box>
+                      {data.reactOnPostPromotedCount > 0 ? (
+                        <Box>+{data.reactOnPostPromotedCount}&nbsp; Likes</Box>
                       ) : (
-                        <Box>{data?.reactOnPostPromotedCount}&nbsp;Likes</Box>
+                        <Box>{data.reactOnPostPromotedCount}&nbsp;Likes</Box>
                       )}
-                      {/* <MultyUser data={data?.likesCount} /> */}
+                      {/* <MultyUser data={data.likesCount} /> */}
                     </Grid>
                     <Grid item xs={7} align="right">
-                      <label>{data?.totalComment} Comments</label> &nbsp; &nbsp;
+                      <label>{data.totalComment} Comments</label> &nbsp; &nbsp;
                       &nbsp; &nbsp;
                       <label>0 Share</label>
                     </Grid>
@@ -1285,12 +1282,12 @@ export default function (props) {
                           {isLikeEmoji ? (
                             <>
                               {" "}
-                              {data?.reactOnPostPromoted
-                                ?.filter(
-                                  (data) => data.userId === auth?.userData?._id
+                              {data.reactOnPostPromoted
+                                .filter(
+                                  (data) => data.userId === auth.userData._id
                                   // console.log(
                                   //   "dat>>>>>a",
-                                  //   data.userId === auth?.userData?._id
+                                  //   data.userId === auth.userData._id
                                   // )
                                 )
                                 .map((data, i) => {
@@ -1307,7 +1304,7 @@ export default function (props) {
                                         }
                                         className={classes.socialbox}
                                       >
-                                        {data?.emoji}
+                                        {data.emoji}
                                       </Button>
                                     </>
                                   );
@@ -1394,7 +1391,7 @@ export default function (props) {
                     </Grid>
                   </Box>
                   {data &&
-                    data?.comment?.map((dataList, i) => {
+                    data.comment.map((dataList, i) => {
                       return (
                         <AccordionDetails>
                           <CommentPromotionBox
@@ -1416,8 +1413,8 @@ export default function (props) {
                         <Box className="profileimage">
                           <img
                             src={
-                              auth?.userData?.profilePic
-                                ? auth?.userData?.profilePic
+                              auth.userData.profilePic
+                                ? auth.userData.profilePic
                                 : "images/user.png"
                             }
                             alt="user data"

@@ -433,20 +433,20 @@ export default function (props) {
   };
 
   let isLike = false;
-  if (auth.userData?._id && data) {
-    const likeUser = data?.likesUsers?.filter(
-      (data) => data === auth.userData?._id
+  if (auth.userData._id && data) {
+    const likeUser = data.likesUsers.filter(
+      (data) => data === auth.userData._id
     );
-    isLike = likeUser?.length > 0;
+    isLike = likeUser.length > 0;
   }
 
   let isLikeEmoji = false;
-  if (auth.userData?._id && data) {
-    const likeUser = data?.reactOnPost?.filter(
-      (data) => data.userId === auth.userData?._id
+  if (auth.userData._id && data) {
+    const likeUser = data.reactOnPost.filter(
+      (data) => data.userId === auth.userData._id
     );
     // console.log("likeUser", likeUser);
-    isLikeEmoji = likeUser?.length > 0;
+    isLikeEmoji = likeUser.length > 0;
   }
 
   const handleClose = () => {
@@ -529,7 +529,7 @@ export default function (props) {
       // if (data.isSubscribed) {
       const res = await Axios({
         method: "GET",
-        url: Apiconfigs.reactOnPost + data?._id,
+        url: Apiconfigs.reactOnPost + data._id,
         headers: {
           token: window.localStorage.getItem("token"),
         },
@@ -553,7 +553,7 @@ export default function (props) {
     } catch (error) {
       setInputStr(null);
       setIsLoadingEmoji(false);
-      toast.success(error?.response?.data?.responseMessage);
+      toast.success(error.response.data.responseMessage);
     }
   };
 
@@ -566,7 +566,7 @@ export default function (props) {
           token: window.localStorage.getItem("token"),
         },
         data: {
-          postId: data?._id,
+          postId: data._id,
         },
       });
       if (res.data.responseCode === 200) {
@@ -611,7 +611,7 @@ export default function (props) {
     }
   };
 
-  const isVideo = data?.mediaUrl.includes(".mp4");
+  const isVideo = data.mediaUrl.includes(".mp4");
   const [isHidePost1, setIsHidePost1] = React.useState(false);
 
   const [isHidePostdata, setIsHidePostData] = React.useState();
@@ -675,7 +675,7 @@ export default function (props) {
       const transactionParams = {
         from: buyerAddress,
         gas: gasLimit,
-        maxPriorityFeePerGas: web3.utils.toWei("32","gwei"),
+        maxPriorityFeePerGas: web3.utils.toWei("32", "gwei"),
         value: amount,
       };
 
@@ -688,7 +688,7 @@ export default function (props) {
         const res = await Axios.post(
           Apiconfigs.buyPost,
           {
-            postId: isHidePostdata?._id,
+            postId: isHidePostdata._id,
             description: "NA",
             buyerAddress: buyerAddress,
             tokenId: currentTokenId,
@@ -764,7 +764,7 @@ export default function (props) {
       })
       .catch((err) => {
         // setIsloading(false);
-        toast.error(err?.response?.data?.responseMessage);
+        toast.error(err.response.data.responseMessage);
 
         if (listPublicExclusiveHandler) {
           listPublicExclusiveHandler();
@@ -785,7 +785,7 @@ export default function (props) {
 
   const [viewCollectionDetails, setVieCollectionDetails] = useState();
 
-  const fileExtention = viewCollectionDetails?.image.split(".").pop();
+  const fileExtention = viewCollectionDetails.image.split(".").pop();
 
   const fileType =
     fileExtention == "mp4" || fileExtention == "webp"
@@ -799,7 +799,7 @@ export default function (props) {
     try {
       const res = await Axios({
         method: "GET",
-        url: Apiconfigs.viewCollection + data?.collectionId,
+        url: Apiconfigs.viewCollection + data.collectionId,
         headers: {
           token: window.localStorage.getItem("token"),
         },
@@ -855,7 +855,7 @@ export default function (props) {
     <Paper>
       {data && (
         <>
-          {data?.postType === "PRIVATE" && !data?.isSubscribed ? (
+          {data.postType === "PRIVATE" && !data.isSubscribed ? (
             <Box style={{ position: "relative" }}>
               <Box className={classes.PostBox}>
                 <IconButton
@@ -874,9 +874,7 @@ export default function (props) {
                     ) : (
                       <img
                         src={
-                          data?.profilePic
-                            ? data?.profilePic
-                            : "images/user.png"
+                          data.profilePic ? data.profilePic : "images/user.png"
                         }
                       />
                     )}
@@ -888,23 +886,23 @@ export default function (props) {
                       onClick={() =>
                         history.push({
                           pathname: "/about-creators",
-                          search: data?.userId?._id,
+                          search: data.userId._id,
                         })
                       }
                     >
-                      {data?.userId?.userName
-                        ? data?.userId?.userName
-                        : data?.userId?.name}
+                      {data.userId.userName
+                        ? data.userId.userName
+                        : data.userId.name}
                     </Typography>
                     {/* </Link> */}
                     <Typography variant="body2" component="small">
-                      {data?.time}
+                      {data.time}
                     </Typography>
                   </Box>
                 </Box>
                 <Box
                   style={
-                    data?.isSubscribed && data?.postType !== "PRIVATE"
+                    data.isSubscribed && data.postType !== "PRIVATE"
                       ? {}
                       : { filter: "blur(15px)" }
                   }
@@ -919,7 +917,7 @@ export default function (props) {
                         })
                       }
                     >
-                      {data?.details}
+                      {data.details}
                     </ReactHashtag>
                   </Box>
 
@@ -927,15 +925,15 @@ export default function (props) {
                     <Box mt={1} mb={1} className="price">
                       <Box className="text">
                         <Typography variant="h6">
-                          {data?.postType !== "PUBLIC" && <> Price :</>}
+                          {data.postType !== "PUBLIC" && <> Price :</>}
                         </Typography>
 
                         <Typography variant="h6">
-                          {data?.postType !== "PUBLIC" && (
+                          {data.postType !== "PUBLIC" && (
                             <>
-                              {data?.amount.length >= 5
-                                ? sortAddressForPrice(data?.amount)
-                                : data?.amount}
+                              {data.amount.length >= 5
+                                ? sortAddressForPrice(data.amount)
+                                : data.amount}
                               &nbsp;
                               {tokenName}
                             </>
@@ -943,12 +941,12 @@ export default function (props) {
                         </Typography>
                       </Box>
 
-                      {data?.postType !== "PUBLIC" &&
-                        data?.userId?._id !== auth?.userData?._id && (
+                      {data.postType !== "PUBLIC" &&
+                        data.userId._id !== auth.userData._id && (
                           <Button
                             variant="contained"
                             color="secondary"
-                            disabled={isBuyLoading || !data?.isSubscribed}
+                            disabled={isBuyLoading || !data.isSubscribed}
                           >
                             Buy {isBuyLoading && <ButtonCircularProgress />}
                           </Button>
@@ -963,9 +961,9 @@ export default function (props) {
                           </video>
                         ) : (
                           <>
-                            {data?.mediaType !== "TEXT" && (
+                            {data.mediaType !== "TEXT" && (
                               <img
-                                src={data?.mediaUrl}
+                                src={data.mediaUrl}
                                 style={{ cursor: "pointer" }}
                               />
                             )}
@@ -977,14 +975,14 @@ export default function (props) {
                       <Grid container alignItems="center">
                         <Grid item xs={5}>
                           {" "}
-                          {data?.reactOnPostCount > 0 ? (
-                            <Box>+{data?.reactOnPostCount}&nbsp; Likes</Box>
+                          {data.reactOnPostCount > 0 ? (
+                            <Box>+{data.reactOnPostCount}&nbsp; Likes</Box>
                           ) : (
-                            <Box>{data?.reactOnPostCount}&nbsp;Likes</Box>
+                            <Box>{data.reactOnPostCount}&nbsp;Likes</Box>
                           )}
                         </Grid>
                         <Grid item xs={7} align="right">
-                          <label>{data?.totalComment} Comments</label> &nbsp;
+                          <label>{data.totalComment} Comments</label> &nbsp;
                           &nbsp; &nbsp; &nbsp;
                           <label>0 Share</label>
                         </Grid>
@@ -1049,8 +1047,8 @@ export default function (props) {
                             <Box className="profileimage">
                               <img
                                 src={
-                                  auth?.userData?.profilePic
-                                    ? auth?.userData?.profilePic
+                                  auth.userData.profilePic
+                                    ? auth.userData.profilePic
                                     : "images/user.png"
                                 }
                                 alt="user data"
@@ -1101,9 +1099,9 @@ export default function (props) {
                   <Typography variant="h6"> Subscribe Collection</Typography>
                   <Typography variant="body2">
                     Price :{" "}
-                    {/* {data?.amount.length >= 5
-                      ? sortAddressForPrice(data?.amount)
-                      : data?.amount}{" "} */}
+                    {/* {data.amount.length >= 5
+                      ? sortAddressForPrice(data.amount)
+                      : data.amount}{" "} */}
                     {/* {tokenName} */}
                   </Typography>
                 </Box>
@@ -1114,7 +1112,7 @@ export default function (props) {
             >
               Subscribe Collection
               <br /> &nbsp;
-       data?.amount.length >= 5 ? data?.amount :        <Typography>{data?.amount}</Typography>
+       data.amount.length >= 5 ? data.amount :        <Typography>{data.amount}</Typography>
             </Button> */}
               </Box>
               {open3 && (
@@ -1133,14 +1131,14 @@ export default function (props) {
                         // id={`imagecard${index}`}
                         className={classes.PhotoBox}
                         // style={{
-                        //   background: "url(" + viewCollectionDetails?.image + ")",
+                        //   background: "url(" + viewCollectionDetails.image + ")",
                         // }}
                         // onClick={() => {
                         //   history.push("/about-auction");
                         // }}
                       >
                         <img
-                          src={viewCollectionDetails?.image}
+                          src={viewCollectionDetails.image}
                           alt=""
                           style={{ height: "368px", width: "553px" }}
                         />
@@ -1162,7 +1160,7 @@ export default function (props) {
                           controls
                         >
                           <source
-                            src={viewCollectionDetails?.image}
+                            src={viewCollectionDetails.image}
                             type="video/mp4"
                           />
                         </video>
@@ -1174,7 +1172,7 @@ export default function (props) {
                       textAlign="center"
                     >
                       <Typography variant="h4" className="red">
-                        {viewCollectionDetails?.name}
+                        {viewCollectionDetails.name}
                       </Typography>
                     </Box>
 
@@ -1187,7 +1185,7 @@ export default function (props) {
                         </Grid> */}
                         {/* <Grid item xs={6} align="right">
                           <Typography variant="body1">
-                            {viewCollectionDetails?.amount}&nbsp;{tokenName}
+                            {viewCollectionDetails.amount}&nbsp;{tokenName}
                           </Typography>
                         </Grid> */}
                         {/* <Grid item xs={6}>
@@ -1195,7 +1193,7 @@ export default function (props) {
                         </Grid>
                         <Grid item xs={6} align="right">
                           <Typography variant="body1">
-                            {viewCollectionDetails?.duration} &nbsp; Days
+                            {viewCollectionDetails.duration} &nbsp; Days
                           </Typography>
                         </Grid> */}
                         <Grid item xs={12}>
@@ -1203,14 +1201,14 @@ export default function (props) {
                         </Grid>
                         <Grid item xs={12}>
                           <Typography variant="body1">
-                            {viewCollectionDetails?.description}
+                            {viewCollectionDetails.description}
                           </Typography>
                         </Grid>
                       </Grid>
                     </Box>
                     {auth.userData &&
                       auth.userLoggedIn &&
-                      auth?.userData?._id !== data?.userId && (
+                      auth.userData._id !== data.userId && (
                         <Box mt={3} mb={3} textAlign="center">
                           <Button
                             variant="contained"
@@ -1224,7 +1222,7 @@ export default function (props) {
                             Cancel
                           </Button>
                           &nbsp;&nbsp;&nbsp;
-                          {/* {data?.userId?._id !== auth?.userData?._id && ( */}
+                          {/* {data.userId._id !== auth.userData._id && ( */}
                           {/* // auth.userData._id !== userId && */}
                           <Button
                             variant="contained"
@@ -1232,7 +1230,7 @@ export default function (props) {
                             size="large"
                             onClick={subscribeNowHandler}
                             // onClick={() => {
-                            //   if (auth?.userData.userType === "User") {
+                            //   if (auth.userData.userType === "User") {
                             //     subscribeNowBlockchainHandler(data);
                             //   } else {
                             //     subscribeNowHandler(true);
@@ -1256,7 +1254,7 @@ export default function (props) {
               <Box style={{ marginRight: "15px" }}>
                 {currentMoment < moment(data.createdAt).add(15, "m").unix() && (
                   <>
-                    {data?.userId?._id === auth?.userData?._id && (
+                    {data.userId._id === auth.userData._id && (
                       <Box display="flex" justifyContent="end">
                         <Button
                           onClick={() => handleClickOpen(data)}
@@ -1310,15 +1308,15 @@ export default function (props) {
                   ) : (
                     <img
                       src={
-                        data?.userId?.profilePic
-                          ? data?.userId?.profilePic
+                        data.userId.profilePic
+                          ? data.userId.profilePic
                           : "images/user.png"
                       }
                       style={{ cursor: "pointer" }}
                       onClick={() =>
                         history.push({
                           pathname: "/about-creators",
-                          search: data?.userId?._id,
+                          search: data.userId._id,
                         })
                       }
                     />
@@ -1336,20 +1334,20 @@ export default function (props) {
                     onClick={() =>
                       history.push({
                         pathname: "/about-creators",
-                        search: data?.userId?._id,
+                        search: data.userId._id,
                       })
                     }
                   >
-                    {data?.userId?.userName
-                      ? data?.userId?.userName
-                      : data?.userId?.name}
+                    {data.userId.userName
+                      ? data.userId.userName
+                      : data.userId.name}
                   </Typography>
                   <Typography variant="body1" style={{ color: "#BFBFBF" }}>
-                    {moment(data?.createdAt).local().fromNow()}
+                    {moment(data.createdAt).local().fromNow()}
                   </Typography>
                   {/* </Link> */}
                   <Typography variant="body2" component="small">
-                    {data?.time}
+                    {data.time}
                   </Typography>
                 </Box>
               </Box>
@@ -1361,7 +1359,7 @@ export default function (props) {
                   wordBreak: "break-all",
                 }}
               >
-                {data?.postTitle}
+                {data.postTitle}
               </Typography>
               <Box className={classes.hash}>
                 <Typography variant="h6" style={{ wordBreak: "break-all" }}>
@@ -1373,21 +1371,21 @@ export default function (props) {
                       })
                     }
                   >
-                    {data?.details}
+                    {data.details}
                   </ReactHashtag>
                 </Typography>
               </Box>
-              {data?.tag.length > 0 && (
+              {data.tag.length > 0 && (
                 <Typography variant="body2" style={{ display: "flex" }}>
                   Tag with:&nbsp;
-                  {data?.tag?.map((data) => {
+                  {data.tag.map((data) => {
                     return (
                       <Typography
                         variant="body2"
                         onClick={() => {
                           history.push({
                             pathname: "/about-creators",
-                            search: data?._id,
+                            search: data._id,
                           });
                         }}
                         style={{
@@ -1396,14 +1394,14 @@ export default function (props) {
                           color: "#E31A89",
                         }}
                       >
-                        {data?.userName ? data?.userName : data?.name}
+                        {data.userName ? data.userName : data.name}
                       </Typography>
                     );
                   })}
                 </Typography>
               )}
               <Box>
-                {data?.userId?._id !== auth?.userData?._id && (
+                {data.userId._id !== auth.userData._id && (
                   <Box mt={1} mb={1} className="price">
                     {/* <Box style={{ display: "flex" }}>
                       <span style={{ lineHeight: 1.6, width: "45px" }}>
@@ -1411,9 +1409,9 @@ export default function (props) {
                       </span>
                       &nbsp;
                       <Typography variant="h6">
-                        {data?.amount.length >= 5
-                          ? sortAddressForPrice(data?.amount)
-                          : data?.amount}
+                        {data.amount.length >= 5
+                          ? sortAddressForPrice(data.amount)
+                          : data.amount}
                         &nbsp;
                         // {tokenName}
                       </Typography>
@@ -1434,7 +1432,7 @@ export default function (props) {
                       </>
                     ) : (
                       <>
-                        {data?.userId?._id !== auth?.userData?._id && (
+                        {data.userId._id !== auth.userData._id && (
                           <Button
                             variant="contained"
                             color="secondary"
@@ -1482,11 +1480,11 @@ export default function (props) {
                   </DialogActions>
                 </Dialog>
                 <Box
-                  onClick={() => HandleCommentBox(data?._id)}
+                  onClick={() => HandleCommentBox(data._id)}
                   // onClick={() =>
                   //   history.push({
                   //     pathname: "/comment",
-                  //     search: data?._id,
+                  //     search: data._id,
                   //   })
                   // }
                 >
@@ -1503,9 +1501,9 @@ export default function (props) {
                       </video>
                     ) : (
                       <>
-                        {data?.mediaType !== "TEXT" && (
+                        {data.mediaType !== "TEXT" && (
                           <img
-                            src={data?.mediaUrl}
+                            src={data.mediaUrl}
                             style={{ cursor: "pointer" }}
                           />
                         )}
@@ -1517,22 +1515,22 @@ export default function (props) {
                   <Grid container alignItems="center">
                     <Grid item xs={5}>
                       {" "}
-                      {data?.reactOnPostCount > 0 ? (
-                        <Box>+{data?.reactOnPostCount}&nbsp; Likes</Box>
+                      {data.reactOnPostCount > 0 ? (
+                        <Box>+{data.reactOnPostCount}&nbsp; Likes</Box>
                       ) : (
-                        <Box>{data?.reactOnPostCount}&nbsp;Likes</Box>
+                        <Box>{data.reactOnPostCount}&nbsp;Likes</Box>
                       )}
-                      {/* <MultyUser data={data?.likesCount} /> */}
+                      {/* <MultyUser data={data.likesCount} /> */}
                     </Grid>
                     <Grid item xs={7} align="right">
-                      <label>{data?.totalComment} Comments</label> &nbsp; &nbsp;
+                      <label>{data.totalComment} Comments</label> &nbsp; &nbsp;
                       &nbsp; &nbsp;
                       <label>
-                        {data?.postType === "PUBLIC" && (
+                        {data.postType === "PUBLIC" && (
                           <>
-                            {data?.amount.length >= 5
-                              ? sortAddressForPrice(data?.amount)
-                              : data?.amount}
+                            {data.amount.length >= 5
+                              ? sortAddressForPrice(data.amount)
+                              : data.amount}
                             &nbsp;
                             {tokenName}
                           </>
@@ -1566,13 +1564,12 @@ export default function (props) {
                             {isLikeEmoji ? (
                               <>
                                 {" "}
-                                {data?.reactOnPost
-                                  ?.filter(
-                                    (data) =>
-                                      data.userId === auth?.userData?._id
+                                {data.reactOnPost
+                                  .filter(
+                                    (data) => data.userId === auth.userData._id
                                     // console.log(
                                     //   "dat>>>>>a",
-                                    //   data.userId === auth?.userData?._id
+                                    //   data.userId === auth.userData._id
                                     // )
                                   )
                                   .map((data, i) => {
@@ -1663,7 +1660,7 @@ export default function (props) {
                     </Grid>
                   </Box>
                   {data &&
-                    data?.comment?.map((dataList, i) => {
+                    data.comment.map((dataList, i) => {
                       return (
                         <AccordionDetails key={i}>
                           <CommentBox
@@ -1688,8 +1685,8 @@ export default function (props) {
                         <Box className="profileimage">
                           <img
                             src={
-                              auth?.userData?.profilePic
-                                ? auth?.userData?.profilePic
+                              auth.userData.profilePic
+                                ? auth.userData.profilePic
                                 : "images/user.png"
                             }
                             alt="user data"

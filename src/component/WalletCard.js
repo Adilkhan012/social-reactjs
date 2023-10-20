@@ -107,25 +107,23 @@ function WalletCard(props) {
   return (
     <>
       <Paper className={classes.root} elevation={2}>
-        <Box className='imgbox'>
+        <Box className="imgbox">
           <Box>
-            <img src='images/wallet.png' />
+            <img src="images/wallet.png" />
           </Box>
         </Box>
-        <Box className='imgbox1'>
+        <Box className="imgbox1">
           <Box>
             Total Balance:&nbsp;{" "}
-            {auth?.userData?.bnbBalace
-              ? parseInt(auth?.userData?.bnbBalace)
-              : 0}{" "}
+            {auth.userData.bnbBalace ? parseInt(auth.userData.bnbBalace) : 0}{" "}
             $LAZI
-            {/* {auth?.userData?.bnbBalace}  */}
+            {/* {auth.userData.bnbBalace}  */}
           </Box>
         </Box>
-        <Box className='text'>
-          <Typography variant='body2' color='primary.main'>
-            {sortAddress(auth?.userData?.bnbAccount?.address)}
-            <CopyToClipboard text={auth?.userData?.bnbAccount?.address}>
+        <Box className="text">
+          <Typography variant="body2" color="primary.main">
+            {sortAddress(auth.userData.bnbAccount.address)}
+            <CopyToClipboard text={auth.userData.bnbAccount.address}>
               <BiCopy
                 style={{
                   color: "#fff",
@@ -141,12 +139,12 @@ function WalletCard(props) {
         <Dialog
           open={openShare}
           onClose={handleCloseShare}
-          aria-labelledby='alert-dialog-title'
-          aria-describedby='alert-dialog-description'
-          maxWidth='xs'
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+          maxWidth="xs"
           fullWidth
         >
-          <DialogTitle id='alert-dialog-title' align='center'>
+          <DialogTitle id="alert-dialog-title" align="center">
             {"Send Amount"}
           </DialogTitle>
           <DialogContent>
@@ -157,11 +155,11 @@ function WalletCard(props) {
               <Grid item xs={12} lg={12}>
                 <FormControl fullWidth>
                   <TextField
-                    id='outlined-basic'
-                    variant='outlined'
-                    name='Text Field'
-                    placeholder='Enter valid Amount'
-                    type='text'
+                    id="outlined-basic"
+                    variant="outlined"
+                    name="Text Field"
+                    placeholder="Enter valid Amount"
+                    type="text"
                     fullWidth
                     // multiline
                     // onClick={handleClickOpen}
@@ -171,11 +169,11 @@ function WalletCard(props) {
               <Grid item xs={12} lg={12}>
                 <FormControl fullWidth>
                   <TextField
-                    id='outlined-basic'
-                    variant='outlined'
-                    name='Text Field'
-                    placeholder='Enter valid Amount'
-                    type='text'
+                    id="outlined-basic"
+                    variant="outlined"
+                    name="Text Field"
+                    placeholder="Enter valid Amount"
+                    type="text"
                     fullWidth
                     // multiline
                     // onClick={handleClickOpen}
@@ -184,30 +182,30 @@ function WalletCard(props) {
               </Grid>
               <Grid item xs={12} lg={12}>
                 <Box p={1}>
-                  <Typography variant='body2' color='primary.main'>
+                  <Typography variant="body2" color="primary.main">
                     Main Wallet Fees: &nbsp;&nbsp;0.005
                   </Typography>
-                  <Typography variant='body2' color='primary.main'>
+                  <Typography variant="body2" color="primary.main">
                     Final Amount: &nbsp;&nbsp;0.005
                   </Typography>
-                  <Typography variant='body2' color='primary.main'>
+                  <Typography variant="body2" color="primary.main">
                     Main Withdrawl Amount: &nbsp;&nbsp;0.005
                   </Typography>
                 </Box>
               </Grid>
               <Grid item xs={12} lg={12}>
-                <Box align='center' p={1}>
+                <Box align="center" p={1}>
                   <Button
-                    variant='contained'
-                    color='primary'
+                    variant="contained"
+                    color="primary"
                     style={{ marginRight: "8px" }}
                     onClick={handleCloseShare}
                   >
                     Cancel
                   </Button>
                   <Button
-                    variant='contained'
-                    color='secondary'
+                    variant="contained"
+                    color="secondary"
                     style={{ marginLeft: "8px" }}
                     onClick={handleCloseShare}
                   >

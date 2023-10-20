@@ -162,17 +162,16 @@ function TransactionHistory({ data, index }) {
   const [isBlock, setBlock] = React.useState(false);
   const [loader2, setloader2] = React.useState(false);
   const [tabview, setTabView] = useState(
-    auth?.userData?.permissions?.postManagement ? "Owned" : "blockUsers"
+    auth.userData.permissions.postManagement ? "Owned" : "blockUsers"
   );
   const [searchUserName, setSearchUserName] = useState("");
   const [noOfPagesBlockUser, setNoOfPagesBlockusers] = useState(1);
   const [pageBlockeUsers, setPageBlockusers] = useState(1);
   useEffect(() => {
-    if (auth?.userData?.userType === "User") {
-      history.push("/explore")
-
+    if (auth.userData.userType === "User") {
+      history.push("/explore");
     }
-  }, [auth?.userData?.userType])
+  }, [auth.userData.userType]);
   const handleBlock = (id) => {
     setIdd(id._id);
     setBlock(true);
@@ -322,7 +321,7 @@ function TransactionHistory({ data, index }) {
               <Container>
                 <Box className={classes.idtxt}>
                   <Box className={classes.TabButtonsBox}>
-                    {auth?.userData?.permissions?.postManagement && (
+                    {auth.userData.permissions.postManagement && (
                       <Button
                         className={tabview === "Owned" ? "active" : " "}
                         onClick={() => setTabView("Owned")}
@@ -333,7 +332,7 @@ function TransactionHistory({ data, index }) {
                         Reported Post
                       </Button>
                     )}
-                    {auth?.userData?.permissions?.userManagement && (
+                    {auth.userData.permissions.userManagement && (
                       <Button
                         className={tabview === "blockUsers" ? "active" : " "}
                         onClick={() => setTabView("blockUsers")}
@@ -360,10 +359,10 @@ function TransactionHistory({ data, index }) {
                       <DataLoading />
                     ) : (
                       <>
-                        {postList && postList?.length > 0 ? (
+                        {postList && postList.length > 0 ? (
                           <>
                             {postList &&
-                              postList?.map((data, index) => {
+                              postList.map((data, index) => {
                                 return (
                                   <Grid item xs={12} sm={6} md={4} lg={4}>
                                     <BlockListPost
@@ -404,7 +403,7 @@ function TransactionHistory({ data, index }) {
                   </Typography>
 
                   <Grid container spacing={2}>
-                    {blockUserList && blockUserList?.length > 0 ? (
+                    {blockUserList && blockUserList.length > 0 ? (
                       <>
                         {blockUserList && (
                           <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -415,8 +414,8 @@ function TransactionHistory({ data, index }) {
                               setPage={setPage}
                               page={page}
                               blockUserList={blockUserList}
-                            // data={data}
-                            // key={i}
+                              // data={data}
+                              // key={i}
                             />
                           </Grid>
                         )}

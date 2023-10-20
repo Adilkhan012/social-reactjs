@@ -208,8 +208,8 @@ export default TopBar;
 
 export function TopBarData() {
   const auth = useContext(AuthContext);
-  //const userId = auth?.userLoggedIn?.userId;
-  //console.log("data: ", auth?.userLoggedIn?.userId);
+  //const userId = auth.userLoggedIn.userId;
+  //console.log("data: ", auth.userLoggedIn.userId);
   const location = useLocation();
   const classes = useStyles();
   const history = useHistory();
@@ -341,7 +341,7 @@ export function TopBarData() {
           setmessagee("");
         }
       } catch (error) {
-        toast.error(error?.response?.data?.responseMessage);
+        toast.error(error.response.data.responseMessage);
         setIsLoading(false);
         setOpen(false);
       }
@@ -503,7 +503,7 @@ export function TopBarData() {
                               marginTop: "5px",
                             }}
                             className={
-                              location?.pathname === "/chat-history"
+                              location.pathname === "/chat-history"
                                 ? "active"
                                 : ""
                             }
@@ -512,7 +512,7 @@ export function TopBarData() {
                             }}
                           >
                             <BsChatLeftDots size={18} />
-                            {auth?.unreadChats > 0 && <Box></Box>}
+                            {auth.unreadChats > 0 && <Box></Box>}
                           </span>
                         </IconButton>
 
@@ -520,7 +520,7 @@ export function TopBarData() {
                           <span
                             style={{ fontSize: "14px" }}
                             className={
-                              location?.pathname === "/wallet" ? "active" : ""
+                              location.pathname === "/wallet" ? "active" : ""
                             }
                             onClick={() => {
                               history.push("/wallet");
@@ -529,7 +529,7 @@ export function TopBarData() {
                             <GiWallet size={18} />
                           </span>
                         </IconButton>
-                        {auth?.userData?.userType === "User" && (
+                        {auth.userData.userType === "User" && (
                           <IconButton
                             className={classes.iconbutton}
                             onClick={() => {
@@ -539,13 +539,13 @@ export function TopBarData() {
                             <span
                               style={{ fontSize: "14px", marginRight: "5px" }}
                               className={
-                                location?.pathname === "/notification-list"
+                                location.pathname === "/notification-list"
                                   ? "active"
                                   : ""
                               }
                             >
                               <MdNotifications size={18} />
-                              {auth?.unReadNotification > 0 && <Box></Box>}
+                              {auth.unReadNotification > 0 && <Box></Box>}
                             </span>
                           </IconButton>
                         )}

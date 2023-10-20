@@ -167,7 +167,7 @@ const useStyles = makeStyles((theme) => ({
       left: "50%",
       transform: "translateX(-50%)",
       maxWidth: "fit-content",
-      objectFit: "cover"
+      objectFit: "cover",
     },
   },
   iconBox: {
@@ -211,7 +211,7 @@ function CreatorsCard(props) {
     try {
       const res = await axios({
         method: "GET",
-        url: Apiconfigs.followUnfollowUser + data?._id,
+        url: Apiconfigs.followUnfollowUser + data._id,
         headers: {
           token: window.localStorage.getItem("token"),
         },
@@ -233,9 +233,9 @@ function CreatorsCard(props) {
     }
   };
   useEffect(() => {
-    if (data && auth?.userData) {
+    if (data && auth.userData) {
       const filterFun = data.followers.filter((data) => {
-        return data === auth?.userData?._id;
+        return data === auth.userData._id;
       });
       if (filterFun[0]) {
         setisFollowing(true);
@@ -243,14 +243,14 @@ function CreatorsCard(props) {
         setisFollowing(false);
       }
     }
-  }, [data, auth?.userData]);
+  }, [data, auth.userData]);
 
   return (
     <Box className={classes.boxsection}>
       <Box
         id={`imagecard${index}`}
         className={classes.nftImg}
-        // style={{ background: "url(" + data?.nftId?.coverImage + ")" }}
+        // style={{ background: "url(" + data.nftId.coverImage + ")" }}
         onClick={() => {
           history.push({
             pathname: "/about-creators",
@@ -259,15 +259,11 @@ function CreatorsCard(props) {
         }}
       >
         <img
-          src={
-            data?.coverPic
-              ? data?.coverPic
-              : "images/userback.png"
-          }
+          src={data.coverPic ? data.coverPic : "images/userback.png"}
           alt=""
           style={{ objectFit: "cover" }}
         />
-        {data?.nftId?.mediaType === "video" && (
+        {data.nftId.mediaType === "video" && (
           <Box style={{ position: "absolute", right: "20px", top: "10px" }}>
             {/* <PlayCircleOutlineIcon
               onClick={() => {
@@ -280,7 +276,7 @@ function CreatorsCard(props) {
             /> */}
           </Box>
         )}
-        {data?.nftId?.mediaType === "audio" && (
+        {data.nftId.mediaType === "audio" && (
           <Box style={{ position: "absolute", right: "20px", top: "10px" }}>
             {/* <AudiotrackIcon
               onClick={() => {
@@ -295,7 +291,7 @@ function CreatorsCard(props) {
       </Box>
       <figure>
         <img
-          src={data?.profilePic ? data?.profilePic : "images/user.png"}
+          src={data.profilePic ? data.profilePic : "images/user.png"}
           onClick={() =>
             history.push({
               pathname: "/about-creators",
@@ -320,37 +316,37 @@ function CreatorsCard(props) {
                   });
                 }}
               >
-                {data?.nftId?.tokenName}{" "}
+                {data.nftId.tokenName}{" "}
               </Typography>
             </Box> */}
-            {data?.userName ? (
+            {data.userName ? (
               <Typography variant="h6" style={{ color: "#fff" }}>
-                {data?.userName?.length <= 20
-                  ? data?.userName
-                  : data?.userName?.length > 20
-                    ? sortAddress(data?.userName)
-                    : ""}
+                {data.userName.length <= 20
+                  ? data.userName
+                  : data.userName.length > 20
+                  ? sortAddress(data.userName)
+                  : ""}
               </Typography>
             ) : (
               <Typography variant="h6" style={{ color: "#fff" }}>
-                {data?.name?.length <= 20
-                  ? data?.name
-                  : data?.name?.length > 20
-                    ? sortAddress(data?.name)
-                    : ""}
+                {data.name.length <= 20
+                  ? data.name
+                  : data.name.length > 20
+                  ? sortAddress(data.name)
+                  : ""}
               </Typography>
             )}
           </Grid>
           <Grid item xs={6} align="right">
             <Box className="top">
-              {auth?.userData?._id !== data?._id && (
+              {auth.userData._id !== data._id && (
                 <Box className={classes.iconBox}>
                   <IconButton
                     className="iconbutton"
                     onClick={() =>
                       history.push({
                         pathname: "/chat-history",
-                        search: data?._id,
+                        search: data._id,
                       })
                     }
                   >
@@ -363,7 +359,7 @@ function CreatorsCard(props) {
         </Grid>
       </Box>
       <Box className="nameChianImage">
-        <img src={`/images/chainImages/${data?.nftId?.network}.png`} alt="" />
+        <img src={`/images/chainImages/${data.nftId.network}.png`} alt="" />
       </Box>
 
       <Box
@@ -373,7 +369,7 @@ function CreatorsCard(props) {
           justifyContent: "center",
         }}
       >
-        {auth?.userData?._id !== data._id && (
+        {auth.userData._id !== data._id && (
           <Button
             variant="contained"
             color="secondary"
@@ -400,7 +396,7 @@ function CreatorsCard(props) {
         </Button>
       </Box>
       <Box display="flex" alignItems="center">
-        <Typography variant="h5">{data?.likesUsers?.length}</Typography>
+        <Typography variant="h5">{data.likesUsers.length}</Typography>
       </Box>
     </Box>
   );

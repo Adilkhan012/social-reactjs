@@ -103,22 +103,22 @@ export default function HotCollectionCard(props) {
       <Box
         id={`imagecard${index}`}
         className={classes.mainimg}
-        style={{ background: "url(" + data?.image + ")" }}
+        style={{ background: "url(" + data.image + ")" }}
         onClick={() => {
           history.push("/collection-details");
         }}
       ></Box>
       <figure>
-        <img src={data?.img} alt="user" />
+        <img src={data.img} alt="user" />
       </figure>
       <Typography variant="h6" align="center">
         {" "}
-        {data?.name}{" "}
+        {data.name}{" "}
       </Typography>
       <Box className={classes.pricedata}>
         <Typography variant="h6">
           &nbsp;&nbsp;
-          {data?.price}&nbsp;
+          {data.price}&nbsp;
           {tokenName}
         </Typography>
       </Box>

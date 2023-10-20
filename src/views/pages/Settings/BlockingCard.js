@@ -9,7 +9,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import NoDataFound from "src/component/NoDataFound";
 
-const useStyles = makeStyles((theme)=>({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     justifyContent: "space-between",
@@ -63,7 +63,7 @@ function BlockingCard({ userData1, callBackFun }) {
 
   const handleClickOpen = (data) => {
     setOpen(true);
-    setIDD(data?._id);
+    setIDD(data._id);
   };
 
   const handleClose = () => {
@@ -107,10 +107,10 @@ function BlockingCard({ userData1, callBackFun }) {
     <>
       <Box className={classes.main}>
         <Grid container direction={"cloumn"} spacing={1}>
-          {userData1?.blockedUser.length > 0 ? (
+          {userData1.blockedUser.length > 0 ? (
             <>
               {userData1 &&
-                userData1?.blockedUser?.map((data, i) => {
+                userData1.blockedUser.map((data, i) => {
                   return (
                     <Grid item xs={12} key={i}>
                       <Box pt={1} pb={2} className={classes.root}>
@@ -119,8 +119,8 @@ function BlockingCard({ userData1, callBackFun }) {
                             <figure>
                               <img
                                 src={
-                                  data?.profilePic
-                                    ? data?.profilePic
+                                  data.profilePic
+                                    ? data.profilePic
                                     : "images/notificationimg.png"
                                 }
                               />
@@ -128,14 +128,14 @@ function BlockingCard({ userData1, callBackFun }) {
                           </Box>
                           <Box ml={2}>
                             <Typography variant="h6">
-                              {data?.userName ? data?.userName : data?.name}
+                              {data.userName ? data.userName : data.name}
                             </Typography>
                             <Typography
                               variant="body"
                               component="small"
                               style={{ color: "#989595" }}
                             >
-                              {data?.blockeddate}
+                              {data.blockeddate}
                             </Typography>
                           </Box>
                         </Box>

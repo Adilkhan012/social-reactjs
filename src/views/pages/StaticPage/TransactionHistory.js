@@ -56,7 +56,6 @@ const useStyles = makeStyles((theme) => ({
       fontSize: "14px",
     },
   },
-
 }));
 
 const currenciesUser = [
@@ -110,7 +109,10 @@ function TransactionHistory({ data, index }) {
       // setIsLoading(true);
       const res = await Axios({
         method: "GET",
-        url: auth?.userData?.userType === "Admin" ? Apiconfigs.adminTransactionList : Apiconfigs.transactionList,
+        url:
+          auth.userData.userType === "Admin"
+            ? Apiconfigs.adminTransactionList
+            : Apiconfigs.transactionList,
         headers: {
           token: window.localStorage.getItem("token"),
         },
@@ -129,11 +131,11 @@ function TransactionHistory({ data, index }) {
           res.data.result.docs.map((data, i) => {
             return {
               Sno: i + 1,
-              Paymentdate: moment(data?.createdAt).format("lll"),
+              Paymentdate: moment(data.createdAt).format("lll"),
               Coinname: "BNB",
-              Token: data?.amount,
-              Transactiontype: data?.transactionType,
-              Transactionstatus: data?.transactionStatus,
+              Token: data.amount,
+              Transactiontype: data.transactionType,
+              Transactionstatus: data.transactionStatus,
             };
           })
         );
@@ -176,7 +178,7 @@ function TransactionHistory({ data, index }) {
           <Box className="content">
             <Box className="heading">
               <Typography variant="h3">All Transactions</Typography>
-              {transactionListData && transactionListData?.length > 0 && (
+              {transactionListData && transactionListData.length > 0 && (
                 <AiOutlineDownload
                   onClick={downloadExcel}
                   style={{
@@ -194,7 +196,7 @@ function TransactionHistory({ data, index }) {
                   <Typography
                     variant="boay2"
                     style={{ color: "#cfc8c8" }}
-                  // color="primary.main"
+                    // color="primary.main"
                   >
                     From
                   </Typography>
@@ -220,7 +222,7 @@ function TransactionHistory({ data, index }) {
                   <Typography
                     variant="boay2"
                     style={{ color: "#cfc8c8" }}
-                  // color="primary.main"
+                    // color="primary.main"
                   >
                     To
                   </Typography>
@@ -318,11 +320,11 @@ function TransactionHistory({ data, index }) {
                       <TableCell align="Center" className={classes.cell}>
                         Payment Date
                       </TableCell>
-                      {auth?.userData?.userType !== "Admin" &&
+                      {auth.userData.userType !== "Admin" && (
                         <TableCell align="Center" className={classes.cell}>
                           Commission
                         </TableCell>
-                      }
+                      )}
 
                       <TableCell align="Center" className={classes.cell}>
                         Transaction Type
@@ -336,7 +338,7 @@ function TransactionHistory({ data, index }) {
                       </TableCell>
                     </TableRow>
                   </TableHead>
-                  {transactionListData?.map((data, i) => {
+                  {transactionListData.map((data, i) => {
                     return (
                       <TableBody key={i}>
                         <TableRow className={classes.tbody}>
@@ -344,22 +346,23 @@ function TransactionHistory({ data, index }) {
                             {i + 1}
                           </TableCell>
                           <TableCell align="Center">
-                            {moment(data?.createdAt).format(
+                            {moment(data.createdAt).format(
                               "DD:MM:YYYY hh:mm A"
                             )}
                           </TableCell>
-                          {auth?.userData?.userType !== "Admin" &&
-                            <TableCell align="Center">{`${data?.commission ? data?.commission : 0} Share`}</TableCell>
-
-                          }
+                          {auth.userData.userType !== "Admin" && (
+                            <TableCell align="Center">{`${
+                              data.commission ? data.commission : 0
+                            } Share`}</TableCell>
+                          )}
                           <TableCell align="Center">
-                            {data?.transactionType}
+                            {data.transactionType}
                           </TableCell>
                           <TableCell align="Center">
-                            {data?.transactionStatus}
+                            {data.transactionStatus}
                           </TableCell>
                           <TableCell align="Center">
-                            {data?.amount}&nbsp;
+                            {data.amount}&nbsp;
                             {tokenName}
                           </TableCell>
                         </TableRow>

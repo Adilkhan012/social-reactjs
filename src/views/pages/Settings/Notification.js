@@ -101,19 +101,19 @@ function Notification() {
     }
   };
   useEffect(() => {
-    if (auth?.userData?.notifications) {
+    if (auth.userData.notifications) {
       setState({
         ...state,
-        like: auth?.userData?.notifications?.like,
-        comment: auth?.userData?.notifications?.comment,
-        mention: auth?.userData?.notifications?.mention,
-        post: auth?.userData?.notifications?.post,
-        share: auth?.userData?.notifications?.share,
-        follow: auth?.userData?.notifications?.follow,
-        event: auth?.userData?.notifications?.event,
+        like: auth.userData.notifications.like,
+        comment: auth.userData.notifications.comment,
+        mention: auth.userData.notifications.mention,
+        post: auth.userData.notifications.post,
+        share: auth.userData.notifications.share,
+        follow: auth.userData.notifications.follow,
+        event: auth.userData.notifications.event,
       });
     }
-  }, [auth?.userData?.notifications]);
+  }, [auth.userData.notifications]);
 
   useEffect(() => {
     return () => {
@@ -125,24 +125,24 @@ function Notification() {
     <>
       <Box className={classes.root}>
         <Box>
-          <Typography variant='h3' color='primary.main'>
+          <Typography variant="h3" color="primary.main">
             Notification
           </Typography>
         </Box>
         <Box mt={1}>
-          <Typography variant='h5' color='primary.main'>
+          <Typography variant="h5" color="primary.main">
             what notification you recieve
           </Typography>
         </Box>
         <Box mt={3}>
-          <Grid container spacing={1} alignItems='center'>
+          <Grid container spacing={1} alignItems="center">
             <Grid item xs={8} sm={5}>
-              <Box className='likeicons'>
+              <Box className="likeicons">
                 <IconButton style={{ backgroundColor: "#FFF" }}>
                   <MdFavorite style={{ color: "blue" }} />{" "}
                 </IconButton>
                 <Box ml={3}>
-                  <Typography variant='body2' color='primary.main'>
+                  <Typography variant="body2" color="primary.main">
                     Like
                   </Typography>
                 </Box>
@@ -154,18 +154,18 @@ function Notification() {
                   <Switch
                     checked={state.like}
                     onChange={handleChange}
-                    name='like'
+                    name="like"
                   />
                 }
               />
             </Grid>
             <Grid item xs={8} sm={5}>
-              <Box className='likeicons' mt={2}>
+              <Box className="likeicons" mt={2}>
                 <IconButton style={{ backgroundColor: "#FFF" }}>
                   <BsFillChatFill style={{ color: "green" }} />{" "}
                 </IconButton>
                 <Box ml={3}>
-                  <Typography variant='body2' color='primary.main'>
+                  <Typography variant="body2" color="primary.main">
                     Comment
                   </Typography>
                 </Box>
@@ -177,18 +177,18 @@ function Notification() {
                   <Switch
                     checked={state.comment}
                     onChange={handleChange}
-                    name='comment'
+                    name="comment"
                   />
                 }
               />
             </Grid>
             <Grid item xs={8} sm={5}>
-              <Box className='likeicons' mt={2}>
+              <Box className="likeicons" mt={2}>
                 <IconButton style={{ backgroundColor: "#FFF" }}>
                   <MdAlternateEmail style={{ color: "brown" }} />{" "}
                 </IconButton>
                 <Box ml={3}>
-                  <Typography variant='body2' color='primary.main'>
+                  <Typography variant="body2" color="primary.main">
                     Mention
                   </Typography>
                 </Box>
@@ -200,18 +200,18 @@ function Notification() {
                   <Switch
                     checked={state.mention}
                     onChange={handleChange}
-                    name='mention'
+                    name="mention"
                   />
                 }
               />
             </Grid>
             <Grid item xs={8} sm={5}>
-              <Box className='likeicons' mt={2}>
+              <Box className="likeicons" mt={2}>
                 <IconButton style={{ backgroundColor: "#FFF" }}>
                   <MdChromeReaderMode style={{ color: "brown" }} />{" "}
                 </IconButton>
                 <Box ml={3}>
-                  <Typography variant='body2' color='primary.main'>
+                  <Typography variant="body2" color="primary.main">
                     Post
                   </Typography>
                 </Box>
@@ -223,18 +223,18 @@ function Notification() {
                   <Switch
                     checked={state.post}
                     onChange={handleChange}
-                    name='post'
+                    name="post"
                   />
                 }
               />
             </Grid>
             <Grid item xs={8} sm={5}>
-              <Box className='likeicons' mt={2}>
+              <Box className="likeicons" mt={2}>
                 <IconButton style={{ backgroundColor: "#FFF" }}>
                   <FaShareAlt style={{ color: "black" }} />{" "}
                 </IconButton>
                 <Box ml={3}>
-                  <Typography variant='body2' color='primary.main'>
+                  <Typography variant="body2" color="primary.main">
                     Share
                   </Typography>
                 </Box>
@@ -246,18 +246,18 @@ function Notification() {
                   <Switch
                     checked={state.share}
                     onChange={handleChange}
-                    name='share'
+                    name="share"
                   />
                 }
               />
             </Grid>
             <Grid item xs={8} sm={5}>
-              <Box className='likeicons' mt={2}>
+              <Box className="likeicons" mt={2}>
                 <IconButton style={{ backgroundColor: "#FFF" }}>
                   <RiUserFollowFill style={{ color: "blue" }} />{" "}
                 </IconButton>
                 <Box ml={3}>
-                  <Typography variant='body2' color='primary.main'>
+                  <Typography variant="body2" color="primary.main">
                     Follow
                   </Typography>
                 </Box>
@@ -269,18 +269,18 @@ function Notification() {
                   <Switch
                     checked={state.follow}
                     onChange={handleChange}
-                    name='follow'
+                    name="follow"
                   />
                 }
               />
             </Grid>
             <Grid item xs={8} sm={5}>
-              <Box className='likeicons' mt={2}>
+              <Box className="likeicons" mt={2}>
                 <IconButton style={{ backgroundColor: "#FFF" }}>
                   <MdOutlineEventAvailable style={{ color: "purple" }} />{" "}
                 </IconButton>
                 <Box ml={3}>
-                  <Typography variant='body2' color='primary.main'>
+                  <Typography variant="body2" color="primary.main">
                     Event
                   </Typography>
                 </Box>
@@ -292,18 +292,18 @@ function Notification() {
                   <Switch
                     checked={state.event}
                     onChange={handleChange}
-                    name='event'
+                    name="event"
                   />
                 }
               />
             </Grid>
             <Grid item xs={8} sm={5}>
-              <Box className='likeicons' mt={2}>
+              <Box className="likeicons" mt={2}>
                 <IconButton style={{ backgroundColor: "#FFF" }}>
                   <MdCollectionsBookmark style={{ color: "#e31a89" }} />{" "}
                 </IconButton>
                 <Box ml={3}>
-                  <Typography variant='body2' color='primary.main'>
+                  <Typography variant="body2" color="primary.main">
                     Collection
                   </Typography>
                 </Box>
@@ -315,18 +315,18 @@ function Notification() {
                   <Switch
                     checked={state.collection}
                     onChange={handleChange}
-                    name='collection'
+                    name="collection"
                   />
                 }
               />
             </Grid>
             <Grid item xs={8} sm={5}>
-              <Box className='likeicons' mt={2}>
+              <Box className="likeicons" mt={2}>
                 <IconButton style={{ backgroundColor: "#FFF" }}>
                   <RiChatFollowUpLine style={{ color: "brown" }} />{" "}
                 </IconButton>
                 <Box ml={3}>
-                  <Typography variant='body2' color='primary.main'>
+                  <Typography variant="body2" color="primary.main">
                     Subscriber
                   </Typography>
                 </Box>
@@ -338,7 +338,7 @@ function Notification() {
                   <Switch
                     checked={state.subsriber}
                     onChange={handleChange}
-                    name='subsriber'
+                    name="subsriber"
                   />
                 }
               />

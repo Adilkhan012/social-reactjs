@@ -398,11 +398,11 @@ export default function (props) {
   };
 
   let isLike = false;
-  if (auth.userData?._id && data) {
-    const likeUser = data?.likesUsers?.filter(
-      (data) => data === auth.userData?._id
+  if (auth.userData._id && data) {
+    const likeUser = data.likesUsers.filter(
+      (data) => data === auth.userData._id
     );
-    isLike = likeUser?.length > 0;
+    isLike = likeUser.length > 0;
   }
   const handleClose = () => {
     setAnchorEl(null);
@@ -505,7 +505,7 @@ export default function (props) {
   const createPromotionleHandle = async () => {
     setIsSubmit(true);
     const selectuser = selectedTeam
-      ? selectedTeam?.map((data, i) => data.name)
+      ? selectedTeam.map((data, i) => data.name)
       : [];
 
     if (
@@ -561,16 +561,16 @@ export default function (props) {
         })
         .catch((error) => {
           setLoader(false);
-          toast.error(error?.response?.data?.responseMessage);
+          toast.error(error.response.data.responseMessage);
         });
     }
   };
   const [durationId, setDurationId] = useState();
 
   const handleDurationFunc = (data) => {
-    setDuration(data?.duration);
-    setAmounDuration(data?.amount);
-    setDurationId(data?._id);
+    setDuration(data.duration);
+    setAmounDuration(data.amount);
+    setDurationId(data._id);
   };
 
   const HandleDeletFun = (data) => {
@@ -586,7 +586,7 @@ export default function (props) {
           token: window.localStorage.getItem("token"),
         },
         data: {
-          postId: data?._id,
+          postId: data._id,
         },
       });
       if (res.data.responseCode === 200) {
@@ -597,7 +597,7 @@ export default function (props) {
         toast.success(res.data.responseMessage);
       }
     } catch (error) {
-      toast.error(error?.response?.data?.responseMessage);
+      toast.error(error.response.data.responseMessage);
       setAnchorEl(false);
       setIsHidePost(false);
     }
@@ -622,7 +622,7 @@ export default function (props) {
         toast.success(res.data.responseMessage);
       }
     } catch (error) {
-      toast.error(error?.response?.data?.responseMessage);
+      toast.error(error.response.data.responseMessage);
       setAnchorEl(false);
       setIsDeletePost(false);
     }
@@ -655,7 +655,7 @@ export default function (props) {
             token: sessionStorage.getItem("token"),
           },
           data: {
-            postId: idData?._id,
+            postId: idData._id,
             walletAddress: walletAddress,
           },
         });
@@ -717,7 +717,7 @@ export default function (props) {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          {!data?.isExport && !data?.isSold && !data?.isauction && (
+          {!data.isExport && !data.isSold && !data.isauction && (
             <StyledMenuItem onClick={handleClickOpenExport}>
               <ListItemText primary="Export" />
             </StyledMenuItem>
@@ -729,16 +729,16 @@ export default function (props) {
           <StyledMenuItem>
             <ListItemText onClick={() => setIsHidePost(true)} primary="Hide" />
           </StyledMenuItem>
-          {data?.userId?._id === auth?.userData?._id && (
+          {data.userId._id === auth.userData._id && (
             <StyledMenuItem>
               <ListItemText
-                onClick={() => HandleDeletFun(data?._id)}
+                onClick={() => HandleDeletFun(data._id)}
                 primary="Delete"
               />
             </StyledMenuItem>
           )}
 
-          <StyledMenuItem onClick={() => handleClickOpenPromoted(data?._id)}>
+          <StyledMenuItem onClick={() => handleClickOpenPromoted(data._id)}>
             <ListItemText primary="Promote" />
           </StyledMenuItem>
         </StyledMenu>
@@ -749,8 +749,8 @@ export default function (props) {
             ) : (
               <img
                 src={
-                  data?.userId?.profilePic
-                    ? data?.userId?.profilePic
+                  data.userId.profilePic
+                    ? data.userId.profilePic
                     : "/images/user.png"
                 }
               />
@@ -760,28 +760,28 @@ export default function (props) {
             <Link to="#">
               {" "}
               <Typography variant="h6">
-                {data?.userId?.userName
+                {data.userId.userName
                   ? `${
-                      data?.userId?.userNam?.length > 25
-                        ? sortAddress(data?.userId?.userName)
-                        : data?.userId?.userName
+                      data.userId.userNam.length > 25
+                        ? sortAddress(data.userId.userName)
+                        : data.userId.userName
                     }`
                   : `${
-                      data?.userId?.namel?.length > 25
-                        ? sortAddress(data?.userId?.name)
-                        : data?.userId?.name
+                      data.userId.namel.length > 25
+                        ? sortAddress(data.userId.name)
+                        : data.userId.name
                     }`}
               </Typography>
             </Link>
             <Typography variant="body2" component="small">
-              {data?.time}
+              {data.time}
             </Typography>
           </Box>
         </Box>
         <Typography variant="body2" style={{ wordBreak: "break-all" }}>
-          {data?.postTitle?.length < 40
-            ? data?.postTitle
-            : sortAddress(data?.postTitle)}
+          {data.postTitle.length < 40
+            ? data.postTitle
+            : sortAddress(data.postTitle)}
         </Typography>
 
         <Box mt={1} mb={1} className="price">
@@ -789,13 +789,13 @@ export default function (props) {
             <Typography variant="h6">Price :</Typography>
 
             <Typography variant="h6">
-              {data?.amount} &nbsp;
+              {data.amount} &nbsp;
               {tokenName}
             </Typography>
           </Box>
           {currentMoment < moment(data.createdAt).add(15, "m").unix() && (
             <>
-              {data?.userId?._id === auth?.userData?._id && (
+              {data.userId._id === auth.userData._id && (
                 <Box display="flex" justifyContent="end">
                   <Button
                     style={{ padding: "0px 8px" }}
@@ -813,14 +813,14 @@ export default function (props) {
               )}
             </>
           )}
-          {data?.postType !== "PUBLIC" &&
-            data?.userId?._id !== auth?.userData?._id && (
+          {data.postType !== "PUBLIC" &&
+            data.userId._id !== auth.userData._id && (
               <Button variant="contained" color="secondary">
                 Buy
               </Button>
             )}
         </Box>
-        <Box onClick={() => HandleCommentBox(data?._id)}>
+        <Box onClick={() => HandleCommentBox(data._id)}>
           {isVideo ? (
             <figure className="postImg">
               <video width="100%" height="450" controls>
@@ -832,7 +832,7 @@ export default function (props) {
               {isLoadingContent ? (
                 <LoadingSkeleton data={8} />
               ) : (
-                <img src={data?.mediaUrl} />
+                <img src={data.mediaUrl} />
               )}
             </figure>
           )}
@@ -845,13 +845,13 @@ export default function (props) {
         >
           <Box className="commentBox"></Box>
           {data &&
-            data?.comment?.map((dataList, i) => {
+            data.comment.map((dataList, i) => {
               return (
                 <AccordionDetails>
                   <CommentBox
                     data={data}
                     dataList={data}
-                    dataParent = {data}
+                    dataParent={data}
                     listPublicExclusiveHandler={listPublicExclusiveHandler}
                   />
                 </AccordionDetails>
@@ -1018,17 +1018,17 @@ export default function (props) {
                   marginRight: "10px",
                 }}
                 src={
-                  auth?.userData?.profilePic
-                    ? auth?.userData?.profilePic
+                  auth.userData.profilePic
+                    ? auth.userData.profilePic
                     : "images/user.png"
                 }
               />
 
               <Typography variant="h6">
                 {" "}
-                {auth?.userData?.userName
-                  ? auth?.userData?.userName
-                  : auth?.userData?.name}
+                {auth.userData.userName
+                  ? auth.userData.userName
+                  : auth.userData.name}
               </Typography>
             </Box>
             <Box mt={2}>
@@ -1040,7 +1040,7 @@ export default function (props) {
                 onChange={(_event, newTeam) => {
                   setSelectedTeam(newTeam);
                 }}
-                getOptionLabel={(option) => option?.name}
+                getOptionLabel={(option) => option.name}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -1071,7 +1071,7 @@ export default function (props) {
                   placeholder="Minimum age"
                   type="number"
                   onKeyPress={(event) => {
-                    if (event?.key === "-" || event?.key === "+") {
+                    if (event.key === "-" || event.key === "+") {
                       event.preventDefault();
                     }
                   }}
@@ -1100,7 +1100,7 @@ export default function (props) {
                   placeholder="MaximumAge age"
                   type="number"
                   onKeyPress={(event) => {
-                    if (event?.key === "-" || event?.key === "+") {
+                    if (event.key === "-" || event.key === "+") {
                       event.preventDefault();
                     }
                   }}
@@ -1161,7 +1161,7 @@ export default function (props) {
                       style={{ paddingRight: "20px" }}
                     >
                       {durationList &&
-                        durationList?.map((data, i) => {
+                        durationList.map((data, i) => {
                           const statusData = data._id === durationId;
                           return (
                             <Grid item xs={6} key={i}>
@@ -1179,8 +1179,7 @@ export default function (props) {
                                 className={statusData ? "active" : null}
                                 onClick={() => handleDurationFunc(data)}
                               >
-                                {data?.duration}&nbsp; Days, {data?.amount}{" "}
-                                Share
+                                {data.duration}&nbsp; Days, {data.amount} Share
                               </span>
                             </Grid>
                           );
@@ -1218,7 +1217,7 @@ export default function (props) {
         >
           <Comment
             data={data}
-            dataList= {data}
+            dataList={data}
             openCommentBox={openCommentBox}
             listPublicExclusiveHandler={listPublicExclusiveHandler}
             setOpenCommentBox={setOpenCommentBox}
@@ -1246,7 +1245,7 @@ export default function (props) {
               style={{ width: "20rem" }}
               disabled={isLoadingFunction}
               onKeyPress={(event) => {
-                if (event?.key === "-" || event?.key === "+") {
+                if (event.key === "-" || event.key === "+") {
                   event.preventDefault();
                 }
               }}

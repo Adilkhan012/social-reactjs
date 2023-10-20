@@ -55,18 +55,15 @@ export default function SearchBox({
     <div className={"searchField customSearch"}>
       <div className={search}>
         <TextField
-          id='outlined-basic'
-          variant='outlined'
-          name='Text Field'
-          placeholder='Search'
-          type='search'
+          id="outlined-basic"
+          variant="outlined"
+          name="Text Field"
+          placeholder="Search"
+          type="search"
           fullWidth
           InputProps={{
             startAdornment: (
-              <FiSearch
-                position="start"
-                style={{ fontSize: "18px" }}
-              />
+              <FiSearch position="start" style={{ fontSize: "18px" }} />
             ),
           }}
           // ref={searchTextRef}
@@ -96,24 +93,24 @@ export function SearchResults({
   setSearchResult,
 }) {
   return (
-    <ul className='list-group text-dark' id='search-list'>
-      {searchResult?.collection?.length > 0 && (
+    <ul className="list-group text-dark" id="search-list">
+      {searchResult.collection.length > 0 && (
         <>
           <li
-            className='list-group-item'
+            className="list-group-item"
             style={{ textAlign: "left", zIndex: 999 }}
           >
-            <Box display={"flex"} justifyContent='space-between'>
+            <Box display={"flex"} justifyContent="space-between">
               <Box display={"flex"}>
-                <Typography variant='h6'>Collections</Typography>
+                <Typography variant="h6">Collections</Typography>
               </Box>
             </Box>
           </li>
-          {searchResult?.collection?.map((data, i) => {
+          {searchResult.collection.map((data, i) => {
             return (
               <li
                 key={i}
-                className='list-group-item'
+                className="list-group-item"
                 style={{ textAlign: "left", zIndex: 999 }}
                 onClick={() => {
                   history.push({
@@ -125,9 +122,9 @@ export function SearchResults({
                   setSearchResult();
                 }}
               >
-                <Box display={"flex"} justifyContent='space-between'>
+                <Box display={"flex"} justifyContent="space-between">
                   <Box display={"flex"}>
-                    <img src={data.image} alt='' />
+                    <img src={data.image} alt="" />
                     <Typography> {data.name}</Typography>
                   </Box>
                 </Box>
@@ -137,23 +134,23 @@ export function SearchResults({
         </>
       )}
 
-      {searchResult?.user.length > 0 && (
+      {searchResult.user.length > 0 && (
         <>
           <li
-            className='list-group-item'
+            className="list-group-item"
             style={{ textAlign: "left", zIndex: 999 }}
           >
-            <Box display={"flex"} justifyContent='space-between'>
+            <Box display={"flex"} justifyContent="space-between">
               <Box display={"flex"}>
-                <Typography variant='h6'>User's</Typography>
+                <Typography variant="h6">User's</Typography>
               </Box>
             </Box>
           </li>
-          {searchResult?.user.map((data, i) => {
+          {searchResult.user.map((data, i) => {
             return (
               <li
                 key={i}
-                className='list-group-item'
+                className="list-group-item"
                 style={{ textAlign: "left", zIndex: 999 }}
                 onClick={() => {
                   history.push({
@@ -164,21 +161,21 @@ export function SearchResults({
                   setSearchResult();
                 }}
               >
-                <Box display={"flex"} justifyContent='space-between'>
+                <Box display={"flex"} justifyContent="space-between">
                   <Box display={"flex"}>
                     <img
                       src={
                         data.profilePic ? data.profilePic : "/images/user.png"
                       }
-                      alt=''
+                      alt=""
                     />
                     <Typography>
                       {" "}
-                      {data?.userName
-                        ? data?.userName
-                        : data?.name
-                        ? data?.name
-                        : sortAddress(data?.walletAddress)}
+                      {data.userName
+                        ? data.userName
+                        : data.name
+                        ? data.name
+                        : sortAddress(data.walletAddress)}
                     </Typography>
                   </Box>
                 </Box>
@@ -187,23 +184,23 @@ export function SearchResults({
           })}
         </>
       )}
-      {searchResult?.post?.length > 0 && (
+      {searchResult.post.length > 0 && (
         <>
           <li
-            className='list-group-item'
+            className="list-group-item"
             style={{ textAlign: "left", zIndex: 999 }}
           >
-            <Box display={"flex"} justifyContent='space-between'>
+            <Box display={"flex"} justifyContent="space-between">
               <Box display={"flex"}>
-                <Typography variant='h6'>Post's</Typography>
+                <Typography variant="h6">Post's</Typography>
               </Box>
             </Box>
           </li>
-          {searchResult?.post.map((data, i) => {
+          {searchResult.post.map((data, i) => {
             return (
               <li
                 key={i}
-                className='list-group-item'
+                className="list-group-item"
                 style={{ textAlign: "left", zIndex: 999 }}
                 onClick={() => {
                   history.push({
@@ -212,9 +209,9 @@ export function SearchResults({
                   });
                 }}
               >
-                <Box display={"flex"} justifyContent='space-between'>
+                <Box display={"flex"} justifyContent="space-between">
                   <Box display={"flex"}>
-                    <img src={data.mediaUrl} alt='' />
+                    <img src={data.mediaUrl} alt="" />
                     <Typography> {data.postTitle}</Typography>
                   </Box>
                 </Box>
@@ -223,23 +220,23 @@ export function SearchResults({
           })}
         </>
       )}
-      {searchResult?.auctions?.length > 0 && (
+      {searchResult.auctions.length > 0 && (
         <>
           <li
-            className='list-group-item'
+            className="list-group-item"
             style={{ textAlign: "left", zIndex: 999 }}
           >
-            <Box display={"flex"} justifyContent='space-between'>
+            <Box display={"flex"} justifyContent="space-between">
               <Box display={"flex"}>
-                <Typography variant='h6'>Auctions's</Typography>
+                <Typography variant="h6">Auctions's</Typography>
               </Box>
             </Box>
           </li>
-          {searchResult?.auctions.map((data, i) => {
+          {searchResult.auctions.map((data, i) => {
             return (
               <li
                 key={i}
-                className='list-group-item'
+                className="list-group-item"
                 style={{ textAlign: "left", zIndex: 999 }}
                 onClick={() => {
                   history.push({
@@ -248,9 +245,9 @@ export function SearchResults({
                   });
                 }}
               >
-                <Box display={"flex"} justifyContent='space-between'>
+                <Box display={"flex"} justifyContent="space-between">
                   <Box display={"flex"}>
-                    <img src={data.mediaUrl} alt='' />
+                    <img src={data.mediaUrl} alt="" />
                     <Typography> {data.title}</Typography>
                   </Box>
                 </Box>

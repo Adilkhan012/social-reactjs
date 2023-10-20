@@ -125,7 +125,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: " no-repeat !important",
     borderRadius: "10px",
     backgroundColor: "#000",
-    cursor:"pointer",
+    cursor: "pointer",
     [theme.breakpoints.down("xs")]: {
       height: "120px !important",
     },
@@ -223,25 +223,25 @@ function BundlesCard(props) {
   const [open3, setOpen3] = React.useState(false);
   const [isLoading, setIsloading] = useState(false);
   const [subscribedUser, setSubscribedUser] = useState(false);
-  // console.log("collection_Id", data?.collectionId?.image);
+  // console.log("collection_Id", data.collectionId.image);
   let isLike = false;
-  if (auth.userData?._id && data) {
-    const likeUser = data?.collectionId?.likesUsers?.filter(
-      (data) => data === auth.userData?._id
+  if (auth.userData._id && data) {
+    const likeUser = data.collectionId.likesUsers.filter(
+      (data) => data === auth.userData._id
     );
-    isLike = likeUser?.length > 0;
+    isLike = likeUser.length > 0;
   }
 
   const likesHandler = async () => {
     try {
       const res = await Axios({
         method: "GET",
-        url: ApiConfig.likeDislikeCollection + data?.collectionId?._id,
+        url: ApiConfig.likeDislikeCollection + data.collectionId._id,
         headers: {
           token: window.localStorage.getItem("token"),
         },
         data: {
-          postId: data?.collectionId?._id,
+          postId: data.collectionId._id,
         },
       });
       if (res.data.responseCode === 200) {
@@ -263,23 +263,23 @@ function BundlesCard(props) {
       <Paper elevation={2} className={classes.root}>
         {/* {fileType == "image" && ( */}
         <Box
-          id={`imagecard${data?.collectionId?._id}`}
+          id={`imagecard${data.collectionId._id}`}
           className={classes.mainimg}
-          style={{ background: "url(" + data?.collectionId?.image + ")" }}
+          style={{ background: "url(" + data.collectionId.image + ")" }}
           onClick={() => {
             history.push({
               pathname: "/bundles-details",
-              search: data?.collectionId?._id,
-              state: data?.collectionId,
+              search: data.collectionId._id,
+              state: data.collectionId,
             });
           }}
         ></Box>
         {/* )} */}
         {/* {(fileType == "video" || fileType == "audio") && (
           <Box
-            id={`imagecard${data?.collectionId?._id}`}
+            id={`imagecard${data.collectionId._id}`}
             className={classes.mainimg}
-            style={{ background: "url(" + data?.collectionId.image + ")" }}
+            style={{ background: "url(" + data.collectionId.image + ")" }}
           >
             <video
               className={classes.videoBox}
@@ -290,12 +290,12 @@ function BundlesCard(props) {
               muted={true}
               controls
             >
-              <source src={data?.collectionId?.image} type="video/mp4" />
+              <source src={data.collectionId.image} type="video/mp4" />
             </video>
           </Box>
         )} */}
         {/* <figure className="postImg">
-          <img src={data?.image} ali="Auction Image" />
+          <img src={data.image} ali="Auction Image" />
         </figure> */}
         <Grid container spacing={1} alignItems="center">
           <Grid item xs={8}>
@@ -304,8 +304,8 @@ function BundlesCard(props) {
                 <Box className="profileimage">
                   <img
                     src={
-                      data?.userId?.profilePic
-                        ? data?.userId?.profilePic
+                      data.userId.profilePic
+                        ? data.userId.profilePic
                         : "/images/user.png"
                     }
                     alt="user data"
@@ -317,10 +317,10 @@ function BundlesCard(props) {
               </Box>
               <Box className="timeline">
                 <Typography variant="h6" className={classes.text}>
-                  {data?.userId?.userName?.length > 40
-                    ? sortAddress(data?.userId?.userName)
-                    : sortAddress(data?.userId?.bnbAccount?.address)}
-                  {/* {data?.name} */}
+                  {data.userId.userName.length > 40
+                    ? sortAddress(data.userId.userName)
+                    : sortAddress(data.userId.bnbAccount.address)}
+                  {/* {data.name} */}
                 </Typography>
               </Box>
             </Box>
@@ -345,16 +345,18 @@ function BundlesCard(props) {
             <Typography variant="body1">Collection Title</Typography>
           </Grid>
           <Grid item xs={6} align="right">
-            <Typography variant="body1">{sortAddress(data?.collectionId?.title)}</Typography>
+            <Typography variant="body1">
+              {sortAddress(data.collectionId.title)}
+            </Typography>
           </Grid>
           <Grid item xs={6}>
             <Typography variant="body1">Collection Price</Typography>
           </Grid>
           <Grid item xs={6} align="right">
             <Typography variant="body1">
-              {data?.collectionId?.amount > 1
-                ? data?.collectionId?.amount
-                : Number(data?.collectionId?.amount)?.toFixed(4)}
+              {data.collectionId.amount > 1
+                ? data.collectionId.amount
+                : Number(data.collectionId.amount).toFixed(4)}
               &nbsp; {tokenName}
             </Typography>
           </Grid>
@@ -365,7 +367,7 @@ function BundlesCard(props) {
           </Grid>
           <Grid item xs={6} align="right">
             <Typography variant="body1">
-              {data?.collectionId?.duration} &nbsp; Days
+              {data.collectionId.duration} &nbsp; Days
             </Typography>
           </Grid>
         </Grid>

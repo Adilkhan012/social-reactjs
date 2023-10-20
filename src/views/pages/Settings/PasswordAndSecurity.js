@@ -11,7 +11,7 @@ import {
   OutlinedInput,
   makeStyles,
   Grid,
-  Container
+  Container,
 } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
@@ -82,7 +82,7 @@ function PasswordAndSecurity(props) {
       setTimeout(() => {
         setErrorMesage(""); // count is 0 here
       }, 5000);
-      setErrorMesage(error?.response?.data?.responseMessage);
+      setErrorMesage(error.response.data.responseMessage);
     }
   };
   return (
@@ -139,7 +139,7 @@ function PasswordAndSecurity(props) {
                               onChange={handleChange}
                               error={Boolean(
                                 touched.currentPassword &&
-                                errors.currentPassword
+                                  errors.currentPassword
                               )}
                               endAdornment={
                                 <InputAdornment position="end">
@@ -212,7 +212,9 @@ function PasswordAndSecurity(props) {
                                   {/* Must contain 8 characters, one uppercase, one
                                 lowercase, one number and one special
                                 character */}
-                                  Password must be minimum 8 and maximum 16 characters , one special character, uppercase letter , lowercase letter.
+                                  Password must be minimum 8 and maximum 16
+                                  characters , one special character, uppercase
+                                  letter , lowercase letter.
                                 </Box>
                               )}
                             </FormHelperText>
@@ -237,7 +239,7 @@ function PasswordAndSecurity(props) {
                               // value={values.confirmPassword}
                               error={Boolean(
                                 touched.confirmPassword &&
-                                errors.confirmPassword
+                                  errors.confirmPassword
                               )}
                               onBlur={handleBlur}
                               onChange={handleChange}

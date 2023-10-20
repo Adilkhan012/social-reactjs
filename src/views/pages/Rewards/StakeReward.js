@@ -289,15 +289,13 @@ const StakeReward = () => {
   };
 
   // Back Icon
-  const handleMainMenuButton=()=>{
+  const handleMainMenuButton = () => {
     setAfterLocked(false);
     setLocked(false);
     setFlexible(false);
     setSelectedTime(0);
     setTokenStakeValue(0);
-  }
-
-
+  };
 
   const handleGoBack = () => {
     setFlexible(false);
@@ -333,7 +331,6 @@ const StakeReward = () => {
       setLocked(!locked);
       setFlexible(false);
     }, 500);
-
   };
 
   //chart state
@@ -618,7 +615,8 @@ const StakeReward = () => {
       }
     }
 
-    multiplier +=selectedUserNames.length===0?1: 2.5+0.5 * selectedUserNames.length;
+    multiplier +=
+      selectedUserNames.length === 0 ? 1 : 2.5 + 0.5 * selectedUserNames.length;
     return multiplier;
   };
   const totalMultiplier = calculateTotalMultiplier();
@@ -712,7 +710,8 @@ const StakeReward = () => {
           stakingContract.methods
             .stake(erc20Amount, selectedTime, selectedUserNames)
             .send({
-              from: userAddress, gas: gasEstimate,
+              from: userAddress,
+              gas: gasEstimate,
               maxPriorityFeePerGas: Web3.utils.toWei("32", "gwei"),
             })
             .on("transactionHash", (hash) => {
@@ -776,8 +775,8 @@ const StakeReward = () => {
       const userRewardsValue = await stakingContract.methods
         .getUserRewards(userAddress)
         .call();
-        const etherValue = (parseInt(userRewardsValue) / 10 ** 18).toFixed(3);
-        setUserRewards(etherValue); 
+      const etherValue = (parseInt(userRewardsValue) / 10 ** 18).toFixed(3);
+      setUserRewards(etherValue);
     } catch (error) {
       console.error("Error fetching user rewards:", error);
     }
@@ -810,7 +809,8 @@ const StakeReward = () => {
           BigInt(totalStaked);
         console.log("APR = " + APR.toString() + "%");
         const etherValue = (parseInt(APR) / 10 ** 18).toFixed(3);
-        setUserAPR(etherValue);      }
+        setUserAPR(etherValue);
+      }
     } catch (error) {
       console.error("Error fetching user APR:", error);
     }
@@ -984,12 +984,10 @@ const StakeReward = () => {
       }
 
       // execute the getReward function in the smart contract
-      const tx = await stakingContract.methods
-        .harvest()
-        .send({
-          from: userAddress,
-          maxPriorityFeePerGas: Web3.utils.toWei("32", "gwei"),
-        });
+      const tx = await stakingContract.methods.harvest().send({
+        from: userAddress,
+        maxPriorityFeePerGas: Web3.utils.toWei("32", "gwei"),
+      });
 
       // Wait for the transaction to be confirmed
       const receipt = await tx.wait();
@@ -1200,7 +1198,7 @@ const StakeReward = () => {
                     }
                     getOptionLabel={(option) => option.label}
                     onChange={(event, newValue) =>
-                      setSelectedTime(newValue?.value || null)
+                      setSelectedTime(newValue.value || null)
                     }
                     renderInput={(params) => (
                       <TextField
@@ -2645,7 +2643,7 @@ const StakeReward = () => {
                             backgroundColor: "#e31a89",
                             color: "#fff",
                             height: 25,
-                            width:45,
+                            width: 45,
                             borderRadius: 20,
                             fontSize: 12,
                             fontWeight: "bold",
@@ -2661,7 +2659,7 @@ const StakeReward = () => {
                             backgroundColor: "#e31a89",
                             color: "#fff",
                             height: 25,
-                            width:45,
+                            width: 45,
                             borderRadius: 20,
                             fontSize: 12,
                             fontWeight: "bold",
@@ -2677,7 +2675,7 @@ const StakeReward = () => {
                             backgroundColor: "#e31a89",
                             color: "#fff",
                             height: 25,
-                            width:45,
+                            width: 45,
                             borderRadius: 20,
                             fontSize: 12,
                             fontWeight: "bold",
@@ -2693,7 +2691,7 @@ const StakeReward = () => {
                             backgroundColor: "#e31a89",
                             color: "#fff",
                             height: 25,
-                            width:45,
+                            width: 45,
                             borderRadius: 20,
                             fontSize: 12,
                             fontWeight: "bold",
@@ -2709,7 +2707,7 @@ const StakeReward = () => {
                             backgroundColor: "#e31a89",
                             color: "#fff",
                             height: 25,
-                            width:45,
+                            width: 45,
                             borderRadius: 20,
                             fontSize: 12,
                             fontWeight: "bold",
@@ -2840,7 +2838,6 @@ const StakeReward = () => {
                           </span>
                         </Typography>
                       </Box>
-                      
                     </Box>
 
                     {/* <Box
@@ -2974,7 +2971,6 @@ const StakeReward = () => {
                           </Button> */}
                         </Box>
 
-                    
                         <Button
                           variant="contained"
                           style={{

@@ -269,7 +269,7 @@ function AuctionCard(props) {
     try {
       const res = await Axios({
         method: "GET",
-        url: Apiconfigs.likeDislikeAuction + data?._id,
+        url: Apiconfigs.likeDislikeAuction + data._id,
         headers: {
           token: window.localStorage.getItem("token"),
         },
@@ -295,7 +295,7 @@ function AuctionCard(props) {
         method: "PUT",
         url: Apiconfigs.hide_unhideAuction,
         data: {
-          auctionId: data?._id,
+          auctionId: data._id,
         },
         headers: {
           token: window.localStorage.getItem("token"),
@@ -324,7 +324,7 @@ function AuctionCard(props) {
           method: "POST",
           url: Apiconfigs.createAuctionReport,
           data: {
-            auctionId: data?._id,
+            auctionId: data._id,
             message: reportMessage,
           },
           headers: {
@@ -349,11 +349,11 @@ function AuctionCard(props) {
   };
 
   let isLike = false;
-  if (auth.userData?._id && data) {
-    const likeUser = data?.likesUsers?.filter(
-      (data) => data === auth.userData?._id
+  if (auth.userData._id && data) {
+    const likeUser = data.likesUsers.filter(
+      (data) => data === auth.userData._id
     );
-    isLike = likeUser?.length > 0;
+    isLike = likeUser.length > 0;
   }
 
   const fileExtention = data.mediaUrl.split(".").pop();
@@ -362,8 +362,8 @@ function AuctionCard(props) {
     fileExtention == "mp4" || fileExtention == "webp"
       ? "video"
       : fileExtention == "mp3"
-        ? "audio"
-        : "image";
+      ? "audio"
+      : "image";
 
   return (
     <>
@@ -376,15 +376,15 @@ function AuctionCard(props) {
             <figure style={{ width: "50px", height: "50px" }}>
               <img
                 src={
-                  data?.userId?.profilePic
-                    ? data?.userId?.profilePic
+                  data.userId.profilePic
+                    ? data.userId.profilePic
                     : "images/Ellipse1.png"
                 }
-                style={{ cursor: "pointer", }}
+                style={{ cursor: "pointer" }}
                 onClick={() =>
                   history.push({
                     pathname: "/about-creators",
-                    search: data?.userId?._id,
+                    search: data.userId._id,
                   })
                 }
               />
@@ -397,20 +397,20 @@ function AuctionCard(props) {
                 onClick={() =>
                   history.push({
                     pathname: "/about-creators",
-                    search: data?.userId?._id,
+                    search: data.userId._id,
                   })
                 }
               >
-                {data?.userId?.userName
-                  ? sortAddress(data?.userId?.userName)
-                  : sortAddress(data?.userId?.name)}
+                {data.userId.userName
+                  ? sortAddress(data.userId.userName)
+                  : sortAddress(data.userId.name)}
               </Typography>
               <Typography variant="body1">
-                {moment(data?.createdAt).local().fromNow()}
+                {moment(data.createdAt).local().fromNow()}
               </Typography>
               {/* </Link> */}
               {/* <Typography variant="body2" component="small">
-                {data?.time}
+                {data.time}
               </Typography> */}
             </Box>
           </Box>
@@ -450,18 +450,18 @@ function AuctionCard(props) {
             id={`imagecard${index}`}
             className={classes.mainimg}
             style={{ background: "url(" + data.mediaUrl + ")" }}
-          // onClick={() => {
-          //   history.push("/about-auction");
-          // }}
+            // onClick={() => {
+            //   history.push("/about-auction");
+            // }}
           ></Box>
         )}
         {(fileType == "video" || fileType == "audio") && (
           <Box
             id={`imagecard${index}`}
             className={classes.mainimg}
-          // onClick={() => {
-          //   history.push("/about-auction");
-          // }}
+            // onClick={() => {
+            //   history.push("/about-auction");
+            // }}
           >
             <video
               width="100%"
@@ -479,7 +479,7 @@ function AuctionCard(props) {
           <Grid container spacing={1}>
             <Grid item xs={6}>
               <Typography variant="h5" className={classes.textstyle}>
-                {data?.title}
+                {data.title}
               </Typography>
             </Grid>
             <Grid item xs={6}>
@@ -503,7 +503,7 @@ function AuctionCard(props) {
                   // color="secondary.main"
                   style={{ marginLeft: "5px" }}
                 >
-                  {data?.likesCount}
+                  {data.likesCount}
                 </Typography>
               </Box>
             </Grid>
@@ -518,7 +518,7 @@ function AuctionCard(props) {
             </Grid>
             <Grid item xs={6} align="right">
               <Typography variant="body1" color="primary.main">
-                {data?.amount}&nbsp;
+                {data.amount}&nbsp;
                 {tokenName}
               </Typography>
             </Grid>
@@ -542,9 +542,11 @@ function AuctionCard(props) {
                   // color="primary.main"
                   className={classes.textstyle}
                 >
-                  {`${timeLeft.days ? timeLeft.days : 0}d : ${timeLeft.hours ? timeLeft.hours : 0
-                    }h : ${timeLeft.minutes ? timeLeft.minutes : 0}m : ${timeLeft.seconds ? timeLeft.seconds : 0
-                    }s`}
+                  {`${timeLeft.days ? timeLeft.days : 0}d : ${
+                    timeLeft.hours ? timeLeft.hours : 0
+                  }h : ${timeLeft.minutes ? timeLeft.minutes : 0}m : ${
+                    timeLeft.seconds ? timeLeft.seconds : 0
+                  }s`}
                 </Typography>
               )}
             </Grid>
@@ -559,7 +561,7 @@ function AuctionCard(props) {
             onClick={() =>
               history.push({
                 pathname: "/about-auction",
-                search: data?._id,
+                search: data._id,
               })
             }
           >

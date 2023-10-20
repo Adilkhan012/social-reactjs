@@ -159,7 +159,7 @@ function Wallet() {
           setuserBalance(response.data.result);
         }
       })
-      .catch((response) => { });
+      .catch((response) => {});
   };
   useEffect(() => {
     handleUserProfileApi();
@@ -182,14 +182,13 @@ function Wallet() {
         // setDataList(res.data.result);
       }
     } catch (error) {
-      toast.success(error?.response?.data?.responseMessage);
+      toast.success(error.response.data.responseMessage);
     }
   };
   const handleOpenDeposit = () => {
     setDeposit(true);
     // getDepositApi();
   };
-
 
   const getTokenAddressDetails = async () => {
     try {
@@ -215,7 +214,7 @@ function Wallet() {
   }, [walletAddressWallet]);
 
   const withdrawHandler = async () => {
-    if (parseInt(userData1?.bnbBalace) > 0) {
+    if (parseInt(userData1.bnbBalace) > 0) {
       setIsSubmit(true);
       if (
         walletAddressWallet &&
@@ -244,7 +243,7 @@ function Wallet() {
           }
           setIsLoading(false);
         } catch (error) {
-          toast.error(error?.response?.data?.responseMessage);
+          toast.error(error.response.data.responseMessage);
           setIsLoading(false);
           //   setAnchorEl(false);
         }
@@ -253,7 +252,6 @@ function Wallet() {
       toast.info("Insufficient Funds");
     }
   };
-
 
   const feelistHandler = async () => {
     // setIsLoading(true);
@@ -266,7 +264,9 @@ function Wallet() {
         },
       });
       if (response.data.responseCode === 200) {
-        setWithdrawtokenId(response.data.result.filter((data) => data?.type === "WITHDRAW_TOKEN"));
+        setWithdrawtokenId(
+          response.data.result.filter((data) => data.type === "WITHDRAW_TOKEN")
+        );
 
         // setIsLoading(false);
       }
@@ -276,23 +276,17 @@ function Wallet() {
   };
   useEffect(() => {
     feelistHandler();
-
   }, []);
 
-
   useEffect(() => {
-
-
-
     if (withdrawtokenId) {
       setWithdrawtoken(
-        withdrawtokenId[0]?.amount ? withdrawtokenId[0]?.amount : ""
+        withdrawtokenId[0].amount ? withdrawtokenId[0].amount : ""
       );
     }
-
   }, [withdrawtokenId]);
 
-  const remainingBalance = parseInt(userData1?.bnbBalace) - withdrawAmount;
+  const remainingBalance = parseInt(userData1.bnbBalace) - withdrawAmount;
   return (
     <>
       <Box mt={5} mb={5}>
@@ -302,14 +296,10 @@ function Wallet() {
               <Grid container spacing={4}>
                 <Grid item xs={12} sm={6} md={6} lg={6}>
                   <Box className="left">
-                    <Typography variant="h5">
-                      Your Wallet Balance :{" "}
-                    </Typography>{" "}
+                    <Typography variant="h5">Your Wallet Balance : </Typography>{" "}
                     &nbsp;&nbsp;&nbsp;
                     <Typography variant="h5">
-                      {userData1?.bnbBalace
-                        ? parseInt(userData1?.bnbBalace)
-                        : 0}{" "}
+                      {userData1.bnbBalace ? parseInt(userData1.bnbBalace) : 0}{" "}
                       $LAZI
                     </Typography>
                   </Box>
@@ -384,19 +374,19 @@ function Wallet() {
                   <Box className="text">
                     <Typography variant="body2">My Wallet Address</Typography>
                     &nbsp;
-                    {userData1?.bnbAccount?.address && (
+                    {userData1.bnbAccount.address && (
                       <img
                         width="56%"
-                        src={`https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=${userData1?.bnbAccount?.address}&choe=UTF-8`}
+                        src={`https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=${userData1.bnbAccount.address}&choe=UTF-8`}
                         alt=""
                       />
                     )}
                     &nbsp;
                     <Box className="address">
                       <Typography variant="body2">
-                        {sortAddress(userData1?.bnbAccount?.address)}
-                        {/* {userData1?.bnbAccount?.address} */}
-                        <CopyToClipboard text={userData1?.bnbAccount?.address}>
+                        {sortAddress(userData1.bnbAccount.address)}
+                        {/* {userData1.bnbAccount.address} */}
+                        <CopyToClipboard text={userData1.bnbAccount.address}>
                           <BiCopy
                             style={{
                               color: "#fff",
@@ -460,20 +450,18 @@ function Wallet() {
                       name="Text Field"
                       disabled={isLoading}
                       placeholder={
-                        userData1?.bnbBalace
-                          ? parseInt(userData1?.bnbBalace)
-                          : 0
+                        userData1.bnbBalace ? parseInt(userData1.bnbBalace) : 0
                       }
                       type="number"
                       fullWidth
                       value={withdrawAmount}
                       error={Boolean(
                         (isSubmit && withdrawAmount === "") ||
-                        (withdrawAmount !== "" &&
-                          Number(withdrawAmount) === 0)
+                          (withdrawAmount !== "" &&
+                            Number(withdrawAmount) === 0)
                       )}
                       onChange={(e) => {
-                        if (userData1?.bnbBalace > 0) {
+                        if (userData1.bnbBalace > 0) {
                           if (remainingBalance > 0) {
                             setWithdrawAmount(e.target.value);
                           } else {
@@ -493,7 +481,7 @@ function Wallet() {
                         }
                       }}
                       onKeyPress={(event) => {
-                        if (event?.key === "-" || event?.key === "+") {
+                        if (event.key === "-" || event.key === "+") {
                           event.preventDefault();
                         }
                       }}
@@ -505,13 +493,18 @@ function Wallet() {
                     )}
 
                     <FormHelperText error>
-                      {(isSubmit && withdrawAmount === "" && (
-                        <Box ml={1}>Enter a valid withdraw amount</Box>
-                      )) ||
-                        (withdrawAmount !== "" &&
-                          Number(withdrawAmount) <= Number(withdrawtoken) + 1 && (
-                            <Box ml={1}>Withdraw amount should be greator than {Number(withdrawtoken) + 1}</Box>
-                          ))
+                      {
+                        (isSubmit && withdrawAmount === "" && (
+                          <Box ml={1}>Enter a valid withdraw amount</Box>
+                        )) ||
+                          (withdrawAmount !== "" &&
+                            Number(withdrawAmount) <=
+                              Number(withdrawtoken) + 1 && (
+                              <Box ml={1}>
+                                Withdraw amount should be greator than{" "}
+                                {Number(withdrawtoken) + 1}
+                              </Box>
+                            ))
                         //   ||
                         // (withdrawAmount !== "" &&
                         //   Number(withdrawAmount)< && (
@@ -536,7 +529,7 @@ function Wallet() {
                         (walletAddressWallet !== "" && !getTokenDetails)
                       }
 
-                    // onClick={handleClickOpen}
+                      // onClick={handleClickOpen}
                     />
                     <FormHelperText error>
                       {(isSubmit && !walletAddressWallet && (

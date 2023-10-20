@@ -61,9 +61,9 @@ function Posts(props) {
     <>
       {/* <Grid container direction={"column"} spacing={2}> */}
       <InfiniteScroll
-        dataLength={dataList?.length - 1}
+        dataLength={dataList.length - 1}
         next={fetchMoreData}
-        hasMore={dataList?.length < noOfPages}
+        hasMore={dataList.length < noOfPages}
         // hasMore={dataList.length < 200}
         loader={
           <Box
@@ -81,10 +81,10 @@ function Posts(props) {
         }
       >
         {dataList &&
-          dataList?.map((data, i) => {
+          dataList.map((data, i) => {
             return (
               <>
-                {data?.type === "POST" ? (
+                {data.type === "POST" ? (
                   <>
                     <Box mb={2}>
                       <PostCard

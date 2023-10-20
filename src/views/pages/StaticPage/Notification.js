@@ -140,12 +140,12 @@ function Notification() {
                 All Creators You May Like
               </Typography>
             </Box>
-            {tempArr?.length !== searchUserList?.length ? (
+            {tempArr.length !== searchUserList.length ? (
               <Grid container direction={"column"} spacing={2}>
                 {searchUserList &&
-                  searchUserList?.map((data, i) => {
+                  searchUserList.map((data, i) => {
                     const ignoreData = JSON.parse(arrSubArre);
-                    const isTrue = ignoreData?.includes(data._id);
+                    const isTrue = ignoreData.includes(data._id);
                     if (isTrue) {
                       return null;
                     } else {
@@ -188,7 +188,7 @@ const User = (props) => {
     try {
       const res = await axios({
         method: "GET",
-        url: Apiconfigs.followUnfollowUser + data?._id,
+        url: Apiconfigs.followUnfollowUser + data._id,
         headers: {
           token: window.localStorage.getItem("token"),
         },
@@ -211,9 +211,9 @@ const User = (props) => {
   };
 
   useEffect(() => {
-    if (data && auth?.userData) {
-      const filterFun = data?.followers?.filter((data) => {
-        return data === auth?.userData?._id;
+    if (data && auth.userData) {
+      const filterFun = data.followers.filter((data) => {
+        return data === auth.userData._id;
       });
       if (filterFun[0]) {
         setisFollowing(true);
@@ -221,7 +221,7 @@ const User = (props) => {
         setisFollowing(false);
       }
     }
-  }, [data, auth?.userData]);
+  }, [data, auth.userData]);
   return (
     <>
       <Box className={classes.user}>
@@ -229,7 +229,7 @@ const User = (props) => {
           <Box className="figure">
             <Box className="profileimage">
               <img
-                src={data?.profilePic ? data?.profilePic : "images/user.png"}
+                src={data.profilePic ? data.profilePic : "images/user.png"}
               />
             </Box>
           </Box>
@@ -244,10 +244,10 @@ const User = (props) => {
                 });
               }}
             >
-              {data?.userName ? data?.userName : data?.name}
+              {data.userName ? data.userName : data.name}
             </Typography>
             <Typography variant="body2" component="small">
-              {data?.userType === "User" ? "Creator" : "Admin"}
+              {data.userType === "User" ? "Creator" : "Admin"}
             </Typography>
           </Box>
         </Box>

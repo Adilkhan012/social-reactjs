@@ -186,7 +186,7 @@ const NavBar = () => {
         onClick={() => history.push("/profile")}
       >
         <Typography variant="body2" component="span">
-          {userData && userData?.name ? userData?.name : userData?.userName}
+          {userData && userData.name ? userData.name : userData.userName}
         </Typography>
 
         <Avatar
@@ -196,11 +196,8 @@ const NavBar = () => {
               : "/images/user.png"
           }
           className={classes.avatar}
-
         />
-
       </Box>
-
     </>
   );
 };

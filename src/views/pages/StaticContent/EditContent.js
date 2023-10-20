@@ -67,7 +67,7 @@ export default function AddStatic() {
   const auth = useContext(AuthContext);
   const editor = useRef(null);
   const [descritionValue, setdescriptionValue] = useState("");
-  console.log("descritionValue",descritionValue)
+  console.log("descritionValue", descritionValue);
   const [isSubmit, setIsSubmit] = useState(false);
   const [Idd, setIdd] = useState();
   // setIsSubmit(true)
@@ -97,8 +97,8 @@ export default function AddStatic() {
           method: "PUT",
           url: ApiConfig.editStatics,
           data: {
-            _id: staticData?._id,
-            title: formValue?.title,
+            _id: staticData._id,
+            title: formValue.title,
             description: descritionValue,
           },
         });
@@ -154,10 +154,10 @@ export default function AddStatic() {
   const config = {
     readonly: false,
   };
-  const getcube=()=>{  
-    var number=document.getElementById("message").value; 
-    setdescriptionValue(number) 
-    }  
+  const getcube = () => {
+    var number = document.getElementById("message").value;
+    setdescriptionValue(number);
+  };
   return (
     <Page title="Edit Static Content">
       <Paper className={classes.root}>
@@ -173,52 +173,54 @@ export default function AddStatic() {
               <Grid container spacing={2} direction={"column"}>
                 <Grid item xs={12} md={12}>
                   <label>Title</label>
-                 <Box mt={1}>
-                 <TextField
-                    placeholder="Enter Subject"
-                    type="text"
-                    size="small"
-                    variant="outlined"
-                    fullWidth
-                    name="title"
-                    value={formValue.title}
-                    error={Boolean(
-                      (isSubmit && formValue.title === "") ||
-                        (formValue.title !== "" && formValue.title.length > 40)
-                    )}
-                    // onBlur={handleBlur}
-                    onChange={_onInputChange}
-                  />
-                  {(isSubmit && formValue.title === "" && (
-                    <FormHelperText error>Title is required</FormHelperText>
-                  )) ||
-                    (formValue.title !== "" && formValue.title.length > 40 && (
-                      <FormHelperText error>
-                        Title should be less than 40 characters.
-                      </FormHelperText>
-                    ))}
+                  <Box mt={1}>
+                    <TextField
+                      placeholder="Enter Subject"
+                      type="text"
+                      size="small"
+                      variant="outlined"
+                      fullWidth
+                      name="title"
+                      value={formValue.title}
+                      error={Boolean(
+                        (isSubmit && formValue.title === "") ||
+                          (formValue.title !== "" &&
+                            formValue.title.length > 40)
+                      )}
+                      // onBlur={handleBlur}
+                      onChange={_onInputChange}
+                    />
+                    {(isSubmit && formValue.title === "" && (
+                      <FormHelperText error>Title is required</FormHelperText>
+                    )) ||
+                      (formValue.title !== "" &&
+                        formValue.title.length > 40 && (
+                          <FormHelperText error>
+                            Title should be less than 40 characters.
+                          </FormHelperText>
+                        ))}
                   </Box>
                 </Grid>
                 <Grid item xs={12} md={12}>
                   <label>Description</label>
-                <Box mt={1}>
-                <JoditEditor
-                  id="message"
-                    ref={editor}
-                    // value={descritionValue}
-                    value={descritionValue}
-                    // value={formData.description}
-                    config={config}
-                    // disabled={loader}
-                    name="descritionValue"
-                    variant="outlined"
-                    fullWidth
-                    size="small"
-                    tabIndex={1}
-                    // onBlur={(e) => setdescriptionValue(e)} // preferred to use only this option to update the content for performance reasons
-                    // onChange={(newContent) => setdescriptionValue(newContent)}
-                  />
-                  {/* <TextField
+                  <Box mt={1}>
+                    <JoditEditor
+                      id="message"
+                      ref={editor}
+                      // value={descritionValue}
+                      value={descritionValue}
+                      // value={formData.description}
+                      config={config}
+                      // disabled={loader}
+                      name="descritionValue"
+                      variant="outlined"
+                      fullWidth
+                      size="small"
+                      tabIndex={1}
+                      // onBlur={(e) => setdescriptionValue(e)} // preferred to use only this option to update the content for performance reasons
+                      // onChange={(newContent) => setdescriptionValue(newContent)}
+                    />
+                    {/* <TextField
                     placeholder="Enter your message"
                     type="text"
                     size="small"
@@ -233,12 +235,12 @@ export default function AddStatic() {
                     // onBlur={handleBlur}
                     onChange={_onInputChange}
                   /> */}
-                  {isSubmit && descritionValue === "" && (
-                    <FormHelperText error>
-                      Description is required
-                    </FormHelperText>
-                  )}
-                </Box>
+                    {isSubmit && descritionValue === "" && (
+                      <FormHelperText error>
+                        Description is required
+                      </FormHelperText>
+                    )}
+                  </Box>
                 </Grid>
                 <Grid item xs={12} align="center">
                   <Button
@@ -248,8 +250,7 @@ export default function AddStatic() {
                     size="large"
                     value="submit"
                     // disabled={isLoading}
-                    onClick={()=>getcube()}
-
+                    onClick={() => getcube()}
                   >
                     Submit
                     {/* {btnText} {isLoading && <ButtonCircularProgress />} */}

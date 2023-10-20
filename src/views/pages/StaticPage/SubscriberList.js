@@ -109,7 +109,7 @@ function SubscriberList({ data }) {
               {dataList && dataList.length > 0 ? (
                 <Grid container direction={"cloumn"} spacing={1}>
                   {dataList &&
-                    dataList?.map((data, i) => {
+                    dataList.map((data, i) => {
                       return (
                         <Grid item xs={12} key={i}>
                           <Box pt={1} pb={2} className={classes.root1}>
@@ -117,8 +117,8 @@ function SubscriberList({ data }) {
                               <figure>
                                 <img
                                   src={
-                                    data?.profilePic
-                                      ? data?.profilePic
+                                    data.profilePic
+                                      ? data.profilePic
                                       : "images/user.png"
                                   }
                                 />
@@ -135,13 +135,13 @@ function SubscriberList({ data }) {
                                     });
                                   }}
                                 >
-                                  {data?.userName ? data?.userName : data?.name}
+                                  {data.userName ? data.userName : data.name}
                                 </Typography>
                                 <Typography
                                   variant="body2"
                                   className={classes.type}
                                 >
-                                  {moment(data?.createdAt).local().fromNow()}
+                                  {moment(data.createdAt).local().fromNow()}
                                 </Typography>
                               </Box>
                             </Box>

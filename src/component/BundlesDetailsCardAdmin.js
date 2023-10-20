@@ -253,7 +253,7 @@ export default function (props) {
           token: window.localStorage.getItem("token"),
         },
         data: {
-          postId: data?._id,
+          postId: data._id,
         },
       });
       if (res.data.responseCode === 200) {
@@ -311,7 +311,7 @@ export default function (props) {
     try {
       const res = await Axios({
         method: "GET",
-        url: Apiconfigs.viewCollection + data?.collectionId,
+        url: Apiconfigs.viewCollection + data.collectionId,
         headers: {
           token: window.localStorage.getItem("token"),
         },
@@ -405,8 +405,8 @@ export default function (props) {
             <figure>
               <img
                 src={
-                  data?.userId?.profilePic
-                    ? data?.userId?.profilePic
+                  data.userId.profilePic
+                    ? data.userId.profilePic
                     : "images/User.png"
                 }
               />
@@ -415,24 +415,24 @@ export default function (props) {
               <Link to="/profile">
                 {" "}
                 <Typography variant="h6">
-                  {data?.userId?.userName
-                    ? data?.userId?.userName
-                    : data?.userId?.name}
+                  {data.userId.userName
+                    ? data.userId.userName
+                    : data.userId.name}
                 </Typography>
               </Link>
               <Typography variant="body1">
-                {moment(data?.createdAt).local().fromNow()}
-                &nbsp; {data?.postType}
+                {moment(data.createdAt).local().fromNow()}
+                &nbsp; {data.postType}
               </Typography>
             </Box>
           </Box>
           <Typography variant="body2">
-            {data?.details?.length < 40
-              ? data?.details
-              : sortAddress(data?.details)}
+            {data.details.length < 40
+              ? data.details
+              : sortAddress(data.details)}
           </Typography>
           <figure className="postImg">
-            {fileType == "image" && <img src={data?.mediaUrl} />}
+            {fileType == "image" && <img src={data.mediaUrl} />}
             {(fileType == "video" || fileType == "audio") && (
               <video
                 width="100%"
@@ -449,14 +449,14 @@ export default function (props) {
             <Button
               color="secondary"
               variant="contained"
-              // disabled={!data?.isSubscribed && data?.postType === "PRIVATE"}
+              // disabled={!data.isSubscribed && data.postType === "PRIVATE"}
               // onClick={() => {
               //   history.push({
               //     pathname: "/details",
-              //     search: data?._id,
+              //     search: data._id,
               //   });
               // }}
-              onClick={() => HandleCommentBox(data?._id)}
+              onClick={() => HandleCommentBox(data._id)}
             >
               Detail
             </Button>
@@ -476,7 +476,7 @@ export default function (props) {
           <IconButton className={classes.cancelBtn} onClick={handleCloseShare}>
             <MdCancel />
           </IconButton>
-          <SocialShareBox url={websiteName + "/about-auction?" + data?._id} />
+          <SocialShareBox url={websiteName + "/about-auction?" + data._id} />
         </DialogContent>
       </Dialog>
       <Dialog

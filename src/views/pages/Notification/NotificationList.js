@@ -109,8 +109,8 @@ function NotificationList() {
   const [collectionDataLoader, setCollectionDataLoader] = React.useState(false);
   const [collectionDetails, setCollectionDetails] = useState();
   const [promotionPostDetails, setPromotionpostDetails] = useState();
-  const isVideo = collectionDetails?.mediaUrl?.includes(".mp4");
-  const isVideo1 = promotionPostDetails?.mediaUrl?.includes(".mp4");
+  const isVideo = collectionDetails.mediaUrl.includes(".mp4");
+  const isVideo1 = promotionPostDetails.mediaUrl.includes(".mp4");
 
   useEffect(() => {
     Axios.get(Apiconfigs.readNotification, {
@@ -209,13 +209,13 @@ function NotificationList() {
           <>
             <Box className={classes.box} pb={2}>
               <Typography variant="h5">Notifications</Typography>
-              {auth?.notificationList?.length > 0 && (
+              {auth.notificationList.length > 0 && (
                 <Button
                   variant="contained"
                   color="secondary"
                   style={{ cursor: "pointer" }}
                   onClick={() => setIsHidePost(true)}
-                // onClick={deleteNotification}
+                  // onClick={deleteNotification}
                 >
                   Delete notification
                 </Button>
@@ -224,20 +224,20 @@ function NotificationList() {
               {/* <FiSettings style={{ fontSize: "20px" }} /> */}
             </Box>
             <Grid container direction={"cloumn"} spacing={1}>
-              {auth?.notificationList?.length == 0 && <NoDataFound />}
-              {auth?.notificationList?.map((data, i) => {
+              {auth.notificationList.length == 0 && <NoDataFound />}
+              {auth.notificationList.map((data, i) => {
                 return (
                   <Grid item xs={12} key={i}>
                     {/* <Box className={classes.root}> */}
                     <Box className={classes.mainContent}>
                       <Box className={classes.dialogProfileImage}>
                         <Box className="userImage">
-                          {data?.likeBy ? (
+                          {data.likeBy ? (
                             <img
                               style={{ width: "50px" }}
                               src={
-                                data?.likeBy?.profilePic
-                                  ? data?.likeBy?.profilePic
+                                data.likeBy.profilePic
+                                  ? data.likeBy.profilePic
                                   : "images/user.png"
                               }
                             />
@@ -245,8 +245,8 @@ function NotificationList() {
                             <img
                               style={{ width: "50px" }}
                               src={
-                                data?.commentBy?.profilePic
-                                  ? data?.commentBy?.profilePic
+                                data.commentBy.profilePic
+                                  ? data.commentBy.profilePic
                                   : "images/user.png"
                               }
                             />
@@ -263,71 +263,70 @@ function NotificationList() {
                           }}
                           onClick={() => {
                             if (
-                              data?.notificationType === "POST_COMMENT" ||
-                              data?.notificationType === "POST_LIKE"
+                              data.notificationType === "POST_COMMENT" ||
+                              data.notificationType === "POST_LIKE"
                             ) {
                               history.push({
                                 pathname: "/comment",
-                                search: data.postId?._id,
+                                search: data.postId._id,
                               });
                             } else if (
-                              data?.notificationType === "COLLECTION_LIKE"
+                              data.notificationType === "COLLECTION_LIKE"
                             ) {
-                              handleOpen(data?.collectionId?._id);
+                              handleOpen(data.collectionId._id);
                             } else if (
-                              data?.notificationType === "AMOUNT_DEPOSIT" ||
-                              data?.notificationType === "AMOUNT_WITHDRAW"
+                              data.notificationType === "AMOUNT_DEPOSIT" ||
+                              data.notificationType === "AMOUNT_WITHDRAW"
                             ) {
                               history.push({
                                 pathname: "/wallet",
                               });
                             } else if (
-                              data?.notificationType === "LIKE_AUCTION"
+                              data.notificationType === "LIKE_AUCTION"
                             ) {
                               history.push({
                                 pathname: "/about-auction",
                                 search: data.auctionId,
                               });
                             } else if (
-                              data?.notificationType ===
-                              "POST_PROMOTION_COMMENT" ||
-                              data?.notificationType === "POST_PROMOTION_LIKE"
+                              data.notificationType ===
+                                "POST_PROMOTION_COMMENT" ||
+                              data.notificationType === "POST_PROMOTION_LIKE"
                             ) {
-                              handleOpenPromotionPost(data?.promotionId?._id);
-                            } else if (data?.commentBy) {
+                              handleOpenPromotionPost(data.promotionId._id);
+                            } else if (data.commentBy) {
                               history.push({
                                 pathname: "/about-creators",
-                                search: data.commentBy?._id,
+                                search: data.commentBy._id,
                               });
-                            } else if (data?.notificationType === "BUY_POST") {
+                            } else if (data.notificationType === "BUY_POST") {
                               history.push({
                                 pathname: "/about-creators",
-                                search: data.buyId?._id,
+                                search: data.buyId._id,
                               });
-                            }
-                            else {
+                            } else {
                               history.push({
                                 pathname: "/about-creators",
-                                search: data.likeBy?._id,
+                                search: data.likeBy._id,
                               });
                             }
                           }}
-                        // onClick={()=>{
-                        //   if (data?.notificationType === "POST_COMMENT" || data?.notificationType=== "POST_LIKE") {
-                        //     history.push({
-                        //         pathname:"/comment",
-                        //         search: data?.postId,
-                        //     })
-                        //   } else {
-                        //     history.push({
-                        //         pathname:"/about-creators",
-                        //         search: data?.userId,
-                        //     })
+                          // onClick={()=>{
+                          //   if (data.notificationType === "POST_COMMENT" || data.notificationType=== "POST_LIKE") {
+                          //     history.push({
+                          //         pathname:"/comment",
+                          //         search: data.postId,
+                          //     })
+                          //   } else {
+                          //     history.push({
+                          //         pathname:"/about-creators",
+                          //         search: data.userId,
+                          //     })
 
-                        //   }
-                        // }}
+                          //   }
+                          // }}
                         >
-                          {data?.description}
+                          {data.description}
                         </Typography>
                         <Typography style={{ marginBottom: "10px" }}>
                           {moment(data.createdAt).local().fromNow()}
@@ -358,13 +357,13 @@ function NotificationList() {
                     <div>
                       <video width="100%" controls>
                         <source
-                          src={collectionDetails?.mediaUrl}
+                          src={collectionDetails.mediaUrl}
                           type="video/mp4"
                         />
                       </video>
                     </div>
                   ) : (
-                    <img src={collectionDetails?.image} alt="" />
+                    <img src={collectionDetails.image} alt="" />
                   )}
                 </Box>
 
@@ -375,8 +374,8 @@ function NotificationList() {
                         <Box className="userImage">
                           <img
                             src={
-                              collectionDetails?.userId?.profilePic
-                                ? collectionDetails?.userId?.profilePic
+                              collectionDetails.userId.profilePic
+                                ? collectionDetails.userId.profilePic
                                 : "/images/user.png"
                             }
                             alt="user collectionDetails"
@@ -384,9 +383,9 @@ function NotificationList() {
                         </Box>
                         <Box className="username">
                           <Typography variant="h6" className={classes.text}>
-                            {collectionDetails?.userId?.userName
-                              ? collectionDetails?.userId?.userName
-                              : collectionDetails?.userId?.name}
+                            {collectionDetails.userId.userName
+                              ? collectionDetails.userId.userName
+                              : collectionDetails.userId.name}
                           </Typography>
                         </Box>
                       </Box>
@@ -401,9 +400,9 @@ function NotificationList() {
                             fontWeight: "500",
                           }}
                         >
-                          {collectionDetails?.amount > 1
-                            ? collectionDetails?.amount
-                            : Number(collectionDetails?.amount)?.toFixed(4)}
+                          {collectionDetails.amount > 1
+                            ? collectionDetails.amount
+                            : Number(collectionDetails.amount).toFixed(4)}
                           &nbsp;
                           {"Share"}
                         </span>
@@ -415,7 +414,7 @@ function NotificationList() {
                       <Grid item xs={12} align="left">
                         <Typography variant="h4">
                           Duration:{" "}
-                          <span>{collectionDetails?.duration}&nbsp; Days</span>
+                          <span>{collectionDetails.duration}&nbsp; Days</span>
                         </Typography>
                       </Grid>
 
@@ -424,7 +423,7 @@ function NotificationList() {
                       </Grid>
                       <Grid item xs={12}>
                         <Typography variant="h6">
-                          {collectionDetails?.title}
+                          {collectionDetails.title}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -438,7 +437,7 @@ function NotificationList() {
                       onClick={() => {
                         setOpen3(false);
                       }}
-                    // disabled={isLoading}
+                      // disabled={isLoading}
                     >
                       Cancel
                     </Button>
@@ -465,13 +464,13 @@ function NotificationList() {
                     <div>
                       <video width="100%" controls>
                         <source
-                          src={promotionPostDetails?.mediaUrl}
+                          src={promotionPostDetails.mediaUrl}
                           type="video/mp4"
                         />
                       </video>
                     </div>
                   ) : (
-                    <img src={promotionPostDetails?.mediaUrl} alt="" />
+                    <img src={promotionPostDetails.mediaUrl} alt="" />
                   )}
                 </Box>
 
@@ -482,8 +481,8 @@ function NotificationList() {
                         <Box className="userImage">
                           <img
                             src={
-                              promotionPostDetails?.userId?.profilePic
-                                ? promotionPostDetails?.userId?.profilePic
+                              promotionPostDetails.userId.profilePic
+                                ? promotionPostDetails.userId.profilePic
                                 : "/images/user.png"
                             }
                             alt="user promotionPostDetails"
@@ -491,9 +490,9 @@ function NotificationList() {
                         </Box>
                         <Box className="username">
                           <Typography variant="h6" className={classes.text}>
-                            {promotionPostDetails?.userId?.userName
-                              ? promotionPostDetails?.userId?.userName
-                              : promotionPostDetails?.userId?.name}
+                            {promotionPostDetails.userId.userName
+                              ? promotionPostDetails.userId.userName
+                              : promotionPostDetails.userId.name}
                           </Typography>
                         </Box>
                       </Box>
@@ -508,9 +507,9 @@ function NotificationList() {
                             fontWeight: "500",
                           }}
                         >
-                          {promotionPostDetails?.amount > 1
-                            ? promotionPostDetails?.amount
-                            : Number(promotionPostDetails?.amount)?.toFixed(4)}
+                          {promotionPostDetails.amount > 1
+                            ? promotionPostDetails.amount
+                            : Number(promotionPostDetails.amount).toFixed(4)}
                           &nbsp;
                           {"Share"}
                         </span>
@@ -523,7 +522,7 @@ function NotificationList() {
                         <Typography variant="h4">
                           Duration:{" "}
                           <span>
-                            {promotionPostDetails?.dateTime}&nbsp; Days
+                            {promotionPostDetails.dateTime}&nbsp; Days
                           </span>
                         </Typography>
                       </Grid>
@@ -536,7 +535,7 @@ function NotificationList() {
                           variant="h6"
                           style={{ wordBreak: "break-all" }}
                         >
-                          {promotionPostDetails?.details}
+                          {promotionPostDetails.details}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -550,7 +549,7 @@ function NotificationList() {
                       onClick={() => {
                         setOpen4(false);
                       }}
-                    // disabled={isLoading}
+                      // disabled={isLoading}
                     >
                       Cancel
                     </Button>

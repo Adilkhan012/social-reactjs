@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import {
-  makeStyles,
-  Paper,
-  Box,
-  Typography,
-  Grid,
-} from "@material-ui/core";
+import { makeStyles, Paper, Box, Typography, Grid } from "@material-ui/core";
 import { MdCollectionsBookmark } from "react-icons/md";
 import { FaUserFriends, FaUsersSlash, FaWallet } from "react-icons/fa";
 import { SiSpringCreators } from "react-icons/si";
@@ -60,16 +54,15 @@ const useStyles = makeStyles((theme) => ({
 
 function Dashboard({ data, index }) {
   const classes = useStyles();
-  const history = useHistory()
-  const auth = useContext(AuthContext)
+  const history = useHistory();
+  const auth = useContext(AuthContext);
   const [dashboarddata, setdashboarddata] = useState();
   useEffect(() => {
-    if (auth?.userData?.userType === "User") {
-      history.push("/explore")
-
+    if (auth.userData.userType === "User") {
+      history.push("/explore");
     }
-  }, [auth?.userData?.userType])
-  // const walletBalance = `${dashboarddata?.binanceRes.toFixed(2)}`;
+  }, [auth.userData.userType]);
+  // const walletBalance = `${dashboarddata.binanceRes.toFixed(2)}`;
 
   const dashboardapi = async () => {
     try {
@@ -109,8 +102,8 @@ function Dashboard({ data, index }) {
                   <Typography variant="h5">Total Active Users</Typography>
                 </Box>
                 <Typography variant="h3">
-                  {dashboarddata?.totalActiveUser
-                    ? dashboarddata?.totalActiveUser
+                  {dashboarddata.totalActiveUser
+                    ? dashboarddata.totalActiveUser
                     : "0"}
                 </Typography>
               </Box>
@@ -122,8 +115,8 @@ function Dashboard({ data, index }) {
                   <Typography variant="h5">Total Blocked Users</Typography>
                 </Box>
                 <Typography variant="h3">
-                  {dashboarddata?.totalBlockUser
-                    ? dashboarddata?.totalBlockUser
+                  {dashboarddata.totalBlockUser
+                    ? dashboarddata.totalBlockUser
                     : "0"}
                 </Typography>
               </Box>
@@ -135,8 +128,8 @@ function Dashboard({ data, index }) {
                   <Typography variant="h5"> Total Collection</Typography>
                 </Box>
                 <Typography variant="h3">
-                  {dashboarddata?.totalCollection
-                    ? dashboarddata?.totalCollection
+                  {dashboarddata.totalCollection
+                    ? dashboarddata.totalCollection
                     : "0"}
                 </Typography>
               </Box>
@@ -148,8 +141,8 @@ function Dashboard({ data, index }) {
                   <Typography variant="h5"> Total Auctions</Typography>
                 </Box>
                 <Typography variant="h3">
-                  {dashboarddata?.totalAuction
-                    ? dashboarddata?.totalAuction
+                  {dashboarddata.totalAuction
+                    ? dashboarddata.totalAuction
                     : "0"}
                 </Typography>
               </Box>
@@ -162,7 +155,7 @@ function Dashboard({ data, index }) {
                 </Box>
                 <Typography variant="h3">
                   {" "}
-                  {dashboarddata?.totalUser ? dashboarddata?.totalUser : "0"}
+                  {dashboarddata.totalUser ? dashboarddata.totalUser : "0"}
                 </Typography>
               </Box>
             </Grid>
@@ -187,8 +180,8 @@ function Dashboard({ data, index }) {
                   </Typography>
                 </Box>
                 <Typography variant="h3">
-                  {dashboarddata?.totalTransaction
-                    ? dashboarddata?.totalTransaction
+                  {dashboarddata.totalTransaction
+                    ? dashboarddata.totalTransaction
                     : "0"}
                 </Typography>
               </Box>
@@ -203,9 +196,7 @@ function Dashboard({ data, index }) {
                   </Typography>
                 </Box>
                 <Typography variant="h3">
-                  {dashboarddata?.binanceRes
-                    ? dashboarddata?.binanceRes
-                    : "0"}
+                  {dashboarddata.binanceRes ? dashboarddata.binanceRes : "0"}
                 </Typography>
               </Box>
             </Grid>
@@ -219,8 +210,8 @@ function Dashboard({ data, index }) {
                   </Typography>
                 </Box>
                 <Typography variant="h3">
-                  {dashboarddata?.activeUser3days
-                    ? dashboarddata?.activeUser3days
+                  {dashboarddata.activeUser3days
+                    ? dashboarddata.activeUser3days
                     : "0"}
                 </Typography>
               </Box>
@@ -235,8 +226,8 @@ function Dashboard({ data, index }) {
                   </Typography>
                 </Box>
                 <Typography variant="h3">
-                  {dashboarddata?.activeUser3days
-                    ? dashboarddata?.activeUser3days
+                  {dashboarddata.activeUser3days
+                    ? dashboarddata.activeUser3days
                     : "0"}
                 </Typography>
               </Box>
@@ -251,9 +242,7 @@ function Dashboard({ data, index }) {
                   </Typography>
                 </Box>
                 <Typography variant="h3">
-                  {dashboarddata?.user24Hours
-                    ? dashboarddata?.user24Hours
-                    : "0"}
+                  {dashboarddata.user24Hours ? dashboarddata.user24Hours : "0"}
                 </Typography>
               </Box>
             </Grid>

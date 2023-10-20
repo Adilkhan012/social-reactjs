@@ -155,27 +155,27 @@ export default function CreatorList() {
                       </TableCell>
                     </TableRow>
                   </TableHead>
-                  {feeListTable?.map((data, i) => {
+                  {feeListTable.map((data, i) => {
                     return (
                       <TableBody key={i}>
                         <TableRow className={classes.tbody}>
                           <TableCell align="Center" component="th" scope="row">
                             {i + 1}
                           </TableCell>
-                          <TableCell align="Center">{data?.status}</TableCell>
-                          <TableCell align="Center">{data?._id}</TableCell>
+                          <TableCell align="Center">{data.status}</TableCell>
+                          <TableCell align="Center">{data._id}</TableCell>
                           <TableCell align="Center">
-                            {data?.amount}&nbsp;
+                            {data.amount}&nbsp;
                             {tokenName}
                           </TableCell>
-                          <TableCell align="Center">{data?.type}</TableCell>
+                          <TableCell align="Center">{data.type}</TableCell>
                           <TableCell align="Center">
-                            {moment(data?.createdAt).local().fromNow()}
+                            {moment(data.createdAt).local().fromNow()}
                           </TableCell>
                           <TableCell align="Center">
-                            {moment(data?.updatedAt).local().fromNow()}
+                            {moment(data.updatedAt).local().fromNow()}
                           </TableCell>
-                          <TableCell align="Center">{data?.__v}</TableCell>
+                          <TableCell align="Center">{data.__v}</TableCell>
                         </TableRow>
                       </TableBody>
                     );

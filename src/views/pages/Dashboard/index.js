@@ -118,10 +118,10 @@ export default function (props) {
   };
 
   useEffect(() => {
-    if (auth?.userData.userType === "User") {
+    if (auth.userData.userType === "User") {
       if (
-        auth?.userData?.interest?.length > 0 &&
-        auth?.userData?.userName?.length > 0
+        auth.userData.interest.length > 0 &&
+        auth.userData.userName.length > 0
       ) {
         history.push("/explore");
       } else {
@@ -130,8 +130,6 @@ export default function (props) {
       }
     }
   }, [auth.userData]);
-
-
 
   const creatorListHandler = async () => {
     try {
@@ -145,9 +143,7 @@ export default function (props) {
         if (res.data.result) {
           setLoading(false);
           setSearchUserList(
-            res.data.result.mightUser?.filter(
-              (data) => data.userType === "User"
-            )
+            res.data.result.mightUser.filter((data) => data.userType === "User")
           );
         }
       } else {
@@ -159,7 +155,6 @@ export default function (props) {
       setSearchUserList([]);
     }
   };
-
 
   const trendingUserlistHandler = async () => {
     try {
@@ -174,7 +169,7 @@ export default function (props) {
             res.data.result.docs
               .filter(
                 (data) =>
-                  data.userType === "User" && data._id !== auth.userData?._id
+                  data.userType === "User" && data._id !== auth.userData._id
               )
               .slice(0, 3)
           );
@@ -189,7 +184,6 @@ export default function (props) {
       setSearchTrendingUserList([]);
     }
   };
-
 
   const listFollowerhandler = async () => {
     try {
@@ -224,7 +218,7 @@ export default function (props) {
       ) : (
         <Grid container spacing={2}>
           <Grid item md={8} lg={8} sm={12} xs={12}>
-            <Box style={{ display: "flex", justifyContent: "center", }}>
+            <Box style={{ display: "flex", justifyContent: "center" }}>
               <Box className="scrollDiv" w>
                 <Box mb={2}>
                   {" "}
@@ -253,12 +247,12 @@ export default function (props) {
                 <Box mb={2}>
                   <InfiniteScroll
                     // className={classes.infiniteScroll}
-                    dataLength={dataList?.length - 1}
+                    dataLength={dataList.length - 1}
                     next={fetchMoreData}
-                    hasMore={dataList?.length < noOfPages}
+                    hasMore={dataList.length < noOfPages}
                     // hasMore={dataList.length < 200}
                     loader={
-                      status !== "BLOCK" && dataList?.length > 0 ? (
+                      status !== "BLOCK" && dataList.length > 0 ? (
                         <Box
                           style={{
                             display: "flex",
@@ -275,10 +269,10 @@ export default function (props) {
                     }
                   >
                     {dataList &&
-                      dataList?.slice(1)?.map((data, i) => {
+                      dataList.slice(1).map((data, i) => {
                         return (
                           <>
-                            {data?.type === "POST" ? (
+                            {data.type === "POST" ? (
                               <>
                                 <Box mb={2}>
                                   <PostCard
@@ -314,15 +308,12 @@ export default function (props) {
                 </Box>
               </Box>
             </Box>
-
           </Grid>
-
-
 
           <Hidden smDown>
             <Grid item md={4}>
-              <Box style={{ display: "flex", }}>
-                <Box className="scrollDiv1" >
+              <Box style={{ display: "flex" }}>
+                <Box className="scrollDiv1">
                   <Grid container direction={"column"} spacing={2}>
                     {/* {loading ? (
                     <Box mt={2}>

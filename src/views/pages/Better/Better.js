@@ -160,7 +160,7 @@ export default function Interest() {
   };
 
   const addInterestHandler = async () => {
-    if (selectedTeam?.length > 2) {
+    if (selectedTeam.length > 2) {
       try {
         setIsLoading(true);
         const intrestValueArr = intrestValue.split(",");
@@ -186,7 +186,6 @@ export default function Interest() {
           setTimeout(() => {
             history.push("/explore");
           }, 3000);
-          
         } else {
           toast.error(res.data.responseMessage);
         }
@@ -202,8 +201,8 @@ export default function Interest() {
 
   useEffect(() => {
     if (auth.userData) {
-      // const interest = auth.userData?.interest;
-      setSelectedTeam(auth.userData?.interest);
+      // const interest = auth.userData.interest;
+      setSelectedTeam(auth.userData.interest);
     }
   }, [auth.userData]);
 
@@ -227,7 +226,7 @@ export default function Interest() {
                 id="tags-standard"
                 options={allintrestList}
                 value={selectedTeam}
-                defaultValue={auth.userData?.interest}
+                defaultValue={auth.userData.interest}
                 onChange={(_event, newTeam) => {
                   setSelectedTeam(newTeam);
                 }}
@@ -292,7 +291,7 @@ export default function Interest() {
                         key={i}
                         variant='contained'
                         style={
-                          data?.isSelect
+                          data.isSelect
                             ? { backgroundColor: "#e31a89", color: "#fff" }
                             : { backgroundColor: "#242526" }
                         }
@@ -315,7 +314,7 @@ export default function Interest() {
                   marginTop: "24px",
                 }}
               >
-                {auth?.userData?.interest?.map((data) => {
+                {auth.userData.interest.map((data) => {
                   return (
                     <Typography
                       style={{

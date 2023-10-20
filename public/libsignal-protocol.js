@@ -134,12 +134,8 @@
     }
 
     if (typeof console !== "undefined") {
-      if (!Module["print"])
-        Module["print"] = function print(x) {
-        };
-      if (!Module["printErr"])
-        Module["printErr"] = function printErr(x) {
-        };
+      if (!Module["print"]) Module["print"] = function print(x) {};
+      if (!Module["printErr"]) Module["printErr"] = function printErr(x) {};
     } else {
       // Probably a worker, and without console.log. We can do very little here...
       var TRY_USE_DUMP = false;
@@ -54333,7 +54329,7 @@
       return this.storage
         .isTrustedIdentity(
           this.remoteAddress.getName(),
-          message?.identityKey?.toArrayBuffer(),
+          message.identityKey.toArrayBuffer(),
           this.storage.Direction.RECEIVING
         )
         .then(
@@ -54345,8 +54341,8 @@
             }
 
             return Promise.all([
-              this?.storage?.loadPreKey(message?.preKeyId),
-              this?.storage?.loadSignedPreKey(message?.signedPreKeyId),
+              this.storage.loadPreKey(message.preKeyId),
+              this.storage.loadSignedPreKey(message.signedPreKeyId),
             ])
               .then(function (results) {
                 preKeyPair = results[0];
@@ -54862,7 +54858,7 @@
                 this.remoteAddress
               );
               // isTrustedIdentity is called within processV3, no need to call it here
-              
+
               return builder.processV3(record, preKeyProto).then(
                 function (preKeyId) {
                   var session = record.getSessionByBaseKey(preKeyProto.baseKey);

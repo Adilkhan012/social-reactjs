@@ -147,7 +147,7 @@ export default function Interest() {
 
   useEffect(() => {
     if (auth.userData) {
-      const interest = auth.userData?.interest;
+      const interest = auth.userData.interest;
       const tempArr = [];
       allInterest.forEach((allItem) => {
         const isSelect = !interest.find(
@@ -184,7 +184,7 @@ export default function Interest() {
                         key={i}
                         variant="contained"
                         style={
-                          data?.isSelect
+                          data.isSelect
                             ? { backgroundColor: "#e31a89", color: "#fff" }
                             : { backgroundColor: "#242526" }
                         }
@@ -361,7 +361,7 @@ export default function Interest() {
 
   useEffect(() => {
     if (auth.userData) {
-      const interest = auth.userData?.interest;
+      const interest = auth.userData.interest;
       const tempArr = [];
       allInterest.forEach((allItem) => {
         const isSelect = !interest.find(
@@ -398,7 +398,7 @@ export default function Interest() {
                         key={i}
                         variant="contained"
                         style={
-                          data?.isSelect
+                          data.isSelect
                             ? { backgroundColor: "#e31a89", color: "#fff" }
                             : { backgroundColor: "#242526" }
                         }

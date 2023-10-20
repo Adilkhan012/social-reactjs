@@ -194,7 +194,7 @@ export default function ({
           data: {
             postId: dataList._id,
             message: replyMessage,
-            commentId: data?._id,
+            commentId: data._id,
           },
         });
         if (res.data.responseCode === 200) {
@@ -231,7 +231,7 @@ export default function ({
         },
         params: {
           postId: dataList._id,
-          commentId: data?._id,
+          commentId: data._id,
         },
       });
       if (res.data.responseCode === 200) {
@@ -269,8 +269,8 @@ export default function ({
         },
         data: {
           postId: dataList._id,
-          commentId: isHidePostdata?.commentId,
-          commentReplyId: isHidePostdata?._id,
+          commentId: isHidePostdata.commentId,
+          commentReplyId: isHidePostdata._id,
         },
       });
       if (res.data.responseCode === 200) {
@@ -288,11 +288,11 @@ export default function ({
     setExpanded(newExpanded ? panel : false);
   };
   let isLike = false;
-  if (auth.userData?._id && data) {
-    const likeUser = data?.likesUsers?.filter(
-      (data) => data === auth.userData?._id
+  if (auth.userData._id && data) {
+    const likeUser = data.likesUsers.filter(
+      (data) => data === auth.userData._id
     );
-    isLike = likeUser?.length > 0;
+    isLike = likeUser.length > 0;
   }
 
   const deleteCommentHandler = async () => {
@@ -305,7 +305,7 @@ export default function ({
         },
         data: {
           postId: dataList._id,
-          commentId: data?._id,
+          commentId: data._id,
         },
       });
       if (res.data.responseCode === 200) {
@@ -326,8 +326,8 @@ export default function ({
           <figure>
             <img
               src={
-                data?.userId?.profilePic
-                  ? data?.userId?.profilePic
+                data.userId.profilePic
+                  ? data.userId.profilePic
                   : "images/user.png"
               }
             />
@@ -335,15 +335,15 @@ export default function ({
 
           <Box>
             <Typography variant="h6">
-              {data?.userId?.userName
-                ? data?.userId.userName
-                : data?.userId.name
-                ? data?.userId.name
+              {data.userId.userName
+                ? data.userId.userName
+                : data.userId.name
+                ? data.userId.name
                 : ""}
             </Typography>
             <Typography variant="body2" component="small">
-              {moment(data?.time).local().fromNow()}
-              {data?.postType}
+              {moment(data.time).local().fromNow()}
+              {data.postType}
             </Typography>{" "}
             <br />
             <Box style={{ width: "80%" }}>
@@ -356,7 +356,7 @@ export default function ({
                   textOverflow: "ellipsis",
                 }}
               >
-                {data?.message}
+                {data.message}
               </Typography>
             </Box>
             <Accordion
@@ -381,7 +381,7 @@ export default function ({
                   </Button>
                 </AccordionSummary>
                 <>
-                  {data?.userId?._id === auth.userData?._id && (
+                  {data.userId._id === auth.userData._id && (
                     <Button
                       color="primary"
                       size="large"
@@ -395,26 +395,26 @@ export default function ({
               </Box>
               <AccordionDetails>
                 <Box>
-                  {data?.reply?.map((data, i) => {
+                  {data.reply.map((data, i) => {
                     return (
                       <Box className={classes.UserBox} key={i}>
                         <figure>
                           <img
                             src={
-                              data?.userId?.profilePic
-                                ? data?.userId?.profilePic
+                              data.userId.profilePic
+                                ? data.userId.profilePic
                                 : "images/user.png"
                             }
                           />
                         </figure>
                         <Box>
                           <Typography variant="h6">
-                            {data?.userId.userName}
+                            {data.userId.userName}
                           </Typography>
                           <Typography variant="body2" component="small">
-                            {moment(data?.time).local().fromNow()}
+                            {moment(data.time).local().fromNow()}
 
-                            {data?.postType}
+                            {data.postType}
                           </Typography>{" "}
                           <br />
                           <Typography
@@ -426,9 +426,9 @@ export default function ({
                               textOverflow: "ellipsis",
                             }}
                           >
-                            {data?.message}
+                            {data.message}
                           </Typography>
-                          {data?.userId?._id === auth.userData?._id && (
+                          {data.userId._id === auth.userData._id && (
                             <Button
                               color="primary"
                               size="large"
@@ -454,8 +454,8 @@ export default function ({
                           <Box className="profileimage">
                             <img
                               src={
-                                auth.userData?.profilePic
-                                  ? auth.userData?.profilePic
+                                auth.userData.profilePic
+                                  ? auth.userData.profilePic
                                   : "images/user.png"
                               }
                               alt="user data"

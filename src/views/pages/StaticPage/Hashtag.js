@@ -47,7 +47,7 @@ export default function Hashtag() {
   const classes = useStyles();
   const location = useLocation();
 
-  //   const isVideo = data?.mediaUrl.includes(".mp4");
+  //   const isVideo = data.mediaUrl.includes(".mp4");
   const [dataList, setDataList] = useState([]);
   const [itagName, setIdd] = useState();
   const [loader, setLoader] = useState(true);
@@ -128,10 +128,10 @@ export default function Hashtag() {
           <DataLoading />
         ) : (
           <>
-            {dataList && dataList?.length > 0 ? (
+            {dataList && dataList.length > 0 ? (
               <Grid container spacing={2}>
                 {dataList &&
-                  dataList?.map((data, i) => {
+                  dataList.map((data, i) => {
                     return (
                       <Grid item xs={12} sm={6} md={4} lg={3}>
                         <HashtagPost
@@ -145,7 +145,7 @@ export default function Hashtag() {
                       </Grid>
                     );
                   })}
-                {/* {dataList && dataList?.length === 0 && <NoDataFound />} */}
+                {/* {dataList && dataList.length === 0 && <NoDataFound />} */}
               </Grid>
             ) : (
               <NoDataFound />
@@ -153,7 +153,7 @@ export default function Hashtag() {
           </>
         )}
 
-        {dataList && dataList?.length >=10 && (
+        {dataList && dataList.length >= 10 && (
           <Box mt={2} display="flex" justifyContent="center">
             <Pagination
               count={noOfPages}

@@ -202,7 +202,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
 
           .catch((err) => {
             setprocess(false);
-            toast.error(err?.response?.data?.responseMessage);
+            toast.error(err.response.data.responseMessage);
             // toast.error("error");
           });
       } catch {}
@@ -265,7 +265,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
       });
       if (response.data.responseCode === 200) {
         setCollection(
-          response.data.result.filter((data) => data?.type === "COLLECTION")
+          response.data.result.filter((data) => data.type === "COLLECTION")
         );
         // setIsLoading(false);
       }
@@ -302,13 +302,12 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                 <NoDataFound />
               )}
               {collectionlistAll &&
-                collectionlistAll?.map((data, i) => {
+                collectionlistAll.map((data, i) => {
                   return (
                     <Grid item lg={3} md={4} sm={6} xs={6}>
                       <BundlesCard
                         collectionListBundle={collectionListBundle}
                         calBackFunc={getParticularUserCollectionList}
-                        
                         particularUserList={particularUserList}
                         userId={userId}
                         data={data}
@@ -321,7 +320,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
             </Grid>
           )}
 
-          {collectionlistAll && collectionlistAll.length >9 && (
+          {collectionlistAll && collectionlistAll.length > 9 && (
             <Box mt={2} display="flex" justifyContent="center">
               <Pagination
                 count={noOfPages}
@@ -439,7 +438,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                           error={isSubmit && donation === ""}
                           onChange={(e) => setdonation(e.target.value)}
                           onKeyPress={(event) => {
-                            if (event?.key === "-" || event?.key === "+") {
+                            if (event.key === "-" || event.key === "+") {
                               event.preventDefault();
                             }
                           }}
@@ -518,14 +517,14 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                                   }}
                                 />
                                 <Box>
-                                  {image?.type === "video/mp4" ||
-                                  image?.type == "image/jpeg" ||
-                                  image?.type == "image/png" ||
-                                  image?.type == "image/gif" ||
-                                  image?.type == "image/jpg" ||
-                                  image?.type == "image/svg" ? (
+                                  {image.type === "video/mp4" ||
+                                  image.type == "image/jpeg" ||
+                                  image.type == "image/png" ||
+                                  image.type == "image/gif" ||
+                                  image.type == "image/jpg" ||
+                                  image.type == "image/svg" ? (
                                     <>
-                                      {image?.type === "video/mp4" ? (
+                                      {image.type === "video/mp4" ? (
                                         <>
                                           <video
                                             style={{
@@ -605,7 +604,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                             <Grid item xs={6} align="left">
                               <Typography variant="h6">
                                 Collection fee&nbsp;
-                                {collectionId && collectionId[0]?.amount}{" "}
+                                {collectionId && collectionId[0].amount}{" "}
                                 &nbsp;Share
                               </Typography>
                             </Grid>

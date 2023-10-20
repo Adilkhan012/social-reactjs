@@ -384,7 +384,7 @@ function Collection({ listPublicExclusiveHandler }) {
     console.log("In create Post Handle!!!");
 
     setIsSubmit(true);
-    const selectuser = selectedTeam?.map((data, i) => data._id);
+    const selectuser = selectedTeam.map((data, i) => data._id);
 
     //contract interaction before storing to database
     try {
@@ -589,7 +589,7 @@ function Collection({ listPublicExclusiveHandler }) {
       });
       if (response.data.responseCode === 200) {
         setCollection(
-          response.data.result.filter((data) => data?.type === "COLLECTION")
+          response.data.result.filter((data) => data.type === "COLLECTION")
         );
         // setIsLoading(false);
       }
@@ -600,10 +600,10 @@ function Collection({ listPublicExclusiveHandler }) {
 
   const post = async (event) => {
     event.preventDefault();
-  
-    // if (auth?.userData?.bnbBalace > 0) {
+
+    // if (auth.userData.bnbBalace > 0) {
     //   setIsSubmit1(true);
-  
+
     if (
       coverCollection !== "" &&
       formValueCollection.title !== "" &&
@@ -614,23 +614,24 @@ function Collection({ listPublicExclusiveHandler }) {
       try {
         setmessage("Creating Collection...");
         setprocess(true);
-  
+
         if (!laziFactoryContract) {
           await initPostFactoryContract();
         }
-  
+
         const gasLimit = await laziFactoryContract.methods
           .createLaziPost()
           .estimateGas({ from: address });
         console.log("gasLimit: ", gasLimit);
-  
+
         const transaction = await laziFactoryContract.methods
           .createLaziPost()
           .send({
-            from: address, gas: gasLimit,
+            from: address,
+            gas: gasLimit,
             maxPriorityFeePerGas: Web3.utils.toWei("32", "gwei"),
           });
-  
+
         const deployedPostsCount = await laziFactoryContract.methods
           .getDeployedLaziPostsCount()
           .call();
@@ -639,7 +640,7 @@ function Collection({ listPublicExclusiveHandler }) {
         const deployedLaziPostAddress = await laziFactoryContract.methods
           .deployedLaziPosts(index)
           .call();
-  
+
         setDeployedLaziPostAddress(deployedLaziPostAddress);
         setDeployedLaziPosts((prevDeployedLaziPosts) => [
           ...prevDeployedLaziPosts,
@@ -647,7 +648,7 @@ function Collection({ listPublicExclusiveHandler }) {
         ]);
         console.log("transaction!: ", transaction);
         console.log("address!: ", deployedLaziPostAddress);
-  
+
         const initLaziPostContract = async () => {
           const web3 = new Web3(window.ethereum);
           return new Promise((resolve, reject) => {
@@ -660,13 +661,13 @@ function Collection({ listPublicExclusiveHandler }) {
         };
         const laziPostContract = await initLaziPostContract();
         console.log(laziPostContract);
-  
+
         const formData = new FormData();
         formData.append("image", coverCollection);
         formData.append("title", formValueCollection.title);
         // formData.append("bundleName", name);
         formData.append("description", formValueCollection.details);
-  
+
         try {
           // Use axios async/await syntax instead of .then/.catch
           const res = await axios.request({
@@ -683,7 +684,7 @@ function Collection({ listPublicExclusiveHandler }) {
               token: window.localStorage.getItem("token"),
             },
           });
-  
+
           if (res.data.responseCode === 200) {
             // if (callbackFun) {
             //   callbackFun();
@@ -708,17 +709,14 @@ function Collection({ listPublicExclusiveHandler }) {
           }
           setprocess(false);
           setOpen(false);
-
         }
       } catch (err) {
         toast.error(`Transaction failed: ${err.message}`);
         setOpen(false);
         setprocess(false);
-
       }
     }
   };
-  
 
   const updateSelectedBundle = (data, collectionAddress) => {
     setCollectionAddress(collectionAddress);
@@ -909,13 +907,13 @@ function Collection({ listPublicExclusiveHandler }) {
                         marginRight: "10px",
                       }}
                       src={
-                        userData?.profilePic
-                          ? userData?.profilePic
+                        userData.profilePic
+                          ? userData.profilePic
                           : "images/user.png"
                       }
                     />
                     <Box>
-                      <Typography variant="h6">{userData?.userName}</Typography>
+                      <Typography variant="h6">{userData.userName}</Typography>
 
                       <TextField
                         className={classes.publicbox}
@@ -956,9 +954,9 @@ function Collection({ listPublicExclusiveHandler }) {
                     <Box mt={1}>Description is required</Box>
                   )}
                 </FormHelperText>
-                {hashtagData?.length > 0 && (
+                {hashtagData.length > 0 && (
                   <>
-                    {hashtagData?.map((data, i) => {
+                    {hashtagData.map((data, i) => {
                       return (
                         <li
                           key={i}
@@ -974,7 +972,7 @@ function Collection({ listPublicExclusiveHandler }) {
                                     setSelectedHashTagName(data.hashTagName);
                                   }}
                                 >
-                                  {data?.hashTagName}
+                                  {data.hashTagName}
                                 </ReactHashtag>
                               </Box>
                             </Box>
@@ -1022,7 +1020,7 @@ function Collection({ listPublicExclusiveHandler }) {
                     placeholder="Price"
                     type="number"
                     onKeyPress={(event) => {
-                      if (event?.key === "-" || event?.key === "+") {
+                      if (event.key === "-" || event.key === "+") {
                         event.preventDefault();
                       }
                     }}
@@ -1079,7 +1077,7 @@ function Collection({ listPublicExclusiveHandler }) {
                 </Box> */}
 
                 <Box mt={2}>
-                  {/* {searchUserList && searchUserList?.map()} */}
+                  {/* {searchUserList && searchUserList.map()} */}
                   <Autocomplete
                     multiple
                     id="tags-standard"
@@ -1088,7 +1086,7 @@ function Collection({ listPublicExclusiveHandler }) {
                     onChange={(_event, newTeam) => {
                       setSelectedTeam(newTeam);
                     }}
-                    getOptionLabel={(option) => option?.userName}
+                    getOptionLabel={(option) => option.userName}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -1115,14 +1113,14 @@ function Collection({ listPublicExclusiveHandler }) {
                     }}
                   />
                   <Box>
-                    {image?.type === "video/mp4" ||
-                    image?.type == "image/jpeg" ||
-                    image?.type == "image/png" ||
-                    image?.type == "image/gif" ||
-                    image?.type == "image/jpg" ||
-                    image?.type == "image/svg" ? (
+                    {image.type === "video/mp4" ||
+                    image.type == "image/jpeg" ||
+                    image.type == "image/png" ||
+                    image.type == "image/gif" ||
+                    image.type == "image/jpg" ||
+                    image.type == "image/svg" ? (
                       <>
-                        {image?.type === "video/mp4" ? (
+                        {image.type === "video/mp4" ? (
                           <>
                             <video
                               ref={videoEl}
@@ -1299,7 +1297,7 @@ function Collection({ listPublicExclusiveHandler }) {
                                     maxHeight: "140px",
                                     borderRadius: "11px",
                                   }}
-                                  src={data?.image}
+                                  src={data.image}
                                   alt=""
                                 />
                               )}
@@ -1312,7 +1310,7 @@ function Collection({ listPublicExclusiveHandler }) {
                               }}
                               variant="h6"
                             >
-                              {data?.title}
+                              {data.title}
                             </Typography>
                           </>
                         ) : (
@@ -1332,7 +1330,7 @@ function Collection({ listPublicExclusiveHandler }) {
                   {/* </Slider> */}
                 </Box>
                 <FormHelperText error>
-                  {isSubmit && collectionlistAll?.length > 0 && list === "" && (
+                  {isSubmit && collectionlistAll.length > 0 && list === "" && (
                     <Box ml={1}>Please select collection name</Box>
                   )}
                 </FormHelperText>
@@ -1390,7 +1388,7 @@ function Collection({ listPublicExclusiveHandler }) {
               ) : (
                 " "
                 // <Typography variant="h6">
-                //   Your balance &nbsp;{auth?.userData?.bnbBalace > 0 ? (parseInt(auth?.userData?.bnbBalace)) : 0}
+                //   Your balance &nbsp;{auth.userData.bnbBalace > 0 ? (parseInt(auth.userData.bnbBalace)) : 0}
                 // </Typography>
               )}
             </Box>
@@ -1533,7 +1531,7 @@ function Collection({ listPublicExclusiveHandler }) {
                           }
                           onChange={_onInputChange}
                           onKeyPress={(event) => {
-                            if (event?.key === "-" || event?.key === "+") {
+                            if (event.key === "-" || event.key === "+") {
                               event.preventDefault();
                             }
                           }}
@@ -1625,14 +1623,14 @@ function Collection({ listPublicExclusiveHandler }) {
                             }}
                           />
                           <Box>
-                            {imageCollection?.type === "video/mp4" ||
-                            imageCollection?.type == "image/jpeg" ||
-                            imageCollection?.type == "image/png" ||
-                            imageCollection?.type == "image/gif" ||
-                            imageCollection?.type == "image/jpg" ||
-                            imageCollection?.type == "image/svg" ? (
+                            {imageCollection.type === "video/mp4" ||
+                            imageCollection.type == "image/jpeg" ||
+                            imageCollection.type == "image/png" ||
+                            imageCollection.type == "image/gif" ||
+                            imageCollection.type == "image/jpg" ||
+                            imageCollection.type == "image/svg" ? (
                               <>
-                                {imageCollection?.type === "video/mp4" ? (
+                                {imageCollection.type === "video/mp4" ? (
                                   <>
                                     <video
                                       style={{

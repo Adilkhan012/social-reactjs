@@ -152,7 +152,7 @@ const BlockUserPage = ({
     setBlock(false);
   };
   const handleBlock = (id) => {
-    setIdd(id?.userId?._id);
+    setIdd(id.userId._id);
     setBlock(true);
 
     //   openBlock();
@@ -228,7 +228,7 @@ const BlockUserPage = ({
                   </TableCell>
                 </TableRow>
               </TableHead>
-              {blockUserList?.map((data, i) => {
+              {blockUserList.map((data, i) => {
                 return (
                   <TableBody key={i}>
                     <TableRow className={classes.tbody}>
@@ -236,18 +236,18 @@ const BlockUserPage = ({
                         {i + 1}
                       </TableCell>
                       <TableCell align="Center">
-                        {data?.userId?.userName
-                          ? data?.userId?.userName
-                          : data?.userId?.name}
+                        {data.userId.userName
+                          ? data.userId.userName
+                          : data.userId.name}
                       </TableCell>
 
                       {/* <TableCell align="Center">0 </TableCell>
                           <TableCell align="Center">0 </TableCell> */}
-                      <TableCell align="Center">{data?.status} </TableCell>
-                      <TableCell align="Center">{data?.message} </TableCell>
+                      <TableCell align="Center">{data.status} </TableCell>
+                      <TableCell align="Center">{data.message} </TableCell>
 
                       <TableCell align="Center">
-                        {moment(data?.createdAt).local().fromNow()}
+                        {moment(data.createdAt).local().fromNow()}
                       </TableCell>
                       <TableCell align="Center">
                         <Box
@@ -262,7 +262,7 @@ const BlockUserPage = ({
                             onClick={() =>
                               history.push({
                                 pathname: "/about-creators",
-                                search: data?.userId?._id,
+                                search: data.userId._id,
                               })
                             }
                             color="primary"
@@ -279,7 +279,7 @@ const BlockUserPage = ({
                             <BlockIcon
                               //   fontSize="small"
                               style={
-                                data?.status === "BLOCK"
+                                data.status === "BLOCK"
                                   ? { fontSize: "15px", color: "green" }
                                   : { fontSize: "15px", color: "red" }
                               }

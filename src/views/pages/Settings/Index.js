@@ -80,11 +80,11 @@ function Index() {
   const [userProfileData, setUserData] = useState();
 
   // useEffect(() => {
-  //   if (auth?.userData?.userType === "Admin") {
+  //   if (auth.userData.userType === "Admin") {
   //     history.push("/dashboard")
 
   //   }
-  // }, [auth?.userData?.userType])
+  // }, [auth.userData.userType])
 
   useEffect(() => {
     const ids = location.hash.split("#");
@@ -108,7 +108,7 @@ function Index() {
         }
       })
       .catch((error) => {
-        toast.error(error?.response?.data?.responseMessage);
+        toast.error(error.response.data.responseMessage);
       });
   };
 
@@ -131,7 +131,7 @@ function Index() {
           <Grid container spacing={0}>
             <Grid item xs={12} sm={3}>
               <Box className="leftbox">
-                {/* {auth?.userData?.userType === "User" && (
+                {/* {auth.userData.userType === "User" && (
                   <Box className="buttonBox">
                     <Link
                       className={tabview === "Interest" ? "active" : " "}
@@ -141,7 +141,7 @@ function Index() {
                     </Link>
                   </Box>
                 )} */}
-                {auth?.userData?.userType === "User" && (
+                {auth.userData.userType === "User" && (
                   <Box className="buttonBox">
                     <Link
                       className={tabview === "EditProfile" ? "active" : " "}
@@ -151,7 +151,7 @@ function Index() {
                     </Link>
                   </Box>
                 )}
-                {auth?.userData?.userType === "User" && (
+                {auth.userData.userType === "User" && (
                   <Box className="buttonBox">
                     <Link
                       className={tabview === "Blocking" ? "active" : " "}
@@ -161,7 +161,7 @@ function Index() {
                     </Link>
                   </Box>
                 )}
-                {auth?.userData?.userType === "User" && (
+                {auth.userData.userType === "User" && (
                   <Box className="buttonBox">
                     <Link
                       className={tabview === "Notification" ? "active" : " "}
@@ -172,7 +172,7 @@ function Index() {
                   </Box>
                 )}
 
-                {!auth.userData?.socialType ? (
+                {!auth.userData.socialType ? (
                   <Box className="buttonBox">
                     <Link
                       className={

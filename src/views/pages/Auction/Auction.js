@@ -52,7 +52,7 @@ function Auction(props) {
         // setAuctionList(res.data.result.docs);
         // setNoOfPages(res.data.result.pages);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
   const allAuctionListHandler = async () => {
     try {
@@ -79,17 +79,16 @@ function Auction(props) {
     allAuctionListHandler();
   }, [page]);
 
-
   const pageCheck = page === 1 ? 10 : 0;
 
   return (
     <>
-      <Page title='Auction'>
+      <Page title="Auction">
         <Paper className={classes.root} elevation={2}>
-          <Box className='heading'>
+          <Box className="heading">
             {/* <Typography variant='h3'>Auctions</Typography> */}
           </Box>
-          <Box className='heading'>
+          <Box className="heading">
             {/* <Button
               variant='contained'
               color='secondary'
@@ -115,7 +114,7 @@ function Auction(props) {
                           <AuctionCard
                             callbackFun={allAuctionListHandler}
                             data={data}
-                            type='card'
+                            type="card"
                             index={i}
                             key={i}
                           />
@@ -133,7 +132,7 @@ function Auction(props) {
                           <AuctionCard
                             callbackFun={calBackFunc || allAuctionListHandler}
                             data={data}
-                            type='card'
+                            type="card"
                             key={i}
                           />
                         </Grid>
@@ -145,7 +144,7 @@ function Auction(props) {
           )}
         </Paper>
         {auctionList && auctionList.length >= pageCheck && (
-          <Box mt={2} display='flex' justifyContent='center'>
+          <Box mt={2} display="flex" justifyContent="center">
             <Pagination
               count={noOfPages}
               page={page}
@@ -274,15 +273,15 @@ export function MakeAuctionModal({
             data: formData,
           });
         }
-        if (res?.data?.responseCode === 200 || !uploadFile) {
+        if (res.data.responseCode === 200 || !uploadFile) {
           let body = {
-            auctionId: auctionNFTDetails?._id,
+            auctionId: auctionNFTDetails._id,
             title: title,
             details: description,
             time: expiryDate,
             amount: startingBid,
           };
-          if (uploadFile && res?.data?.result?.secure_ur) {
+          if (uploadFile && res.data.result.secure_ur) {
             const uploadFileURL = res.data.result.secure_url;
             body.mediaUrl = uploadFileURL;
           }
@@ -318,19 +317,19 @@ export function MakeAuctionModal({
 
   useEffect(() => {
     if (auctionNFTDetails && isEdit) {
-      setTitle(auctionNFTDetails?.title);
-      setUploadFileBlob(auctionNFTDetails?.mediaUrl);
-      setDescription(auctionNFTDetails?.details);
-      setExpiryDate(auctionNFTDetails?.time);
-      setStartingBid(auctionNFTDetails?.amount);
+      setTitle(auctionNFTDetails.title);
+      setUploadFileBlob(auctionNFTDetails.mediaUrl);
+      setDescription(auctionNFTDetails.details);
+      setExpiryDate(auctionNFTDetails.time);
+      setStartingBid(auctionNFTDetails.amount);
       const fileExtention = auctionNFTDetails.mediaUrl.split(".").pop();
 
       const fileType =
         fileExtention == "mp4" || fileExtention == "webp"
           ? "video"
           : fileExtention == "mp3"
-            ? "audio"
-            : "image";
+          ? "audio"
+          : "image";
       setUploadFileType(fileType);
       setUploadFileType(fileType);
     }
@@ -339,12 +338,12 @@ export function MakeAuctionModal({
   return (
     <Dialog
       open={open}
-      aria-labelledby='alert-dialog-title'
-      aria-describedby='alert-dialog-description'
-      maxWidth='sm'
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      maxWidth="sm"
       fullWidth
     >
-      <DialogTitle id='alert-dialog-title' align='center'>
+      <DialogTitle id="alert-dialog-title" align="center">
         {isEdit ? "Edit Auction" : "Make a New Auction"}
       </DialogTitle>
       <DialogContent>
@@ -353,18 +352,18 @@ export function MakeAuctionModal({
             <Grid item xs={12}>
               <Box mt={2}>
                 <Typography
-                  variant='h6'
-                  color='primary.main'
+                  variant="h6"
+                  color="primary.main"
                   style={{ paddingBottom: "8px" }}
                 >
                   Title
                 </Typography>
                 <TextField
-                  id='outlined-basic'
-                  variant='outlined'
-                  name='Text Field'
-                  placeholder='Write here...'
-                  type='text'
+                  id="outlined-basic"
+                  variant="outlined"
+                  name="Text Field"
+                  placeholder="Write here..."
+                  type="text"
                   fullWidth
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
@@ -423,26 +422,26 @@ export function MakeAuctionModal({
                   <Box>
                     {(uploadFileType == "video" ||
                       uploadFileType == "audio") && (
-                        <video
-                          // width='100%'
-                          loop={false}
-                          autoPlay={false}
-                          muted={true}
-                          controls
-                          style={
-                            uploadFileType === "audio"
-                              ? { height: 75, width: "100%" }
-                              : { height: 250, width: "100%" }
-                          }
-                        >
-                          <source src={uploadFileBlob} type='video/mp4' />
-                        </video>
-                      )}
+                      <video
+                        // width='100%'
+                        loop={false}
+                        autoPlay={false}
+                        muted={true}
+                        controls
+                        style={
+                          uploadFileType === "audio"
+                            ? { height: 75, width: "100%" }
+                            : { height: 250, width: "100%" }
+                        }
+                      >
+                        <source src={uploadFileBlob} type="video/mp4" />
+                      </video>
+                    )}
                     {uploadFileType == "image" && (
                       <img
                         src={uploadFileBlob}
                         style={{ height: 250 }}
-                        alt=''
+                        alt=""
                       />
                     )}
                   </Box>
@@ -456,18 +455,18 @@ export function MakeAuctionModal({
             <Grid item xs={12}>
               <Box mt={2}>
                 <Typography
-                  variant='h6'
-                  color='primary.main'
+                  variant="h6"
+                  color="primary.main"
                   style={{ paddingBottom: "8px" }}
                 >
                   Description
                 </Typography>
                 <TextField
-                  id='outlined-basic'
-                  variant='outlined'
-                  name='Text Field'
-                  placeholder='Write here...'
-                  type='text'
+                  id="outlined-basic"
+                  variant="outlined"
+                  name="Text Field"
+                  placeholder="Write here..."
+                  type="text"
                   fullWidth
                   multiline
                   maxRows={5}
@@ -499,17 +498,17 @@ export function MakeAuctionModal({
               <Box mt={3}>
                 <FormControl fullWidth>
                   <Typography
-                    variant='h6'
-                    color='primary.main'
+                    variant="h6"
+                    color="primary.main"
                     style={{ paddingBottom: "8px" }}
                   >
                     Expiry Date
                   </Typography>
                   <KeyboardDatePicker
-                    format='DD/MM/YYYY'
-                    inputVariant='outlined'
+                    format="DD/MM/YYYY"
+                    inputVariant="outlined"
                     disablePast
-                    margin='dense'
+                    margin="dense"
                     minDate={moment().add(10, "hours")}
                     onChange={(date) => setExpiryDate(date)}
                     value={expiryDate}
@@ -521,21 +520,21 @@ export function MakeAuctionModal({
               <Box mt={3}>
                 <FormControl fullWidth>
                   <Typography
-                    variant='h6'
-                    color='primary.main'
+                    variant="h6"
+                    color="primary.main"
                     style={{ paddingBottom: "8px" }}
                   >
                     Starting Bid
                   </Typography>
                   <TextField
-                    id='outlined-basic'
-                    variant='outlined'
-                    name='Text Field'
-                    type='number'
+                    id="outlined-basic"
+                    variant="outlined"
+                    name="Text Field"
+                    type="number"
                     fullWidth
                     value={startingBid}
                     onKeyPress={(event) => {
-                      if (event?.key === "-" || event?.key === "+") {
+                      if (event.key === "-" || event.key === "+") {
                         event.preventDefault();
                       }
                     }}
@@ -564,11 +563,11 @@ export function MakeAuctionModal({
               </Box>
             </Grid>
           </Grid>
-          <Box mt={4} mb={3} align='center'>
+          <Box mt={4} mb={3} align="center">
             <Button
-              variant='contained'
-              size='large'
-              color='primary'
+              variant="contained"
+              size="large"
+              color="primary"
               onClick={() => setOpen(false)}
               className={classes.btn1}
               disabled={isLoading}
@@ -576,9 +575,9 @@ export function MakeAuctionModal({
               Cancel
             </Button>
             <Button
-              variant='contained'
-              size='large'
-              color='secondary'
+              variant="contained"
+              size="large"
+              color="secondary"
               onClick={() =>
                 isEdit ? updateAuctionNFTHandler() : submitHandler()
               }

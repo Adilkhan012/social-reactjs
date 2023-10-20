@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
       borderRadius: "50%",
       overflow: "hidden",
       backgroundColor: "#101010",
-      display:"flex",
+      display: "flex",
       "& img": {
         width: "auto",
         minWidth: "100%",
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ({ dataList }) {
   const classes = useStyles();
-  const history = useHistory()
+  const history = useHistory();
   return (
     <>
       <Grid container spacing={1}>
@@ -43,40 +43,43 @@ export default function ({ dataList }) {
             <figure>
               <img
                 src={
-                  dataList?.userId?.profilePic
-                    ? dataList?.userId?.profilePic
+                  dataList.userId.profilePic
+                    ? dataList.userId.profilePic
                     : "images/user.png"
                 }
               />
             </figure>
             <Box>
-                    <Typography
-                      variant='h6'
-                      style={{ cursor: "pointer" }}
-                      onClick={() =>
-                        history.push({
-                          pathname: "/about-creators",
-                          search: dataList?.userId?._id,
-                        })
-                      }
-                   
-                    >
-                      {dataList?.userId?.userName
-                        ? dataList?.userId?.userName
-                        : dataList?.userId?.name}
-                    </Typography>
-                    <Typography variant="body2" component="small">
-                {moment(dataList?.createdAt).local().fromNow()}
-                {dataList?.postType}
+              <Typography
+                variant="h6"
+                style={{ cursor: "pointer" }}
+                onClick={() =>
+                  history.push({
+                    pathname: "/about-creators",
+                    search: dataList.userId._id,
+                  })
+                }
+              >
+                {dataList.userId.userName
+                  ? dataList.userId.userName
+                  : dataList.userId.name}
               </Typography>
-                    {/* </Link> */}
-                  </Box>
+              <Typography variant="body2" component="small">
+                {moment(dataList.createdAt).local().fromNow()}
+                {dataList.postType}
+              </Typography>
+              {/* </Link> */}
+            </Box>
           </Box>
         </Grid>
         <Grid item xs={12}>
           <Box>
-            <Typography variant="h6" style={{wordBreak:"break-all"}}>{dataList?.postTitle} </Typography>
-            <Typography variant="body1" style={{wordBreak:"break-all"}}>{dataList?.details} </Typography>
+            <Typography variant="h6" style={{ wordBreak: "break-all" }}>
+              {dataList.postTitle}{" "}
+            </Typography>
+            <Typography variant="body1" style={{ wordBreak: "break-all" }}>
+              {dataList.details}{" "}
+            </Typography>
           </Box>
         </Grid>
       </Grid>

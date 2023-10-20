@@ -301,11 +301,11 @@ export default function (props) {
   };
   console.log("dahgshb", data);
   let isLike = false;
-  if (auth.userData?._id && data) {
-    const likeUser = data?.likesUsers?.filter(
-      (data) => data === auth.userData?._id
+  if (auth.userData._id && data) {
+    const likeUser = data.likesUsers.filter(
+      (data) => data === auth.userData._id
     );
-    isLike = likeUser?.length > 0;
+    isLike = likeUser.length > 0;
   }
   const handleClose = () => {
     setAnchorEl(null);
@@ -366,7 +366,7 @@ export default function (props) {
           {/* <StyledMenuItem onClick={handleClickOpenReport}>
             <ListItemText primary="Report" />
           </StyledMenuItem> */}
-          {/* <StyledMenuItem onClick={() => handleClickOpenPromoted(data?._id)}>
+          {/* <StyledMenuItem onClick={() => handleClickOpenPromoted(data._id)}>
     <ListItemText primary="Promoted" />
   </StyledMenuItem> */}
         </StyledMenu>
@@ -377,14 +377,14 @@ export default function (props) {
             ) : (
               <img
                 src={
-                  data?.postId?.profilePic
-                    ? data?.postId?.profilePic
+                  data.postId.profilePic
+                    ? data.postId.profilePic
                     : "/images/user.png"
                 }
                 onClick={() => {
                   history.push({
                     pathname: "/profile",
-                    search: data?.postId?._id,
+                    search: data.postId._id,
                   });
                 }}
               />
@@ -394,48 +394,48 @@ export default function (props) {
             <Link to="#">
               {" "}
               <Typography variant="h6">
-                {data?.postId?.userId?.userName}
+                {data.postId.userId.userName}
               </Typography>
             </Link>
             <Typography variant="body2" component="small">
-              {data?.postId?.time}
+              {data.postId.time}
             </Typography>
           </Box>
         </Box>
-        <Typography variant="body2">{data?.text}</Typography>
+        <Typography variant="body2">{data.text}</Typography>
         <Box mt={1} mb={1}>
-          <Typography variant="h6">{data?.postId?.postTitle}</Typography>
-          <Typography variant="h6">{data?.postId?.details}</Typography>
+          <Typography variant="h6">{data.postId.postTitle}</Typography>
+          <Typography variant="h6">{data.postId.details}</Typography>
           {/* <Box className="text">
             <Typography variant="h6" color="secondary.main">
               Price :
             </Typography>
             &nbsp;&nbsp;
             <Typography variant="h6" color="secondary.main">
-              {data?.postId?.amount} &nbsp;
+              {data.postId.amount} &nbsp;
               {tokenName}
             </Typography>
           </Box> */}
-          {/* {data?.postType !== "PUBLIC" &&
-            data?.userId?._id !== auth?.userData?._id && (
+          {/* {data.postType !== "PUBLIC" &&
+            data.userId._id !== auth.userData._id && (
               <Button variant="contained" color="secondary">
                 Buy
               </Button>
             )} */}
         </Box>
         <Box
-        // onClick={() => HandleCommentBox(data?._id)}
+        // onClick={() => HandleCommentBox(data._id)}
         // onClick={() =>
         //   history.push({
         //     pathname: "/comment",
-        //     search: data?.postId?._id,
+        //     search: data.postId._id,
         //   })
         // }
         >
           {isVideo ? (
             <figure className="postImg">
               <video width="100%" height="450" controls>
-                <source src={data.postId?.mediaUrl} type="video/mp4" />
+                <source src={data.postId.mediaUrl} type="video/mp4" />
               </video>
             </figure>
           ) : (
@@ -443,7 +443,7 @@ export default function (props) {
               {isLoadingContent ? (
                 <LoadingSkeleton data={8} />
               ) : (
-                <img src={data.postId?.mediaUrl} />
+                <img src={data.postId.mediaUrl} />
               )}
             </figure>
           )}
@@ -455,7 +455,7 @@ export default function (props) {
           onChange={handleChange("panel1")}
         >
           {data &&
-            data?.comment?.map((data, i) => {
+            data.comment.map((data, i) => {
               return (
                 <Box>
                   <CommentBox data={data} key={i} />
@@ -475,8 +475,7 @@ export default function (props) {
         fullScreen
       >
         <Comment
-        openCommentBox={openCommentBox}
-
+          openCommentBox={openCommentBox}
           listPublicExclusiveHandler={listPublicExclusiveHandler}
           setOpenCommentBox={setOpenCommentBox}
           openCommentBoxId={openCommentBoxId}

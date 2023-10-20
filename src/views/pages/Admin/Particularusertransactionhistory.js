@@ -264,7 +264,7 @@ function TransactionHistory({ data, index, userId }) {
                     </TableCell>
                   </TableRow>
                 </TableHead>
-                {transactionListData?.map((data, i) => {
+                {transactionListData.map((data, i) => {
                   return (
                     <TableBody key={i}>
                       <TableRow className={classes.tbody}>
@@ -272,17 +272,17 @@ function TransactionHistory({ data, index, userId }) {
                           {i + 1}
                         </TableCell>
                         <TableCell align="Center">
-                          {moment(data?.createdAt).format("DD:MM:YYYY hh:mm A")}
+                          {moment(data.createdAt).format("DD:MM:YYYY hh:mm A")}
                         </TableCell>
                         <TableCell align="Center">ETH</TableCell>
                         <TableCell align="Center">
-                          {data?.transactionType}
+                          {data.transactionType}
                         </TableCell>
                         <TableCell align="Center">
-                          {data?.transactionStatus}
+                          {data.transactionStatus}
                         </TableCell>
                         <TableCell align="Center">
-                          {data?.amount}&nbsp;
+                          {data.amount}&nbsp;
                           {tokenName}
                         </TableCell>
                       </TableRow>
@@ -296,7 +296,7 @@ function TransactionHistory({ data, index, userId }) {
             transactionListData &&
             transactionListData.length === 0 && <NoDataFound />}
 
-          {transactionListData && transactionListData.length >=10 && (
+          {transactionListData && transactionListData.length >= 10 && (
             <Box mt={2} display="flex" justifyContent="center">
               <Pagination
                 count={noOfPages}

@@ -96,7 +96,7 @@ export default function AuctionTable(props) {
           <Box mt={1.5} mb={1.5} ml={5}>
             <Typography variant="h5">History</Typography>
           </Box>
-          {auctionNFTDetails?.bidId?.length > 0 ? (
+          {auctionNFTDetails.bidId.length > 0 ? (
             <Table className={classes.table} aria-label="simple table">
               <TableHead>
                 <TableRow>
@@ -114,7 +114,7 @@ export default function AuctionTable(props) {
 
               <>
                 {auctionNFTDetails &&
-                  auctionNFTDetails?.bidId?.map((data, i) => {
+                  auctionNFTDetails.bidId.map((data, i) => {
                     return (
                       <>
                         <TableBody key={i}>
@@ -126,22 +126,22 @@ export default function AuctionTable(props) {
                               style={{ fontSize: "14px" }}
                             >
                               {" "}
-                              {data?.amountBid}
+                              {data.amountBid}
                             </TableCell>
                             <TableCell
                               align="Center"
                               style={{ fontSize: "14px" }}
                             >
                               {" "}
-                              {moment(data?.createdAt).format("MM/DD/YYYY")}
-                              {/* {data?.createdAt} */}
+                              {moment(data.createdAt).format("MM/DD/YYYY")}
+                              {/* {data.createdAt} */}
                             </TableCell>
                             <TableCell
                               align="Center"
                               style={{ fontSize: "14px" }}
                             >
                               {" "}
-                              {data?.bidStatus}
+                              {data.bidStatus}
                             </TableCell>
                           </TableRow>
                         </TableBody>

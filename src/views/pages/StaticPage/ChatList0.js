@@ -381,9 +381,8 @@ const StyledMenu = withStyles({
 // const socket = window.io(socketURL);
 const socket = window.io("https://localhost:1909/", {
   secure: true,
-  rejectUnauthorized: false
+  rejectUnauthorized: false,
 });
-
 
 function isEmpty(obj) {
   if (obj) {
@@ -468,7 +467,7 @@ function ChatList() {
         }
       }
       if (newuserDetails) {
-        if (checkNew?.length > 0) {
+        if (checkNew.length > 0) {
           setShowChat1(checkNew[0]);
         } else {
           setShowChat1(messageList[0]);
@@ -477,7 +476,7 @@ function ChatList() {
         setShowChat1(messageList[0]);
       } else if (!isEmpty(showChat1)) {
         const lastChatData = user.chatMessageData.filter(
-          (data) => data._id === showChat1?._id
+          (data) => data._id === showChat1._id
         );
         setShowChat1(lastChatData[0]);
       }
@@ -497,15 +496,15 @@ function ChatList() {
   const encryptMessageHandler = async () => {
     try {
       const finalChatData = await Promise.all(
-        showChat1?.messages?.map(async (chat, i) => {
+        showChat1.messages.map(async (chat, i) => {
           if (chat.mediaType == "text") {
             let data = { ...chat };
             const chatObj = chat.message;
 
             const userIddd =
-              data?.receiverId == showChat1?.senderId._id
-                ? showChat1?.receiverId._id
-                : showChat1?.senderId._id;
+              data.receiverId == showChat1.senderId._id
+                ? showChat1.receiverId._id
+                : showChat1.senderId._id;
 
             const bytes = await CryptoJS.AES.decrypt(chatObj, userIddd);
 
@@ -523,7 +522,7 @@ function ChatList() {
         const encryptedChat = { ...showChat1, messages: finalChatData };
         setShowChat(encryptedChat);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -562,7 +561,6 @@ function ChatList() {
         });
       });
     } else {
-
     }
   };
 
@@ -583,7 +581,7 @@ function ChatList() {
     }
   };
   const PerticularChat = () => {
-    socket.emit("viewChat", { chatId: showChat1?._id });
+    socket.emit("viewChat", { chatId: showChat1._id });
     socket.on("viewChat", (message) => {
       setShowChat1(message.result);
     });
@@ -596,7 +594,7 @@ function ChatList() {
     if ((!chattext && receiverId) || receiverId.length > 5) {
       const encryptedMessage = CryptoJS.AES.encrypt(
         chattext,
-        user?.userData?._id
+        user.userData._id
       );
       const chatdetails = {
         senderId: senderId,
@@ -617,7 +615,7 @@ function ChatList() {
         },
       })
         .then(async (response) => {
-          if (response?.data?.response_code === 200) {
+          if (response.data.response_code === 200) {
             setShowChat1();
             setNewuserDetails();
           } else {
@@ -654,7 +652,7 @@ function ChatList() {
           token: window.localStorage.getItem("token"),
         },
       });
-    } catch (error) { }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -707,10 +705,10 @@ function ChatList() {
   };
 
   useEffect(() => {
-    if (showChat1?._id) {
+    if (showChat1._id) {
       readChatHandler(showChat1._id);
     }
-  }, [showChat1?._id]);
+  }, [showChat1._id]);
 
   const onEmojiClick = (event, emojiObject) => {
     setInputStr((data) => data + emojiObject.emoji);
@@ -773,7 +771,7 @@ function ChatList() {
       });
       if (res.data.responseCode === 200) {
       }
-    } catch (error) { }
+    } catch (error) {}
   };
   useEffect(() => {
     if (typeof checked !== "undefined") {
@@ -791,9 +789,9 @@ function ChatList() {
         },
       });
       if (res.data.responseCode === 200) {
-        setChecked(res.data?.result?.disappear);
+        setChecked(res.data.result.disappear);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -864,12 +862,12 @@ function ChatList() {
                       return (
                         <>
                           {chat.receiverId &&
-                            chat.receiverId._id !== senderId ? (
+                          chat.receiverId._id !== senderId ? (
                             <Box
                               key={i}
                               className={classes.box}
                               style={
-                                showChat1?._id == chat?._id
+                                showChat1._id == chat._id
                                   ? { background: "#E31A89" }
                                   : {}
                               }
@@ -883,7 +881,7 @@ function ChatList() {
                                   <img
                                     src={
                                       chat.receiverId &&
-                                        chat.receiverId.profilePic
+                                      chat.receiverId.profilePic
                                         ? chat.receiverId.profilePic
                                         : "images/Activity.png"
                                     }
@@ -922,11 +920,11 @@ function ChatList() {
                                 <Box className={classes.nameSection}>
                                   <Typography variant="h6">
                                     {" "}
-                                    {chat?.receiverId?.userName
-                                      ? chat?.receiverId?.userName
+                                    {chat.receiverId.userName
+                                      ? chat.receiverId.userName
                                       : sortAddress(
-                                        chat?.receiverId?.bnbAccount?.address
-                                      )}
+                                          chat.receiverId.bnbAccount.address
+                                        )}
                                   </Typography>
                                 </Box>
                               </Box>
@@ -936,9 +934,9 @@ function ChatList() {
                                   component="span"
                                   style={{ color: "#BBB6B6" }}
                                 >
-                                  {/* {chat?.time} */}
+                                  {/* {chat.time} */}
                                 </Typography>
-                                {chat?.receiverId?.isOnline ? (
+                                {chat.receiverId.isOnline ? (
                                   <Box
                                     // active
                                     className=" statusBox"
@@ -950,17 +948,17 @@ function ChatList() {
                                     style={{ backgroundColor: "#EB9310" }}
                                   ></Box>
                                 )}
-                                {chat?.gray && (
+                                {chat.gray && (
                                   <Box
                                     className=" statusBox"
                                     // gray
                                     style={{ backgroundColor: "#7D807D" }}
                                   ></Box>
                                 )}
-                                {chat?.unReadCount > 0 && (
+                                {chat.unReadCount > 0 && (
                                   <Box className=" chatBox">
                                     {" "}
-                                    {chat?.unReadCount}
+                                    {chat.unReadCount}
                                   </Box>
                                 )}
                               </Box>
@@ -970,7 +968,7 @@ function ChatList() {
                               className={classes.box}
                               mb={2}
                               style={
-                                showChat1?._id == chat?._id
+                                showChat1._id == chat._id
                                   ? { background: "#E31A89" }
                                   : {}
                               }
@@ -982,15 +980,15 @@ function ChatList() {
                                 <Box className="chatprofile">
                                   <img
                                     src={
-                                      chat?.senderId && chat?.senderId?.profilePic
-                                        ? chat?.senderId?.profilePic
+                                      chat.senderId && chat.senderId.profilePic
+                                        ? chat.senderId.profilePic
                                         : "images/Activity.png"
                                     }
                                     style={{ borderRadius: "50%" }}
                                   />
                                   <Hidden only={["md", "lg"]}>
                                     <Box>
-                                      {chat?.senderId?.isOnline ? (
+                                      {chat.senderId.isOnline ? (
                                         <Box
                                           // active
                                           className=" statusBox"
@@ -1003,17 +1001,17 @@ function ChatList() {
                                         ></Box>
                                       )}
 
-                                      {chat?.gray && (
+                                      {chat.gray && (
                                         <Box
                                           className=" statusBox"
                                           // gray
                                           style={{ backgroundColor: "#7D807D" }}
                                         ></Box>
                                       )}
-                                      {chat?.unReadCount > 0 && (
+                                      {chat.unReadCount > 0 && (
                                         <Box className=" chatBox">
                                           {" "}
-                                          {chat?.unReadCount}
+                                          {chat.unReadCount}
                                         </Box>
                                       )}
                                     </Box>
@@ -1022,11 +1020,11 @@ function ChatList() {
                                 <Box className={classes.nameSection}>
                                   <Typography variant="h6">
                                     {" "}
-                                    {chat?.senderId?.userName
-                                      ? chat?.senderId?.userName
+                                    {chat.senderId.userName
+                                      ? chat.senderId.userName
                                       : sortAddress(
-                                        chat?.senderId?.bnbAccount?.address
-                                      )}
+                                          chat.senderId.bnbAccount.address
+                                        )}
                                   </Typography>
                                 </Box>
                               </Box>
@@ -1037,7 +1035,7 @@ function ChatList() {
                                   style={{ color: "#BBB6B6" }}
                                 ></Typography>
 
-                                {chat?.senderId?.isOnline ? (
+                                {chat.senderId.isOnline ? (
                                   <Box
                                     // active
                                     className=" statusBox"
@@ -1050,25 +1048,25 @@ function ChatList() {
                                   ></Box>
                                 )}
 
-                                {chat?.gray && (
+                                {chat.gray && (
                                   <Box
                                     // gray
                                     className=" statusBox"
                                     style={{ backgroundColor: "#7D807D" }}
                                   ></Box>
                                 )}
-                                {chat?.unReadCount > 0 && (
+                                {chat.unReadCount > 0 && (
                                   <Box className=" chatBox">
                                     {" "}
-                                    {chat?.unReadCount}
+                                    {chat.unReadCount}
                                   </Box>
                                 )}
                                 <Typography variant="h6">
                                   {" "}
-                                  {/* {chat?.senderId?.userName
-                                    ? chat?.senderId?.userName
+                                  {/* {chat.senderId.userName
+                                    ? chat.senderId.userName
                                     : sortAddress(
-                                        chat?.senderId?.bnbAccount?.address
+                                        chat.senderId.bnbAccount.address
                                       )} */}
                                 </Typography>
                               </Box>
@@ -1086,25 +1084,25 @@ function ChatList() {
                 <Box style={{ borderBottom: "1px solid #242526" }}>
                   <Grid container spacing={2} style={{ alignItems: "center" }}>
                     <Grid item lg={6} sm={6} md={6} xs={6} align="left">
-                      {showChat1?.receiverId?._id !== senderId ? (
+                      {showChat1.receiverId._id !== senderId ? (
                         <Box className="headerbox">
                           <img
                             src={
-                              showChat1?.receiverId?.profilePic
-                                ? showChat1?.receiverId?.profilePic
+                              showChat1.receiverId.profilePic
+                                ? showChat1.receiverId.profilePic
                                 : "images/Activity.png"
                             }
                           />
                           <Box ml={2}>
                             <Typography variant="h6">
                               {" "}
-                              {showChat1?.receiverId?.userName
-                                ? showChat1?.receiverId?.userName
+                              {showChat1.receiverId.userName
+                                ? showChat1.receiverId.userName
                                 : sortAddress(
-                                  showChat1?.receiverId?.bnbAccount?.address
-                                )}
+                                    showChat1.receiverId.bnbAccount.address
+                                  )}
                             </Typography>
-                            {showChat1?.receiverId?.isOnline == true ? (
+                            {showChat1.receiverId.isOnline == true ? (
                               <Box style={{ display: "flex" }}>
                                 <Typography>Active Now</Typography>
                                 <Box className={classes.dot} ml={1} mt={0.3} />
@@ -1120,20 +1118,20 @@ function ChatList() {
                         <Box className="headerbox">
                           <img
                             src={
-                              showChat1?.senderId?.profilePic
-                                ? showChat1?.senderId?.profilePic
+                              showChat1.senderId.profilePic
+                                ? showChat1.senderId.profilePic
                                 : "images/Activity.png"
                             }
                           />
                           <Box ml={2}>
                             <Typography variant="h6">
-                              {showChat1?.senderId?.userName
-                                ? showChat1?.senderId?.userName
+                              {showChat1.senderId.userName
+                                ? showChat1.senderId.userName
                                 : sortAddress(
-                                  showChat1?.senderId?.bnbAccount?.address
-                                )}
+                                    showChat1.senderId.bnbAccount.address
+                                  )}
                             </Typography>
-                            {showChat1?.senderId?.isOnline == true ? (
+                            {showChat1.senderId.isOnline == true ? (
                               <Box style={{ display: "flex" }}>
                                 <Typography>Active Now</Typography>
                                 <Box className={classes.dot} ml={1} mt={0.3} />
@@ -1169,12 +1167,12 @@ function ChatList() {
                   </Box>
 
                   <>
-                    {showChat?.messages?.map((chat, i) => {
+                    {showChat.messages.map((chat, i) => {
                       return (
                         <>
                           {chat && (
                             <>
-                              {chat?.receiverId === senderId ? (
+                              {chat.receiverId === senderId ? (
                                 <Box className={classes.box1} key={i}>
                                   <Grid
                                     container
@@ -1184,8 +1182,8 @@ function ChatList() {
                                     <Grid item lg={1} sm={1} md={1} xs={2}>
                                       <img
                                         src={
-                                          showChat?.receiverId?.profilePic
-                                            ? showChat?.receiverId?.profilePic
+                                          showChat.receiverId.profilePic
+                                            ? showChat.receiverId.profilePic
                                             : "images/Activity.png"
                                         }
                                       />
@@ -1198,15 +1196,14 @@ function ChatList() {
                                         }}
                                       >
                                         <Box className={classes.mess1}>
-                                          {chat?.mediaType === "image" ? (
+                                          {chat.mediaType === "image" ? (
                                             <Box>
                                               <img
                                                 src={chat.message}
                                                 style={{
-
                                                   width: 100,
                                                   borderRadius: "unset",
-                                                  objectFit: "cover"
+                                                  objectFit: "cover",
                                                 }}
                                               />
                                             </Box>
@@ -1215,20 +1212,20 @@ function ChatList() {
                                               variant="body1"
                                               style={{ wordBreak: "break-all" }}
                                             >
-                                              {chat?.message}
+                                              {chat.message}
                                             </Typography>
                                           )}
                                           <Typography
                                             variant="body1"
                                             component="small"
                                           >
-                                            {moment(chat?.createdAt)
+                                            {moment(chat.createdAt)
                                               .local()
                                               .fromNow()}
                                           </Typography>
                                           <IconButton
                                             onClick={(event) => {
-                                              setAnchorEl(event?.currentTarget);
+                                              setAnchorEl(event.currentTarget);
                                               setSelectedChat(chat);
                                             }}
                                             aria-controls="customized-menu"
@@ -1280,12 +1277,11 @@ function ChatList() {
                                           {chat.mediaType === "image" ? (
                                             <Box>
                                               <img
-                                                src={chat?.message}
+                                                src={chat.message}
                                                 style={{
-
                                                   width: 100,
                                                   borderRadius: "unset",
-                                                  objectFit: "cover"
+                                                  objectFit: "cover",
                                                 }}
                                               />
                                             </Box>
@@ -1294,20 +1290,20 @@ function ChatList() {
                                               variant="body1"
                                               style={{ wordBreak: "break-all" }}
                                             >
-                                              {chat?.message}
+                                              {chat.message}
                                             </Typography>
                                           )}
                                           <Typography
                                             variant="body1"
                                             component="small"
                                           >
-                                            {moment(chat?.createdAt)
+                                            {moment(chat.createdAt)
                                               .local()
                                               .fromNow()}
                                           </Typography>
                                           <IconButton
                                             onClick={(event) => {
-                                              setAnchorEl(event?.currentTarget);
+                                              setAnchorEl(event.currentTarget);
                                               setSelectedChat(chat);
                                             }}
                                             aria-controls="customized-menu"
@@ -1342,8 +1338,8 @@ function ChatList() {
                                     >
                                       <img
                                         src={
-                                          showChat?.senderId?.profilePic
-                                            ? showChat?.senderId?.profilePic
+                                          showChat.senderId.profilePic
+                                            ? showChat.senderId.profilePic
                                             : "images/Activity.png"
                                         }
                                       />
@@ -1434,17 +1430,17 @@ function ChatList() {
                         <Button
                           type="submit"
                           disabled={!inputStr}
-                        // onClick={() => {
-                        //   if (image) {
-                        //     chatSend(image, true);
+                          // onClick={() => {
+                          //   if (image) {
+                          //     chatSend(image, true);
 
-                        //     setTimeout(() => {
-                        //       setimage();
-                        //     }, 100);
-                        //   } else {
-                        //     chatSend(inputStr, false);
-                        //   }
-                        // }}
+                          //     setTimeout(() => {
+                          //       setimage();
+                          //     }, 100);
+                          //   } else {
+                          //     chatSend(inputStr, false);
+                          //   }
+                          // }}
                         >
                           <AiOutlineSend />
                           {isUploadingData && <ButtonCircularProgress />}
@@ -1593,7 +1589,7 @@ export function StyledMenuBox({
             setAnchorEl(null);
           }}
         >
-          <CopyToClipboard text={chat?.message}>
+          <CopyToClipboard text={chat.message}>
             <ListItemText
               primary="Copy"
               onClick={() => toast.success("Copied")}
@@ -1608,9 +1604,9 @@ export function StyledMenuBox({
 export function SearchResults({ searchResult, history, setShowUser }) {
   return (
     <ul className="list-group text-dark" id="search-list">
-      {searchResult?.length > 0 && (
+      {searchResult.length > 0 && (
         <>
-          {searchResult?.map((data, i) => {
+          {searchResult.map((data, i) => {
             console.log("data--nwe-chat", data);
             return (
               <li

@@ -106,14 +106,14 @@ function Forgetassword(props) {
   const formValidationSchema = yup.object().shape(
     checked1
       ? {
-        email: yup
-          .string()
-          .email(
-            "You have entered an invalid email address. Please try again"
-          )
-          .required("Email address is required")
-          .matches("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$"),
-      }
+          email: yup
+            .string()
+            .email(
+              "You have entered an invalid email address. Please try again"
+            )
+            .required("Email address is required")
+            .matches("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$"),
+        }
       : {}
   );
 
@@ -133,9 +133,9 @@ function Forgetassword(props) {
         setTimeout(() => {
           setErrorMesageResend(""); // count is 0 here
         }, 5000);
-        setErrorMesageResend(res.data?.responseMessage);
+        setErrorMesageResend(res.data.responseMessage);
         toast.success(`${res.data.responseMessage} please login`);
-        localStorage.setItem("email", res.data?.result.email);
+        localStorage.setItem("email", res.data.result.email);
 
         history.push("/reset-password");
         // window.sessionStorage.setItem("otp", values.otp);
@@ -147,7 +147,7 @@ function Forgetassword(props) {
       setTimeout(() => {
         setErrorMesage(""); // count is 0 here
       }, 5000);
-      setErrorMesage(error?.response?.data?.responseMessage);
+      setErrorMesage(error.response.data.responseMessage);
     }
   };
   const resendOTP = async () => {
@@ -168,7 +168,7 @@ function Forgetassword(props) {
         setTimeout(() => {
           setErrorMesageResend(""); // count is 0 here
         }, 5000);
-        setErrorMesageResend(res.data?.responseMessage);
+        setErrorMesageResend(res.data.responseMessage);
         toast.success("resend otp succefully");
       }
     } catch (error) {
@@ -178,8 +178,8 @@ function Forgetassword(props) {
       setTimeout(() => {
         setErrorMesage(""); // count is 0 here
       }, 5000);
-      setErrorMesage(error?.response?.data?.responseMessage);
-      // setErrorMesage(error?.response?.data?.responseMessage);
+      setErrorMesage(error.response.data.responseMessage);
+      // setErrorMesage(error.response.data.responseMessage);
     }
   };
   const formValidationSchemaOtp = yup.object().shape({
@@ -255,7 +255,7 @@ function Forgetassword(props) {
                         url: ApiConfig.forgotPassword,
                         data: {
                           email: checked2
-                            ? mobileNumber?.slice(countryCode.length)
+                            ? mobileNumber.slice(countryCode.length)
                             : values.email,
                         },
                       });
@@ -264,7 +264,7 @@ function Forgetassword(props) {
                         setIsSubmit(false);
                         setEmail(
                           mobileNumber
-                            ? mobileNumber?.slice(countryCode.length)
+                            ? mobileNumber.slice(countryCode.length)
                             : values.email
                         );
                         setVerifyOTPOpen(true);
@@ -280,8 +280,7 @@ function Forgetassword(props) {
                       setTimeout(() => {
                         setErrorMesage(""); // count is 0 here
                       }, 3000);
-                      setErrorMesage(error?.response?.data?.responseMessage);
-
+                      setErrorMesage(error.response.data.responseMessage);
                     }
                   }
                 }}
@@ -313,9 +312,9 @@ function Forgetassword(props) {
                                 (isSubmit &&
                                   checked1 &&
                                   formValue.email === "") ||
-                                (formValue.email !== "" &&
-                                  checked1 &&
-                                  !isValidEmail(formValue.email))
+                                  (formValue.email !== "" &&
+                                    checked1 &&
+                                    !isValidEmail(formValue.email))
                               )}
                               onBlur={handleBlur}
                               onChange={handleChange}
@@ -331,7 +330,6 @@ function Forgetassword(props) {
                               {touched.email && errors.email}
                             </FormHelperText>
                           </FormControl>
-
                         </Grid>
                       )}
                       &nbsp;
@@ -348,9 +346,9 @@ function Forgetassword(props) {
                               value={mobileNumber}
                               error={Boolean(
                                 (isSubmit && checked2 && !mobileNumber) ||
-                                (isSubmit &&
-                                  checked2 &&
-                                  !isValidNumber(mobileNumber))
+                                  (isSubmit &&
+                                    checked2 &&
+                                    !isValidNumber(mobileNumber))
                               )}
                               onChange={(phone, e) => {
                                 setCountryCode(e.dialCode);
@@ -397,7 +395,7 @@ function Forgetassword(props) {
                         fullWidth
                         size="large"
                         disabled={isLoading}
-                      // onClick={forgetPassword}
+                        // onClick={forgetPassword}
                       >
                         Send {isLoading && <ButtonCircularProgress />}
                       </Button>
@@ -415,10 +413,11 @@ function Forgetassword(props) {
                     alignItems: "center",
                     justifyContent: "center",
                     color: "#E31A89",
-                    textDecoration: "none"
+                    textDecoration: "none",
                   }}
                 >
-                  <ChevronLeftIcon />Back to Sign Up
+                  <ChevronLeftIcon />
+                  Back to Sign Up
                 </Link>
               </Box>
             </Box>
@@ -430,7 +429,7 @@ function Forgetassword(props) {
             fullWidth
             maxWidth="sm"
             open={verifyOTPOpen}
-          // onClose={() => setVerifyOTPOpen(false)}
+            // onClose={() => setVerifyOTPOpen(false)}
           >
             <DialogContent>
               <Page title="Verify OTP">
@@ -478,11 +477,10 @@ function Forgetassword(props) {
                               onBlur={handleBlur}
                               onChange={handleChange}
                               onKeyPress={(event) => {
-                                if (event?.key === "-" || event?.key === "+") {
+                                if (event.key === "-" || event.key === "+") {
                                   event.preventDefault();
                                 }
                               }}
-
                             />
                             <FormHelperText error>
                               {touched.otp && errors.otp}
@@ -539,12 +537,10 @@ function Forgetassword(props) {
                             fontWeight: 500,
                             marginTop: "10px",
                           }}
-
                         >
-                          Your OTP will expire in {timeLeft?.minutes} m :{" "}
-                          {timeLeft?.seconds} s
+                          Your OTP will expire in {timeLeft.minutes} m :{" "}
+                          {timeLeft.seconds} s
                         </Typography>{" "}
-
                       </>
                     ) : (
                       <>
@@ -567,7 +563,6 @@ function Forgetassword(props) {
                 </Box>
               </Page>
             </DialogContent>
-
           </Dialog>
         )}
       </Page>

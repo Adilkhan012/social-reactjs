@@ -79,7 +79,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 function Subscriber() {
   const classes = useStyles();
   const [dataList, setDataList] = useState([]);
@@ -112,11 +111,13 @@ function Subscriber() {
     <>
       <Paper className={classes.root} elevation={2}>
         <Box className="heading">
-          <Typography variant="h5">
-            Subscriber
-          </Typography>
+          <Typography variant="h5">Subscriber</Typography>
           {dataList.length > 6 && (
-            <Link component={RouterComponent} to="/subscriber-list"  style={{ color: "#E31A89" }}>
+            <Link
+              component={RouterComponent}
+              to="/subscriber-list"
+              style={{ color: "#E31A89" }}
+            >
               See All
             </Link>
           )}
@@ -128,7 +129,7 @@ function Subscriber() {
             {dataList && dataList.length > 0 ? (
               <>
                 {dataList &&
-                  dataList?.map((data, i) => {
+                  dataList.map((data, i) => {
                     return (
                       <Grid item xs={12} key={i}>
                         <Users
@@ -179,7 +180,7 @@ const Users = (props) => {
               onClick={() => {
                 history.push({
                   pathname: "/about-creators",
-                  search: data?._id,
+                  search: data._id,
                 });
               }}
             >

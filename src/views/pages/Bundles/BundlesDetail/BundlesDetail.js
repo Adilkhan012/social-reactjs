@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 function BundlesDetail() {
   const [idd, setIdd] = useState();
   const location = useLocation();
-  const collectionTitle = location?.state?.title;
+  const collectionTitle = location.state.title;
   const [page, setPage] = useState(1);
   const [noOfPages, setNoOfPages] = useState(1);
   const [dataList, setDataList] = useState([]);
@@ -81,10 +81,10 @@ function BundlesDetail() {
               <Grid item xs={12} sm={12} md={12} lg={12}>
                 <Typography variant="h3">{`${collectionTitle} Post's`}</Typography>
               </Grid>
-              {dataList && dataList?.length > 0 ? (
+              {dataList && dataList.length > 0 ? (
                 <>
                   {dataList &&
-                    dataList?.map((data, i) => {
+                    dataList.map((data, i) => {
                       return (
                         <Grid item xs={12} sm={6} md={4} lg={4}>
                           <BundlesDetailCard

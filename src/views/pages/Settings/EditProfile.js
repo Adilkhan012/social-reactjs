@@ -194,11 +194,11 @@ function EditProfile({ userProfileData }) {
   });
 
   useEffect(() => {
-    if (auth?.userData) {
-      setBase64Img(auth?.userData.profilePic);
-      setBase64Img1(auth?.userData.coverPic);
+    if (auth.userData) {
+      setBase64Img(auth.userData.profilePic);
+      setBase64Img1(auth.userData.coverPic);
     }
-  }, [auth?.userData]);
+  }, [auth.userData]);
   function imageUpload(event) {
     let base64img = userData.profilepic;
     let reader = new FileReader();
@@ -221,20 +221,20 @@ function EditProfile({ userProfileData }) {
   const [mobileNumberField, setMobileNumber] = useState("");
 
   const formInitialSchema = {
-    email: auth?.userData.email ? auth?.userData.email : "",
-    userName: auth?.userData.userName ? auth?.userData.userName : "",
-    name: auth?.userData.name ? auth?.userData.name : "",
-    // mobileNumber: auth?.userData.mobileNumber,
-    dob: auth?.userData.dob ? auth?.userData.dob : "",
-    bio: auth?.userData.bio ? auth?.userData.bio : "",
-    gender: auth?.userData.gender ? auth?.userData.gender : "",
-    profilePic: auth?.userData.profilePic ? auth?.userData.profilePic : "",
-    coverPic: auth?.userData.coverPic ? auth?.userData.coverPic : "",
-    location: auth?.userData.location ? auth?.userData.location : "",
-    facebook: auth?.userData.facebook ? auth?.userData.facebook : "",
-    twitter: auth?.userData.twitter ? auth?.userData.twitter : "",
-    instagram: auth?.userData.instagram ? auth?.userData.instagram : "",
-    linkedIn: auth?.userData.linkedIn ? auth?.userData.linkedIn : "",
+    email: auth.userData.email ? auth.userData.email : "",
+    userName: auth.userData.userName ? auth.userData.userName : "",
+    name: auth.userData.name ? auth.userData.name : "",
+    // mobileNumber: auth.userData.mobileNumber,
+    dob: auth.userData.dob ? auth.userData.dob : "",
+    bio: auth.userData.bio ? auth.userData.bio : "",
+    gender: auth.userData.gender ? auth.userData.gender : "",
+    profilePic: auth.userData.profilePic ? auth.userData.profilePic : "",
+    coverPic: auth.userData.coverPic ? auth.userData.coverPic : "",
+    location: auth.userData.location ? auth.userData.location : "",
+    facebook: auth.userData.facebook ? auth.userData.facebook : "",
+    twitter: auth.userData.twitter ? auth.userData.twitter : "",
+    instagram: auth.userData.instagram ? auth.userData.instagram : "",
+    linkedIn: auth.userData.linkedIn ? auth.userData.linkedIn : "",
   };
 
   const formValidationSchema = yup.object().shape({
@@ -306,17 +306,17 @@ function EditProfile({ userProfileData }) {
     return re.test(value);
   };
   useEffect(() => {
-    if (auth?.userData) {
+    if (auth.userData) {
       setMobileNumber(
-        auth?.userData?.mobileNumber
-          ? `${auth?.userData?.countryCode}${auth?.userData?.mobileNumber}`
+        auth.userData.mobileNumber
+          ? `${auth.userData.countryCode}${auth.userData.mobileNumber}`
           : ""
       );
       setCountryCode(
-        auth?.userData?.countryCode ? auth?.userData?.countryCode : ""
+        auth.userData.countryCode ? auth.userData.countryCode : ""
       );
     }
-  }, [auth?.userData]);
+  }, [auth.userData]);
   const handleFormSubmit = async (values) => {
     setIsUpdating(true);
     // if(
@@ -364,8 +364,8 @@ function EditProfile({ userProfileData }) {
         setTimeout(() => {
           setErrorMesage(""); // count is 0 here
         }, 5000);
-        setErrorMesage(error?.response?.data?.responseMessage);
-        // toast.error(error?.response?.data?.responseMessage);
+        setErrorMesage(error.response.data.responseMessage);
+        // toast.error(error.response.data.responseMessage);
       });
   };
 
@@ -552,7 +552,7 @@ function EditProfile({ userProfileData }) {
                               size="small"
                               name="userName"
                               style={{ height: "45px" }}
-                              value={values.userName || userData?.userName}
+                              value={values.userName || userData.userName}
                               onChange={(event) => {
                                 setUserName(event.target.value);
                                 handleChange(event);
@@ -592,7 +592,7 @@ function EditProfile({ userProfileData }) {
                               style={{ height: "45px" }}
                               disabled={isEdit}
                               placeholder="Name"
-                              value={values.name ? values.name : userData?.name}
+                              value={values.name ? values.name : userData.name}
                               // placeholder="Kollol Baran Nath"
                               // value={values.userName}
                               error={Boolean(touched.name && errors.name)}
@@ -646,9 +646,9 @@ function EditProfile({ userProfileData }) {
                               name="email"
                               style={{ height: "45px" }}
                               placeholder="Add email"
-                              disabled={auth?.userData.email !== "" || isEdit}
+                              disabled={auth.userData.email !== "" || isEdit}
                               value={
-                                values.email ? values.email : userData?.email
+                                values.email ? values.email : userData.email
                               }
                               error={Boolean(touched.email && errors.email)}
                               onBlur={handleBlur}
@@ -676,7 +676,7 @@ function EditProfile({ userProfileData }) {
                               style={{ height: "45px" }}
                               disabled={isEdit}
                               placeholder="Add a bio"
-                              value={values.bio ? values.bio : userData?.bio}
+                              value={values.bio ? values.bio : userData.bio}
                               error={Boolean(touched.bio && errors.bio)}
                               onBlur={handleBlur}
                               onChange={handleChange}
@@ -697,7 +697,7 @@ function EditProfile({ userProfileData }) {
                             </Typography>
                             <PhoneInput
                               country={"in"}
-                              disabled={!auth?.userData.email || isEdit}
+                              disabled={!auth.userData.email || isEdit}
                               name="mobileNumber"
                               value={mobileNumberField}
                               error={
@@ -751,7 +751,7 @@ function EditProfile({ userProfileData }) {
                                   value={
                                     values.gender
                                       ? values.gender
-                                      : userData?.gender
+                                      : userData.gender
                                   }
                                   error={Boolean(
                                     touched.gender && errors.gender
@@ -806,7 +806,7 @@ function EditProfile({ userProfileData }) {
                               value={
                                 values.location
                                   ? values.location
-                                  : userData?.location
+                                  : userData.location
                               }
                               error={Boolean(
                                 touched.location && errors.location
@@ -846,7 +846,7 @@ function EditProfile({ userProfileData }) {
                               value={
                                 values.facebook
                                   ? values.facebook
-                                  : userData?.facebook
+                                  : userData.facebook
                               }
                               error={Boolean(
                                 touched.facebook && errors.facebook
@@ -879,7 +879,7 @@ function EditProfile({ userProfileData }) {
                               value={
                                 values.twitter
                                   ? values.twitter
-                                  : userData?.twitter
+                                  : userData.twitter
                               }
                               error={Boolean(touched.twitter && errors.twitter)}
                               onBlur={handleBlur}
@@ -910,7 +910,7 @@ function EditProfile({ userProfileData }) {
                               value={
                                 values.linkedIn
                                   ? values.linkedIn
-                                  : userData?.linkedIn
+                                  : userData.linkedIn
                               }
                               error={Boolean(
                                 touched.linkedIn && errors.linkedIn
@@ -943,7 +943,7 @@ function EditProfile({ userProfileData }) {
                               value={
                                 values.instagram
                                   ? values.instagram
-                                  : userData?.instagram
+                                  : userData.instagram
                               }
                               error={Boolean(
                                 touched.instagram && errors.instagram

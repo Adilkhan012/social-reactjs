@@ -46,7 +46,7 @@ export class SignalServerStore {
   getPreKeyBundle(userId) {
     let preKeyBundle = JSON.parse(localStorage.getItem("userId"));
 
-    let preKey = preKeyBundle?.preKeys.splice(-1);
+    let preKey = preKeyBundle.preKeys.splice(-1);
     preKey[0].publicKey = util.base64ToArrayBuffer(preKey[0].publicKey);
     this.updatePreKeyBundle(userId, preKeyBundle);
     return {
@@ -80,7 +80,7 @@ class SignalProtocolManager {
    * Initialize the manager when the user logs on.
    */
   async initializeAsync() {
-    await this?._generateIdentityAsync();
+    await this._generateIdentityAsync();
 
     var preKeyBundle = await this._generatePreKeyBundleAsync();
 
@@ -102,11 +102,11 @@ class SignalProtocolManager {
       var sessionBuilder = new libsignal.SessionBuilder(this.store, address);
 
       var remoteUserPreKey =
-        this.signalServerStore?.getPreKeyBundle(remoteUserId);
+        this.signalServerStore.getPreKeyBundle(remoteUserId);
       // Process a prekey fetched from the server. Returns a promise that resolves
       // once a session is created and saved in the store, or rejects if the
       // identityKey differs from a previously seen identity for this address.
-      await sessionBuilder?.processPreKey(remoteUserPreKey);
+      await sessionBuilder.processPreKey(remoteUserPreKey);
 
       var sessionCipher = new libsignal.SessionCipher(this.store, address);
       this.store.storeSessionCipher(remoteUserId, sessionCipher);
@@ -137,11 +137,11 @@ class SignalProtocolManager {
     // Returns a promise that resolves when the message is decrypted or
     // rejects if the identityKey differs from a previously seen identity for this address.
     if (messageHasEmbeddedPreKeyBundle) {
-      var decryptedMessage = await sessionCipher?.decryptPreKeyWhisperMessage(
+      var decryptedMessage = await sessionCipher.decryptPreKeyWhisperMessage(
         cipherText.body
       );
       // var decryptedMessage = await sessionCipher
-      //   ?.decryptPreKeyWhisperMessage(cipherText.body)
+      //   .decryptPreKeyWhisperMessage(cipherText.body)
       //   .then(function (plaintext) {
       //     console.log("plaintext", plaintext);
 
@@ -155,7 +155,7 @@ class SignalProtocolManager {
       return util.toString(decryptedMessage);
     } else {
       // Decrypt a normal message using an existing session
-      var decryptedMessage = await sessionCipher?.decryptWhisperMessage(
+      var decryptedMessage = await sessionCipher.decryptWhisperMessage(
         cipherText.body
       );
       return util.toString(decryptedMessage);
@@ -167,8 +167,8 @@ class SignalProtocolManager {
    */
   async _generateIdentityAsync() {
     var results = await Promise.all([
-      libsignal?.KeyHelper?.generateIdentityKeyPair(),
-      libsignal?.KeyHelper?.generateRegistrationId(),
+      libsignal.KeyHelper.generateIdentityKeyPair(),
+      libsignal.KeyHelper.generateRegistrationId(),
     ]);
 
     this.store.put("identityKey", results && results[0]);
@@ -193,35 +193,35 @@ class SignalProtocolManager {
     // The libsignal-javascript does not provide a counter to generate multiple keys, contrary to the case of JAVA (KeyHelper.java)
     // Therefore you need to set it manually (as per my research)
     var keys = await Promise.all([
-      libsignal?.KeyHelper?.generatePreKey(registrationId + 1),
-      libsignal?.KeyHelper?.generatePreKey(registrationId + 2),
-      libsignal?.KeyHelper?.generatePreKey(registrationId + 3),
-      libsignal?.KeyHelper?.generatePreKey(registrationId + 4),
-      libsignal?.KeyHelper?.generateSignedPreKey(identity, registrationId + 1),
+      libsignal.KeyHelper.generatePreKey(registrationId + 1),
+      libsignal.KeyHelper.generatePreKey(registrationId + 2),
+      libsignal.KeyHelper.generatePreKey(registrationId + 3),
+      libsignal.KeyHelper.generatePreKey(registrationId + 4),
+      libsignal.KeyHelper.generateSignedPreKey(identity, registrationId + 1),
     ]);
 
     let preKeys = [keys[0], keys[1], keys[2], keys[3]];
     let signedPreKey = keys[4];
 
     preKeys.forEach((preKey) => {
-      this.store.storePreKey(preKey?.keyId, preKey?.keyPair);
+      this.store.storePreKey(preKey.keyId, preKey.keyPair);
     });
-    this.store.storeSignedPreKey(signedPreKey?.keyId, signedPreKey?.keyPair);
+    this.store.storeSignedPreKey(signedPreKey.keyId, signedPreKey.keyPair);
 
     let publicPreKeys = preKeys.map((preKey) => {
       return {
-        keyId: preKey?.keyId,
-        publicKey: preKey?.keyPair?.pubKey,
+        keyId: preKey.keyId,
+        publicKey: preKey.keyPair.pubKey,
       };
     });
     return {
-      identityKey: identity?.pubKey,
+      identityKey: identity.pubKey,
       registrationId: registrationId,
       preKeys: publicPreKeys,
       signedPreKey: {
-        keyId: signedPreKey?.keyId,
-        publicKey: signedPreKey?.keyPair?.pubKey,
-        signature: signedPreKey?.signature,
+        keyId: signedPreKey.keyId,
+        publicKey: signedPreKey.keyPair.pubKey,
+        signature: signedPreKey.signature,
       },
     };
   }

@@ -72,12 +72,12 @@ function Story() {
     })
       .then(async (response) => {
         setStoryList(
-          response.data.result.following.filter((data) => data?.isStory)
+          response.data.result.following.filter((data) => data.isStory)
         );
 
         if (response.data.responseCode === 200) {
           setStoryList(
-            response.data.result.following.filter((data) => data?.isStory)
+            response.data.result.following.filter((data) => data.isStory)
           );
         }
       })

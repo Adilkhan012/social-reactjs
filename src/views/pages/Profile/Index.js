@@ -504,7 +504,7 @@ function Profile() {
   }, [walletAddressWallet]);
 
   const withdrawHandler = async () => {
-    if (parseInt(userData1?.bnbBalace) > 0) {
+    if (parseInt(userData1.bnbBalace) > 0) {
       setIsSubmit(true);
       if (
         walletAddressWallet &&
@@ -533,7 +533,7 @@ function Profile() {
           }
           setIsLoading(false);
         } catch (error) {
-          toast.error(error?.response?.data?.responseMessage);
+          toast.error(error.response.data.responseMessage);
           setIsLoading(false);
           //   setAnchorEl(false);
         }
@@ -545,7 +545,7 @@ function Profile() {
 
   console.log("userData1---", userData1);
 
-  const remainingBalance = parseInt(userData1?.bnbBalace) - withdrawAmount;
+  const remainingBalance = parseInt(userData1.bnbBalace) - withdrawAmount;
 
   return (
     <>
@@ -585,7 +585,7 @@ function Profile() {
                 onClick={() =>
                   history.push({
                     pathname: "/settings",
-                    search: userData1?._id,
+                    search: userData1._id,
                     hash: "editProfile",
                     state: {
                       data: userData1,
@@ -599,7 +599,7 @@ function Profile() {
           </Box>
 
           <Grid container spacing={1}>
-            {auth?.userData?.userType !== "Admin" && (
+            {auth.userData.userType !== "Admin" && (
               <Grid item xs={12} sm={12} md={12} align="right">
                 <Box className={classes.buttonbox}>
                   <Button
@@ -625,12 +625,12 @@ function Profile() {
             <Grid item xs={12} sm={5} md={4}>
               <Box className="username">
                 <Typography color="primary.main" variant="h3">
-                  {userData1?.name ? userData1?.name : userData1?.userName}
+                  {userData1.name ? userData1.name : userData1.userName}
                 </Typography>
-                {userData1?.walletAddress && (
+                {userData1.walletAddress && (
                   <Typography variant="body1">
-                    {userData1?.walletAddress}
-                    <CopyToClipboard text={userData1?.walletAddress}>
+                    {userData1.walletAddress}
+                    <CopyToClipboard text={userData1.walletAddress}>
                       <BiCopy
                         style={{
                           color: "#fff",
@@ -643,20 +643,18 @@ function Profile() {
                     </CopyToClipboard>
                   </Typography>
                 )}
-                {auth?.userData?.userType !== "Admin" && (
+                {auth.userData.userType !== "Admin" && (
                   <Typography variant="body1">
-                    Total Subscriber : &nbsp; {userData1?.subscriberCount}
+                    Total Subscriber : &nbsp; {userData1.subscriberCount}
                   </Typography>
                 )}
 
                 <Typography variant="body1">
                   Your LAZI Balance : &nbsp;{" "}
-                  {userData1?.bnbBalace > 0
-                    ? parseInt(userData1?.bnbBalace)
-                    : 0}
+                  {userData1.bnbBalace > 0 ? parseInt(userData1.bnbBalace) : 0}
                   &nbsp;$LAZI
                 </Typography>
-                {auth?.userData?.userType !== "Admin" && (
+                {auth.userData.userType !== "Admin" && (
                   <Box
                     style={{
                       display: "flex",
@@ -684,7 +682,7 @@ function Profile() {
                 )}
               </Box>
             </Grid>
-            {auth?.userData?.userType !== "Admin" && (
+            {auth.userData.userType !== "Admin" && (
               <>
                 <Grid item xs={12} sm={5} md={4}>
                   <Box className="username">
@@ -694,15 +692,15 @@ function Profile() {
 
                     <Typography variant="body1">
                       Sign Up Bonus : &nbsp;{" "}
-                      {userReferralData?.tatalSignupBonus
-                        ? userReferralData?.tatalSignupBonus
+                      {userReferralData.tatalSignupBonus
+                        ? userReferralData.tatalSignupBonus
                         : "0 "} Share
                     </Typography>
 
                     <Typography variant="body1">
                       Referral Earning : &nbsp;{" "}
-                      {userReferralData?.totalrefferralBonus
-                        ? userReferralData?.totalrefferralBonus
+                      {userReferralData.totalrefferralBonus
+                        ? userReferralData.totalrefferralBonus
                         : "0"} Share
                     </Typography> */}
 
@@ -720,8 +718,8 @@ function Profile() {
 
                         >
                           Total Refferral :{" "}
-                          {userReferralData?.totalReferralUser
-                            ? userReferralData?.totalReferralUser
+                          {userReferralData.totalReferralUser
+                            ? userReferralData.totalReferralUser
                             : "0"}
                         </Typography>
                       </Box>
@@ -744,14 +742,14 @@ function Profile() {
                         fullWidth
                         value={
                           window.location.origin +
-                          `${"/"}`?.concat(userData1?.referralCode)
+                          `${"/"}`.concat(userData1.referralCode)
                         }
                         InputProps={{
                           className: classes.TextBox,
                           endAdornment: (
                             <InputAdornment position="end">
                               <CopyToClipboard
-                                text={`${window.location.origin}/signup?${userData1?.referralCode}`}
+                                text={`${window.location.origin}/signup?${userData1.referralCode}`}
                               >
                                 <Button
                                   onClick={() => toast.info("Copied")}
@@ -772,8 +770,8 @@ function Profile() {
                     <Box className={classes.btnfollow2}>
                       <Typography color="primary.main" variant="body1">
                         Total Refferral :{" "}
-                        {userReferralData?.totalReferralUser
-                          ? userReferralData?.totalReferralUser
+                        {userReferralData.totalReferralUser
+                          ? userReferralData.totalReferralUser
                           : "0"}
                       </Typography>
                     </Box>
@@ -784,7 +782,7 @@ function Profile() {
           </Grid>
         </Box>
 
-        {userData1?.userType === "User" ? (
+        {userData1.userType === "User" ? (
           <Box className="outerbox">
             <Box className="detail">
               <Bundles />
@@ -828,7 +826,7 @@ function Profile() {
                   {followingList && followingList.length > 0 ? (
                     <Grid container>
                       {followingList &&
-                        followingList?.map((data, i) => {
+                        followingList.map((data, i) => {
                           return (
                             <Grid
                               item
@@ -891,7 +889,7 @@ function Profile() {
                   {followerList && followerList.length > 0 ? (
                     <Grid container>
                       {followerList &&
-                        followerList?.map((data, i) => {
+                        followerList.map((data, i) => {
                           return (
                             <Grid
                               item
@@ -945,19 +943,19 @@ function Profile() {
                 <Box className="text">
                   <Typography variant="body2">My Wallet Address</Typography>
                   &nbsp;
-                  {userData1?.bnbAccount?.address && (
+                  {userData1.bnbAccount.address && (
                     <img
                       width="56%"
-                      src={`https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=${userData1?.bnbAccount?.address}&choe=UTF-8`}
+                      src={`https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=${userData1.bnbAccount.address}&choe=UTF-8`}
                       alt=""
                     />
                   )}
                   &nbsp;
                   <Box className="address">
                     <Typography variant="body2">
-                      {sortAddress(userData1?.bnbAccount?.address)}
-                      {/* {userData1?.bnbAccount?.address} */}
-                      <CopyToClipboard text={userData1?.bnbAccount?.address}>
+                      {sortAddress(userData1.bnbAccount.address)}
+                      {/* {userData1.bnbAccount.address} */}
+                      <CopyToClipboard text={userData1.bnbAccount.address}>
                         <BiCopy
                           style={{
                             color: "#fff",
@@ -1024,7 +1022,7 @@ function Profile() {
                     name="Text Field"
                     disabled={isLoading}
                     placeholder={
-                      userData1?.bnbBalace ? parseInt(userData1?.bnbBalace) : 0
+                      userData1.bnbBalace ? parseInt(userData1.bnbBalace) : 0
                     }
                     type="number"
                     fullWidth
@@ -1034,7 +1032,7 @@ function Profile() {
                         (withdrawAmount !== "" && Number(withdrawAmount) === 0)
                     )}
                     onChange={(e) => {
-                      if (userData1?.bnbBalace > 0) {
+                      if (userData1.bnbBalace > 0) {
                         if (remainingBalance > 0) {
                           setWithdrawAmount(e.target.value);
                         } else {
@@ -1054,7 +1052,7 @@ function Profile() {
                       }
                     }}
                     onKeyPress={(event) => {
-                      if (event?.key === "-" || event?.key === "+") {
+                      if (event.key === "-" || event.key === "+") {
                         event.preventDefault();
                       }
                     }}

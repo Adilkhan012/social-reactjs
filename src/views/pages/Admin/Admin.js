@@ -178,7 +178,6 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
-
 }));
 const currenciesUser = [
   {
@@ -221,11 +220,10 @@ function TransactionHistory({ data, index }) {
   const [pagePost, setPagePost] = useState(1);
   const [noOfPagesPost, setNoOfPagesPostList] = useState(1);
   useEffect(() => {
-    if (auth?.userData?.userType === "User") {
-      history.push("/explore")
-
+    if (auth.userData.userType === "User") {
+      history.push("/explore");
     }
-  }, [auth?.userData?.userType])
+  }, [auth.userData.userType]);
 
   const handleBlock = (id) => {
     setIdd(id._id);
@@ -234,7 +232,6 @@ function TransactionHistory({ data, index }) {
     //   openBlock();
   };
   const adminUserListHandler = async () => {
-
     try {
       const res = await Axios({
         method: "GET",
@@ -250,7 +247,6 @@ function TransactionHistory({ data, index }) {
           toDate: toTimeFilter ? `${moment(toTimeFilter)}` : null,
           statusType: typeactivty === "All" ? null : typeactivty,
         },
-
       });
 
       if (res.data.responseCode === 200) {
@@ -282,7 +278,7 @@ function TransactionHistory({ data, index }) {
 
       if (res.data.responseCode === 200) {
         setTransactionListAll(
-          res.data.result?.map((data, i) => {
+          res.data.result.map((data, i) => {
             return {
               Username: data.userName ? data.userName : null,
               Email: data.email ? data.email : null,
@@ -347,7 +343,6 @@ function TransactionHistory({ data, index }) {
         setloader2(false);
       });
   };
-
 
   const collectionList = async () => {
     try {
@@ -461,12 +456,12 @@ function TransactionHistory({ data, index }) {
     XLSX.write(workBook, { bookType: "xlsx", type: "binary" });
     XLSX.writeFile(workBook, "user_list.xlsx");
   };
-  const pageCheck = page === 1 ? 15 : 0
+  const pageCheck = page === 1 ? 15 : 0;
   return (
     <>
       <Box className={classes.root}>
         <Container>
-          {auth?.userData?.permissions?.userManagement && (
+          {auth.userData.permissions.userManagement && (
             <>
               <Box className={classes.main}>
                 <Box className={classes.heading}>
@@ -483,7 +478,7 @@ function TransactionHistory({ data, index }) {
                     style={{ color: "#e6e5e8" }}
                   >
                     {transactionListDataAll &&
-                      transactionListDataAll?.length > 0 && (
+                      transactionListDataAll.length > 0 && (
                         <AiOutlineDownload
                           onClick={downloadExcel}
                           style={{
@@ -502,7 +497,7 @@ function TransactionHistory({ data, index }) {
                       <Typography
                         variant="boay2"
                         style={{ color: "#cfc8c8" }}
-                      // color="primary.main"
+                        // color="primary.main"
                       >
                         From
                       </Typography>
@@ -531,7 +526,7 @@ function TransactionHistory({ data, index }) {
                       <Typography
                         variant="boay2"
                         style={{ color: "#cfc8c8" }}
-                      // color="primary.main"
+                        // color="primary.main"
                       >
                         To
                       </Typography>
@@ -562,7 +557,7 @@ function TransactionHistory({ data, index }) {
                       <Typography
                         variant="boay2"
                         style={{ color: "#cfc8c8", marginTop: "-2px" }}
-                      // color="primary.main"
+                        // color="primary.main"
                       >
                         By Type
                       </Typography>
@@ -599,16 +594,15 @@ function TransactionHistory({ data, index }) {
                     <Grid item xs={12} sm={6} md={3} lg={2}>
                       <Typography
                         variant="boay2"
-
                         style={{ color: "#cfc8c8", marginTop: "-2px" }}
                         className={classes.searchbox}
-                      // color="primary.main"
+                        // color="primary.main"
                       >
                         Search
                       </Typography>
                       <Box
                         mt={1}
-                      // style={{ minHeight: "43px", marginTop: "-2px" }}
+                        // style={{ minHeight: "43px", marginTop: "-2px" }}
                       >
                         <FormControl fullWidth>
                           <TextField
@@ -666,10 +660,15 @@ function TransactionHistory({ data, index }) {
                   style={{ background: "#000", padding: "15px" }}
                 >
                   {isLoading ? (
-                    <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <Box
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
                       <DataLoading />
                     </Box>
-
                   ) : (
                     <TableContainer>
                       <Table>
@@ -703,7 +702,7 @@ function TransactionHistory({ data, index }) {
                             </TableCell>
                           </TableRow>
                         </TableHead>
-                        {transactionListData?.map((data, i) => {
+                        {transactionListData.map((data, i) => {
                           return (
                             <TableBody key={i}>
                               <TableRow className={classes.tbody}>
@@ -715,12 +714,12 @@ function TransactionHistory({ data, index }) {
                                   {(page - 1) * 15 + i + 1}
                                 </TableCell>
                                 <TableCell align="Center">
-                                  {data?.userName ? data?.userName : data?.name}
+                                  {data.userName ? data.userName : data.name}
                                 </TableCell>
                                 <TableCell align="Center">
-                                  {sortAddress(data?.bnbAccount?.address)}&nbsp;
+                                  {sortAddress(data.bnbAccount.address)}&nbsp;
                                   <CopyToClipboard
-                                    text={data?.bnbAccount?.address}
+                                    text={data.bnbAccount.address}
                                     style={{ cursor: "pointer" }}
                                   >
                                     <FiCopy
@@ -732,10 +731,10 @@ function TransactionHistory({ data, index }) {
                                 {/* <TableCell align="Center">0 </TableCell>
                           <TableCell align="Center">0 </TableCell> */}
                                 <TableCell align="Center">
-                                  {data?.status}{" "}
+                                  {data.status}{" "}
                                 </TableCell>
                                 <TableCell align="Center">
-                                  {moment(data?.createdAt).format("DD-MM-YYYY")}
+                                  {moment(data.createdAt).format("DD-MM-YYYY")}
                                 </TableCell>
                                 <TableCell align="Center">
                                   <Box
@@ -757,12 +756,12 @@ function TransactionHistory({ data, index }) {
                                     >
                                       <VisibilityIcon />
                                     </Button>
-                                    {data?.status === "BLOCK" ? (
+                                    {data.status === "BLOCK" ? (
                                       <Button
                                         // variant="contained"
                                         color="primary"
-                                      // className={classes.button}
-                                      // onClick={() => handleBlock(data)}
+                                        // className={classes.button}
+                                        // onClick={() => handleBlock(data)}
                                       >
                                         <BlockIcon
                                           //   fontSize="small"
@@ -797,7 +796,7 @@ function TransactionHistory({ data, index }) {
                                       <BlockIcon
                                         //   fontSize="small"
                                         style={
-                                          data?.status === "BLOCK"
+                                          data.status === "BLOCK"
                                             ? { fontSize: "15px", color: "red" }
                                             : {
                                                 fontSize: "15px",
@@ -819,15 +818,16 @@ function TransactionHistory({ data, index }) {
                     transactionListData &&
                     transactionListData.length === 0 && <NoDataFound />}
 
-                  {transactionListData && transactionListData.length >= pageCheck && (
-                    <Box mt={2} display="flex" justifyContent="center">
-                      <Pagination
-                        count={noOfPages}
-                        page={page}
-                        onChange={(e, v) => setPage(v)}
-                      />
-                    </Box>
-                  )}
+                  {transactionListData &&
+                    transactionListData.length >= pageCheck && (
+                      <Box mt={2} display="flex" justifyContent="center">
+                        <Pagination
+                          count={noOfPages}
+                          page={page}
+                          onChange={(e, v) => setPage(v)}
+                        />
+                      </Box>
+                    )}
                 </Box>
               </Box>
             </>
@@ -842,15 +842,26 @@ function TransactionHistory({ data, index }) {
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
                   {/* {row.status} */}
-                  {`Are you sure  to ${idds.status === "BLOCK" ? "ACTIVE" : "BLOCK"
-                    } this user?`}
+                  {`Are you sure  to ${
+                    idds.status === "BLOCK" ? "ACTIVE" : "BLOCK"
+                  } this user?`}
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button variant="contained" color="secondary" disabled={loader2} onClick={blockuser}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  disabled={loader2}
+                  onClick={blockuser}
+                >
                   Yes {loader2 && <ButtonCircularProgress />}
                 </Button>
-                <Button onClick={closeBlock} variant='contained' color="primary" autoFocus>
+                <Button
+                  onClick={closeBlock}
+                  variant="contained"
+                  color="primary"
+                  autoFocus
+                >
                   No
                 </Button>
               </DialogActions>
@@ -885,7 +896,6 @@ function TransactionHistory({ data, index }) {
                       <AddToHomeScreenIcon style={{ marginRight: "5px" }} />{" "}
                       Auction
                     </Button>
-
                   </Box>
                 </Box>
               </Container>
@@ -901,7 +911,7 @@ function TransactionHistory({ data, index }) {
                         <NoDataFound />
                       )}
                       {collectionlistAll &&
-                        collectionlistAll?.map((data, i) => {
+                        collectionlistAll.map((data, i) => {
                           return (
                             <Grid item lg={4} md={4} sm={6} xs={6}>
                               <BundlesCard
@@ -937,10 +947,10 @@ function TransactionHistory({ data, index }) {
               {tabview === "Owned" && (
                 <Box mt={3}>
                   <Grid container spacing={2}>
-                    {postList && postList?.length > 0 ? (
+                    {postList && postList.length > 0 ? (
                       <>
                         {postList &&
-                          postList?.map((data, i) => {
+                          postList.map((data, i) => {
                             return (
                               <Grid item xs={12} sm={6} md={4} lg={4}>
                                 <BundlesDetailsCardAdmin
@@ -973,10 +983,10 @@ function TransactionHistory({ data, index }) {
               {tabview === "auction" && (
                 <Box mt={3}>
                   <Grid container spacing={2}>
-                    {auctionList && auctionList?.length > 0 ? (
+                    {auctionList && auctionList.length > 0 ? (
                       <>
                         {auctionList &&
-                          auctionList?.map((data, i) => {
+                          auctionList.map((data, i) => {
                             return (
                               <Grid item xs={12} sm={6} md={4} lg={4}>
                                 <AuctionCard
@@ -1012,7 +1022,7 @@ function TransactionHistory({ data, index }) {
                 </Typography>
 
                 <Grid container spacing={2}>
-                  {blockUserList && blockUserList?.length > 0 ? (
+                  {blockUserList && blockUserList.length > 0 ? (
                     <>
                       {blockUserList && (
                         <Grid item xs={12} sm={12} md={12} lg={12}>

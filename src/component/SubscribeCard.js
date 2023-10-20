@@ -86,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
       justifyContent: "space-between",
       padding: "10px 0px 0px",
       whiteSpace: "nowrap",
-      textOverflow: "ellipsis"
+      textOverflow: "ellipsis",
     },
     "& .buttonbox": {
       display: "flex",
@@ -193,7 +193,7 @@ const useStyles = makeStyles((theme) => ({
         color: "#FFF",
         whiteSpace: "nowrap",
         textOverflow: "ellipsis",
-        overflow: "hidden"
+        overflow: "hidden",
       },
     },
   },
@@ -231,17 +231,17 @@ function StoryCard(props) {
   const [open4, setOpen4] = React.useState(false);
   const [subscribedUser, setSubscribedUser] = useState(false);
   const [viewCollectionDetails, setOpenData] = React.useState();
-  const fileExtention = viewCollectionDetails?.image.split(".").pop();
+  const fileExtention = viewCollectionDetails.image.split(".").pop();
   const [isLoading, setIsLoading] = useState(false);
 
   const fileType =
     fileExtention == "mp4" || fileExtention == "webp"
       ? "video"
       : fileExtention == "mp3"
-        ? "audio"
-        : "image";
+      ? "audio"
+      : "image";
 
-  // console.log("viewCollectionDetails", data?.userId?.bnbAccount?.address);
+  // console.log("viewCollectionDetails", data.userId.bnbAccount.address);
 
   const updateDimensions = () => {
     var offsetWidth = document.getElementById("imagecard" + index).offsetWidth;
@@ -260,8 +260,8 @@ function StoryCard(props) {
   }, []);
 
   useEffect(() => {
-    const userSubscriberd = data?.subscriptionUsers?.filter((value) => {
-      return value === auth.userData?._id;
+    const userSubscriberd = data.subscriptionUsers.filter((value) => {
+      return value === auth.userData._id;
     });
     if (userSubscriberd[0]) {
       setSubscribedUser(true);
@@ -269,10 +269,10 @@ function StoryCard(props) {
       setSubscribedUser(false);
     }
   }, [
-    data?.subscriptionUser,
+    data.subscriptionUser,
     subscribedUser,
-    data?.subscriptionUsers,
-    auth.userData?._id,
+    data.subscriptionUsers,
+    auth.userData._id,
   ]);
   const subscribeNowHandler = async (isCheck) => {
     setIsloading(true);
@@ -302,7 +302,7 @@ function StoryCard(props) {
       })
       .catch((err) => {
         setIsloading(false);
-        toast.error(err?.response?.data?.responseMessage);
+        toast.error(err.response.data.responseMessage);
 
         if (calBackFunc) {
           calBackFunc();
@@ -317,12 +317,12 @@ function StoryCard(props) {
   };
   const isVideo = data.image.includes(".mp4");
   let isLike = false;
-  if (auth.userData?._id && data) {
-    const likeUser = data?.likesUsers?.filter(
-      (data) => data === auth.userData?._id
+  if (auth.userData._id && data) {
+    const likeUser = data.likesUsers.filter(
+      (data) => data === auth.userData._id
     );
     // console.log("likeUser", likeUser);
-    isLike = likeUser?.length > 0;
+    isLike = likeUser.length > 0;
   }
   // console.log("isLike", isLike, data);
   const likesHandler = async () => {
@@ -348,7 +348,7 @@ function StoryCard(props) {
 
         toast.success(res.data.responseMessage);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   const handleCollection = () => {
@@ -366,21 +366,21 @@ function StoryCard(props) {
           onClick={() => {
             history.push({
               pathname: "/bundles-details",
-              search: data?._id,
+              search: data._id,
               state: data,
             });
           }}
         >
           {fileType == "image" && (
             <Box
-              id={`imagecard${data?._id}`}
+              id={`imagecard${data._id}`}
               className={classes.mainimg}
               style={{ background: "url(" + data.image + ")" }}
             ></Box>
           )}
           {(fileType == "video" || fileType == "audio") && (
             <Box
-              id={`imagecard${data?._id}`}
+              id={`imagecard${data._id}`}
               className={classes.mainimg}
               style={{ background: "url(" + data.image + ")" }}
             >
@@ -405,8 +405,8 @@ function StoryCard(props) {
                 <Box className="userImage">
                   <img
                     src={
-                      data?.userId?.profilePic
-                        ? data?.userId?.profilePic
+                      data.userId.profilePic
+                        ? data.userId.profilePic
                         : "/images/user.png"
                     }
                     alt="user data"
@@ -414,16 +414,16 @@ function StoryCard(props) {
                 </Box>
                 <Box className="username">
                   <Typography variant="h6" className={classes.text}>
-                    {data?.userId?.userName
-                      ? `${data?.userId?.userName?.length > 15
-                        ? sortAddress(data?.userId?.userName)
-                        : data?.userId?.userName
-                      }`
-                      : `${sortAddress(data?.userId?.bnbAccount?.address)}`}
+                    {data.userId.userName
+                      ? `${
+                          data.userId.userName.length > 15
+                            ? sortAddress(data.userId.userName)
+                            : data.userId.userName
+                        }`
+                      : `${sortAddress(data.userId.bnbAccount.address)}`}
                   </Typography>
                 </Box>
               </Box>
-
 
               <IconButton className={classes.iconbutton} onClick={likesHandler}>
                 {isLike ? (
@@ -445,18 +445,18 @@ function StoryCard(props) {
         </Box>
         <Box className="text">
           <Typography variant="body1">Collection Title</Typography>
-          <Typography variant="body1">{sortAddress(data?.title)}</Typography>
+          <Typography variant="body1">{sortAddress(data.title)}</Typography>
         </Box>
         <Box className="text" mb={2}>
           <Typography variant="body1">Collection Price</Typography>
           <Typography variant="body1">
-            {data?.amount > 1 ? data?.amount : Number(data?.amount)?.toFixed(4)}
+            {data.amount > 1 ? data.amount : Number(data.amount).toFixed(4)}
             &nbsp;
             {tokenName}
           </Typography>
         </Box>
         <Box className="buttonbox">
-          {!subscribedUser && data?.userId?._id !== auth?.userData?._id && (
+          {!subscribedUser && data.userId._id !== auth.userData._id && (
             <Box align="center">
               <Box
                 onClick={() => handleCollection(data)}
@@ -469,7 +469,7 @@ function StoryCard(props) {
               </Box>
             </Box>
           )}
-          {subscribedUser && data?.userId?._id !== auth?.userData?._id && (
+          {subscribedUser && data.userId._id !== auth.userData._id && (
             <Box align="center">
               <Box
                 // onClick={() => subscribeNowHandler()}
@@ -481,7 +481,7 @@ function StoryCard(props) {
               </Box>
             </Box>
           )}
-          {data?.userId?._id === auth?.userData?._id && (
+          {data.userId._id === auth.userData._id && (
             <Box align="center">
               <Box
                 onClick={() => setOpen3(true)}
@@ -511,32 +511,32 @@ function StoryCard(props) {
             open={open3}
             onClose={() => setOpen3(false)}
             aria-labelledby="max-width-dialog-title"
-          // disableBackdropClick={isLoading}
-          // disableEscapeKeyDown={isLoading}
+            // disableBackdropClick={isLoading}
+            // disableEscapeKeyDown={isLoading}
           >
             <DialogContent>
               <Box className="img-container">
                 {/* {isVideo ? (
                 <div>
                   <video width="100%" controls>
-                    <source src={data?.nftId[0]?.mediaUrl} type="video/mp4" />
+                    <source src={data.nftId[0].mediaUrl} type="video/mp4" />
                   </video>
                 </div>
               ) : ( */}
                 <img
-                  src={data?.image}
+                  src={data.image}
                   alt=""
-                // style={{
-                //   width: "440px",
-                //   maxWidth: "100%",
-                //   height: "auto",
-                //   borderRadius:"15px !important"
-                // }}
+                  // style={{
+                  //   width: "440px",
+                  //   maxWidth: "100%",
+                  //   height: "auto",
+                  //   borderRadius:"15px !important"
+                  // }}
                 />
               </Box>
               {/* <Box mt={2} className={classes.bundleText} textAlign="center">
                 <Typography variant="h4" className="red">
-                  {data?.name}
+                  {data.name}
                 </Typography>
               </Box> */}
               <Box mt={2}>
@@ -546,8 +546,8 @@ function StoryCard(props) {
                       <Box className="userImage">
                         <img
                           src={
-                            data?.userId?.profilePic
-                              ? data?.userId?.profilePic
+                            data.userId.profilePic
+                              ? data.userId.profilePic
                               : "/images/user.png"
                           }
                           alt="user data"
@@ -555,9 +555,9 @@ function StoryCard(props) {
                       </Box>
                       <Box className="username">
                         <Typography variant="h6" className={classes.text}>
-                          {data?.userId?.userName
-                            ? data?.userId?.userName
-                            : data?.userId?.name}
+                          {data.userId.userName
+                            ? data.userId.userName
+                            : data.userId.name}
                         </Typography>
                       </Box>
                     </Box>
@@ -570,7 +570,7 @@ function StoryCard(props) {
                           fontWeight: "500",
                         }}
                       >
-                        {data?.title}
+                        {data.title}
                       </Typography> */}
                   </Grid>
                   <Grid item xs={6} align="right">
@@ -583,9 +583,9 @@ function StoryCard(props) {
                           fontWeight: "500",
                         }}
                       >
-                        {data?.amount > 1
-                          ? data?.amount
-                          : Number(data?.amount)?.toFixed(4)}
+                        {data.amount > 1
+                          ? data.amount
+                          : Number(data.amount).toFixed(4)}
                         &nbsp;
                         {tokenName}
                       </span>
@@ -596,7 +596,7 @@ function StoryCard(props) {
                   <Grid container spacing={1}>
                     <Grid item xs={12} align="left">
                       <Typography variant="h4">
-                        Duration: <span>{data?.duration}&nbsp; Days</span>
+                        Duration: <span>{data.duration}&nbsp; Days</span>
                       </Typography>
                     </Grid>
 
@@ -604,13 +604,13 @@ function StoryCard(props) {
                       <Typography variant="h4">Details:</Typography>
                     </Grid>
                     <Grid item xs={12}>
-                      <Typography variant="h6">{data?.title}</Typography>
+                      <Typography variant="h6">{data.title}</Typography>
                     </Grid>
                   </Grid>
                 </Box>
                 {auth.userData &&
                   auth.userLoggedIn &&
-                  auth?.userData?._id !== data?.userId && (
+                  auth.userData._id !== data.userId && (
                     <Box mt={3} mb={3} textAlign="center">
                       <Button
                         variant="contained"
@@ -634,28 +634,28 @@ function StoryCard(props) {
           open={open4}
           onClose={() => setOpen4(false)}
           aria-labelledby="max-width-dialog-title"
-        // disableBackdropClick={isLoading}
-        // disableEscapeKeyDown={isLoading}
+          // disableBackdropClick={isLoading}
+          // disableEscapeKeyDown={isLoading}
         >
           <DialogContent>
             {fileType == "image" && (
               <Box className={classes.modalBannerImage}>
                 <figure>
-                  <img src={viewCollectionDetails?.image} alt="" />
+                  <img src={viewCollectionDetails.image} alt="" />
                 </figure>
               </Box>
               // <Box
               //   // id={`imagecard${index}`}
               //   className={classes.PhotoBox}
               //   // style={{
-              //   //   background: "url(" + viewCollectionDetails?.image + ")",
+              //   //   background: "url(" + viewCollectionDetails.image + ")",
               //   // }}
               //   // onClick={() => {
               //   //   history.push("/about-auction");
               //   // }}
               // >
               //   <img
-              //     src={viewCollectionDetails?.image}
+              //     src={viewCollectionDetails.image}
               //     alt=""
               //     style={{
               //       width: "440px",
@@ -670,9 +670,9 @@ function StoryCard(props) {
               <Box
                 id={`imagecard${index}`}
                 className={classes.PhotoBox}
-              // onClick={() => {
-              //   history.push("/about-auction");
-              // }}
+                // onClick={() => {
+                //   history.push("/about-auction");
+                // }}
               >
                 <video
                   width="100%"
@@ -681,13 +681,13 @@ function StoryCard(props) {
                   muted={true}
                   controls
                 >
-                  <source src={viewCollectionDetails?.image} type="video/mp4" />
+                  <source src={viewCollectionDetails.image} type="video/mp4" />
                 </video>
               </Box>
             )}
             {/* <Box mt={2} className={classes.bundleText} textAlign="center">
               <Typography variant="h4" className="red">
-                {viewCollectionDetails?.name}
+                {viewCollectionDetails.name}
               </Typography>
             </Box> */}
             <Box mt={2}>
@@ -698,8 +698,8 @@ function StoryCard(props) {
                       <Box className="userImage">
                         <img
                           src={
-                            data?.userId?.profilePic
-                              ? data?.userId?.profilePic
+                            data.userId.profilePic
+                              ? data.userId.profilePic
                               : "/images/user.png"
                           }
                           alt="user data"
@@ -714,7 +714,7 @@ function StoryCard(props) {
                             fontWeight: "500",
                           }}
                         >
-                          {data?.title}
+                          {data.title}
                         </Typography>
                       </Box>
                     </Box>
@@ -730,9 +730,9 @@ function StoryCard(props) {
                         fontWeight: "500",
                       }}
                     >
-                      {data?.amount > 1
-                        ? data?.amount
-                        : Number(data?.amount)?.toFixed(4)}
+                      {data.amount > 1
+                        ? data.amount
+                        : Number(data.amount).toFixed(4)}
                       &nbsp;
                       {tokenName}
                     </span>
@@ -745,7 +745,7 @@ function StoryCard(props) {
                     <Typography variant="h4">
                       Duration:&nbsp;
                       <span style={{ fontSize: "14px" }}>
-                        {viewCollectionDetails?.duration}&nbsp; Days
+                        {viewCollectionDetails.duration}&nbsp; Days
                       </span>{" "}
                     </Typography>
                   </Grid>
@@ -757,14 +757,14 @@ function StoryCard(props) {
                       variant="h6"
                       style={{ color: "#A3A3A3", fontSize: "12px" }}
                     >
-                      {viewCollectionDetails?.description}
+                      {viewCollectionDetails.description}
                     </Typography>
                   </Grid>
                 </Grid>
               </Box>
               {auth.userData &&
                 auth.userLoggedIn &&
-                auth?.userData?._id !== data?.userId && (
+                auth.userData._id !== data.userId && (
                   <Box mt={3} mb={3} textAlign="center">
                     <Button
                       variant="contained"
@@ -778,7 +778,7 @@ function StoryCard(props) {
                       Cancel
                     </Button>
                     &nbsp;&nbsp;&nbsp;
-                    {/* {data?.userId?._id !== auth?.userData?._id && ( */}
+                    {/* {data.userId._id !== auth.userData._id && ( */}
                     {/* // auth.userData._id !== userId && */}
                     <Button
                       variant="contained"

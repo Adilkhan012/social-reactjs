@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     background: "#000",
     "& img": {
       width: "100%",
-      minHeight:"100%"
+      minHeight: "100%",
     },
   },
 }));
@@ -66,7 +66,7 @@ export default function UsersCard(props) {
     try {
       const res = await axios({
         method: "GET",
-        url: Apiconfigs.followUnfollowUser + data?._id,
+        url: Apiconfigs.followUnfollowUser + data._id,
         headers: {
           token: window.localStorage.getItem("token"),
         },
@@ -88,9 +88,9 @@ export default function UsersCard(props) {
   };
 
   useEffect(() => {
-    if (data && auth?.userData) {
+    if (data && auth.userData) {
       const filterFun = data.followers.filter((data) => {
-        return data === auth?.userData?._id;
+        return data === auth.userData._id;
       });
       if (filterFun[0]) {
         setisFollowing(true);
@@ -98,7 +98,7 @@ export default function UsersCard(props) {
         setisFollowing(false);
       }
     }
-  }, [data, auth?.userData]);
+  }, [data, auth.userData]);
 
   return (
     <Box className={classes.root}>
@@ -108,17 +108,17 @@ export default function UsersCard(props) {
             <img src={data.check}  />
           </Box> */}
           <img
-            src={data?.profilePic ? data?.profilePic : "/images/user.png"}
+            src={data.profilePic ? data.profilePic : "/images/user.png"}
             alt="user"
           />
         </figure>
         <Box pl={1}>
           <Typography variant="h5" style={{ fontSize: "16px" }}>
             {" "}
-            {data?.userName ? data?.userName : data?.name}
+            {data.userName ? data.userName : data.name}
           </Typography>
           {/* <Typography variant="body2" style={{ color: "#ffffffab" }}>
-            {data?.followersCount}
+            {data.followersCount}
           </Typography> */}
         </Box>
       </Box>

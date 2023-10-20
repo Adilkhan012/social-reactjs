@@ -283,7 +283,7 @@ export default function Interest() {
     reader.onload = function () {
       cb(reader.result);
     };
-    reader.onerror = function (err) { };
+    reader.onerror = function (err) {};
   };
   const handleClickOpen = () => {
     setOpen(true);
@@ -309,13 +309,14 @@ export default function Interest() {
   const [durationId, setDurationId] = useState();
   const [durationAmount, setAmounDuration] = useState();
   const validPromotionUrl = (value) => {
-    const re = /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;
+    const re =
+      /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;
     return re.test(value);
   };
   const handleDurationFunc = (data) => {
-    setDuration(data?.duration);
-    setAmounDuration(data?.amount);
-    setDurationId(data?._id);
+    setDuration(data.duration);
+    setAmounDuration(data.amount);
+    setDurationId(data._id);
   };
   const listDurationHandler = async (id) => {
     try {
@@ -332,12 +333,12 @@ export default function Interest() {
       if (res.data.responseCode === 200) {
         setSurationList(res.data.result.docs);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
   const [durationDays, setDurationDays] = useState("Days");
   const [durationCount, setDurationCount] = useState(0);
   useEffect(() => {
-    const ab = durationList?.map((data) => {
+    const ab = durationList.map((data) => {
       if (data.duration == 365) {
         setDurationDays("Year");
         setDurationCount(1);
@@ -380,7 +381,7 @@ export default function Interest() {
       if (res.data.responseCode === 200) {
         setIntrestList(res.data.result.docs);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
   useEffect(() => {
     listInterestHandler();
@@ -404,7 +405,7 @@ export default function Interest() {
         });
         if (res.data.responseCode === 200) {
         }
-      } catch (error) { }
+      } catch (error) {}
     }
   };
 
@@ -412,7 +413,7 @@ export default function Interest() {
     event.preventDefault();
     setIsSubmit(true);
     const selectuser = selectedTeam
-      ? selectedTeam?.map((data) => data.name)
+      ? selectedTeam.map((data) => data.name)
       : [];
 
     if (
@@ -480,8 +481,8 @@ export default function Interest() {
         })
         .catch((error) => {
           setLoader(false);
-          if (error?.response?.data?.responseMessage) {
-            toast.error(error?.response?.data?.responseMessage);
+          if (error.response.data.responseMessage) {
+            toast.error(error.response.data.responseMessage);
           } else {
             toast.error(error.message);
           }
@@ -492,7 +493,6 @@ export default function Interest() {
   return (
     <>
       <Box className={classes.bannerBox}>
-
         <Paper className={classes.root} elevation={2}>
           <Box className={classes.root}>
             <Grid container spacing>
@@ -548,16 +548,16 @@ export default function Interest() {
                     marginRight: "10px",
                   }}
                   src={
-                    auth?.userData?.profilePic
-                      ? auth?.userData?.profilePic
+                    auth.userData.profilePic
+                      ? auth.userData.profilePic
                       : "images/user.png"
                   }
                 />
 
                 <Typography variant="h6">
-                  {auth?.userData?.userName
-                    ? auth?.userData?.userName
-                    : auth?.userData?.name}
+                  {auth.userData.userName
+                    ? auth.userData.userName
+                    : auth.userData.name}
                 </Typography>
               </Box>
               <form onSubmit={(event) => createPromotionleHandle(event)}>
@@ -649,7 +649,7 @@ export default function Interest() {
                     onChange={(_event, newTeam) => {
                       setSelectedTeam(newTeam);
                     }}
-                    getOptionLabel={(option) => option?.name}
+                    getOptionLabel={(option) => option.name}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -742,7 +742,7 @@ export default function Interest() {
                       placeholder="Minimum age (year)"
                       type="number"
                       onKeyPress={(event) => {
-                        if (event?.key === "-" || event?.key === "+") {
+                        if (event.key === "-" || event.key === "+") {
                           event.preventDefault();
                         }
                       }}
@@ -760,8 +760,7 @@ export default function Interest() {
                         (minAgeCheck === "" ||
                           Number(minAgeCheck) > Number(maxAgeCheck)) && (
                           <Box ml={1}>
-                            Min age is required, It should be less then max
-                            age
+                            Min age is required, It should be less then max age
                           </Box>
                         )) ||
                         (minAgeCheck !== "" && Number(minAgeCheck) < 1 && (
@@ -782,7 +781,7 @@ export default function Interest() {
                       placeholder="Maximum age (year)"
                       type="number"
                       onKeyPress={(event) => {
-                        if (event?.key === "-" || event?.key === "+") {
+                        if (event.key === "-" || event.key === "+") {
                           event.preventDefault();
                         }
                       }}
@@ -837,9 +836,7 @@ export default function Interest() {
                       <Box ml={1}>Promotion url is required</Box>
                     )) ||
                       (portUrl !== "" && !validPromotionUrl(portUrl) && (
-                        <Box ml={1}>
-                          Please enter valid promotion url
-                        </Box>
+                        <Box ml={1}>Please enter valid promotion url</Box>
                       ))}
                   </FormHelperText>
                 </Box>
@@ -850,9 +847,13 @@ export default function Interest() {
                     </Grid>
                     <Grid item xs={12} className={classes.donation}>
                       <Box>
-                        <Grid container spacing={3} style={{ paddingRight: "20px" }}>
+                        <Grid
+                          container
+                          spacing={3}
+                          style={{ paddingRight: "20px" }}
+                        >
                           {durationList &&
-                            durationList?.map((data, i) => {
+                            durationList.map((data, i) => {
                               const statusData = data._id === durationId;
                               return (
                                 <Grid item xs={6} key={i}>
@@ -870,8 +871,8 @@ export default function Interest() {
                                     className={statusData ? "active" : null}
                                     onClick={() => handleDurationFunc(data)}
                                   >
-                                    {data?.duration}&nbsp; Days,{" "}
-                                    {data?.amount} Share
+                                    {data.duration}&nbsp; Days, {data.amount}{" "}
+                                    Share
                                   </span>
                                 </Grid>
                               );
@@ -880,9 +881,11 @@ export default function Interest() {
                       </Box>
                     </Grid>
                   </Grid>
-                  <FormHelperText error >
+                  <FormHelperText error>
                     {isSubmit && !duration && (
-                      <Box style={{ marginTop: '10px', marginLeft: "6px" }}>Please add duration </Box>
+                      <Box style={{ marginTop: "10px", marginLeft: "6px" }}>
+                        Please add duration{" "}
+                      </Box>
                     )}
                   </FormHelperText>
                 </Box>
@@ -899,23 +902,21 @@ export default function Interest() {
                           error={Boolean(isSubmit && image === "")}
                           onChange={(e) => {
                             setimage(e.target.files[0]);
-                            setimageurl(
-                              URL.createObjectURL(e.target.files[0])
-                            );
+                            setimageurl(URL.createObjectURL(e.target.files[0]));
                             getBase64(e.target.files[0], (result) => {
                               setcover(result);
                             });
                           }}
                         />
                         <Box>
-                          {image?.type === "video/mp4" ||
-                            image?.type === "image/jpeg" ||
-                            image?.type === "image/png" ||
-                            image?.type === "image/gif" ||
-                            image?.type === "image/jpg" ||
-                            image?.type === "image/svg" ? (
+                          {image.type === "video/mp4" ||
+                          image.type === "image/jpeg" ||
+                          image.type === "image/png" ||
+                          image.type === "image/gif" ||
+                          image.type === "image/jpg" ||
+                          image.type === "image/svg" ? (
                             <>
-                              {image?.type === "video/mp4" ? (
+                              {image.type === "video/mp4" ? (
                                 <>
                                   <video
                                     style={{
@@ -1023,25 +1024,25 @@ export default function Interest() {
                       style={
                         list
                           ? {
-                            width: "200px",
-                            minWidth: "200px",
-                            height: "150px",
-                            background: "#710d44",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            borderRadius: "10px",
-                          }
+                              width: "200px",
+                              minWidth: "200px",
+                              height: "150px",
+                              background: "#710d44",
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              borderRadius: "10px",
+                            }
                           : {
-                            width: "200px",
-                            minWidth: "200px",
-                            height: "150px",
-                            background: "#710d44",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            borderRadius: "10px",
-                          }
+                              width: "200px",
+                              minWidth: "200px",
+                              height: "150px",
+                              background: "#710d44",
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              borderRadius: "10px",
+                            }
                       }
                       onClick={() => {
                         updateSelectedBundle(data._id);
@@ -1051,7 +1052,7 @@ export default function Interest() {
                         <figure style={{ width: "200px", height: "150px" }}>
                           <img
                             style={{ width: "150px", height: "150px" }}
-                            src={data?.image}
+                            src={data.image}
                             alt=""
                           />
                         </figure>
@@ -1071,7 +1072,7 @@ export default function Interest() {
                                 background: "rgb(0, 0, 0)",
                               }}
                               controls
-                            // onClick={handleClickOpen2}
+                              // onClick={handleClickOpen2}
                             >
                               <source src={data.image} type="video/mp4" />
                             </video>
@@ -1083,7 +1084,7 @@ export default function Interest() {
                                 borderRadius: "11px",
                                 background: "rgb(0, 0, 0)",
                               }}
-                              src={data?.image}
+                              src={data.image}
                               alt=""
                             />
                           )}
@@ -1115,7 +1116,6 @@ export default function Interest() {
             </Box>
           </DialogContent>
         </Dialog>
-
       </Box>
     </>
   );

@@ -129,7 +129,7 @@ function Trending({ serchTrending, trendingUserlistHandler }) {
   //           res.data.result.docs
   //             .filter(
   //               (data) =>
-  //                 data.userType === "User" && data._id !== auth.userData?._id
+  //                 data.userType === "User" && data._id !== auth.userData._id
   //             )
   //             .slice(0, 3)
   //         );
@@ -155,13 +155,17 @@ function Trending({ serchTrending, trendingUserlistHandler }) {
           <Typography variant="h6" style={{ fontWeight: "500" }}>
             Trending Creator
           </Typography>
-          <Link component={RouterComponent} to="/trending-list" style={{ color: "#E31A89" }}>
+          <Link
+            component={RouterComponent}
+            to="/trending-list"
+            style={{ color: "#E31A89" }}
+          >
             See All
           </Link>
         </Box>
         <Grid container direction={"cloumn"} spacing={1}>
           {serchTrending &&
-            serchTrending?.map((data, i) => {
+            serchTrending.map((data, i) => {
               return (
                 <Grid item key={i} xs={12}>
                   <CreatorsCard data={data} type="data" key={i} />
@@ -186,14 +190,18 @@ const CreatorsCard = (props) => {
       <Box className={classes.creators}>
         <Box className="UserBox">
           <Box className="figure">
-            <Box style={{ cursor: "pointer" }} className="profileimage" onClick={() => {
-              history.push({
-                pathname: "/about-creators",
-                search: data._id,
-              });
-            }}>
+            <Box
+              style={{ cursor: "pointer" }}
+              className="profileimage"
+              onClick={() => {
+                history.push({
+                  pathname: "/about-creators",
+                  search: data._id,
+                });
+              }}
+            >
               <img
-                src={data?.profilePic ? data?.profilePic : "images/user.png"}
+                src={data.profilePic ? data.profilePic : "images/user.png"}
                 alt="user data"
               />
             </Box>
@@ -216,7 +224,7 @@ const CreatorsCard = (props) => {
               </Typography>
             </Link>
             <Typography variant="body2" component="small">
-              {data?.bnbBalace ? data?.bnbBalace.toFixed(0) : 0}&nbsp;{tokenName}
+              {data.bnbBalace ? data.bnbBalace.toFixed(0) : 0}&nbsp;{tokenName}
             </Typography>
           </Box>
         </Box>

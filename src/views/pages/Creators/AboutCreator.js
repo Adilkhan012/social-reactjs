@@ -174,11 +174,11 @@ function AboutCreator({ data }) {
   const [setPostLists] = useState([]);
   const handleClickOpen = (data) => {
     setOpen(true);
-    setIDD1(data?.otherUserData?._id);
+    setIDD1(data.otherUserData._id);
   };
   const handleClickOpen1 = (data) => {
     setOpen1(true);
-    setIDD1(data?.otherUserData?._id);
+    setIDD1(data.otherUserData._id);
   };
   const viewOtherProfileHandler = async () => {
     try {
@@ -191,10 +191,10 @@ function AboutCreator({ data }) {
       });
       if (res.data.responseCode === 200) {
         setOtherUserData(res.data.result);
-        let followersList = res?.data?.result?.followers;
+        let followersList = res.data.result.followers;
         if (followersList) {
           const filterFun = followersList.filter((data) => {
-            return data === auth?.userData?._id;
+            return data === auth.userData._id;
           });
           if (filterFun[0]) {
             setisFollowing(true);
@@ -215,11 +215,11 @@ function AboutCreator({ data }) {
     if (userId) {
       viewOtherProfileHandler();
     }
-    let blockList = auth?.userData?.blockedUser;
+    let blockList = auth.userData.blockedUser;
 
     if (blockList) {
       const filterFun = blockList.filter((data) => {
-        return data === otherUserData?._id;
+        return data === otherUserData._id;
       });
       if (filterFun[0]) {
         setisBlocking(true);
@@ -227,7 +227,7 @@ function AboutCreator({ data }) {
         setisBlocking(false);
       }
     }
-  }, [userId, auth?.userData?._id, auth?.userData?.blockedUser]);
+  }, [userId, auth.userData._id, auth.userData.blockedUser]);
 
   useEffect(() => {
     const creatorId = location.search.split("?");
@@ -284,7 +284,7 @@ function AboutCreator({ data }) {
           //   viewOtherProfileHandler();
           // }
           setBlockList(res.data.result);
-          if (auth?.handleUserProfileApi()) {
+          if (auth.handleUserProfileApi()) {
             auth.handleUserProfileApi();
           }
           toast.success(res.data.responseMessage);
@@ -381,7 +381,7 @@ function AboutCreator({ data }) {
       listUserWithpostHanlder();
       listUserWithpostHanldersnft();
     }
-  }, [userId, auth?.userData?._id, page]);
+  }, [userId, auth.userData._id, page]);
   const [tagPostList] = useState([]);
 
   return (
@@ -400,8 +400,8 @@ function AboutCreator({ data }) {
                 <figure className="postImg">
                   <img
                     src={
-                      otherUserData?.coverPic
-                        ? otherUserData?.coverPic
+                      otherUserData.coverPic
+                        ? otherUserData.coverPic
                         : "images/userback.png"
                     }
                     ali="Creators Image"
@@ -423,8 +423,8 @@ function AboutCreator({ data }) {
                         width: "100%",
                       }}
                       src={
-                        otherUserData?.profilePic
-                          ? otherUserData?.profilePic
+                        otherUserData.profilePic
+                          ? otherUserData.profilePic
                           : "/images/user.png"
                       }
                     />
@@ -435,12 +435,12 @@ function AboutCreator({ data }) {
               <Box className={classes.profileDetails}>
                 <Box className="username">
                   <Typography color="primary.main" variant="h3">
-                    {otherUserData?.userName
-                      ? otherUserData?.userName
-                      : otherUserData?.name}
+                    {otherUserData.userName
+                      ? otherUserData.userName
+                      : otherUserData.name}
                   </Typography>
                   <Typography variant="body2" color="primary.main">
-                    {otherUserData?.bio}
+                    {otherUserData.bio}
                   </Typography>
                   <Typography
                     variant="body1"
@@ -450,8 +450,8 @@ function AboutCreator({ data }) {
                       marginTop: "5px",
                     }}
                   >
-                    {sortAddress(otherUserData?.bnbAccount?.address)}
-                    <CopyToClipboard text={otherUserData?.bnbAccount?.address}>
+                    {sortAddress(otherUserData.bnbAccount.address)}
+                    <CopyToClipboard text={otherUserData.bnbAccount.address}>
                       <BiCopy
                         style={{
                           color: "#fff",
@@ -464,7 +464,7 @@ function AboutCreator({ data }) {
                     </CopyToClipboard>{" "}
                     &nbsp;
                   </Typography>
-                  {otherUserData?._id !== auth?.userData?._id && (
+                  {otherUserData._id !== auth.userData._id && (
                     <Box mt={1}>
                       <Button
                         variant="contained"
@@ -479,7 +479,7 @@ function AboutCreator({ data }) {
 
                       {isBlocking === false && (
                         <>
-                          {auth?.userData?.userType === "Admin" ? (
+                          {auth.userData.userType === "Admin" ? (
                             <Button
                               variant="contained"
                               color="primary"
@@ -523,7 +523,7 @@ function AboutCreator({ data }) {
                         onClick={() =>
                           history.push({
                             pathname: "chat-history",
-                            search: otherUserData?._id,
+                            search: otherUserData._id,
                           })
                         }
                       >
@@ -551,8 +551,8 @@ function AboutCreator({ data }) {
                     Post
                   </Button>
                   &nbsp;&nbsp;&nbsp;&nbsp;
-                  {auth?.userData?.userType === "Admin" ||
-                  (auth?.userData?.userType === "Subadmin" &&
+                  {auth.userData.userType === "Admin" ||
+                  (auth.userData.userType === "Subadmin" &&
                     auth.userData.permissions.userManagement) ? (
                     <>
                       <Button
@@ -638,10 +638,10 @@ function AboutCreator({ data }) {
                     </Typography>
 
                     <Grid container spacing={2}>
-                      {postList && postList?.length > 0 ? (
+                      {postList && postList.length > 0 ? (
                         <>
                           {postList &&
-                            postList?.map((data, i) => {
+                            postList.map((data, i) => {
                               return (
                                 <Grid item xs={12} sm={6} md={4} lg={3}>
                                   <BundlesDetailCard
@@ -677,10 +677,10 @@ function AboutCreator({ data }) {
                     <Typography variant="h3"> Tag Post</Typography>
 
                     <Grid container spacing={2}>
-                      {tagPostList && tagPostList?.length > 0 ? (
+                      {tagPostList && tagPostList.length > 0 ? (
                         <>
                           {tagPostList &&
-                            tagPostList?.map((data, index) => {
+                            tagPostList.map((data, index) => {
                               return (
                                 <Grid item xs={12} sm={6} md={4} lg={4}>
                                   <MyPost

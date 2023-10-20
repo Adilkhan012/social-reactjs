@@ -43,10 +43,10 @@ function BlockingCard({ activityData, loading }) {
         <DataLoading />
       ) : (
         <Grid container direction={"cloumn"} spacing={1}>
-          {activityData?.length > 0 ? (
+          {activityData.length > 0 ? (
             <>
               {activityData &&
-                activityData?.map((data, i) => {
+                activityData.map((data, i) => {
                   return (
                     <Grid item xs={12} key={i}>
                       <Box pt={1} pb={2} className={classes.root}>
@@ -59,8 +59,8 @@ function BlockingCard({ activityData, loading }) {
                             <Box>
                               <img
                                 src={
-                                  data?.userId?.profilePic
-                                    ? data?.userId?.profilePic
+                                  data.userId.profilePic
+                                    ? data.userId.profilePic
                                     : "images/Activity.png"
                                 }
                                 style={{ borderRadius: "50%" }}
@@ -69,13 +69,13 @@ function BlockingCard({ activityData, loading }) {
                           </Link>
                           <Box ml={3}>
                             <Typography variant="body2">
-                              {data?.title}
+                              {data.title}
                             </Typography>
                             <Typography variant="h6">
-                              {data?.desctiption}
+                              {data.desctiption}
                             </Typography>
                             <Typography variant="body2" component="small">
-                              {moment(data?.createdAt).local().fromNow()}
+                              {moment(data.createdAt).local().fromNow()}
                             </Typography>
                             &nbsp;
                             <br />

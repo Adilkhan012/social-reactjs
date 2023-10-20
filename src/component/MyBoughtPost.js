@@ -302,7 +302,7 @@ export default function (props) {
   const [isLoadingFunction, setIsLoadingFunc] = React.useState(false);
   const { data, buyPostList, isAuction, isLoadingContent } = props;
   // console.log("boughtList", data);
-  const [price, setPrice] = useState(data?.amount);
+  const [price, setPrice] = useState(data.amount);
   const [walletAddress, setWalletAddress] = useState("");
   const [idData, setIdData] = useState({});
 
@@ -318,8 +318,8 @@ export default function (props) {
 
   const setAllData = (data) => {
     console.log("data----", data);
-    setIdData(data)
-  }
+    setIdData(data);
+  };
 
   const handleClickOpenExport = () => {
     setOpenExport(true);
@@ -329,7 +329,6 @@ export default function (props) {
   const handleCloseExport = () => {
     setOpenExport(false);
   };
-
 
   const sortAddress = (add) => {
     if (add) {
@@ -341,11 +340,11 @@ export default function (props) {
   };
 
   let isLike = false;
-  if (auth.userData?._id && data) {
-    const likeUser = data?.likesUsers?.filter(
-      (data) => data === auth.userData?._id
+  if (auth.userData._id && data) {
+    const likeUser = data.likesUsers.filter(
+      (data) => data === auth.userData._id
     );
-    isLike = likeUser?.length > 0;
+    isLike = likeUser.length > 0;
   }
 
   const handleClickOpen1 = () => {
@@ -355,8 +354,6 @@ export default function (props) {
   const handleClose1 = () => {
     setOpen1(false);
   };
-
-
 
   const addAuctionPost = async () => {
     setIsSubmit(true);
@@ -372,10 +369,10 @@ export default function (props) {
             token: window.localStorage.getItem("token"),
           },
           data: {
-            postId: isAuction ? data.postId?._id : data?._id,
-            title: isAuction ? data?.title : data?.postTitle,
-            mediaUrl: data?.mediaUrl,
-            details: data?.details,
+            postId: isAuction ? data.postId._id : data._id,
+            title: isAuction ? data.title : data.postTitle,
+            mediaUrl: data.mediaUrl,
+            details: data.details,
             amount: price,
             time: fieldValue,
           },
@@ -389,15 +386,15 @@ export default function (props) {
           setOpen1(false);
         }
       } catch (error) {
-        if (error?.response?.data?.responseCode === 200) {
+        if (error.response.data.responseCode === 200) {
           setIsLoadingFunc(false);
           buyPostList();
-          toast.success(error?.response?.data?.responseMessage);
+          toast.success(error.response.data.responseMessage);
           setIsLoading(false);
           setOpen1(false);
         } else {
           setIsLoadingFunc(false);
-          toast.error(error?.response?.data?.responseMessage);
+          toast.error(error.response.data.responseMessage);
           setIsLoading(false);
           buyPostList();
           setOpen1(false);
@@ -409,7 +406,7 @@ export default function (props) {
     try {
       const res = await Axios({
         method: "GET",
-        url: Apiconfigs.postLikeDislike + data?._id,
+        url: Apiconfigs.postLikeDislike + data._id,
         headers: {
           token: window.localStorage.getItem("token"),
         },
@@ -421,7 +418,7 @@ export default function (props) {
         buyPostList();
         toast.success(res.data.responseMessage);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   const isVideo = data.mediaUrl.includes(".mp4");
@@ -431,42 +428,36 @@ export default function (props) {
     // setOpen1(false);
   };
 
-
   const exportToAddress = async () => {
     setIsSubmit(true);
 
     if (walletAddress !== "") {
       try {
-        setIsLoadingFunc(true)
+        setIsLoadingFunc(true);
         const res = await Axios({
-          method: 'POST',
+          method: "POST",
           url: Apiconfigs.exportOnMarketPlace,
           headers: {
-            token: sessionStorage.getItem("token")
+            token: sessionStorage.getItem("token"),
           },
           data: {
-            postId: idData?._id,
-            walletAddress: walletAddress
-          }
-        })
+            postId: idData._id,
+            walletAddress: walletAddress,
+          },
+        });
         if (res.data.responseCode === 200) {
-          setIsLoadingFunc(false)
-          toast.success(res.data.responseMessage)
+          setIsLoadingFunc(false);
+          toast.success(res.data.responseMessage);
           buyPostList();
-          setOpenExport(false)
-
+          setOpenExport(false);
         }
-
       } catch (error) {
-        setIsLoadingFunc(false)
-
+        setIsLoadingFunc(false);
       }
-
     } else {
-      toast.warn("Please Enter Wallet Address")
+      toast.warn("Please Enter Wallet Address");
     }
-
-  }
+  };
 
   return (
     <Paper>
@@ -479,8 +470,8 @@ export default function (props) {
               ) : (
                 <img
                   src={
-                    data?.buyerId.profilePic
-                      ? data?.buyerId.profilePic
+                    data.buyerId.profilePic
+                      ? data.buyerId.profilePic
                       : "/images/user.png"
                   }
                 />
@@ -489,76 +480,67 @@ export default function (props) {
             <Box>
               <Typography variant="h5">
                 {sortAddress(
-                  data?.buyerId?.userName
-                    ? data?.buyerId?.userName
-                    : data?.buyerId?.name
+                  data.buyerId.userName
+                    ? data.buyerId.userName
+                    : data.buyerId.name
                 )}
               </Typography>
               <Box>
                 <Link to="#">
                   {" "}
                   <Typography variant="h6">
-                    {data?.postTitle.length > 40
-                      ? sortAddress(data?.postTitle)
-                      : data?.postTitle}
+                    {data.postTitle.length > 40
+                      ? sortAddress(data.postTitle)
+                      : data.postTitle}
                   </Typography>
                 </Link>
                 <Typography variant="body2" component="small">
-                  {moment(data?.createdAt).local().fromNow()}
-                  {/* {data?.createdAt} */}
+                  {moment(data.createdAt).local().fromNow()}
+                  {/* {data.createdAt} */}
                 </Typography>
               </Box>
             </Box>
           </Box>
           <Box>
-            {
-              !data?.isauction &&
-              !data?.postId?.isauction && !data?.isExport && (
-                <>
-                  <IconButton
-                    aria-controls="customized-menu"
-                    aria-haspopup="true"
-                    onClick={(event) => {
-                      handleClick(event)
-                      setAllData(data)
-                    }}
-
-
-                    className={classes.menuShare}
-                  >
-                    <FaEllipsisH />
-                  </IconButton>
-                  <StyledMenu
-                    id="customized-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-
-                  >
-                    <StyledMenuItem onClick={handleClickOpenExport}>
-                      <ListItemText primary="Export" />
-                    </StyledMenuItem>
-                    <StyledMenuItem>
-                      <ListItemText
-                        onClick={handleClickOpen1}
-                        primary="Resell"
-                      />
-                    </StyledMenuItem>
-                  </StyledMenu>
-                </>
-              )}
-
+            {!data.isauction && !data.postId.isauction && !data.isExport && (
+              <>
+                <IconButton
+                  aria-controls="customized-menu"
+                  aria-haspopup="true"
+                  onClick={(event) => {
+                    handleClick(event);
+                    setAllData(data);
+                  }}
+                  className={classes.menuShare}
+                >
+                  <FaEllipsisH />
+                </IconButton>
+                <StyledMenu
+                  id="customized-menu"
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <StyledMenuItem onClick={handleClickOpenExport}>
+                    <ListItemText primary="Export" />
+                  </StyledMenuItem>
+                  <StyledMenuItem>
+                    <ListItemText onClick={handleClickOpen1} primary="Resell" />
+                  </StyledMenuItem>
+                </StyledMenu>
+              </>
+            )}
           </Box>
         </Box>
-        <Typography variant="body2">{data?.text}</Typography>
+        <Typography variant="body2">{data.text}</Typography>
         <Box mt={1} mb={1} className="price">
           <Box className="text">
-            <Typography variant="body">{sortAddress(data?.details)}</Typography>
+            <Typography variant="body">{sortAddress(data.details)}</Typography>
           </Box>
-          {/* {data?.postType !== "PUBLIC" &&
-            !data?.isauction &&
-            !data?.postId?.isauction && (
+          {/* {data.postType !== "PUBLIC" &&
+            !data.isauction &&
+            !data.postId.isauction && (
               <Button
                 variant="contained"
                 color="secondary"
@@ -596,7 +578,7 @@ export default function (props) {
               {isLoadingContent ? (
                 <LoadingSkeleton data={8} />
               ) : (
-                <img src={data?.mediaUrl} />
+                <img src={data.mediaUrl} />
               )}
             </figure>
           )}
@@ -607,8 +589,7 @@ export default function (props) {
       <Dialog
         onClose={() => {
           if (!isLoadingFunction) {
-            handleCloseExport()
-
+            handleCloseExport();
           }
         }}
         aria-labelledby="customized-dialog-title"
@@ -618,29 +599,29 @@ export default function (props) {
           <Typography variant="h6">Wallet Address</Typography>
           <Box my={2}>
             <TextField
-
               variant="outlined"
               value={walletAddress}
               placeholder="Enter wallet address"
               onChange={(e) => setWalletAddress(e.target.value)}
               style={{ width: "20rem" }}
               disabled={isLoadingFunction}
-
               onKeyPress={(event) => {
-                if (event?.key === "-" || event?.key === "+") {
+                if (event.key === "-" || event.key === "+") {
                   event.preventDefault();
                 }
               }}
             />
             <FormHelperText error>
-              {(isSubmit && (walletAddress === "") && (
+              {isSubmit && walletAddress === "" && (
                 <Box ml={1}>Enter wallet address</Box>
-              ))}
+              )}
             </FormHelperText>
           </Box>
         </Box>
 
-        <Box style={{ marginLeft: "10px", display: "flex", alignItems: "center" }}>
+        <Box
+          style={{ marginLeft: "10px", display: "flex", alignItems: "center" }}
+        >
           <Button
             onClick={handleCloseExport}
             color="primary"
@@ -649,21 +630,18 @@ export default function (props) {
             disabled={isLoadingFunction}
           >
             Cancel
-          </Button>&nbsp;
+          </Button>
+          &nbsp;
           <Button
-
             color="secondary"
             variant="contained"
             size="large"
             disabled={isLoadingFunction}
-
             onClick={() => exportToAddress()}
-
           >
-            Export  {isLoadingFunction && <ButtonCircularProgress />}
+            Export {isLoadingFunction && <ButtonCircularProgress />}
           </Button>
         </Box>
-
       </Dialog>
       {/*  <--- Dialog for Resell---> */}
       <Dialog
@@ -684,7 +662,7 @@ export default function (props) {
               (price !== "" && Number(price) > 2000)
             }
             onKeyPress={(event) => {
-              if (event?.key === "-" || event?.key === "+") {
+              if (event.key === "-" || event.key === "+") {
                 event.preventDefault();
               }
             }}
@@ -724,7 +702,7 @@ export default function (props) {
               name="dob"
               // onChange={_onInputChange}
               error={Boolean(isSubmit && !fieldValue)}
-            // helperText={touched.dob && errors.dob}
+              // helperText={touched.dob && errors.dob}
             />
             <FormHelperText error>
               {isSubmit && !fieldValue && (
@@ -749,9 +727,9 @@ export default function (props) {
             size="large"
             disabled={isLoadingFunction}
             onClick={abc}
-          // onClickCapture={() => {
-          //   history.push("/");
-          // }}
+            // onClickCapture={() => {
+            //   history.push("/");
+            // }}
           >
             Create Auction {isLoadingFunction && <ButtonCircularProgress />}
           </Button>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext } from "react";
 import {
   makeStyles,
   Paper,
@@ -16,157 +16,157 @@ import {
   ListItem,
   FormHelperText,
   Container,
-} from '@material-ui/core'
-import { MdAddToPhotos } from 'react-icons/md'
-import ToggleButton from '@material-ui/lab/ToggleButton'
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup'
-import Page from 'src/component/Page'
-import BundlesCard from 'src/component/BundlesCard'
-import axios from 'axios'
-import { toast } from 'react-toastify'
-import ApiConfig from 'src/ApiConfig/ApiConfig'
-import ButtonCircularProgress from 'src/component/ButtonCircularProgress'
-import { AuthContext } from 'src/context/Auth'
+} from "@material-ui/core";
+import { MdAddToPhotos } from "react-icons/md";
+import ToggleButton from "@material-ui/lab/ToggleButton";
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
+import Page from "src/component/Page";
+import BundlesCard from "src/component/BundlesCard";
+import axios from "axios";
+import { toast } from "react-toastify";
+import ApiConfig from "src/ApiConfig/ApiConfig";
+import ButtonCircularProgress from "src/component/ButtonCircularProgress";
+import { AuthContext } from "src/context/Auth";
 import {
   useHistory,
   Link as RouterComponent,
   useLocation,
-} from 'react-router-dom'
-import DataLoading from 'src/component/DataLoading'
-import NoDataFound from 'src/component/NoDataFound'
-import { Pagination } from '@material-ui/lab'
+} from "react-router-dom";
+import DataLoading from "src/component/DataLoading";
+import NoDataFound from "src/component/NoDataFound";
+import { Pagination } from "@material-ui/lab";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    '& .heading': {
-      marginBottom: '20px',
-      display: 'flex',
-      justifyContent: 'space-between',
-      '& .buttonbox': {
-        width: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'end',
+    "& .heading": {
+      marginBottom: "20px",
+      display: "flex",
+      justifyContent: "space-between",
+      "& .buttonbox": {
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "end",
       },
     },
   },
   create: {
-    textAlign: 'center',
-    marginBottom: '50px',
+    textAlign: "center",
+    marginBottom: "50px",
   },
   upload: {
-    height: '75px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    height: "75px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   listbutton: {
-    '& ul': {
-      display: 'flex',
-      alignItems: 'center',
-      '& li': {
-        border: '0.25px solid #FFF',
+    "& ul": {
+      display: "flex",
+      alignItems: "center",
+      "& li": {
+        border: "0.25px solid #FFF",
       },
     },
   },
   addphotos: {
-    display: 'flex',
-    alignItems: 'center',
-    textAlign: 'center',
-    justifyContent: 'center',
-    padding: '30px 20px',
-    border: '0.25px solid #525455',
-    borderRadius: '14px',
-    cursor: 'pointer',
-    position: 'relative',
-    '& input': {
-      position: 'absolute',
+    display: "flex",
+    alignItems: "center",
+    textAlign: "center",
+    justifyContent: "center",
+    padding: "30px 20px",
+    border: "0.25px solid #525455",
+    borderRadius: "14px",
+    cursor: "pointer",
+    position: "relative",
+    "& input": {
+      position: "absolute",
       top: 0,
       left: 0,
-      width: '100%',
-      height: '100%',
+      width: "100%",
+      height: "100%",
       opacity: 0,
     },
-    '& svg': {
-      fontSize: '30px',
+    "& svg": {
+      fontSize: "30px",
     },
   },
   donation: {
-    '& span': {
-      fontSize: '12px',
-      padding: '2px 5px',
-      border: '1px solid #e31a89',
-      cursor: 'pointer',
-      '&.active': {
-        backgroundColor: '#e31a89',
+    "& span": {
+      fontSize: "12px",
+      padding: "2px 5px",
+      border: "1px solid #e31a89",
+      cursor: "pointer",
+      "&.active": {
+        backgroundColor: "#e31a89",
       },
     },
   },
-}))
+}));
 
 function Collection({ viewOtherProfileHandler, collectionListBundle }) {
-  const classes = useStyles()
-  const [title, settitle] = useState('')
-  const [name, setname] = useState('')
-  const [donation, setdonation] = useState('')
-  const [date, setdate] = useState('')
-  const [image, setimage] = useState('')
-  const auth = useContext(AuthContext)
+  const classes = useStyles();
+  const [title, settitle] = useState("");
+  const [name, setname] = useState("");
+  const [donation, setdonation] = useState("");
+  const [date, setdate] = useState("");
+  const [image, setimage] = useState("");
+  const auth = useContext(AuthContext);
 
-  const location = useLocation()
+  const location = useLocation();
 
-  const [imageurl, setimageurl] = useState('')
-  const [details, setdetails] = useState('')
-  const [process, setprocess] = useState(false)
-  const [message, setmessage] = useState('')
-  const [fire, setfire] = useState(false)
-  const [duration, setDuration] = useState('7 Days')
-  const [isSubmit, setIsSubmit] = useState(false)
-  const [collectionlistAll, setCollectionlist] = useState([])
-  const [isLoadingContent, setIsLoading] = useState(true)
-  const [particularUserList, setParticularUserList] = useState()
-  const [userId, setUserId] = useState()
-  const [page, setPage] = useState(1)
-  const [noOfPages, setNoOfPages] = useState(1)
-  const [tokenImage, setTokenImage] = React.useState('/images/tokens/1.png')
+  const [imageurl, setimageurl] = useState("");
+  const [details, setdetails] = useState("");
+  const [process, setprocess] = useState(false);
+  const [message, setmessage] = useState("");
+  const [fire, setfire] = useState(false);
+  const [duration, setDuration] = useState("7 Days");
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [collectionlistAll, setCollectionlist] = useState([]);
+  const [isLoadingContent, setIsLoading] = useState(true);
+  const [particularUserList, setParticularUserList] = useState();
+  const [userId, setUserId] = useState();
+  const [page, setPage] = useState(1);
+  const [noOfPages, setNoOfPages] = useState(1);
+  const [tokenImage, setTokenImage] = React.useState("/images/tokens/1.png");
 
-  const history = useHistory()
-  const [open, setOpen] = useState(false)
+  const history = useHistory();
+  const [open, setOpen] = useState(false);
   const getBase64 = (file, cb) => {
-    let reader = new FileReader()
-    reader.readAsDataURL(file)
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
     reader.onload = function () {
-      cb(reader.result)
-    }
-    reader.onerror = function (err) {}
-  }
-  const [cover, setcover] = useState()
+      cb(reader.result);
+    };
+    reader.onerror = function (err) {};
+  };
+  const [cover, setcover] = useState();
 
   const post = async () => {
-    setIsSubmit(true)
+    setIsSubmit(true);
     if (
-      image !== '' &&
-      name !== '' &&
-      title !== '' &&
-      details !== '' &&
-      donation !== '' &&
+      image !== "" &&
+      name !== "" &&
+      title !== "" &&
+      details !== "" &&
+      donation !== "" &&
       parseFloat(donation) > 0
     ) {
       try {
-        setmessage('Creating Collection...')
-        setprocess(true)
-        const formData = new FormData()
-        formData.append('image', cover)
-        formData.append('name', name)
-        formData.append('symbol', title)
-        formData.append('duration', duration)
+        setmessage("Creating Collection...");
+        setprocess(true);
+        const formData = new FormData();
+        formData.append("image", cover);
+        formData.append("name", name);
+        formData.append("symbol", title);
+        formData.append("duration", duration);
         // formData.append("bundleName", name);
-        formData.append('description', details)
-        formData.append('amount', donation)
+        formData.append("description", details);
+        formData.append("amount", donation);
 
         axios
           .request({
-            method: 'POST',
+            method: "POST",
             url: ApiConfig.addNft,
             data: {
               name: name,
@@ -178,97 +178,96 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
             },
             // data: formData,
             headers: {
-              token: window.localStorage.getItem('token'),
+              token: window.localStorage.getItem("token"),
             },
           })
           .then((res) => {
             if (res.data.responseCode === 200) {
-              collectionList()
+              collectionList();
               // if (callbackFun) {
               //   callbackFun();
               // }
 
               // user.updateUserData();
-              setOpen(false)
-              setprocess(false)
-              toast.success('Collection created')
-              setfire(!fire)
+              setOpen(false);
+              setprocess(false);
+              toast.success("Collection created");
+              setfire(!fire);
               // handleClose();
-              setname('')
-              settitle('')
-              setdonation('')
-              setimage()
-              setdetails('')
+              setname("");
+              settitle("");
+              setdonation("");
+              setimage();
+              setdetails("");
             } else {
-              setprocess(false)
+              setprocess(false);
 
-              toast.error('error')
+              toast.error("error");
             }
           })
 
           .catch((err) => {
-            setprocess(false)
-            toast.error('error')
-            toast.error(err?.response?.data?.responseMessage)
-          })
-      } catch {
-      }
+            setprocess(false);
+            toast.error("error");
+            toast.error(err.response.data.responseMessage);
+          });
+      } catch {}
     }
-  }
+  };
 
   const collectionList = async () => {
     try {
       const response = await axios({
-        method: 'GET',
+        method: "GET",
         url: ApiConfig.listCollection,
         headers: {
-          token: window.localStorage.getItem('token'),
+          token: window.localStorage.getItem("token"),
         },
         params: {
           page: page,
           limit: 9,
         },
-      })
+      });
       if (response.data.responseCode === 200) {
-        setCollectionlist(response.data.result.docs)
-        setNoOfPages(response.data.result.pages)
+        setCollectionlist(response.data.result.docs);
+        setNoOfPages(response.data.result.pages);
       }
-      setIsLoading(false)
+      setIsLoading(false);
     } catch (error) {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
   const getParticularUserCollectionList = async (id) => {
     try {
       const response = await axios({
-        method: 'GET',
+        method: "GET",
         url: ApiConfig.getOtheruserCollection,
         headers: {
-          token: window.localStorage.getItem('token'),
+          token: window.localStorage.getItem("token"),
         },
         params: {
           userId: id,
         },
-      })
+      });
       if (response.data.responseCode === 200) {
-        setCollectionlist(response.data.result.docs)
-        setNoOfPages(response.data.result.pages)
+        setCollectionlist(response.data.result.docs);
+        setNoOfPages(response.data.result.pages);
       }
-      setIsLoading(false)
+      setIsLoading(false);
     } catch (error) {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
   useEffect(() => {
-    const locationCheck = location.search.split('?')
+    const locationCheck = location.search.split("?");
     if (locationCheck[1]) {
-      getParticularUserCollectionList(locationCheck[1])
-      setParticularUserList(locationCheck[1])
+      getParticularUserCollectionList(locationCheck[1]);
+      setParticularUserList(locationCheck[1]);
     } else {
-      collectionList()
-      setUserId(locationCheck)
+      collectionList();
+      setUserId(locationCheck);
     }
-  }, [location, page])
+  }, [location, page]);
 
   return (
     <>
@@ -286,7 +285,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                 <NoDataFound />
               )}
               {collectionlistAll &&
-                collectionlistAll?.map((data, i) => {
+                collectionlistAll.map((data, i) => {
                   return (
                     <Grid item lg={4} md={4} sm={6} xs={6}>
                       <BundlesCard
@@ -299,12 +298,12 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                         key={i}
                       />
                     </Grid>
-                  )
+                  );
                 })}
             </Grid>
           )}
 
-          {collectionlistAll && collectionlistAll.length >9 && (
+          {collectionlistAll && collectionlistAll.length > 9 && (
             <Box mt={2} display="flex" justifyContent="center">
               <Pagination
                 count={noOfPages}
@@ -317,7 +316,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
           <Dialog
             open={open}
             onClose={() => {
-              setOpen(false)
+              setOpen(false);
             }}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
@@ -325,10 +324,10 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
             fullWidth
           >
             <DialogTitle id="alert-dialog-title" align="left">
-              {'Create a collection'}
+              {"Create a collection"}
             </DialogTitle>
             <DialogContent align="center">
-              <Grid container direction={'column'} spacing={3}>
+              <Grid container direction={"column"} spacing={3}>
                 <Grid item xs={12}>
                   <Box>
                     <Grid container spacing={1}>
@@ -343,11 +342,11 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                           variant="outlined"
                           className={classes.input_fild2}
                           onChange={(e) => settitle(e.target.value)}
-                          error={isSubmit && title === ''}
+                          error={isSubmit && title === ""}
                           helperText={
                             isSubmit &&
-                            title === '' &&
-                            'Please enter valid title'
+                            title === "" &&
+                            "Please enter valid title"
                           }
                         />
                       </Grid>
@@ -367,10 +366,10 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                           placeholder="Basic Collection"
                           onChange={(e) => setname(e.target.value)}
                           className={classes.input_fild2}
-                          error={isSubmit && name === ''}
+                          error={isSubmit && name === ""}
                           fullWidth
                           helperText={
-                            isSubmit && name === '' && 'Please enter valid name'
+                            isSubmit && name === "" && "Please enter valid name"
                           }
                         />
                       </Grid>
@@ -392,12 +391,12 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                           placeholder="Basic Collection"
                           onChange={(e) => setdetails(e.target.value)}
                           className={classes.input_fild2}
-                          error={isSubmit && details === ''}
+                          error={isSubmit && details === ""}
                           fullWidth
                           helperText={
                             isSubmit &&
-                            name === '' &&
-                            'Please enter valid details'
+                            name === "" &&
+                            "Please enter valid details"
                           }
                         />
                       </Grid>
@@ -419,17 +418,17 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                           type="number"
                           fullWidth
                           value={donation}
-                          error={isSubmit && donation === ''}
+                          error={isSubmit && donation === ""}
                           onChange={(e) => setdonation(e.target.value)}
                           onKeyPress={(event) => {
-                            if (event?.key === '-' || event?.key === '+') {
-                              event.preventDefault()
+                            if (event.key === "-" || event.key === "+") {
+                              event.preventDefault();
                             }
                           }}
                           helperText={
                             isSubmit &&
-                            donation === '' &&
-                            'Please enter valid donation amount'
+                            donation === "" &&
+                            "Please enter valid donation amount"
                           }
                         />
                       </Grid>
@@ -445,43 +444,43 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                       <Grid item xs={8} className={classes.donation}>
                         <Box>
                           <span
-                            style={{ fontSize: '14px', marginRight: '8px' }}
-                            className={duration === '7 Days' ? 'active' : null}
-                            onClick={() => setDuration('7 Days')}
+                            style={{ fontSize: "14px", marginRight: "8px" }}
+                            className={duration === "7 Days" ? "active" : null}
+                            onClick={() => setDuration("7 Days")}
                           >
                             7 Days
                           </span>
                           <span
-                            style={{ fontSize: '14px', marginRight: '8px' }}
-                            className={duration === '14 Days' ? 'active' : null}
-                            onClick={() => setDuration('14 Days')}
+                            style={{ fontSize: "14px", marginRight: "8px" }}
+                            className={duration === "14 Days" ? "active" : null}
+                            onClick={() => setDuration("14 Days")}
                           >
                             14 Days
                           </span>
                           <span
-                            style={{ fontSize: '14px', marginRight: '8px' }}
-                            className={duration === '30 Days' ? 'active' : null}
-                            onClick={() => setDuration('30 Days')}
+                            style={{ fontSize: "14px", marginRight: "8px" }}
+                            className={duration === "30 Days" ? "active" : null}
+                            onClick={() => setDuration("30 Days")}
                           >
                             30 Days
                           </span>
                           <span
-                            style={{ fontSize: '14px', marginRight: '8px' }}
-                            className={duration === '60 Days' ? 'active' : null}
-                            onClick={() => setDuration('60 Days')}
+                            style={{ fontSize: "14px", marginRight: "8px" }}
+                            className={duration === "60 Days" ? "active" : null}
+                            onClick={() => setDuration("60 Days")}
                           >
                             60 Days
                           </span>
                           <span
-                            style={{ fontSize: '14px', marginRight: '8px' }}
-                            className={duration === '1 Year' ? 'active' : null}
-                            onClick={() => setDuration('1 Year')}
+                            style={{ fontSize: "14px", marginRight: "8px" }}
+                            className={duration === "1 Year" ? "active" : null}
+                            onClick={() => setDuration("1 Year")}
                           >
                             1 Year
                           </span>
                         </Box>
                         <Box>
-                          <Grid container direction={'column'} spacing={2}>
+                          <Grid container direction={"column"} spacing={2}>
                             <Grid item xs={12}>
                               <Box mt={4} className={classes.addphotos}>
                                 <input
@@ -489,31 +488,31 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                                   accept=".jpg,.gif,.png,.svg,.jpeg,.mp4"
                                   // accept="image/*"
                                   type="file"
-                                  error={Boolean(isSubmit && image === '')}
+                                  error={Boolean(isSubmit && image === "")}
                                   onChange={(e) => {
-                                    setimage(e.target.files[0])
+                                    setimage(e.target.files[0]);
                                     setimageurl(
-                                      URL.createObjectURL(e.target.files[0]),
-                                    )
+                                      URL.createObjectURL(e.target.files[0])
+                                    );
                                     getBase64(e.target.files[0], (result) => {
-                                      setcover(result)
-                                    })
+                                      setcover(result);
+                                    });
                                   }}
                                 />
                                 <Box>
-                                  {image?.type === 'video/mp4' ||
-                                  image?.type == 'image/jpeg' ||
-                                  image?.type == 'image/png' ||
-                                  image?.type == 'image/gif' ||
-                                  image?.type == 'image/jpg' ||
-                                  image?.type == 'image/svg' ? (
+                                  {image.type === "video/mp4" ||
+                                  image.type == "image/jpeg" ||
+                                  image.type == "image/png" ||
+                                  image.type == "image/gif" ||
+                                  image.type == "image/jpg" ||
+                                  image.type == "image/svg" ? (
                                     <>
-                                      {image?.type === 'video/mp4' ? (
+                                      {image.type === "video/mp4" ? (
                                         <>
                                           <video
                                             style={{
-                                              width: '100%',
-                                              maxHeight: '213px',
+                                              width: "100%",
+                                              maxHeight: "213px",
                                             }}
                                             controls
                                           >
@@ -531,9 +530,9 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                                             color="secondary"
                                             type="submit"
                                             onClick={() => {
-                                              setimageurl('')
-                                              setimage('')
-                                              setcover('')
+                                              setimageurl("");
+                                              setimage("");
+                                              setcover("");
                                             }}
                                           >
                                             Remove
@@ -555,9 +554,9 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                                             color="secondary"
                                             type="submit"
                                             onClick={() => {
-                                              setimageurl('')
-                                              setimage('')
-                                              setcover('')
+                                              setimageurl("");
+                                              setimage("");
+                                              setcover("");
                                             }}
                                           >
                                             Remove
@@ -567,7 +566,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                                     </>
                                   ) : (
                                     <>
-                                      {' '}
+                                      {" "}
                                       <MdAddToPhotos />
                                       <Typography variant="h5">
                                         Add photos/videos
@@ -579,7 +578,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                               </Box>
                               <Box mt={1}>
                                 <FormHelperText error>
-                                  {isSubmit && image === '' && (
+                                  {isSubmit && image === "" && (
                                     <Box ml={1}>Image is required</Box>
                                   )}
                                 </FormHelperText>
@@ -598,9 +597,9 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                       color="primary"
                       size="large"
                       onClick={() => {
-                        setOpen(false)
+                        setOpen(false);
                       }}
-                      style={{ marginRight: '8px' }}
+                      style={{ marginRight: "8px" }}
                     >
                       Cancel
                     </Button>
@@ -610,9 +609,9 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
                       size="large"
                       onClick={post}
                       disabled={process}
-                      style={{ marginLeft: '8px' }}
+                      style={{ marginLeft: "8px" }}
                     >
-                      {!process ? 'Create' : message}{' '}
+                      {!process ? "Create" : message}{" "}
                       {process && <ButtonCircularProgress />}
                     </Button>
                   </Box>
@@ -620,19 +619,17 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
               </Grid>
               <Box
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                <Typography variant="body2" >
-                  Fees
-                </Typography>
+                <Typography variant="body2">Fees</Typography>
                 <Link
                   onClick={() => {
-                    setOpen(false)
+                    setOpen(false);
                   }}
-                  style={{ marginLeft: '5px' }}
+                  style={{ marginLeft: "5px" }}
                 >
                   Apply
                 </Link>
@@ -642,7 +639,7 @@ function Collection({ viewOtherProfileHandler, collectionListBundle }) {
         </Paper>
       </Page>
     </>
-  )
+  );
 }
 
-export default Collection
+export default Collection;

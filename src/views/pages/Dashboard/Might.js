@@ -115,7 +115,7 @@ function Might({
     try {
       const res = await axios({
         method: "GET",
-        url: Apiconfigs.followUnfollowUser + searchUserList[0]?._id,
+        url: Apiconfigs.followUnfollowUser + searchUserList[0]._id,
         headers: {
           token: window.localStorage.getItem("token"),
         },
@@ -137,9 +137,9 @@ function Might({
     }
   };
   useEffect(() => {
-    if (searchUserList[0] && auth?.userData) {
-      const filterFun = searchUserList[0]?.followers.filter((data) => {
-        return data === auth?.userData?._id;
+    if (searchUserList[0] && auth.userData) {
+      const filterFun = searchUserList[0].followers.filter((data) => {
+        return data === auth.userData._id;
       });
       if (filterFun[0]) {
         setisFollowing(true);
@@ -147,7 +147,7 @@ function Might({
         setisFollowing(false);
       }
     }
-  }, [searchUserList[0], auth?.userData]);
+  }, [searchUserList[0], auth.userData]);
   const handleIgnorFunction = () => {
     setSerachValue(searchValue + 1);
     ignorUnignoreTousers();
@@ -161,7 +161,7 @@ function Might({
           token: window.localStorage.getItem("token"),
         },
         data: {
-          _id: searchUserList[0]?._id,
+          _id: searchUserList[0]._id,
         },
       });
       if (res.data.responseCode === 200) {
@@ -175,7 +175,7 @@ function Might({
 
         // toast.success(res.data.responseMessage);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
   return (
     <>
@@ -183,7 +183,7 @@ function Might({
         <Paper className={classes.root} elevation={2}>
           <Box className="heading">
             <Typography variant="h6">Creators You May Like</Typography>
-            {searchUserList && searchUserList?.length > 1 && (
+            {searchUserList && searchUserList.length > 1 && (
               <Link
                 component={RouterComponent}
                 to="/notification"
@@ -197,17 +197,21 @@ function Might({
             <Box className="UserBox">
               <Box style={{ display: "flex", alignitems: "center" }}>
                 <Box className="figure">
-                  <Box style={{ cursor: "pointer" }} className="profileimage" onClick={() => {
-                    history.push({
-                      pathname: "/about-creators",
-                      search: searchUserList[searchValue]?._id,
-                    });
-                  }}>
+                  <Box
+                    style={{ cursor: "pointer" }}
+                    className="profileimage"
+                    onClick={() => {
+                      history.push({
+                        pathname: "/about-creators",
+                        search: searchUserList[searchValue]._id,
+                      });
+                    }}
+                  >
                     {searchUserList && (
                       <img
                         src={
-                          searchUserList[searchValue]?.profilePic
-                            ? searchUserList[searchValue]?.profilePic
+                          searchUserList[searchValue].profilePic
+                            ? searchUserList[searchValue].profilePic
                             : "images/user.png"
                         }
                       />
@@ -220,18 +224,18 @@ function Might({
                     onClick={() => {
                       history.push({
                         pathname: "/about-creators",
-                        search: searchUserList[searchValue]?._id,
+                        search: searchUserList[searchValue]._id,
                       });
                     }}
                   >
                     <Typography variant="h6">
-                      {searchUserList[searchValue]?.userName
-                        ? searchUserList[searchValue]?.userName
-                        : searchUserList[searchValue]?.name}
+                      {searchUserList[searchValue].userName
+                        ? searchUserList[searchValue].userName
+                        : searchUserList[searchValue].name}
                     </Typography>
                   </Link>
                   <Typography variant="body1" component="small">
-                    {searchUserList[searchValue]?.userType === "User"
+                    {searchUserList[searchValue].userType === "User"
                       ? " @Creator"
                       : ""}
                   </Typography>

@@ -251,8 +251,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   startingPrice: {
-    display: "flex", alignItems: "center",
-  }
+    display: "flex",
+    alignItems: "center",
+  },
 }));
 
 function AboutAuction(props) {
@@ -276,11 +277,10 @@ function AboutAuction(props) {
   const [isHidePost1, setIsHidePost1] = React.useState(false);
   const [bidLoader, setBidLoader] = useState(false);
   const [open1, setOpen1] = React.useState(false);
-  const [price, setPrice] = useState(data?.amount);
+  const [price, setPrice] = useState(data.amount);
   const [fieldValue, setFieldValueDateOfBirth] = useState();
   const [isBuyPost, setIsBuyPost] = useState(false);
   const [isOpenInterest, setIsopenInterest] = useState(false);
-
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -311,13 +311,13 @@ function AboutAuction(props) {
           fileExtention == "mp4" || fileExtention == "webp"
             ? "video"
             : fileExtention == "mp3"
-              ? "audio"
-              : "image";
+            ? "audio"
+            : "image";
         setFileType(fileType);
-        let followersList = res?.data?.result?.userId?.followers;
+        let followersList = res.data.result.userId.followers;
         if (followersList) {
           const filterFun = followersList.filter((data) => {
-            return data === auth?.userData?._id;
+            return data === auth.userData._id;
           });
           if (filterFun[0]) {
             setisFollowing(true);
@@ -358,7 +358,7 @@ function AboutAuction(props) {
       })
       .catch((err) => {
         viewAuctionNFTHandler();
-        toast.error(err?.response?.data?.responseMessage);
+        toast.error(err.response.data.responseMessage);
       });
   };
 
@@ -386,7 +386,7 @@ function AboutAuction(props) {
         }
       })
       .catch((err) => {
-        toast.error(err?.response?.data?.responseMessage);
+        toast.error(err.response.data.responseMessage);
       });
   };
   useEffect(() => {
@@ -408,8 +408,8 @@ function AboutAuction(props) {
     setIsSubmit(true);
     setBidLoader(true);
     if (Number(bidPrice) > 0 && bidPrice !== "" && Number(bidPrice) < 2000) {
-      if (auctionNFTDetails?.bidId.length > 0) {
-        if (bidPrice > auctionNFTDetails?.bidId[0]?.amountBid) {
+      if (auctionNFTDetails.bidId.length > 0) {
+        if (bidPrice > auctionNFTDetails.bidId[0].amountBid) {
           await axios({
             method: "POST",
             url: Apiconfigs.createBid,
@@ -425,14 +425,14 @@ function AboutAuction(props) {
               // setIsloading(false);
               if (res.data.responseCode === 200) {
                 setBidLoader(false);
-                setBidPrice("")
+                setBidPrice("");
                 setIsSubmit(false);
                 viewAuctionNFTHandler();
                 setOpen(false);
                 toast.success(res.data.responseMessage);
               } else {
                 setIsSubmit(false);
-                setBidLoader(false)
+                setBidLoader(false);
                 // toast.error("Something went wrong");
               }
             })
@@ -441,7 +441,7 @@ function AboutAuction(props) {
               setBidLoader(false);
 
               setIsSubmit(false);
-              toast.error(err?.response?.data?.responseMessage);
+              toast.error(err.response.data.responseMessage);
             });
         } else {
           setBidLoader(false);
@@ -449,7 +449,7 @@ function AboutAuction(props) {
           toast.info("Bid price should be greater than from last bid");
         }
       } else {
-        if (Number(bidPrice) > auctionNFTDetails?.amount) {
+        if (Number(bidPrice) > auctionNFTDetails.amount) {
           await axios({
             method: "POST",
             url: Apiconfigs.createBid,
@@ -473,7 +473,7 @@ function AboutAuction(props) {
             })
             .catch((err) => {
               setIsSubmit(false);
-              toast.error(err?.response?.data?.responseMessage);
+              toast.error(err.response.data.responseMessage);
             });
         } else {
           setBidLoader(false);
@@ -483,7 +483,6 @@ function AboutAuction(props) {
     }
   };
 
-
   const acceptBidNowHandler = async (isCheck) => {
     await axios({
       method: "POST",
@@ -492,7 +491,7 @@ function AboutAuction(props) {
         token: window.localStorage.getItem("token"),
       },
       params: {
-        _id: auctionNFTDetails?.bidId[0]?._id,
+        _id: auctionNFTDetails.bidId[0]._id,
       },
     })
       .then(async (res) => {
@@ -510,7 +509,7 @@ function AboutAuction(props) {
       })
       .catch((err) => {
         setIsHidePost1(false);
-        toast.error(err?.response?.data?.responseMessage);
+        toast.error(err.response.data.responseMessage);
       });
   };
   const rejectBidNowHandler = async (isCheck) => {
@@ -521,7 +520,7 @@ function AboutAuction(props) {
         token: window.localStorage.getItem("token"),
       },
       params: {
-        _id: auctionNFTDetails?.bidId[0]?._id,
+        _id: auctionNFTDetails.bidId[0]._id,
       },
     })
       .then(async (res) => {
@@ -540,12 +539,12 @@ function AboutAuction(props) {
       })
       .catch((err) => {
         setIsHidePost(false);
-        toast.error(err?.response?.data?.responseMessage);
+        toast.error(err.response.data.responseMessage);
       });
   };
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (auctionNFTDetails?.time) {
+      if (auctionNFTDetails.time) {
         setTimeLeft(calculateTimeLeftAuction(new Date(auctionNFTDetails.time)));
       }
     }, 1000);
@@ -554,19 +553,17 @@ function AboutAuction(props) {
   });
 
   useEffect(() => {
-    if (auctionNFTDetails && auth?.userData) {
-      const filterFun = auctionNFTDetails.userId?.subscribers?.filter(
-        (data) => {
-          return data === auth?.userData?._id;
-        }
-      );
-      if (filterFun?.length > 0) {
+    if (auctionNFTDetails && auth.userData) {
+      const filterFun = auctionNFTDetails.userId.subscribers.filter((data) => {
+        return data === auth.userData._id;
+      });
+      if (filterFun.length > 0) {
         setIsSubscribed(true);
       } else {
         setIsSubscribed(false);
       }
     }
-  }, [auctionNFTDetails, auth?.userData]);
+  }, [auctionNFTDetails, auth.userData]);
 
   const likesHandler = async () => {
     try {
@@ -590,14 +587,12 @@ function AboutAuction(props) {
     }
   };
   let isLike = false;
-  if (auth.userData?._id && auctionNFTDetails) {
-    const likeUser = auctionNFTDetails?.likesUsers?.filter(
-      (data) => data === auth.userData?._id
+  if (auth.userData._id && auctionNFTDetails) {
+    const likeUser = auctionNFTDetails.likesUsers.filter(
+      (data) => data === auth.userData._id
     );
-    isLike = likeUser?.length > 0;
+    isLike = likeUser.length > 0;
   }
-
-
 
   const handleClickOpen1 = () => {
     setOpen1(true);
@@ -623,9 +618,9 @@ function AboutAuction(props) {
           },
           data: {
             postId: data._id,
-            title: data?.postTitle,
-            mediaUrl: data?.mediaUrl,
-            details: data?.details,
+            title: data.postTitle,
+            mediaUrl: data.mediaUrl,
+            details: data.details,
             amount: price,
             time: fieldValue,
           },
@@ -639,15 +634,15 @@ function AboutAuction(props) {
           setOpen1(false);
         }
       } catch (error) {
-        if (error?.response?.data?.responseCode === 200) {
+        if (error.response.data.responseCode === 200) {
           if (viewAuctionNFTHandler) {
             viewAuctionNFTHandler();
           }
-          toast.success(error?.response?.data?.responseMessage);
+          toast.success(error.response.data.responseMessage);
           setIsLoading(false);
           setOpen1(false);
         } else {
-          toast.error(error?.response?.data?.responseMessage);
+          toast.error(error.response.data.responseMessage);
           setIsLoading(false);
           if (viewAuctionNFTHandler) {
             viewAuctionNFTHandler();
@@ -712,8 +707,8 @@ function AboutAuction(props) {
                   {fileType == "image" && (
                     <img
                       src={
-                        auctionNFTDetails?.mediaUrl
-                          ? auctionNFTDetails?.mediaUrl
+                        auctionNFTDetails.mediaUrl
+                          ? auctionNFTDetails.mediaUrl
                           : "images/Auction/Auction.png"
                       }
                       ali="Creators Image"
@@ -751,8 +746,8 @@ function AboutAuction(props) {
                           <figure>
                             <img
                               src={
-                                auctionNFTDetails?.userId?.profilePic
-                                  ? auctionNFTDetails?.userId?.profilePic
+                                auctionNFTDetails.userId.profilePic
+                                  ? auctionNFTDetails.userId.profilePic
                                   : "images/user.png"
                               }
                             />
@@ -764,13 +759,16 @@ function AboutAuction(props) {
                         <Box>
                           {" "}
                           <Typography
-                            // 
+                            //
                             variant="h4"
-                            style={{ marginLeft: "7px", wordBreak: "break-all" }}
+                            style={{
+                              marginLeft: "7px",
+                              wordBreak: "break-all",
+                            }}
                           >
-                            {auctionNFTDetails?.userId?.userName
-                              ? auctionNFTDetails?.userId?.userName
-                              : auctionNFTDetails?.userId?.name}
+                            {auctionNFTDetails.userId.userName
+                              ? auctionNFTDetails.userId.userName
+                              : auctionNFTDetails.userId.name}
                           </Typography>
                         </Box>
                       </Box>
@@ -784,7 +782,9 @@ function AboutAuction(props) {
                             </>
                           ) : (
                             <>
-                              <FavoriteBorderIcon style={{ color: "#BFBFBF" }} />
+                              <FavoriteBorderIcon
+                                style={{ color: "#BFBFBF" }}
+                              />
                             </>
                           )}
                           {/* <FavoriteBorderIcon
@@ -795,7 +795,7 @@ function AboutAuction(props) {
                         <Box pl={1}>
                           {" "}
                           <Typography variant="body2">
-                            {auctionNFTDetails?.likesCount}
+                            {auctionNFTDetails.likesCount}
                           </Typography>
                         </Box>
                       </Box>{" "}
@@ -803,40 +803,34 @@ function AboutAuction(props) {
                   </Grid>
                 </Box>
                 <Box className={classes.startingPrice}>
-                  {auctionNFTDetails?.amount && (
-                    <Typography variant="body2">
-                      Starting Price
-                    </Typography>
+                  {auctionNFTDetails.amount && (
+                    <Typography variant="body2">Starting Price</Typography>
                   )}
                   &nbsp;
-                  {auctionNFTDetails?.amount && (
-                    <Typography
-                      variant="h4"
-                      style={{ marginLeft: "8px" }}
-                    >
-                      {/* {auctionNFTDetails?.amount} */}
-                      {auctionNFTDetails?.bidId[0]?.amountBid
-                        ? auctionNFTDetails?.bidId[0]?.amountBid
-                        : auctionNFTDetails?.amount}&nbsp; share
+                  {auctionNFTDetails.amount && (
+                    <Typography variant="h4" style={{ marginLeft: "8px" }}>
+                      {/* {auctionNFTDetails.amount} */}
+                      {auctionNFTDetails.bidId[0].amountBid
+                        ? auctionNFTDetails.bidId[0].amountBid
+                        : auctionNFTDetails.amount}
+                      &nbsp; share
                     </Typography>
                   )}
                 </Box>
                 <Box mt={1}>
-                  {auctionNFTDetails?.isBuy || auctionNFTDetails?.isSold ? (
+                  {auctionNFTDetails.isBuy || auctionNFTDetails.isSold ? (
                     <Box textAlign={"center"}>
-                      <Typography  variant="h2">
-                        SOLD
-                      </Typography>
+                      <Typography variant="h2">SOLD</Typography>
                     </Box>
                   ) : (
                     <Box style={{ display: "flex", alignItems: "center" }}>
-                      <Typography  variant="h6">
+                      <Typography variant="h6">
                         AUCTIONS ENDING IN: {""}
                       </Typography>
                       {moment().unix() >
-                        moment(auctionNFTDetails.time).unix() ? (
+                      moment(auctionNFTDetails.time).unix() ? (
                         <Typography
-                          // 
+                          //
                           variant="h6"
                           style={{ marginTop: "-8px" }}
                         >
@@ -844,13 +838,15 @@ function AboutAuction(props) {
                         </Typography>
                       ) : (
                         <Typography
-                          // 
+                          //
                           variant="h4"
                           style={{ marginLeft: "8px" }}
                         >
-                          {`${timeLeft.days ? timeLeft.days : 0}d : ${timeLeft.hours ? timeLeft.hours : 0
-                            }h : ${timeLeft.minutes ? timeLeft.minutes : 0}m : ${timeLeft.seconds ? timeLeft.seconds : 0
-                            }s`}
+                          {`${timeLeft.days ? timeLeft.days : 0}d : ${
+                            timeLeft.hours ? timeLeft.hours : 0
+                          }h : ${timeLeft.minutes ? timeLeft.minutes : 0}m : ${
+                            timeLeft.seconds ? timeLeft.seconds : 0
+                          }s`}
                         </Typography>
                       )}
                     </Box>
@@ -860,15 +856,15 @@ function AboutAuction(props) {
                       variant="body1"
                       style={{ wordBreak: "break-all" }}
                     >
-                      {auctionNFTDetails?.title}
+                      {auctionNFTDetails.title}
                     </Typography>
                   </Box>
                   <Box mt={1}>
                     <Typography
                       variant="body1"
-                      style={{ wordBreak: "break-all" }} 
+                      style={{ wordBreak: "break-all" }}
                     >
-                      {auctionNFTDetails?.details}
+                      {auctionNFTDetails.details}
                     </Typography>
                   </Box>
 
@@ -877,8 +873,8 @@ function AboutAuction(props) {
                       {!(
                         moment().unix() > moment(auctionNFTDetails.time).unix()
                       ) &&
-                        auctionNFTDetails?.userId?._id !== auth.userData?._id &&
-                        !auctionNFTDetails?.isSold && (
+                        auctionNFTDetails.userId._id !== auth.userData._id &&
+                        !auctionNFTDetails.isSold && (
                           <Button
                             variant="contained"
                             onClick={() => setIsBuyPost(true)}
@@ -891,8 +887,8 @@ function AboutAuction(props) {
                       &nbsp;&nbsp;
                       {moment().unix() >
                         moment(auctionNFTDetails.time).unix() ||
-                        (auctionNFTDetails?.buyerId === auth.userData?._id &&
-                          auctionNFTDetails?.isSold && (
+                        (auctionNFTDetails.buyerId === auth.userData._id &&
+                          auctionNFTDetails.isSold && (
                             <Button
                               variant="contained"
                               // onClick={buyNftPost}
@@ -909,35 +905,34 @@ function AboutAuction(props) {
                           moment().unix() >
                           moment(auctionNFTDetails.time).unix()
                         ) &&
-                        // auctionNFTDetails?.bidId[0]?.userId !==
-                        //   auth?.userData?._id &&
-                        auctionNFTDetails?.userId?._id !==
-                        auth.userData?._id &&
-                        !auctionNFTDetails?.isSold && (
-                          // auctionNFTDetails?.bidId[0]?.userId ===
-                          // auth?.userData?._id &&
-                          // auctionNFTDetails?.bidId[0]?.bidStatus ===
-                          //   "REJECTED" && (
-                          // auctionNFTDetails?.bidId?.length &&
-                          // auctionNFTDetails?.bidId[0]?.bidStatus ===
-                          // ("REJECTED"
-                          <Button
-                            variant="contained"
-                            color="secondary"
-                            size="large"
-                            onClick={handleClickOpen}
-                          >
-                            Bid Now
-                          </Button>
-                        )
+                          // auctionNFTDetails.bidId[0].userId !==
+                          //   auth.userData._id &&
+                          auctionNFTDetails.userId._id !== auth.userData._id &&
+                          !auctionNFTDetails.isSold && (
+                            // auctionNFTDetails.bidId[0].userId ===
+                            // auth.userData._id &&
+                            // auctionNFTDetails.bidId[0].bidStatus ===
+                            //   "REJECTED" && (
+                            // auctionNFTDetails.bidId.length &&
+                            // auctionNFTDetails.bidId[0].bidStatus ===
+                            // ("REJECTED"
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              size="large"
+                              onClick={handleClickOpen}
+                            >
+                              Bid Now
+                            </Button>
+                          )
                         // )
                       }
                       &nbsp;&nbsp;
                       {!(
                         moment().unix() > moment(auctionNFTDetails.time).unix()
                       ) &&
-                        auctionNFTDetails?.userId?._id === auth.userData?._id &&
-                        !auctionNFTDetails?.isSold && (
+                        auctionNFTDetails.userId._id === auth.userData._id &&
+                        !auctionNFTDetails.isSold && (
                           <Button
                             variant="contained"
                             color="secondary"
@@ -951,10 +946,11 @@ function AboutAuction(props) {
                       {!(
                         moment().unix() > moment(auctionNFTDetails.time).unix()
                       ) &&
-                        auctionNFTDetails?.userId?._id === auth.userData?._id &&
-                        auctionNFTDetails?.bidId?.length > 0 &&
-                        auctionNFTDetails?.bidId[0]?.bidStatus !==
-                        "REJECTED" && auctionNFTDetails?.isBuy !== true && auctionNFTDetails?.isSold !== true && (
+                        auctionNFTDetails.userId._id === auth.userData._id &&
+                        auctionNFTDetails.bidId.length > 0 &&
+                        auctionNFTDetails.bidId[0].bidStatus !== "REJECTED" &&
+                        auctionNFTDetails.isBuy !== true &&
+                        auctionNFTDetails.isSold !== true && (
                           <Button
                             variant="contained"
                             color="secondary"
@@ -968,17 +964,16 @@ function AboutAuction(props) {
                       {!(
                         moment().unix() > moment(auctionNFTDetails.time).unix()
                       ) &&
-                        auctionNFTDetails?.userId?._id === auth.userData?._id &&
-                        auctionNFTDetails?.bidId?.length > 0 &&
-                        !auctionNFTDetails?.isSold &&
-                        auctionNFTDetails?.bidId[0]?.bidStatus !==
-                        "REJECTED" && (
+                        auctionNFTDetails.userId._id === auth.userData._id &&
+                        auctionNFTDetails.bidId.length > 0 &&
+                        !auctionNFTDetails.isSold &&
+                        auctionNFTDetails.bidId[0].bidStatus !== "REJECTED" && (
                           <Button
                             variant="contained"
                             color="secondary"
                             size="large"
                             onClick={() => setIsHidePost(true)}
-                          // onClick={rejectBidNowHandler}
+                            // onClick={rejectBidNowHandler}
                           >
                             Reject Bid
                           </Button>
@@ -987,8 +982,8 @@ function AboutAuction(props) {
                       {!(
                         moment().unix() > moment(auctionNFTDetails.time).unix()
                       ) &&
-                        auctionNFTDetails?.userId?._id === auth.userData?._id &&
-                        !auctionNFTDetails?.isSold && (
+                        auctionNFTDetails.userId._id === auth.userData._id &&
+                        !auctionNFTDetails.isSold && (
                           <Button
                             variant="contained"
                             color="secondary"
@@ -1123,7 +1118,7 @@ function AboutAuction(props) {
                               value={bidPrice}
                               onChange={(e) => setBidPrice(e.target.value)}
                               onKeyPress={(event) => {
-                                if (event?.key === "-" || event?.key === "+") {
+                                if (event.key === "-" || event.key === "+") {
                                   event.preventDefault();
                                 }
                               }}
@@ -1153,7 +1148,7 @@ function AboutAuction(props) {
                                 variant="contained"
                                 color="primary"
                                 style={{ marginRight: "8px" }}
-                              // onClick={bidNowHandler}
+                                // onClick={bidNowHandler}
                               >
                                 Cancel
                               </Button>
@@ -1221,7 +1216,7 @@ function AboutAuction(props) {
                               isSubmit && (price === "" || Number(price) <= 0)
                             )}
                             onKeyPress={(event) => {
-                              if (event?.key === "-" || event?.key === "+") {
+                              if (event.key === "-" || event.key === "+") {
                                 event.preventDefault();
                               }
                             }}
@@ -1259,7 +1254,7 @@ function AboutAuction(props) {
                               name="dob"
                               // onChange={_onInputChange}
                               error={Boolean(isSubmit && !fieldValue)}
-                            // helperText={touched.dob && errors.dob}
+                              // helperText={touched.dob && errors.dob}
                             />
                             <FormHelperText error>
                               {isSubmit && !fieldValue && (
@@ -1283,9 +1278,9 @@ function AboutAuction(props) {
                             variant="contained"
                             size="large"
                             onClick={abc}
-                          // onClickCapture={() => {
-                          //   history.push("/");
-                          // }}
+                            // onClickCapture={() => {
+                            //   history.push("/");
+                            // }}
                           >
                             Create Auction
                           </Button>
@@ -1313,8 +1308,8 @@ function AboutAuction(props) {
                   <figure className="postImg">
                     <img
                       src={
-                        auctionNFTDetails?.userId?.coverPic
-                          ? auctionNFTDetails?.userId?.coverPic
+                        auctionNFTDetails.userId.coverPic
+                          ? auctionNFTDetails.userId.coverPic
                           : "images/userback.png"
                       }
                       ali="Creators Image"
@@ -1326,8 +1321,8 @@ function AboutAuction(props) {
                     <figure className="user">
                       <img
                         src={
-                          auctionNFTDetails?.userId?.profilePic
-                            ? auctionNFTDetails?.userId?.profilePic
+                          auctionNFTDetails.userId.profilePic
+                            ? auctionNFTDetails.userId.profilePic
                             : "images/user.png"
                         }
                       />
@@ -1335,18 +1330,16 @@ function AboutAuction(props) {
                   </Box>
                 </Box>
                 <Box className="username">
-                  <Typography  variant="h3">
-                    {auctionNFTDetails?.userId?.userName
-                      ? auctionNFTDetails?.userId?.userName
-                      : auctionNFTDetails?.userId?.name}
+                  <Typography variant="h3">
+                    {auctionNFTDetails.userId.userName
+                      ? auctionNFTDetails.userId.userName
+                      : auctionNFTDetails.userId.name}
                   </Typography>
                   <Typography variant="body1">
-                    {sortAddress(
-                      auctionNFTDetails?.userId?.bnbAccount?.address
-                    )}{" "}
+                    {sortAddress(auctionNFTDetails.userId.bnbAccount.address)}{" "}
                     &nbsp;
                     <CopyToClipboard
-                      text={auctionNFTDetails?.userId?.bnbAccount?.address}
+                      text={auctionNFTDetails.userId.bnbAccount.address}
                     >
                       <FaCopy
                         style={{ cursor: "pointer" }}
@@ -1355,7 +1348,7 @@ function AboutAuction(props) {
                     </CopyToClipboard>
                     {/* &nbsp; <img src="images/Creators/chaincopy.png" /> */}
                   </Typography>
-                  {auctionNFTDetails?.userId?._id !== auth.userData?._id && (
+                  {auctionNFTDetails.userId._id !== auth.userData._id && (
                     <Box mt={1}>
                       {/* <Button
                       variant="contained"
@@ -1372,7 +1365,7 @@ function AboutAuction(props) {
                         size="large"
                         style={{ marginRight: "8px" }}
                         onClick={() =>
-                          followUnfollowHandler(auctionNFTDetails?.userId?._id)
+                          followUnfollowHandler(auctionNFTDetails.userId._id)
                         }
                       >
                         {isFollowing ? "Unfollow" : "Follow"}
@@ -1385,7 +1378,7 @@ function AboutAuction(props) {
                         onClick={() =>
                           history.push({
                             pathname: "/chat-history",
-                            search: auctionNFTDetails?.userId?._id,
+                            search: auctionNFTDetails.userId._id,
                           })
                         }
                         className={classes.subscribeButton}

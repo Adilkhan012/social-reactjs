@@ -144,11 +144,11 @@ export default function (props) {
     setReciveOpen(false);
   };
   let isLike;
-  if (auth.userData?._id && dataList) {
-    const likeUser = dataList?.reactOnPost?.filter(
-      (data) => data.userId === auth.userData?._id
+  if (auth.userData._id && dataList) {
+    const likeUser = dataList.reactOnPost.filter(
+      (data) => data.userId === auth.userData._id
     );
-    isLike = likeUser?.length > 0;
+    isLike = likeUser.length > 0;
   }
 
   const viewExclusivepostHandler = async () => {
@@ -171,14 +171,14 @@ export default function (props) {
     }
   };
   // let isLike = false;
-  // if (auth.userData?._id && dataList) {
-  //   const likeUser = dataList?.reactOnPost?.includes()
-  //   const likeUser = dataList?.reactOnPost?.map(()=>{
+  // if (auth.userData._id && dataList) {
+  //   const likeUser = dataList.reactOnPost.includes()
+  //   const likeUser = dataList.reactOnPost.map(()=>{
   //     return(
   //       data
   //     )
   //   })
-  //   isLike = likeUser?.length > 0;
+  //   isLike = likeUser.length > 0;
   // }
   const commentPostHandler = async (event) => {
     event.preventDefault();
@@ -266,7 +266,7 @@ export default function (props) {
       setInputStr(null);
     }
   };
-  const isVideo = dataList?.mediaUrl?.includes(".mp4");
+  const isVideo = dataList.mediaUrl.includes(".mp4");
   const [showPicker, setShowPicker] = useState(false);
 
   const onEmojiClick = () => {
@@ -325,7 +325,7 @@ export default function (props) {
                         </video>
                       ) : (
                         <img
-                          src={dataList?.mediaUrl}
+                          src={dataList.mediaUrl}
                           style={{ cursor: "pointer" }}
                         />
                       )}
@@ -341,23 +341,23 @@ export default function (props) {
                           <Grid container alignItems="center">
                             <Grid item xs={5}>
                               {" "}
-                              {dataList?.reactOnPostCount > 0 ? (
+                              {dataList.reactOnPostCount > 0 ? (
                                 <Box>
-                                  +{dataList?.reactOnPostCount}&nbsp; Likes
+                                  +{dataList.reactOnPostCount}&nbsp; Likes
                                 </Box>
                               ) : (
                                 <Box>
-                                  {dataList?.reactOnPostCount}&nbsp;Likes
+                                  {dataList.reactOnPostCount}&nbsp;Likes
                                 </Box>
                               )}
                             </Grid>
                             <Grid item xs={7} align="right">
-                              <label>{dataList?.totalComment} Comments</label>{" "}
+                              <label>{dataList.totalComment} Comments</label>{" "}
                               &nbsp; &nbsp; &nbsp; &nbsp;
                               <label>
-                                {dataList?.postType === "PUBLIC" && (
+                                {dataList.postType === "PUBLIC" && (
                                   <>
-                                    {dataList?.amount}&nbsp;
+                                    {dataList.amount}&nbsp;
                                     {tokenName}
                                   </>
                                 )}{" "}
@@ -405,8 +405,8 @@ export default function (props) {
                           </Grid>
                         </Box>
                         <Box className="CommentscrollDiv">
-                          {dataList?.comment &&
-                            dataList?.comment?.map((dataChild, i) => {
+                          {dataList.comment &&
+                            dataList.comment.map((dataChild, i) => {
                               return (
                                 <CommentBox
                                   key={i}
@@ -427,8 +427,8 @@ export default function (props) {
                                 <Box className="profileimage">
                                   <img
                                     src={
-                                      auth.userData?.profilePic
-                                        ? auth.userData?.profilePic
+                                      auth.userData.profilePic
+                                        ? auth.userData.profilePic
                                         : "images/user.png"
                                     }
                                     alt="user data"
