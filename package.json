@@ -27,6 +27,7 @@
     "apexcharts": "^3.39.0",
     "axios": "^0.20.0",
     "big-integer": "^1.6.51",
+    "caniuse-lite": "^1.0.30001551",
     "canvas": "^2.4.0",
     "clsx": "^1.1.1",
     "connectors": "^1.0.0",

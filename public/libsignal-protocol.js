@@ -1,4 +1,5 @@
 (function () {
+  console.log("process");
   var Internal = {};
   window.libsignal = {};
   // The Module object: Our interface to the outside world. We import
