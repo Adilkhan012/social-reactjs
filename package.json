@@ -77,9 +77,10 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "react-scripts  start",
+    "start": "NODE_OPTIONS=--max-old-space-size=8192 react-scripts start",
+    "build": "NODE_OPTIONS=--max-old-space-size=8192 react-scripts build",
     "start1": "react-scripts  start",
-    "build": "npm install --force && react-scripts  --max_old_space_size=8192 build",
+    "build1": "npm install --force && react-scripts  --max_old_space_size=8192 build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
